@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\WebControllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +17,10 @@ use App\Http\Controllers\LoginController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Auth::routes();
+// Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/', [LoginController::class, 'login']);
 Route::post('/processLogin', [LoginController::class, 'processLogin']);
+Route::get('/logout', [LoginController::class, 'logout']);
 Route::get('/dashboard', [LoginController::class, 'dashboard']);

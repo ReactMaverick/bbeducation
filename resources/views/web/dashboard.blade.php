@@ -11,7 +11,7 @@
 
             <p>Dashboard</p>
 
-            <a class="btn btn-link" href="{{ url('/') }}">
+            <a class="btn btn-link" href="{{ url('/logout') }}">
                 Logout
             </a>
 

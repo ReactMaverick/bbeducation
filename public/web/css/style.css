@@ -1,0 +1,91 @@
+.login-section {
+    background-color: #40a0ed;
+    padding: 25px;
+    width: 33%;
+}
+
+.login-section h2 {
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+    margin: 15px;
+}
+
+.login-form-sec label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+}
+
+/* .select-field {
+    border-radius: 0;
+    font-size: 14px;
+} */
+
+.password-field {
+    padding: 15px 12px;
+    border-radius: 0;
+    font-size: 12px;
+}
+
+.login-button-sec {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-button-sec button {
+    background-color: #ffc20e;
+    color: #000;
+    border: none;
+    border-radius: 3px;
+    width: 25%;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.login-button-sec button:hover {
+    background-color: #ffc20e;
+    color: #fff;
+}
+
+.login-button-sec button:focus {
+    background-color: #ffc20e;
+}
+
+.login-button-sec button:active {
+    background-color: #ffc20e !important;
+    border-color: #ffc20e !important;
+}
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login-page-img {
+    display: flex;
+    justify-content: center;
+}
+
+.login-page-img img {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+}
+
+.form-group.has-error label{
+	color:#dd4b39
+}
+.form-group.has-error .form-control{
+	border-color:#dd4b39;box-shadow:none
+}
