@@ -189,5 +189,16 @@
         <div class="tab-pane fade" id="teachers" role="tabpanel3" aria-labelledby="teachers-tab">
             <h2>ggjgjg</h2>
         </div>
+        <div class="tab-pane fade" id="schools" role="tabpanel2" aria-labelledby="schools-tab">
+            <h2>khkhkh</h2>
+        </div>
+        <div class="tab-pane fade" id="finance" role="tabpanel3" aria-labelledby="finance-tab">
+            <h2>ggjgjg</h2>
+        </div>
+        <div class="tab-pane fade" id="management" role="tabpanel2" aria-labelledby="management-tab">
+            <h2>khkhkh</h2>
+        </div>
+        <div class="tab-pane fade" id="settings" role="tabpanel3" aria-labelledby="settings-tab">
+        </div>
     </div>
 @endsection

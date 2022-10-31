@@ -26,9 +26,15 @@
             <a class="nav-link" id="Management-tab" data-toggle="tab" href="#Management" role="tab"
                 aria-controls="Management" aria-selected="false"><i class="fa-solid fa-person">Management</i></a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" id="Settings-tab" data-toggle="tab" href="#Settings" role="tab"
-                aria-controls="Settings" aria-selected="false"><i class="fa-solid fa-gear">Settings</i></a>
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-gear">Settings</i></a>
+                <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Separated link</a>
+                </div>
         </li>
     </ul>
 
