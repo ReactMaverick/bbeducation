@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebControllers\LoginController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,14 @@ use App\Http\Controllers\WebControllers\LoginController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/cache-clear', function () {
+    Artisan::call('config:cache');
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+
+    return Artisan::output();
+});
 
 // Route::get('/', function () {
 //     return view('welcome');

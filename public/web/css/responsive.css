@@ -4,10 +4,90 @@
     .login-section {
         width: 60%;
     }
+
+
+    /* =======DASHBOARD========= */
+
+    .assignment-status-table {
+        width: 100%;
+    }
+
+    .assignment-status-sec {
+        width: 65%;
+    }
+
+    .nav-tabs .nav-link {
+        width: 170px;
+        padding: 12px 0 12px 12px;
+    }
+    .first-sec {
+        width: 30%;
+    }
+    .second-sec {
+        width: 70%;
+        margin-right: 10px;
+    }
 }
 
 @media screen and (max-width: 480px) {
     .login-section {
         width: 100%;
+    }
+
+    /* ===========DASHBOARD========== */
+
+    .dashboard-tab-section {
+        height: 30%;
+    }
+
+    .nav-tabs .nav-link {
+        width: 170px;
+        padding: 12px 0 12px 12px;
+    }
+
+    .sidebar-sec {
+        justify-content: center;
+    }
+
+    .sidebar-sec-text {
+        width: 27%;
+    }
+
+    .assignment-col {
+        padding-left: 0;
+    }
+
+    .assignment-status-sec {
+        width: 100%;
+    }
+
+    .assignment-status-table {
+        width: 100%;
+    }
+    .first-sec {
+        width: 100%;
+    }
+    .second-sec {
+        width: 100%;
+        padding-right: 13px;
+    }
+    .total-sec{
+        display: flex;
+        flex-direction: column;
+    }
+    
+}
+
+@media (max-width: 375px) {
+    .second-sec {
+        width: 100%;
+        padding-right: 13px;
+        padding-left: 8px;
+    }
+    .dashboard-tab-content {
+        padding-left: 0;
+    }
+    .dashboard-tab-content h2 {
+        margin-left: 13px;
     }
 }
