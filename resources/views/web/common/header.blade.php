@@ -4,20 +4,20 @@
         <li class="nav-item @if ($headerTitle == 'Dashboard') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/dashboard') }}" ><i class="fa-solid fa-house-chimney">Home</i></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item @if ($headerTitle == 'Assignments') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/assignments') }}"><i class="fa-solid fa-id-card">assignments</i></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item @if ($headerTitle == 'Teachers') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/teachers') }}"><i
                     class="fa-solid fa-person-chalkboard">Teachers</i></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item @if ($headerTitle == 'Schools') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/schools') }}"><i class="fa-solid fa-school">Schools</i></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item @if ($headerTitle == 'Finance') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/finance') }}"><i class="fa-solid fa-money-bills">Finance</i></a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item @if ($headerTitle == 'Management') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/management') }}"><i class="fa-solid fa-person">Management</i></a>
         </li>
         <li class="nav-item dropdown">

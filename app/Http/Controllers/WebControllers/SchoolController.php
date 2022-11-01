@@ -10,7 +10,8 @@ class SchoolController extends Controller
     public function schools()
     {
         $title = array('pageTitle' => "Schools");
+        $headerTitle = "Schools";
 
-        return view("web.school", ['title' => $title]);
+        return view("web.school", ['title' => $title, 'headerTitle' => $headerTitle]);
     }
 }

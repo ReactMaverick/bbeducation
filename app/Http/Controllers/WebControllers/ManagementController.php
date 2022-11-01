@@ -10,7 +10,8 @@ class ManagementController extends Controller
     public function management()
     {
         $title = array('pageTitle' => "Management");
+        $headerTitle = "Management";
 
-        return view("web.management", ['title' => $title]);
+        return view("web.management", ['title' => $title, 'headerTitle' => $headerTitle]);
     }
 }

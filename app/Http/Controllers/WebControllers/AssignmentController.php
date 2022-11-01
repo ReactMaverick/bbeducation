@@ -10,7 +10,8 @@ class AssignmentController extends Controller
     public function assignments()
     {
         $title = array('pageTitle' => "Assignments");
+        $headerTitle = "Assignments";
 
-        return view("web.assignment", ['title' => $title]);
+        return view("web.assignment", ['title' => $title, 'headerTitle' => $headerTitle]);
     }
 }

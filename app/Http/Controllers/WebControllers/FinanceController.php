@@ -10,7 +10,8 @@ class FinanceController extends Controller
     public function finance()
     {
         $title = array('pageTitle' => "Finance");
+        $headerTitle = "Finance";
 
-        return view("web.finance", ['title' => $title]);
+        return view("web.finance", ['title' => $title, 'headerTitle' => $headerTitle]);
     }
 }

@@ -10,7 +10,8 @@ class TeacherController extends Controller
     public function teachers()
     {
         $title = array('pageTitle' => "Teachers");
+        $headerTitle = "Teachers";
 
-        return view("web.teacher", ['title' => $title]);
+        return view("web.teacher", ['title' => $title, 'headerTitle' => $headerTitle]);
     }
 }
