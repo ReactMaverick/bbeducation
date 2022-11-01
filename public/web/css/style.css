@@ -1,7 +1,7 @@
 /* ======GLOBAL====== */
 
 .login-section {
-    background-color: #40a0ed;
+    background-color: #40a0ed9e;
     padding: 25px;
     width: 33%;
 }
@@ -416,6 +416,20 @@
 }
 .second-sec{
     width: 82%;
+}
+
+/* ===========TAB DROPDOWN======= */
+
+.nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: #1f81cf;
+    border-color: #dee2e6;
+    border-radius: 0;
+}
+
+.dropdown-menu.show {
+    top: 4px !important;
+    border-radius: 5px;
 }
 
 
