@@ -92,6 +92,12 @@
 	border-color:#dd4b39;box-shadow:none
 }
 
+.header-active {
+    background-color: #1f81cf;
+    color: #fff;
+    border-radius: 0;
+}
+
 /* ===============DASHBOARD============ */
 
 /* =====TAB==== */
@@ -433,3 +439,135 @@
 }
 
 
+/* ===============ASSIGNMENT PAGE=========== */
+
+.assignment-page-table {
+    width: 100%;
+}
+
+.assignment-tab-content {
+    margin-top: 16px;
+    padding: 0 13px;
+}
+
+.assignment-section-col {
+    width: 100%;
+}
+
+.assignment-page-sec {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 40%;
+    border-bottom: 1px solid #d0d0d0;
+}
+
+.assignment-page-sec h2 {
+    font-size: 24px;
+    color: #afabab;
+    font-weight: 400;
+    margin-right: 25px;
+}
+
+.assignment-first-sec {
+    width: 100%;
+}
+
+.assignment-sidebar-data {
+    border: 1px solid #0b85f4;
+    border-radius: 100%;
+    width: 67px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignment-sidebar-data h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #0b85f4;
+    text-align: center;
+    margin: 0;
+}
+
+.assignment-sidebar-data2 {
+    border: 1px solid #ff8200;
+    border-radius: 100%;
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignment-sidebar-data2 h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #ff8200;
+    text-align: center;
+    margin: 0;
+}
+
+.assignment-sidebar-data3 {
+    border: 1px solid #f43779;
+    border-radius: 100%;
+    width: 72px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignment-sidebar-data3 h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #f43779;
+    text-align: center;
+    margin: 0;
+}
+
+.assignment-left-sidebar-section {
+    display: flex;
+}
+
+.assignment-sidebar-data4 {
+    border: 1px solid #2cdac8;
+    border-radius: 100%;
+    width: 67px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignment-sidebar-data4 h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #2cdac8;
+    text-align: center;
+    margin: 0;
+}
+
+.checkbox-field {
+    display: flex;
+    align-items: center;
+}
+
+.assignment-page-sec label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #afabab;
+    margin-bottom: 0;
+    margin-right: 10px;
+}
+
+
+/* ==========TEACHER PAGE============ */
+
+.teacher-page-sec {
+    font-size: 24px;
+    color: #afabab;
+    font-weight: 400;
+    margin-right: 25px;
+}
