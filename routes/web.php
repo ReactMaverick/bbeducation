@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebControllers\LoginController;
+use App\Http\Controllers\WebControllers\HomeController;
+use App\Http\Controllers\WebControllers\AssignmentController;
+use App\Http\Controllers\WebControllers\TeacherController;
+use App\Http\Controllers\WebControllers\SchoolController;
+use App\Http\Controllers\WebControllers\FinanceController;
+use App\Http\Controllers\WebControllers\ManagementController;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -31,4 +37,14 @@ Route::get('/cache-clear', function () {
 Route::get('/', [LoginController::class, 'login']);
 Route::post('/processLogin', [LoginController::class, 'processLogin']);
 Route::get('/logout', [LoginController::class, 'logout']);
-Route::get('/dashboard', [LoginController::class, 'dashboard']);
+Route::get('/dashboard', [HomeController::class, 'dashboard']);
+
+Route::get('/assignments', [AssignmentController::class, 'assignments']);
+
+Route::get('/teachers', [TeacherController::class, 'teachers']);
+
+Route::get('/schools', [SchoolController::class, 'schools']);
+
+Route::get('/finance', [FinanceController::class, 'finance']);
+
+Route::get('/management', [ManagementController::class, 'management']);

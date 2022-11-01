@@ -56,10 +56,4 @@ class LoginController extends Controller
         return redirect('/');
     }
 
-    public function dashboard()
-    {
-        $title = array('pageTitle' => "Dashboard");
-
-        return view("web.dashboard", ['title' => $title]);
-    }
 }

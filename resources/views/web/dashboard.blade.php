@@ -1,7 +1,7 @@
 @extends('web.layout')
 @section('content')
     <div class="tab-content dashboard-tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div>
             <h2>Home</h2>
             <div class="total-sec">
                 <div class="first-sec">
@@ -182,23 +182,6 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="assignments" role="tabpanel2" aria-labelledby="assignments-tab">
-            <h2>khkhkh</h2>
-        </div>
-        <div class="tab-pane fade" id="teachers" role="tabpanel3" aria-labelledby="teachers-tab">
-            <h2>ggjgjg</h2>
-        </div>
-        <div class="tab-pane fade" id="schools" role="tabpanel2" aria-labelledby="schools-tab">
-            <h2>khkhkh</h2>
-        </div>
-        <div class="tab-pane fade" id="finance" role="tabpanel3" aria-labelledby="finance-tab">
-            <h2>ggjgjg</h2>
-        </div>
-        <div class="tab-pane fade" id="management" role="tabpanel2" aria-labelledby="management-tab">
-            <h2>khkhkh</h2>
-        </div>
-        <div class="tab-pane fade" id="settings" role="tabpanel3" aria-labelledby="settings-tab">
         </div>
     </div>
 @endsection
