@@ -8,12 +8,15 @@ use Validator;
 use Hash;
 use Auth;
 use DB;
+use Session;
 
 class LoginController extends Controller
 {
     public function login()
     {
-        if (Auth::guard('subadmin')->check()) {
+        $webUserLoginData = Session::get('webUserLoginData');
+        // if (Auth::guard('subadmin')->check()) {
+        if ($webUserLoginData) {
             return redirect()->intended('/dashboard');
         } else {
             $title = array('pageTitle' => "Login");
@@ -42,7 +45,8 @@ class LoginController extends Controller
                 $admin = Auth::guard('subadmin')->user();
 
                 $administrators = DB::table('tbl_user')->where('user_id', $admin->user_id)->get();
-                // dd($administrators);
+                Session::put('webUserLoginData', $administrators[0]);
+                // dd($admin);
                 return redirect()->intended('/dashboard')->with('administrators', $administrators[0]);
             } else {
                 return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
@@ -53,6 +57,7 @@ class LoginController extends Controller
     public function logout()
     {
         Auth::guard('subadmin')->logout();
+        Session::forget('webUserLoginData');
         return redirect('/');
     }
 

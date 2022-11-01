@@ -51,11 +51,11 @@
                 </div>
                 <div class="second-sec assignment-col">
                     <div class="assignment-status-sec">
-                        <h2>20 - Latest Assignments</h2>
-                        <span>Double click to open the assignment</span>
+                        <h2>{{ count($latestAssignment) }} - Latest Assignments</h2>
+                        {{-- <span>Double click to open the assignment</span> --}}
                     </div>
 
-                    <table class="table assignment-status-table">
+                    <table class="table assignment-status-table" id="myTable">
                         <thead>
                             <tr class="table-heading">
                                 <th>School</th>
@@ -66,122 +66,31 @@
                             </tr>
                         </thead>
                         <tbody class="table-body-sec">
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Completed</td>
-                                <td>Teaching Assistant</td>
-                                <td>Lorem Ipsum</td>
-                                <td>6.5 days</td>
-                            </tr>
-
+                            @foreach ($latestAssignment as $key => $Assignment)
+                                <tr class="table-data">
+                                    <td>{{ $Assignment->schooleName }}</td>
+                                    <td>
+                                        @if ($Assignment->status_int == 3)
+                                            Complete
+                                        @else
+                                            --
+                                        @endif
+                                    </td>
+                                    <td>{{ $Assignment->positionAppliedFor_txt }}</td>
+                                    <td>{{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}</td>
+                                    <td>{{ $Assignment->totalDay }} Days</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
 @endsection

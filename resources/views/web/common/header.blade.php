@@ -1,7 +1,7 @@
 <div class="container-fluid dashboard-tab-section">
     <!-- <div class="container"> -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
+        <li class="nav-item @if ($headerTitle == 'Dashboard') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/dashboard') }}" ><i class="fa-solid fa-house-chimney">Home</i></a>
         </li>
         <li class="nav-item">
