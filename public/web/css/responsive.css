@@ -36,9 +36,9 @@
 
     /* ===========DASHBOARD========== */
 
-    .dashboard-tab-section {
+    /* .dashboard-tab-section {
         height: 30%;
-    }
+    } */
 
     .nav-tabs .nav-link {
         width: 170px;
@@ -59,6 +59,8 @@
 
     .assignment-status-sec {
         width: 100%;
+        justify-content: center;
+        margin-top: 10px;
     }
 
     .assignment-status-table {
@@ -74,6 +76,10 @@
     .total-sec{
         display: flex;
         flex-direction: column;
+    }
+
+    .dataTables_wrapper {
+        overflow-x: auto;
     }
     
 }

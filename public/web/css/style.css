@@ -112,7 +112,7 @@
     color: #fff;
     padding: 12px 0 12px 12px;
     font-size: 12px;
-    width: 170px;
+    width: 162.8px;
 }
 
 .nav-item {
@@ -121,9 +121,6 @@
 
 .dashboard-tab-section {
     background-color: #40a0ed;
-    height: 10%;
-    display: flex;
-    align-items: flex-end;
 }
 
 .nav-tabs .nav-link.active {
@@ -140,7 +137,7 @@
 
 .dashboard-tab-content {
     margin-top: 16px;
-    padding-left: 13px;
+    padding: 0 13px;
 }
 
 .dashboard-tab-content h2 {
@@ -353,16 +350,15 @@
 .assignment-status-sec {
     width: 36%;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: center; */
     align-items: center;
-    margin-top: 10px;
 }
 
 .assignment-status-sec h2 {
     font-size: 12px;
     font-weight: bold;
     color: #afabab;
-    margin: 0;
+    margin: 0 0 15px 0;
 }
 
 .assignment-status-sec span {
@@ -381,7 +377,7 @@
 .table-heading th {
     border-bottom: 0 !important;
     border-top: 0 !important;
-    font-size: 12px;
+    font-size: 15px;
     color: #afabab;
     font-weight: 400;
 
@@ -411,18 +407,20 @@
 }
 
 .table-body-sec {
-    border: 1px solid #afabab;
+    outline: 1px solid #afabab;
 }
 .total-sec{
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
 }
 .first-sec{
     width: 18%;
 }
 .second-sec{
-    width: 82%;
+    width: 81%;
 }
+
+
 
 /* ===========TAB DROPDOWN======= */
 
@@ -570,4 +568,105 @@
     color: #afabab;
     font-weight: 400;
     margin-right: 25px;
+}
+
+.teacher-section {
+    width: 45%;
+}
+
+.teacher-all-section {
+    display: flex;
+    justify-content: space-between;
+}
+.teacher-left-sec {
+    display: flex;
+    margin-top: 35px;
+}
+
+.about-teacher {
+    text-align: center;
+    margin: 0 50px;
+}
+
+.about-teacher i {
+    font-size: 55px;
+    color: #40A0ED;
+}
+
+.about-teacher p {
+    font-size: 14px;
+    color: #40A0ED;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.about-teacher a:hover {
+    text-decoration: none;
+}
+
+.teacher-page-table {
+    width: 100%;
+}
+
+.teacher-page-table-section {
+    width: 45%;
+}
+
+.table-heading th {
+    padding-left: 0;
+}
+
+.table-heading i::before {
+    font-size: 26px;
+    color:#40a0ed;
+    margin-right: 8px;
+}
+
+
+/* =========HEADER LOGO=========== */
+
+.header-logo {
+    display: flex;
+    align-items: flex-end;
+}
+
+.header-logo img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+}
+
+.header-logo span {
+    font-size: 16px;
+    color: #fff;
+    font-weight: 500;
+    margin-left: 20px;
+}
+
+.header-user-profile-sec {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 25px 0;
+}
+
+.user-name-sec {
+    display: flex;
+    align-items: center;
+}
+
+.user-name-sec i {
+    font-size: 14px;
+    color: #fff;
+    margin-right: 8px;
+}
+
+.user-name-sec span {
+    font-size: 15px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding: 15px 0 !important;
 }
