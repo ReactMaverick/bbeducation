@@ -61,4 +61,16 @@ class LoginController extends Controller
         return redirect('/');
     }
 
+    public function profile()
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Profile");
+            $headerTitle = "Profile";
+
+            return view("web.profile", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
 }

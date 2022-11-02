@@ -37,6 +37,7 @@ Route::get('/cache-clear', function () {
 Route::get('/', [LoginController::class, 'login']);
 Route::post('/processLogin', [LoginController::class, 'processLogin']);
 Route::get('/logout', [LoginController::class, 'logout']);
+Route::get('/profile', [LoginController::class, 'profile']);
 
 Route::get('/dashboard', [HomeController::class, 'dashboard']);
 

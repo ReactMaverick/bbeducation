@@ -23,7 +23,7 @@
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-gear">Settings</i></a>
                 <div class="dropdown-menu">
-                <a class="dropdown-item" href="javascript:void(0)">Profile</a>
+                <a class="dropdown-item" href="{{ URL::to('/profile') }}">Profile</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ url('/logout') }}">Logout</a>
                 </div>
