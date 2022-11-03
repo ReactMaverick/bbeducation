@@ -44,7 +44,11 @@ class LoginController extends Controller
             if (Auth::guard('subadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password], $request->get('remember'))) {
                 $admin = Auth::guard('subadmin')->user();
 
-                $administrators = DB::table('tbl_user')->where('user_id', $admin->user_id)->get();
+                $administrators = DB::table('tbl_user')
+                    ->LeftJoin('company', 'company.company_id', '=', 'tbl_user.company_id')
+                    ->select('tbl_user.*', 'company.company_name')
+                    ->where('tbl_user.user_id', $admin->user_id)
+                    ->get();
                 Session::put('webUserLoginData', $administrators[0]);
                 // dd($admin);
                 return redirect()->intended('/dashboard')->with('administrators', $administrators[0]);
@@ -73,5 +77,5 @@ class LoginController extends Controller
             return redirect()->intended('/');
         }
     }
-    
+
 }

@@ -10,7 +10,7 @@
                             <span>Week Beginning</span>
                             <div class="date-text">
                                 <i class="fa-solid fa-caret-left"></i>
-                                <h2>Mon 31 Oct 2022</h2><i class="fa-solid fa-caret-right"></i>
+                                <h2>{{ date('D d M Y', strtotime($weekStartDate)) }}</h2><i class="fa-solid fa-caret-right"></i>
                             </div>
                         </div>
                         <div class="sidebar-sec">
