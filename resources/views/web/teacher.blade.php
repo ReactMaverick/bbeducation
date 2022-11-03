@@ -1,12 +1,13 @@
 @extends('web.layout')
 @section('content')
 <div class="tab-content dashboard-tab-content" id="myTabContent">
-    <div class="second-sec assignment-section-col">
-        <div class="teacher-page-sec">
-            <h2>Teachers</h2>
-        </div>
+    <div class="assignment-section-col">
+        
         <div class="teacher-all-section">
             <div class="teacher-section">
+                <div class="teacher-page-sec">
+            <h2>Teachers</h2>
+        </div>
                 <div class="teacher-left-sec">
                     <div class="about-teacher">
                         <a href="#"> <i class="fa-solid fa-magnifying-glass"></i>
@@ -26,8 +27,7 @@
                             <p>New Teacher</p>
                         </a>
                     </div>
-                </div>
-                <div class="teacher-left-sec">
+
                     <div class="about-teacher">
                         <a href="#"> <i class="fa-solid fa-file-lines"></i>
                             <p>Pending</p>

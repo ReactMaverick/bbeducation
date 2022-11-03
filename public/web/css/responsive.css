@@ -27,7 +27,27 @@
         width: 70%;
         margin-right: 10px;
     }
+
+    /* =======TEACHER======== */
+
+    .teacher-section {
+        width: 50%;
+    }
+
+    .about-teacher {
+        margin: 10px 45px 0 45px;
+    }
+
+    /* ============FINANCE============= */
+    .about-finance{
+        width: 25%;
+        margin: 10px 0 0 0;
+    }
 }
+
+
+
+
 
 @media screen and (max-width: 480px) {
     .login-section {
@@ -82,6 +102,13 @@
         overflow-x: auto;
     }
     
+
+/* =============FINANCE============= */
+
+    .about-finance {
+        margin: 10px 0 0 0;;
+        width: 50%;
+    }
 }
 
 @media (max-width: 375px) {
@@ -95,5 +122,11 @@
     }
     .dashboard-tab-content h2 {
         margin-left: 13px;
+    }
+
+    /* ===========PROFILE=========== */
+
+    .profile-form {
+        width: 100%;
     }
 }

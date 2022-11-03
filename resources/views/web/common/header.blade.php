@@ -43,7 +43,7 @@
                 </div>
         </li>
         <li class="nav-item @if ($headerTitle == 'Logout') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/logout') }}"><i class="fa-solid fa-person">Logout</i></a>
+            <a class="nav-link" href="{{ URL::to('/logout') }}"><i class="fa-solid fa-arrow-right-from-bracket">Logout</i></a>
         </li>
     </ul>
 
