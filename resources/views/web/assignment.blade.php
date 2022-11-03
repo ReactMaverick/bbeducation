@@ -3,7 +3,7 @@
     <div class="tab-content assignment-tab-content" id="myTabContent">
         <div>
                            
-                <div class="second-sec assignment-section-col">
+                <div class="assignment-section-col">
                     <div class="assignment-page-sec">
                         <h2>Assignment</h2>
                         <!-- <div class="checkbox-field">
