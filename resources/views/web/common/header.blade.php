@@ -10,7 +10,7 @@
         <div class="header-logo">
             <img src="{{ asset('web/images/login-page-img.jpg') }}" alt="">
             <span>
-                @if ($webUserLoginData)
+                @if ($webUserLoginData && isset($webUserLoginData->company_name))
                     {{ $webUserLoginData->company_name }}
                 @endif
             </span>

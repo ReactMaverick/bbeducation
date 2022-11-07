@@ -22,49 +22,29 @@
                             </a>
                         </div>
                     </div>
-
-
-
-
                 </div>
 
                 <div class="teacher-page-table-section">
                     <table class="table teacher-page-table" id="myTable">
                         <thead>
                             <tr class="table-heading">
-
                                 <th><i class="fa-solid fa-star">Favourites</i></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody class="table-body-sec">
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Primary</td>
-                            </tr>
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Primary</td>
-                            </tr>
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Primary</td>
-                            </tr>
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Primary</td>
-                            </tr>
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Primary</td>
-                            </tr>
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Primary</td>
-                            </tr>
-                            <tr class="table-data">
-                                <td>Alexandra Primary Schhol</td>
-                                <td>Primary</td>
-                            </tr>
+                            @foreach ($fabSchoolList as $key => $fabSchool)
+                                <tr class="table-data">
+                                    <td>{{ $fabSchool->name_txt }}</td>
+                                    <td>
+                                        @if ($fabSchool->contactSchoolId == null || $fabSchool->contactSchoolId == '')
+                                            No Contact
+                                        @else
+                                            {{ date('d-m-Y', strtotime($fabSchool->lastContact_dte)) }}
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

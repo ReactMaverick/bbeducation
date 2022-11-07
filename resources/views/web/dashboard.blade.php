@@ -9,13 +9,14 @@
                         <div class="date-sec">
                             <span>Week Beginning</span>
                             <div class="date-text">
-                                <i class="fa-solid fa-caret-left"></i>
-                                <h2>{{ date('D d M Y', strtotime($weekStartDate)) }}</h2><i class="fa-solid fa-caret-right"></i>
+                                <a href="{{ URL::to('/dashboard?date='.date('Y-m-d', strtotime($weekStartDate .' -7 days')) ) }}"><i class="fa-solid fa-caret-left"></i></a>
+                                <h2>{{ date('D d M Y', strtotime($weekStartDate)) }}</h2>
+                                <a href="{{ URL::to('/dashboard?date='.date('Y-m-d', strtotime($weekStartDate .' +7 days')) ) }}"><i class="fa-solid fa-caret-right"></i></a>
                             </div>
                         </div>
                         <div class="sidebar-sec">
                             <div class="sidebar-data">
-                                <h2>211</h2>
+                                <h2>{{ number_format((float)$sideBarData[0]->daysThisWeek, 1, '.', '') }}</h2>
                             </div>
                             <div class="sidebar-sec-text">
                                 <span>Days this Week</span>
@@ -24,7 +25,7 @@
 
                         <div class="sidebar-sec">
                             <div class="sidebar-data2">
-                                <h2>43</h2>
+                                <h2>{{ $sideBarData[0]->teachersWorking }}</h2>
                             </div>
                             <div class="sidebar-sec-text">
                                 <span>Teachers Working</span>
@@ -33,7 +34,7 @@
 
                         <div class="sidebar-sec">
                             <div class="sidebar-data3">
-                                <h2>19</h2>
+                                <h2>{{ $sideBarData[0]->schoolsUsing }}</h2>
                             </div>
                             <div class="sidebar-sec-text">
                                 <span>Schools Using</span>
@@ -41,7 +42,7 @@
                         </div>
                         <div class="price-sec">
                             <span>Predicted GP (this week)</span>
-                            <h2>&#163 8,708.94</h2>
+                            <h2>&#163 {{ number_format((float)$sideBarData[0]->predictedGP, 1, '.', '') }}</h2>
                             <span>Billed That Week</span>
                             <h2>&#163 0.00</h2>
                             <span>Invoices This Week</span>
@@ -70,15 +71,11 @@
                                 <tr class="table-data">
                                     <td>{{ $Assignment->schooleName }}</td>
                                     <td>
-                                        @if ($Assignment->status_int == 3)
-                                            Complete
-                                        @else
-                                            --
-                                        @endif
+                                        {{ $Assignment->assignmentStatus }}
                                     </td>
-                                    <td>{{ $Assignment->positionAppliedFor_txt }}</td>
+                                    <td>{{ $Assignment->teacherProfession }}</td>
                                     <td>{{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}</td>
-                                    <td>{{ $Assignment->totalDay }} Days</td>
+                                    <td>{{ $Assignment->daysThisWeek }} Days</td>
                                 </tr>
                             @endforeach
                         </tbody>
