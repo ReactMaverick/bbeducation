@@ -12,6 +12,6 @@ class ManagementController extends Controller
         $title = array('pageTitle' => "Management");
         $headerTitle = "Management";
 
-        return view("web.management", ['title' => $title, 'headerTitle' => $headerTitle]);
+        return view("web.management.index", ['title' => $title, 'headerTitle' => $headerTitle]);
     }
 }

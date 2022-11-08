@@ -38,7 +38,7 @@ class SchoolController extends Controller
                 ->get();
             // dd($fabSchoolList);
 
-            return view("web.school", ['title' => $title, 'headerTitle' => $headerTitle, 'fabSchoolList' => $fabSchoolList]);
+            return view("web.school.index", ['title' => $title, 'headerTitle' => $headerTitle, 'fabSchoolList' => $fabSchoolList]);
         } else {
             return redirect()->intended('/');
         }

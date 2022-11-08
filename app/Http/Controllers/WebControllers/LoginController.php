@@ -72,7 +72,7 @@ class LoginController extends Controller
             $title = array('pageTitle' => "Profile");
             $headerTitle = "Profile";
 
-            return view("web.profile", ['title' => $title, 'headerTitle' => $headerTitle]);
+            return view("web.user.profile", ['title' => $title, 'headerTitle' => $headerTitle]);
         } else {
             return redirect()->intended('/');
         }
