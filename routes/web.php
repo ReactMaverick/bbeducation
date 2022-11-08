@@ -42,6 +42,7 @@ Route::get('/profile', [LoginController::class, 'profile']);
 Route::get('/dashboard', [HomeController::class, 'dashboard']);
 
 Route::get('/assignments', [AssignmentController::class, 'assignments']);
+Route::get('/assignment-details', [AssignmentController::class, 'assignmentDetails']);
 
 Route::get('/teachers', [TeacherController::class, 'teachers']);
 

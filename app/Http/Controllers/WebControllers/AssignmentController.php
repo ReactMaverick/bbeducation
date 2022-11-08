@@ -54,7 +54,21 @@ class AssignmentController extends Controller
                 ->groupBy('tbl_asn.asn_id')
                 ->get();
 
-            return view("web.assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'assignmentList' => $assignmentList]);
+            return view("web.assignment.index", ['title' => $title, 'headerTitle' => $headerTitle, 'assignmentList' => $assignmentList]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function assignmentDetails(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Assignments Detail");
+            $headerTitle = "Assignments";
+            $company_id = $webUserLoginData->company_id;
+
+            return view("web.assignment.assignment_detail", ['title' => $title, 'headerTitle' => $headerTitle]);
         } else {
             return redirect()->intended('/');
         }
