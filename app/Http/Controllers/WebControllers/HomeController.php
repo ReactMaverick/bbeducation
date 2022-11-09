@@ -48,8 +48,8 @@ class HomeController extends Controller
                 ->select('tbl_asn.*', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'), DB::raw('SUM((tbl_asnItem.charge_dec - tbl_asnItem.cost_dec) * dayPercent_dec) AS predictedGP'), DB::raw('COUNT(DISTINCT tbl_asn.teacher_id) AS teachersWorking'), DB::raw('COUNT(DISTINCT tbl_asn.school_id) AS schoolsUsing'), 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession')
                 ->where('tbl_asn.status_int', 3)
                 ->where('tbl_asn.company_id', $company_id)
-                ->whereDate('tbl_asnItem.asnDate_dte', '>=', $weekStartDate)
-                ->whereDate('tbl_asnItem.asnDate_dte', '<=', $plusFiveDate)
+                // ->whereDate('tbl_asnItem.asnDate_dte', '>=', $weekStartDate)
+                // ->whereDate('tbl_asnItem.asnDate_dte', '<=', $plusFiveDate)
                 ->groupBy('tbl_asn.asn_id')
                 ->get();
             $sideBarData = DB::table('tbl_asn')
@@ -60,8 +60,8 @@ class HomeController extends Controller
                 ->select(DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'), DB::raw('SUM((tbl_asnItem.charge_dec - tbl_asnItem.cost_dec) * dayPercent_dec) AS predictedGP'), DB::raw('COUNT(DISTINCT tbl_asn.teacher_id) AS teachersWorking'), DB::raw('COUNT(DISTINCT tbl_asn.school_id) AS schoolsUsing'))
                 ->where('tbl_asn.status_int', 3)
                 ->where('tbl_asn.company_id', $company_id)
-                ->whereDate('tbl_asnItem.asnDate_dte', '>=', $weekStartDate)
-                ->whereDate('tbl_asnItem.asnDate_dte', '<=', $plusFiveDate)
+                // ->whereDate('tbl_asnItem.asnDate_dte', '>=', $weekStartDate)
+                // ->whereDate('tbl_asnItem.asnDate_dte', '<=', $plusFiveDate)
                 ->get();
             // dd($sideBarData);
             return view("web.dashboard", ['title' => $title, 'latestAssignment' => $latestAssignment, 'headerTitle' => $headerTitle, 'weekStartDate' => $weekStartDate, 'sideBarData' => $sideBarData]);

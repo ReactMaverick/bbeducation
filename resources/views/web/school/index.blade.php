@@ -10,7 +10,7 @@
                     </div>
                     <div class="teacher-left-sec">
                         <div class="about-teacher">
-                            <a href="#"> <i class="fa-solid fa-magnifying-glass"></i>
+                            <a href="{{ URL::to('/school-search') }}"> <i class="fa-solid fa-magnifying-glass"></i>
                                 <p>Find School</p>
                             </a>
                         </div>

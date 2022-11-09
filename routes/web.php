@@ -47,6 +47,7 @@ Route::get('/assignment-details', [AssignmentController::class, 'assignmentDetai
 Route::get('/teachers', [TeacherController::class, 'teachers']);
 
 Route::get('/schools', [SchoolController::class, 'schools']);
+Route::get('/school-search', [SchoolController::class, 'schoolSearch']);
 
 Route::get('/finance', [FinanceController::class, 'finance']);
 
