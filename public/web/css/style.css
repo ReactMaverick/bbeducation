@@ -938,15 +938,15 @@ table td {
 }
 
 .days-slider-sec i {
-    font-size: 18px;
-    margin-top: 5px;
+    font-size: 25px;
+    /* margin-top: 5px; */
 }
 
 .total-days-text {
     display: flex;
     /* justify-content: space-between;
     align-items: center; */
-    width: 75%;
+    /* width: 75%; */
 }
 
 .total-days-text span {
@@ -974,4 +974,8 @@ table td {
     width: 90%;
     display: flex;
     justify-content: center;
+}
+
+.date-section {
+    width: 75%;
 }

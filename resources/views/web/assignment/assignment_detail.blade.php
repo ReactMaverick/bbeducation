@@ -162,36 +162,41 @@
                             <i class="fa-regular fa-calendar-days"></i>
                         </div>
 
-                        <div class="total-days-text">
-                            <div class="assignment-date">
-                                <span>1.41</span>
+                        <div class="date-section">
+                            <div class="total-days-text">
+                                <div class="assignment-date">
+                                    <span>1.41</span>
+                                </div>
+                                <div class="assignment-date-text">
+                                    <span>Total Days: 2.41</span>
+                                </div>
+                                <div class="assignment-date">
+                                    <span>1</span>
+                                </div>
                             </div>
-                            <div class="assignment-date-text">
-                                <span>Total Days: 2.41</span>
-                            </div>
-                            <div class="assignment-date">
-                                <span>1</span>
+                            <div class="total-days-text">
+                                <div class="assignment-date">
+                                    <i class="fa-solid fa-caret-left"></i>
+                                </div>
+                                <div class="assignment-date-text">
+                                    <span>10 October 2022</span>
+                                </div>
+                                <div class="assignment-date">
+                                    <i class="fa-solid fa-caret-right"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="total-days-section">
+                    <!-- <div class="total-days-section">
                         <div class="days-slider-sec">
-                            <!-- <i class="fa-regular fa-calendar-days"></i> -->
+                            <i class="fa-regular fa-calendar-days"></i>
                         </div>
 
-                        <div class="total-days-text">
-                            <div class="assignment-date">
-                                <i class="fa-solid fa-caret-left"></i>
-                            </div>
-                            <div class="assignment-date-text">
-                                <span>10 October 2022</span>
-                            </div>
-                            <div class="assignment-date">
-                                <i class="fa-solid fa-caret-right"></i>
-                            </div>
+                        
+                            
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
 
