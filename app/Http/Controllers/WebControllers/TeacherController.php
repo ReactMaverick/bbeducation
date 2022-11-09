@@ -37,7 +37,7 @@ class TeacherController extends Controller
                 })
                 ->get();
             // dd($fabTeacherList);
-            return view("web.teacher", ['title' => $title, 'headerTitle' => $headerTitle, 'fabTeacherList' => $fabTeacherList]);
+            return view("web.teacher.index", ['title' => $title, 'headerTitle' => $headerTitle, 'fabTeacherList' => $fabTeacherList]);
         } else {
             return redirect()->intended('/');
         }
