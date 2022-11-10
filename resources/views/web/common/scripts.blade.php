@@ -1,4 +1,15 @@
 <script>
+    $(document).ready(function() {
+        $('#advanceSearchDiv').css('display', 'none');
+    });
+
+    $(document).on('click', '#advanceSearch', function() {
+        if ($("#advanceSearchDiv").is(":visible")) {
+            $('#advanceSearchDiv').css('display', 'none');
+        } else {
+            $('#advanceSearchDiv').css('display', 'block');
+        }
+    });
 
     /******* field validate 1 ********/
     $(document).on('submit', '.form-validate', function(e) {

@@ -27,12 +27,12 @@
                     <table class="table assignment-page-table" id="myTable">
                         <thead>
                             <tr class="table-heading">
-                                <th>School For</th>
-                                <th>Year Group</th>
-                                <th>Status</th>
-                                <th>Profession</th>
+                                <th>Name</th>
+                                <th>Age Range</th>
                                 <th>Type</th>
+                                <th>LA/Borough</th>
                                 <th>Days</th>
+                                <th>Last Contact</th>
                             </tr>
                         </thead>
                         <tbody class="table-body-sec">
@@ -49,10 +49,10 @@
                 </div>
                 <div class="col-md-3 advance-search-col">
                     <div class="search-form-button">
-                        <button>Advance Search</button>
+                        <button id="advanceSearch" >Advance Search</button>
                     </div>
 
-                    <div class="advance-search-filter-section">
+                    <div class="advance-search-filter-section" id="advanceSearchDiv" >
                         <div class="form-group filter-form-group">
                             <label for="sel1">Age Range</label>
                             <select class="form-control" id="sel1">
