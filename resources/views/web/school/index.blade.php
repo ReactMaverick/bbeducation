@@ -28,7 +28,7 @@
                     <table class="table teacher-page-table" id="myTable">
                         <thead>
                             <tr class="table-heading">
-                                <th><i class="fa-solid fa-star">Favourites</i></th>
+                                <th><i class="fa-solid fa-star"><span>Favourites</span></i></th>
                                 <th></th>
                             </tr>
                         </thead>

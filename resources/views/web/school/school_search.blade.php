@@ -90,7 +90,7 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>Before
+                                        <input type="radio" class="form-check-input" >Before
                                     </label>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>After
+                                        <input type="radio" class="form-check-input" >After
                                     </label>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>Before
+                                        <input type="radio" class="form-check-input" >Before
                                     </label>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>After
+                                        <input type="radio" class="form-check-input" >After
                                     </label>
                                 </div>
                             </div>
@@ -134,6 +134,8 @@
                             <input type="email" class="form-control" id="exampleInputEmail1"
                                 aria-describedby="emailHelp">
                         </div>
+
+                        <button type="submit" class="btn btn-primary save-result-btn schoolSearchBtn">Search</button>
 
                         <button type="submit" class="btn btn-primary save-result-btn">Save Results as Mailshot List</button>
 
@@ -150,7 +152,12 @@
 
 <script>
 $(document).ready(function() {
-    $('#myTable').DataTable();
+    $('#myTable').DataTable({
+        // paging: false,
+        // ordering: false,
+        info: false,
+        searching: false
+    });
 });
 </script>
 @endsection
