@@ -90,7 +90,7 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>Before
+                                        <input type="radio" class="form-check-input">Before
                                     </label>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>After
+                                        <input type="radio" class="form-check-input">After
                                     </label>
                                 </div>
                             </div>
@@ -110,14 +110,14 @@
 
 
                         <div class="last-contact-text">
-                            <span>Last Contact</span>
+                            <span>Days Booked</span>
                         </div>
 
                         <div class="row filter-row">
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>Before
+                                        <input type="radio" class="form-check-input">More than
                                     </label>
                                 </div>
                             </div>
@@ -125,7 +125,7 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" disabled>After
+                                        <input type="radio" class="form-check-input">Less than
                                     </label>
                                 </div>
                             </div>
