@@ -106,6 +106,64 @@
                         <h2>Details</h2>
                         <a href="#"><i class="fa-solid fa-pencil"></i></a>
                     </div>
+
+                    <div class="about-school-section">
+                        <div class="school-name-section">
+                            <div class="school-heading-text">
+                                <h2>School</h2>
+                            </div>
+                            <div class="school-name-text">
+                                <p>Barnet Virtual School</p>
+                            </div>
+                        </div>
+                        <div class="school-name-section">
+                            <div class="school-heading-text">
+                                <h2>Address</h2>
+                            </div>
+                            <div class="school-name-text">
+                                <p>PO100071028</p>
+                                <p>London Barnet Borough House</p>
+                                <p>2 Bristol Avenue</p>
+                                <p>Colindale</p>
+                                <p>NW94EW</p>
+                            </div>
+                        </div>
+                        <div class="school-name-section">
+                            <div class="school-heading-text">
+                                <h2>Grid Refs</h2>
+                            </div>
+                            <div class="grid-refs-sec">
+                                <div class="grid-refs-text1">
+                                    <p>Barnet Virtual School</p>
+                                </div>
+
+                                <div class="grid-refs-text1">
+                                    <p>Barnet Virtual School</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="school-name-section">
+                            <div class="school-heading-text">
+                                <h2>Website</h2>
+                            </div>
+                            <div class="school-name-text">
+                                <p>Barnet Virtual School</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-heading">
+                            <div class="contact-heading-text">
+                                <h2>Contacts</h2>
+                            </div>
+                            <div class="contact-icon-sec">
+                                <a href="#"><i class="fa-solid fa-xmark"></i></i></a>
+                                <a href="#"><i class="fa-solid fa-plus"></i></a>
+                                <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="school-details-second-sec">
