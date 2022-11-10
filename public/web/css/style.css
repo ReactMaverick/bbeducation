@@ -1412,6 +1412,8 @@ table td {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #dddddd;
 }
 
 .details-heading h2 {
@@ -1425,6 +1427,86 @@ table td {
     color: #000;
 }
 
+.school-name-section {
+    display: flex;
+    margin-top: 5px;
+    /* justify-content: space-between;
+    width: 60%; */
+}
+
+.school-name-section h2 {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.school-name-section p {
+    font-size: 12px;
+    color: #000;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+.school-heading-text {
+    width: 40%;
+}
+
+.school-name-text {
+    width: 60%;
+}
+
+.grid-refs-sec {
+    display: flex;
+    /* justify-content: space-between; */
+    width: 60%;
+}
+
+/* .grid-refs-text1 {
+    width: 40%;
+} */
+
+.grid-refs-text1 p {
+    font-size: 12px;
+    color: #000;
+    font-weight: 400;
+    margin-bottom: 0;
+    padding-right: 10px;
+}
+
+.contact-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0 7px 0;
+    border-bottom: 2px solid #dddddd;
+}
+
+.contact-heading-text {
+    width: 70%;
+}
+
+.contact-heading-text h2 {
+    font-size: 15px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.contact-icon-sec {
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contact-icon-sec i {
+    font-size: 25px;
+    color: #48a0dc;
+}
+
+.school-edit-icon {
+    font-size: 20px !important;
+    color: #000 !important;
+}
 
 
 
