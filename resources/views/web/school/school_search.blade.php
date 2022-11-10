@@ -135,6 +135,8 @@
                                 aria-describedby="emailHelp">
                         </div>
 
+                        <button type="submit" class="btn btn-primary save-result-btn schoolSearchBtn">Search</button>
+
                         <button type="submit" class="btn btn-primary save-result-btn">Save Results as Mailshot List</button>
 
                     </div>
@@ -150,7 +152,12 @@
 
 <script>
 $(document).ready(function() {
-    $('#myTable').DataTable();
+    $('#myTable').DataTable({
+        // paging: false,
+        // ordering: false,
+        info: false,
+        searching: false
+    });
 });
 </script>
 @endsection
