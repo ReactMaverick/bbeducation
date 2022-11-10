@@ -25,27 +25,54 @@
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item @if ($headerTitle == 'Dashboard') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/dashboard') }}"><i class="fa-solid fa-house-chimney">Home</i></a>
+            <a class="nav-link" href="{{ URL::to('/dashboard') }}">
+                <i class="fa-solid fa-house-chimney">
+                    <span class="tab-section-text">Home</span>
+                </i>
+            </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Assignments') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/assignments') }}"><i class="fa-solid fa-id-card">assignments</i></a>
+            <a class="nav-link" href="{{ URL::to('/assignments') }}">
+                <i class="fa-solid fa-id-card">
+                <span class="tab-section-text">Assignments</span>
+                </i>
+            </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Teachers') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/teachers') }}"><i
-                    class="fa-solid fa-person-chalkboard">Teachers</i></a>
+            <a class="nav-link" href="{{ URL::to('/teachers') }}">
+                <i class="fa-solid fa-person-chalkboard">
+                    <span class="tab-section-text">Teachers</span>
+                </i>
+            </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Schools') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/schools') }}"><i class="fa-solid fa-school">Schools</i></a>
+            <a class="nav-link" href="{{ URL::to('/schools') }}">
+                <i class="fa-solid fa-school">
+                <span class="tab-section-text">Schools</span>
+                </i>
+            </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Finance') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/finance') }}"><i class="fa-solid fa-money-bills">Finance</i></a>
+            <a class="nav-link" href="{{ URL::to('/finance') }}">
+                <i class="fa-solid fa-money-bills">
+                <span class="tab-section-text">Finance</span>
+                </i>
+            </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Management') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/management') }}"><i class="fa-solid fa-person">Management</i></a>
+            <a class="nav-link" href="{{ URL::to('/management') }}">
+                <i class="fa-solid fa-person">
+                <span class="tab-section-text">Management</span>
+                </i>
+            </a>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-gear">Settings</i></a>
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-gear">
+                <span class="tab-section-text">Settings</span>
+                </i>
+            </a>
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{ URL::to('/profile') }}">Profile</a>
                 <!-- <div class="dropdown-divider"></div>
@@ -53,8 +80,12 @@
             </div>
         </li>
         <li class="nav-item @if ($headerTitle == 'Logout') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/logout') }}"><i
-                    class="fa-solid fa-arrow-right-from-bracket">Logout</i></a>
+            <a class="nav-link" href="{{ URL::to('/logout') }}">
+                <i
+                    class="fa-solid fa-arrow-right-from-bracket">
+                    <span class="tab-section-text">Logout</span>
+                    </i>
+                </a>
         </li>
     </ul>
 
