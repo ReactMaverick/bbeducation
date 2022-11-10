@@ -48,12 +48,27 @@ class SchoolController extends Controller
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
-            $title = array('pageTitle' => "Schools");
+            $title = array('pageTitle' => "School Search");
             $headerTitle = "Schools";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
             return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolDetail(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "School Detail");
+            $headerTitle = "Schools";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle]);
         } else {
             return redirect()->intended('/');
         }

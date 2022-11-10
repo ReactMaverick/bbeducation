@@ -34,7 +34,7 @@
                         </thead>
                         <tbody class="table-body-sec">
                             @foreach ($fabSchoolList as $key => $fabSchool)
-                                <tr class="table-data">
+                                <tr class="table-data" onclick="schoolDetail()">
                                     <td>{{ $fabSchool->name_txt }}</td>
                                     <td>
                                         @if ($fabSchool->contactSchoolId == null || $fabSchool->contactSchoolId == '')
@@ -59,5 +59,9 @@
         $(document).ready(function() {
             $('#myTable').DataTable();
         });
+
+        function schoolDetail(){
+            window.location.href = "{{ URL::to('/school-detail') }}";
+        }
     </script>
 @endsection
