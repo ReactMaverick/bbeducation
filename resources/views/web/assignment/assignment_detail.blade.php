@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="assignment-detail-page-section">
-    <div class="row">
+    <div class="row assignment-detail-row">
         <div class="col-md-2 sidebar-col">
             <div class="assignment-detail-sidebar-sec">
                 <div class="sidebar-top-text">
