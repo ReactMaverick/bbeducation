@@ -90,7 +90,8 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" >Before
+                                        <input type="radio" class="form-check-input">
+                                        <span class="radio-text">Before</span>
                                     </label>
                                 </div>
                             </div>
@@ -98,7 +99,8 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" >After
+                                        <input type="radio" class="form-check-input">
+                                        <span class="radio-text">After</span>
                                     </label>
                                 </div>
                             </div>
@@ -110,14 +112,15 @@
 
 
                         <div class="last-contact-text">
-                            <span>Last Contact</span>
+                            <span>Days Booked</span>
                         </div>
 
                         <div class="row filter-row">
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" >Before
+                                        <input type="radio" class="form-check-input">
+                                        <span class="radio-text">More than</span>
                                     </label>
                                 </div>
                             </div>
@@ -125,7 +128,8 @@
                             <div class="col-md-6">
                                 <div class="form-check filter-radio-field">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" >After
+                                        <input type="radio" class="form-check-input">
+                                        <span class="radio-text">Less than</span>
                                     </label>
                                 </div>
                             </div>
@@ -135,9 +139,14 @@
                                 aria-describedby="emailHelp">
                         </div>
 
-                        <button type="submit" class="btn btn-primary save-result-btn schoolSearchBtn">Search</button>
+                        <div class="school-search-btn-section">
+                            <button type="submit"
+                                class="btn btn-primary save-result-btn schoolSearchBtn">Search</button>
 
-                        <button type="submit" class="btn btn-primary save-result-btn">Save Results as Mailshot List</button>
+                            <button type="submit" class="btn btn-primary save-result-btn">Save Results as Mailshot
+                                List</button>
+                        </div>
+
 
                     </div>
 
