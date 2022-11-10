@@ -6,6 +6,7 @@
 
 h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,strong,div,i {
     font-family: 'poppins';
+    /* letter-spacing: 0.6px; */
 }
 
 .login-section {
@@ -389,13 +390,18 @@ h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,
     width: 75%;
 }
 
+.table-heading {
+    outline: 1px solid #afabab;
+}
+
 .table-heading th {
     border-bottom: 0 !important;
     border-top: 0 !important;
-    font-size: 14px;
+    font-size: 13px;
     color: #3c3c3c;
     font-weight: 400;
     padding: 0 0 10px 0;
+    width: auto !important;
 
 }
 
@@ -458,12 +464,16 @@ h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,
 
 /* ===============ASSIGNMENT PAGE=========== */
 
+.dataTables_filter input {
+    border: 1px solid #afabab;
+}
+
 .assignment-page-table {
     width: 100%;
 }
 
 .assignment-tab-content {
-    margin-top: 16px;
+    margin: 16px 0;
     padding: 0 13px;
 }
 
@@ -1200,22 +1210,23 @@ table td {
 .school-search-field {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
 }
 
 .school-search-field input {
     width: 65%;
-    border-radius: 0;
-    height: 25px;
-    border-color: #000;
+    border-radius: 5px;
+    height: 35px;
+    border-color: #afabab;
 }
 
 .school-search-btn {
     font-size: 12px;
     color: #000;
     background-color: #dddddd;
-    border: 1px solid #000;
-    border-radius: 0;
-    height: 25px;
+    border: 1px solid #afabab;
+    border-radius: 5px;
+    height: 35px;
     padding: 0px;
     width: 20%;
     margin-left: 10px;
@@ -1240,9 +1251,9 @@ table td {
 }
 
 .school-search-field i {
-    font-size: 18px;
+    font-size: 20px;
     color: #48a0dc;
-    margin-left: 6px;
+    margin-left: 15px;
 }
 
 .advance-search-col {
@@ -1252,7 +1263,7 @@ table td {
 .search-form-button button {
     font-size: 13px;
     width: 100%;
-    border: 1px solid #000;
+    border: 1px solid #afabab;
     background-color: #fff;
     border-radius: 5px;
     padding: 5px 0;
@@ -1260,7 +1271,7 @@ table td {
 
 .advance-search-filter-section {
     padding: 15px;
-    background-color: #ff8200;
+    background-color: #ff8200d6;
     margin-top: 10px;
 }
 
@@ -1277,8 +1288,8 @@ table td {
 .filter-form-group select {
     height: 35px;
     padding: 0px 5px;
-    border-radius: 0;
-    border: 1px solid #000;
+    border-radius: 5px;
+    border: 1px solid #afabab;
 }
 
 .last-contact-text span {
@@ -1300,9 +1311,13 @@ table td {
 .field-input-field input {
     height: 35px;
     padding: 0px 5px;
-    border-radius: 0;
-    border: 1px solid #000;
+    border-radius: 5px;
+    border: 1px solid #afabab;
     margin: 5px 0;
+}
+
+.radio-text {
+    line-height: 23px;
 }
 
 .filter-row {
@@ -1310,12 +1325,12 @@ table td {
 }
 
 .save-result-btn {
-    width: 100%;
-    background-color: #70ad47;
+    width: 72%;
+    background-color: #48a0dc;
     padding: 8px 0;
     border: none;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 400;
     color: #fff;
 }
 
@@ -1331,4 +1346,88 @@ table td {
 .save-result-btn:focus {
     background-color: #70ad47 !important;
     box-shadow: none;
+}
+
+.school-search-btn-section {
+    display: flex;
+    margin-top: 10px;
+}
+
+.schoolSearchBtn {
+    width: 28%;
+    background-color: #70ad47;
+    margin-right: 10px;
+}
+
+/* ===============SCHOOL DETAIL========== */
+
+.school-detail-sec {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.school-detail-sec h2 {
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    margin: 15px 0 50px 0;
+}
+
+.school-detail-sec i {
+    font-size: 30px;
+    color: #3e3e3e;
+    margin-bottom: 25px;
+}
+
+.school-detail-sec span {
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 13px;
+}
+
+.topbar-star-icon {
+    color: #48a0dc !important;
+}
+
+.topbar-text {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.school-detail-right-sec {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    padding: 16px 10px;
+}
+
+.school-details-first-sec {
+    width: 40%;
+}
+
+.details-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details-heading h2 {
+    font-size: 15px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.details-heading i {
+    font-size: 15px;
+    color: #000;
+}
+
+
+
+
+.school-details-second-sec {
+    width: 40%;
 }
