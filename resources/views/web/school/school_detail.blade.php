@@ -158,15 +158,93 @@
                                 <h2>Contacts</h2>
                             </div>
                             <div class="contact-icon-sec">
-                                <a href="#"><i class="fa-solid fa-xmark"></i></i></a>
+                                <a href="#"><i class="fa-solid fa-xmark"></i></a>
                                 <a href="#"><i class="fa-solid fa-plus"></i></a>
                                 <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
                             </div>
                         </div>
                     </div>
+
+                    <table class="table school-detail-page-table" id="myTable">
+                        <thead>
+                            <tr class="school-detail-table-heading">
+                                <th>Job Role</th>
+                                <th>Name</th>
+                                <th>T/S</th>
+                                <th>Vet.</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body-sec">
+                            <tr class="school-detail-table-data">
+                                <td>xbx</td>
+                                <td>sgsfg</td>
+                                <td>fffs</td>
+                                <td>xdgsg</td>
+                            </tr>
+
+                            <tr class="school-detail-table-data">
+                                <td>xbx</td>
+                                <td>sgsfg</td>
+                                <td>fffs</td>
+                                <td>xdgsg</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="school-details-second-sec">
+                    <div>
+                        <div class="details-heading">
+                            <h2>Last Contact</h2>
+                        </div>
+
+                        <!-- <div class="about-school-section"> -->
+                        <div class="school-name-section">
+                            <div class="school-detail-last-contact-text">
+                                <p>We have no record of previous contact with this school.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="contact-heading">
+                            <div class="contact-heading-text">
+                                <h2>Contact Items</h2>
+                            </div>
+                            <div class="contact-icon-sec">
+                                <a href="#"><i class="fa-solid fa-mobile-screen"></i></a>
+                                <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                                <a href="#"><i class="fa-solid fa-xmark"></i></a>
+                                <a href="#"><i class="fa-solid fa-plus"></i></a>
+                                <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                            </div>
+                        </div>
+                        <!-- </div> -->
+
+
+
+                        <table class="table school-detail-page-table" id="myTable">
+                            <thead>
+                                <tr class="school-detail-table-heading">
+                                    <th>Person</th>
+                                    <th>Type</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body-sec">
+                                <tr class="school-detail-table-data">
+                                    <td>School Main</td>
+                                    <td>School Main</td>
+                                    <td>020 8359 7744</td>
+                                </tr>
+
+                                <tr class="school-detail-table-data">
+                                    <td>School Main</td>
+                                    <td>School Main</td>
+                                    <td>020 8359 7744</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
             </div>
