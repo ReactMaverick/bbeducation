@@ -1401,7 +1401,7 @@ table td {
     display: flex;
     /* align-items: center; */
     justify-content: space-between;
-    padding: 50px;
+    padding: 35px;
 }
 
 .school-details-first-sec {
@@ -1568,7 +1568,7 @@ table td {
 }
 
 .school-assignment-sec {
-    padding: 16px 13px;
+    padding: 35px 13px;
 }
 
 .school-assignment-right-sec {
@@ -1581,6 +1581,7 @@ table td {
 .school-assignment-contact-heading-text {
     width: 100%;
     border-bottom: 2px solid #dddddd;
+    padding-bottom: 5px;
 }
 
 .school-assignment-contact-heading-text h2 {
@@ -1608,4 +1609,100 @@ table td {
 
 .assignment-detail-sidebar-sec {
     height: 100vh;
+}
+
+/* ================SCHOOL CONTACT============ */
+
+.contact-history-heading-section {
+    display: flex;
+    justify-content: space-between;
+    width: 35%;
+    border-bottom: 2px solid #dddddd;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.contact-history-heading-section h2 {
+    font-size: 18px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.contact-history-heading-section i {
+    font-size: 25px;
+    color: #48a0dc;
+    margin-left: 20px;
+}
+
+/* ============SCHOOL FINANCE============= */
+
+.school-finance-sec {
+    display: flex;
+    align-items: center;
+    width: 70%;
+    border-bottom: 2px solid #dddddd;
+    margin-bottom: 10px;
+}
+
+.school-finance-contact-heading-text {
+    width: 20%;
+}
+
+.school-finance-contact-heading-text h2 {
+    font-size: 18px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.paid-check {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    width: 13%;
+}
+
+.paid-check label {
+    font-size: 12px;
+    color: #afabab;
+    margin: 0 6px 0 0;
+}
+
+.payment-method-type {
+    width: 30%;
+    margin: 0 0 0 10px;;
+}
+
+.payment-method-type label {
+    font-size: 12px;
+    color: #7f7f7f;
+    margin-bottom: 8px;
+}
+
+.payment-method-type select {
+    font-size: 12px;
+    padding: 0;
+    height: 28px;
+    border-radius: 0;
+    margin-bottom: 8px;
+}
+
+.school-finance-contact-heading {
+    width: 37%;
+}
+
+.school-finance-contact-icon-sec {
+    display: flex;
+    /* width: 100%; */
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.school-finance-contact-icon-sec i {
+    font-size: 25px;
+    color: #48a0dc;
+    margin-left: 16px;
+}
+
+.school-finance-table-section {
+    width: 70%;
 }

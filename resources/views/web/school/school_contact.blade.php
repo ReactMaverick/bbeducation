@@ -29,26 +29,30 @@
 
 
                     <div class="school-assignment-section">
-                        <div class="school-assignment-contact-heading-text">
-                            <h2>School Contact</h2>
+                        <div class="contact-history-heading-section">
+                            <h2>Contact History</h2>
+                            <a href="#"><i class="fa-solid fa-plus"></i></a>
                         </div>
-                        <div class="school-assignment-contact-heading">
+                        <!-- <div class="school-assignment-contact-heading">
 
                             <div class="school-assignment-contact-icon-sec">
                                 <a href="#"><i class="fa-solid fa-xmark"></i></a>
                                 <a href="#"><i class="fa-solid fa-plus"></i></a>
                                 <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
                             </div>
-                        </div>
+                        </div> -->
 
 
 
                         <table class="table school-detail-page-table" id="myTable">
                             <thead>
                                 <tr class="school-detail-table-heading">
-                                    <th>Person</th>
-                                    <th>Type</th>
-                                    <th>Details</th>
+                                    <th>Contact Notes</th>
+                                    <th>Spoke To</th>
+                                    <th>Contact By</th>
+                                    <th>Contact On</th>
+                                    <th>Method</th>
+                                    <th>CB Due</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
@@ -56,11 +60,17 @@
                                     <td>School Main</td>
                                     <td>School Main</td>
                                     <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
                                 </tr>
 
                                 <tr class="school-detail-table-data">
                                     <td>School Main</td>
                                     <td>School Main</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
                                     <td>020 8359 7744</td>
                                 </tr>
                             </tbody>
@@ -75,7 +85,7 @@
                                     <h2>29</h2>
                                 </div>
                                 <div class="sidebar-sec-text">
-                                    <span>Completed Assignments</span>
+                                    <span>Total Contacts</span>
                                 </div>
                             </div>
                             <div class="sidebar-sec">
@@ -83,7 +93,7 @@
                                     <h2>4</h2>
                                 </div>
                                 <div class="sidebar-sec-text">
-                                    <span>Total Days</span>
+                                    <span>Callbacks Due</span>
                                 </div>
                             </div>
 
