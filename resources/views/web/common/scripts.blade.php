@@ -1,14 +1,8 @@
+<script src="{!! asset('plugins/select2/select2.full.min.js') !!}"></script>
+
 <script>
     $(document).ready(function() {
-        $('#advanceSearchDiv').css('display', 'none');
-    });
-
-    $(document).on('click', '#advanceSearch', function() {
-        if ($("#advanceSearchDiv").is(":visible")) {
-            $('#advanceSearchDiv').css('display', 'none');
-        } else {
-            $('#advanceSearchDiv').css('display', 'block');
-        }
+        $(".select2").select2();
     });
 
     /******* field validate 1 ********/

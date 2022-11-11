@@ -53,10 +53,56 @@ class SchoolController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle]);
+            $ageRangeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 28)
+                ->get();
+            $schoolTypeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 30)
+                ->get();
+            $laBoroughList = DB::table('tbl_localAuthority')
+                ->select('tbl_localAuthority.*')
+                ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
+                ->orderBy('laName_txt', 'ASC')
+                ->get();
+            $schoolList = array();
+
+            return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle, 'ageRangeList' => $ageRangeList, 'schoolTypeList' => $schoolTypeList, 'laBoroughList' => $laBoroughList, 'schoolList' => $schoolList]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function schoolSearchPost(Request $request)
+    {
+        dd($request->all());
+        // $webUserLoginData = Session::get('webUserLoginData');
+        // if ($webUserLoginData) {
+        //     $title = array('pageTitle' => "School Search");
+        //     $headerTitle = "Schools";
+        //     $company_id = $webUserLoginData->company_id;
+        //     $user_id = $webUserLoginData->user_id;
+
+        //     $ageRangeList = DB::table('tbl_description')
+        //         ->select('tbl_description.*')
+        //         ->where('tbl_description.descriptionGroup_int', 28)
+        //         ->get();
+        //     $schoolTypeList = DB::table('tbl_description')
+        //         ->select('tbl_description.*')
+        //         ->where('tbl_description.descriptionGroup_int', 30)
+        //         ->get();
+        //     $laBoroughList = DB::table('tbl_localAuthority')
+        //         ->select('tbl_localAuthority.*')
+        //         ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
+        //         ->orderBy('laName_txt', 'ASC')
+        //         ->get();
+        //     $schoolList = array();
+
+        //     return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle, 'ageRangeList' => $ageRangeList, 'schoolTypeList' => $schoolTypeList, 'laBoroughList' => $laBoroughList, 'schoolList' => $schoolList]);
+        // } else {
+        //     return redirect()->intended('/');
+        // }
     }
 
     public function schoolDetail(Request $request)
@@ -73,5 +119,4 @@ class SchoolController extends Controller
             return redirect()->intended('/');
         }
     }
-    
 }
