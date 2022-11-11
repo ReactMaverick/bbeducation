@@ -76,33 +76,44 @@ class SchoolController extends Controller
 
     public function schoolSearchPost(Request $request)
     {
-        dd($request->all());
-        // $webUserLoginData = Session::get('webUserLoginData');
-        // if ($webUserLoginData) {
-        //     $title = array('pageTitle' => "School Search");
-        //     $headerTitle = "Schools";
-        //     $company_id = $webUserLoginData->company_id;
-        //     $user_id = $webUserLoginData->user_id;
+        // dd($request->all());
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "School Search");
+            $headerTitle = "Schools";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
 
-        //     $ageRangeList = DB::table('tbl_description')
-        //         ->select('tbl_description.*')
-        //         ->where('tbl_description.descriptionGroup_int', 28)
-        //         ->get();
-        //     $schoolTypeList = DB::table('tbl_description')
-        //         ->select('tbl_description.*')
-        //         ->where('tbl_description.descriptionGroup_int', 30)
-        //         ->get();
-        //     $laBoroughList = DB::table('tbl_localAuthority')
-        //         ->select('tbl_localAuthority.*')
-        //         ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
-        //         ->orderBy('laName_txt', 'ASC')
-        //         ->get();
-        //     $schoolList = array();
+            $ageRangeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 28)
+                ->get();
+            $schoolTypeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 30)
+                ->get();
+            $laBoroughList = DB::table('tbl_localAuthority')
+                ->select('tbl_localAuthority.*')
+                ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
+                ->orderBy('laName_txt', 'ASC')
+                ->get();
+            $schoolList = DB::table('speaker_posts')->LeftJoin('users', 'users.id', '=', 'speaker_posts.eminent_speaker_id')
+                ->LeftJoin('image_categories', function ($join) {
+                    $join->on('image_categories.image_id', '=', 'users.image')
+                        ->where(function ($query) {
+                            $query->where('image_categories.image_type', '=', 'MEDIUM')
+                                ->where('image_categories.image_type', '!=', 'MEDIUM')
+                                ->orWhere('image_categories.image_type', '=', 'ACTUAL');
+                        });
+                })
+                ->select('speaker_posts.*', 'users.name', 'image_categories.path as image_path')
+                ->where('speaker_posts.speaker_posts_id', $id)
+                ->first();
 
-        //     return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle, 'ageRangeList' => $ageRangeList, 'schoolTypeList' => $schoolTypeList, 'laBoroughList' => $laBoroughList, 'schoolList' => $schoolList]);
-        // } else {
-        //     return redirect()->intended('/');
-        // }
+            return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle, 'ageRangeList' => $ageRangeList, 'schoolTypeList' => $schoolTypeList, 'laBoroughList' => $laBoroughList, 'schoolList' => $schoolList]);
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function schoolDetail(Request $request)
@@ -120,6 +131,21 @@ class SchoolController extends Controller
         }
     }
 
+    public function schoolContact(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "School Contact");
+            $headerTitle = "Schools";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            return view("web.school.school_contact", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
     public function schoolAssignment(Request $request)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -130,6 +156,21 @@ class SchoolController extends Controller
             $user_id = $webUserLoginData->user_id;
 
             return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolFinance(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "School Finance");
+            $headerTitle = "Schools";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle]);
         } else {
             return redirect()->intended('/');
         }
