@@ -6,9 +6,6 @@
             <div class="assignment-section-col">
                 <div class="assignment-page-sec">
                     <h2>School Search</h2>
-                    <!-- <div class="checkbox-field">
-                                                                        <label for="vehicle1">Include All</label><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                                                                    </div> -->
                 </div>
 
                 <div class="row">
@@ -55,6 +52,7 @@
                         </div>
                         <form action="{{ url('/schoolSearchPost') }}" method="post" id="advanceSearchForm">
                             @csrf
+                            <input type="hidden" name="search_input" id="search_input">
                             <div class="advance-search-filter-section" id="advanceSearchDiv">
 
                                 <div class="form-group filter-form-group">
@@ -117,7 +115,7 @@
                                     </div>
                                 </div>
                                 <div class="field-input-field">
-                                    <input type="date" class="form-control" id="">
+                                    <input type="date" class="form-control" name="lasContactDate" id="lasContactDate">
                                 </div>
 
 
@@ -147,7 +145,7 @@
                                     </div>
                                 </div>
                                 <div class="field-input-field">
-                                    <input type="number" class="form-control" id="">
+                                    <input type="number" class="form-control" name="booked_day" id="booked_day">
                                 </div>
 
                                 <div class="school-search-btn-section">
@@ -185,6 +183,15 @@
         });
 
         $(document).on('click', '#advanceSearch', function() {
+            $('#search_input').val('');
+            $('#ageRangeId').val('');
+            $('#schoolTypeId').val('');
+            $('#laId').val('');
+            $('#lasContactDate').val('');
+            $('#booked_day').val('');
+            $('input[type=radio][name=lastContactRadio]').prop('checked', false);
+            $('input[type=radio][name=dayBookedRadio]').prop('checked', false);
+
             if ($("#advanceSearchDiv").is(":visible")) {
                 $('#advanceSearchDiv').css('display', 'none');
             } else {
@@ -192,8 +199,9 @@
             }
         });
 
-        $(document).on('click', '#advanceSearchBtn', function() {
-            $("#SearchForm").submit();
+        $(document).on('click', '#normalSearchBtn, #advanceSearchBtn', function() {
+            var searchKey = $('#searchKey').val();
+            $('#search_input').val(searchKey);
             $("#advanceSearchForm").submit();
         });
     </script>
