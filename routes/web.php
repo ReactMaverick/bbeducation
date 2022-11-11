@@ -48,7 +48,6 @@ Route::get('/teachers', [TeacherController::class, 'teachers']);
 
 Route::get('/schools', [SchoolController::class, 'schools']);
 Route::get('/school-search', [SchoolController::class, 'schoolSearch']);
-Route::post('/schoolSearchPost', [SchoolController::class, 'schoolSearchPost']);
 Route::get('/school-detail', [SchoolController::class, 'schoolDetail']);
 Route::get('/school-contact', [SchoolController::class, 'schoolContact']);
 Route::get('/school-assignment', [SchoolController::class, 'schoolAssignment']);

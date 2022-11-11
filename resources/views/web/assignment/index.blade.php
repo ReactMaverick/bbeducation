@@ -27,7 +27,7 @@
                     </thead>
                     <tbody class="table-body-sec">
                         @foreach ($assignmentList as $key => $Assignment)
-                            <tr class="table-data">
+                            <tr class="table-data" onclick="assignmentDetail()">
                                 <td>{{ $Assignment->schooleName }}</td>
                                 <td>{{ $Assignment->yearGroup }}</td>
                                 <td>{{ $Assignment->assignmentStatus }}</td>
@@ -116,5 +116,8 @@
         $(document).ready(function() {
             $('#myTable').DataTable();
         });
+        function assignmentDetail(){
+            window.location.href = "{{ URL::to('/assignment-details') }}";
+        }
     </script>
 @endsection

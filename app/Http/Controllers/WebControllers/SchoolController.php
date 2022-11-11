@@ -66,49 +66,96 @@ class SchoolController extends Controller
                 ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
                 ->orderBy('laName_txt', 'ASC')
                 ->get();
+
             $schoolList = array();
+            $srchCnt = 0;
+            if ($request->search) {
+                $schoolQry = DB::table('tbl_school')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_contactItemSch.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_schoolContact', 'tbl_schoolContact.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                    ->LeftJoin('tbl_schoolContactLog', 'tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_asn', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                    ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                        $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                            ->where(function ($query) {
+                                $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                        $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                            ->where(function ($query) {
+                                $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                            });
+                    })
+                    ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', DB::raw('SUM(IF(tbl_asnItem.hours_dec IS NOT NULL, tbl_asnItem.hours_dec / 6, tbl_asnItem.dayPercent_dec)) AS days_dec'), DB::raw('MAX(tbl_schoolContactLog.contactOn_dtm) AS lastContact_dte'))
+                    ->whereIn('tbl_school.la_id', function ($query) {
+                        $query->select('la_id')
+                            ->from('tbl_localAuthority')
+                            ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
+                            ->get();
+                    });
 
-            return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle, 'ageRangeList' => $ageRangeList, 'schoolTypeList' => $schoolTypeList, 'laBoroughList' => $laBoroughList, 'schoolList' => $schoolList]);
-        } else {
-            return redirect()->intended('/');
-        }
-    }
+                if ($request->search_input) {
+                    $srchCnt = 1;
+                    $search_input = $request->search_input;
+                    $schoolQry->where(function ($query) use ($search_input) {
+                        $query->where('tbl_school.name_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('tbl_schoolcontact.firstName_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('tbl_schoolcontact.surname_txt', 'LIKE', '%' . $search_input . '%')
+                            // ->orWhere(DB::raw("CONCAT(`tbl_schoolcontact.firstName_txt`, ' ', `tbl_schoolcontact.surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere('tbl_contactitemsch.contactItem_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('tbl_school.postcode_txt', 'LIKE', '%' . $search_input . '%');
+                    });
+                }
 
-    public function schoolSearchPost(Request $request)
-    {
-        // dd($request->all());
-        $webUserLoginData = Session::get('webUserLoginData');
-        if ($webUserLoginData) {
-            $title = array('pageTitle' => "School Search");
-            $headerTitle = "Schools";
-            $company_id = $webUserLoginData->company_id;
-            $user_id = $webUserLoginData->user_id;
+                if ($request->ageRangeId) {
+                    $srchCnt = 1;
+                    $schoolQry->where('tbl_school.ageRange_int', $request->ageRangeId);
+                }
 
-            $ageRangeList = DB::table('tbl_description')
-                ->select('tbl_description.*')
-                ->where('tbl_description.descriptionGroup_int', 28)
-                ->get();
-            $schoolTypeList = DB::table('tbl_description')
-                ->select('tbl_description.*')
-                ->where('tbl_description.descriptionGroup_int', 30)
-                ->get();
-            $laBoroughList = DB::table('tbl_localAuthority')
-                ->select('tbl_localAuthority.*')
-                ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
-                ->orderBy('laName_txt', 'ASC')
-                ->get();
-            $schoolList = DB::table('speaker_posts')->LeftJoin('users', 'users.id', '=', 'speaker_posts.eminent_speaker_id')
-                ->LeftJoin('image_categories', function ($join) {
-                    $join->on('image_categories.image_id', '=', 'users.image')
-                        ->where(function ($query) {
-                            $query->where('image_categories.image_type', '=', 'MEDIUM')
-                                ->where('image_categories.image_type', '!=', 'MEDIUM')
-                                ->orWhere('image_categories.image_type', '=', 'ACTUAL');
-                        });
-                })
-                ->select('speaker_posts.*', 'users.name', 'image_categories.path as image_path')
-                ->where('speaker_posts.speaker_posts_id', $id)
-                ->first();
+                if ($request->schoolTypeId) {
+                    $srchCnt = 1;
+                    $schoolQry->where('tbl_school.type_int', $request->schoolTypeId);
+                }
+
+                if ($request->laId) {
+                    $srchCnt = 1;
+                    $schoolQry->where('tbl_school.la_id', $request->laId);
+                }
+
+                if ($request->lastContactRadio && $request->lasContactDate) {
+                    if ($request->lastContactRadio == 'Before') {
+                        $srchCnt = 1;
+                        $schoolQry->whereDate('tbl_schoolContactLog.contactOn_dtm', '<', $request->lasContactDate);
+                    }
+                    if ($request->lastContactRadio == 'After') {
+                        $srchCnt = 1;
+                        $schoolQry->whereDate('tbl_schoolContactLog.contactOn_dtm', '>', $request->lasContactDate);
+                    }
+                }
+
+                if ($request->dayBookedRadio && $request->booked_day) {
+                    if ($request->dayBookedRadio == 'More') {
+                        $srchCnt = 1;
+                        // $schoolQry->whereRaw('SUM(IF(tbl_asnItem.hours_dec IS NOT NULL, tbl_asnItem.hours_dec / 6, tbl_asnItem.dayPercent_dec)', '>', $request->booked_day);
+                    }
+                    if ($request->dayBookedRadio == 'Less') {
+                        $srchCnt = 1;
+                        // $schoolQry->whereRaw('SUM(IF(tbl_asnItem.hours_dec IS NOT NULL, tbl_asnItem.hours_dec / 6, tbl_asnItem.dayPercent_dec)', '<', $request->booked_day);
+                    }
+                }
+
+                if ($srchCnt != 1) {
+                    $schoolQry->groupBy('tbl_school.school_id')
+                        ->limit(50);
+                } else {
+                    $schoolQry->groupBy('tbl_school.school_id');
+                }
+
+                $schoolList = $schoolQry->get();
+            }
 
             return view("web.school.school_search", ['title' => $title, 'headerTitle' => $headerTitle, 'ageRangeList' => $ageRangeList, 'schoolTypeList' => $schoolTypeList, 'laBoroughList' => $laBoroughList, 'schoolList' => $schoolList]);
         } else {
