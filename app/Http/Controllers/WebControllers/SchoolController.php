@@ -119,4 +119,19 @@ class SchoolController extends Controller
             return redirect()->intended('/');
         }
     }
+
+    public function schoolAssignment(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "School Assignment");
+            $headerTitle = "Schools";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
 }

@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="sidebar-pages-section sidebar-active">
-                    <a href="#" class="sidebar-pages">
+                    <a href="{{ URL::to('/school-detail') }}" class="sidebar-pages">
                         <div class="page-icon-sec">
                             <i class="fa-solid fa-clipboard-list"></i>
 
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="sidebar-pages-section">
-                    <a href="#" class="sidebar-pages">
+                    <a href="{{ URL::to('/school-assignment') }}" class="sidebar-pages">
                         <div class="page-icon-sec">
                             <i class="fa-solid fa-person-chalkboard"></i>
                         </div>

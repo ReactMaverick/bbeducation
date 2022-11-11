@@ -7,8 +7,8 @@
                 <div class="assignment-page-sec">
                     <h2>School Search</h2>
                     <!-- <div class="checkbox-field">
-                                                                    <label for="vehicle1">Include All</label><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                                                                </div> -->
+                                                                        <label for="vehicle1">Include All</label><input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                                                    </div> -->
                 </div>
 
                 <div class="row">
@@ -16,10 +16,7 @@
 
                         <div class="school-search-section">
                             <div class="school-search-field">
-                                <form action="{{ url('/schoolSearchPost') }}" method="post" id="SearchForm">
-                                    @csrf
-                                    <input type="text" class="form-control" id="searchKey" name="searchKey">
-                                </form>
+                                <input type="text" class="form-control" id="searchKey" name="searchKey">
                                 <button type="submit" class="btn btn-primary school-search-btn"
                                     id="normalSearchBtn">Search</button>
                                 <a href="#"><i class="fa-solid fa-arrows-rotate"></i></a>
@@ -62,7 +59,8 @@
 
                                 <div class="form-group filter-form-group">
                                     <label for="ageRangeId">Age Range</label>
-                                    <select class="form-control select2" name="ageRangeId" id="ageRangeId" style="width: 100%;">
+                                    <select class="form-control select2" name="ageRangeId" id="ageRangeId"
+                                        style="width: 100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($ageRangeList as $key1 => $ageRange)
                                             <option value="{{ $ageRange->description_int }}">
@@ -74,7 +72,8 @@
 
                                 <div class="form-group filter-form-group">
                                     <label for="schoolTypeId">School Type</label>
-                                    <select class="form-control select2" name="schoolTypeId" id="schoolTypeId" style="width: 100%;">
+                                    <select class="form-control select2" name="schoolTypeId" id="schoolTypeId"
+                                        style="width: 100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($schoolTypeList as $key2 => $schoolType)
                                             <option value="{{ $schoolType->description_int }}">
