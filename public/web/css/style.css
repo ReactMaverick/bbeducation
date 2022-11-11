@@ -540,7 +540,7 @@ h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,
 .assignment-sidebar-data3 {
     border: 1px solid #f43779;
     border-radius: 100%;
-    width: 72px;
+    width: 67px;
     height: 65px;
     display: flex;
     align-items: center;
@@ -562,7 +562,7 @@ h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,
 .assignment-sidebar-data4 {
     border: 1px solid #2cdac8;
     border-radius: 100%;
-    width: 67px;
+    width: 66px;
     height: 65px;
     display: flex;
     align-items: center;
@@ -1542,10 +1542,6 @@ table td {
     color: #fff;
 }
 
-
-
-
-
 .school-details-second-sec {
     width: 40%;
     display: flex;
@@ -1562,4 +1558,53 @@ table td {
     color: #000;
     font-weight: 400;
     margin-bottom: 0;
+}
+
+/* ===============SCHOOL ASSIGNMENT============ */
+
+.school-assignment-section {
+    width: 100%;
+}
+
+.school-assignment-sec {
+    padding: 16px 13px;
+}
+
+.school-assignment-right-sec {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+
+.school-assignment-contact-heading-text {
+    width: 100%;
+    border-bottom: 2px solid #dddddd;
+}
+
+.school-assignment-contact-heading-text h2 {
+    font-size: 18px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.school-assignment-contact-heading {
+    padding: 15px 0 7px 0;
+}
+
+.school-assignment-contact-icon-sec {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.school-assignment-contact-icon-sec i {
+    font-size: 25px;
+    color: #48a0dc;
+    margin-left: 20px;
+}
+
+.assignment-detail-sidebar-sec {
+    height: 100vh;
 }
