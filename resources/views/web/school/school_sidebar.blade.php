@@ -63,7 +63,7 @@
         </div>
 
         <div class="sidebar-pages-section">
-            <a href="#" class="sidebar-pages">
+            <a href="{{ URL::to('/school-teacher') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person"></i>
                 </div>
