@@ -25,7 +25,7 @@
                 </i>
             </div>
 
-            <div class="school-assignment-sec">
+            <div class="school-finance-right-sec">
 
 
                 <div class="school-assignment-section">
@@ -116,8 +116,16 @@
                         </table>
                     </div>
                 </div>
-                
+                <div class="billing-details-section">
+                    <div class="billing-details-heading">
+                        <span>Billing Details</span>
+                        <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                    </div>
+
+                </div>
             </div>
+
+
 
         </div>
     </div>

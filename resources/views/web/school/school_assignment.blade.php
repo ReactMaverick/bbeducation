@@ -70,7 +70,7 @@
                 </div>
             <div class="assignment-first-sec">
                 <div class="assignment-left-sidebar-section">
-                    <div class="sidebar-sec">
+                    <div class="school-assignment-sidebar-sec">
                         <div class="assignment-sidebar-data">
                             <h2>29</h2>
                         </div>
@@ -78,7 +78,7 @@
                             <span>Completed Assignments</span>
                         </div>
                     </div>
-                    <div class="sidebar-sec">
+                    <div class="school-assignment-sidebar-sec">
                         <div class="assignment-sidebar-data2">
                             <h2>4</h2>
                         </div>

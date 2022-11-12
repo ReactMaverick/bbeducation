@@ -240,7 +240,7 @@ h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,
     align-items: center;
     padding: 0 22px 0 0;
     margin: 7.5px 0;
-    width: 20%;
+    /* width: 20%; */
 }
 
 .sidebar-data {
@@ -1611,6 +1611,22 @@ table td {
     height: 100vh;
 }
 
+.assignment-sidebar-sec {
+    display: flex;
+    align-items: center;
+    padding: 0 22px 0 0;
+    margin: 7.5px 0;
+    width: 20%;
+}
+
+.school-assignment-sidebar-sec {
+    display: flex;
+    align-items: center;
+    padding: 0 22px 0 0;
+    margin: 7.5px 0;
+    width: 20%;
+}
+
 /* ================SCHOOL CONTACT============ */
 
 .contact-history-heading-section {
@@ -1705,4 +1721,26 @@ table td {
 
 .school-finance-table-section {
     width: 70%;
+}
+
+.billing-details-section {
+    width: 30%;
+}
+
+.billing-details-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #dddddd;
+}
+
+.billing-details-heading span {
+    font-size: 12px;
+    color: #7f7f7f;
+    /* margin-bottom: 8px; */
+}
+
+.school-finance-right-sec {
+    display: flex;
+    padding: 35px 13px;
 }
