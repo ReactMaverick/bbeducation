@@ -467,6 +467,8 @@ h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,
 
 .dataTables_filter input {
     border: 1px solid #afabab;
+    padding: 2px 10px;
+    font-size: 14px;
 }
 
 .assignment-page-table {
@@ -1655,7 +1657,7 @@ table td {
 .school-finance-sec {
     display: flex;
     align-items: center;
-    width: 70%;
+    width: 100%;
     border-bottom: 2px solid #dddddd;
     margin-bottom: 10px;
 }
@@ -1720,22 +1722,24 @@ table td {
 }
 
 .school-finance-table-section {
-    width: 70%;
+    width: 100%;
 }
 
 .billing-details-section {
     width: 30%;
+    padding-left: 35px;
 }
 
 .billing-details-heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    padding-bottom: 5px;
 }
 
 .billing-details-heading span {
-    font-size: 12px;
+    font-size: 14px;
     color: #7f7f7f;
     /* margin-bottom: 8px; */
 }
@@ -1743,4 +1747,58 @@ table td {
 .school-finance-right-sec {
     display: flex;
     padding: 35px 13px;
+}
+
+.school-finance-section {
+    width: 70%;
+}
+
+.invoice-timesheet-checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.invoice-timesheet-checkbox label {
+    font-size: 12px;
+    color: #7f7f7f;
+    margin-left: 5px;
+    margin-bottom: 0;
+}
+
+.billing-address-section h2 {
+    font-size: 12px;
+    color: #7f7f7f;
+    margin-bottom: 10px;
+}
+
+.billing-address-section p {
+    font-size: 13px;
+    color: #3c3c3c;
+    margin-bottom: 10px;
+}
+
+.billing-address-section {
+    margin-top: 50px;
+}
+
+.billing-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.billing-button button {
+    font-size: 13px;
+    font-weight: 500;
+    color: #3c3c3c;
+    width: 50%;
+    border: 1px solid #afabab;
+    border-radius: 3px;
+    background-color: #ffc20e;
+    padding: 6px 0;
+}
+
+.dataTables_filter input:focus-visible {
+    outline: none;
 }

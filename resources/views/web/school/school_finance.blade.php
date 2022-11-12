@@ -28,7 +28,7 @@
             <div class="school-finance-right-sec">
 
 
-                <div class="school-assignment-section">
+                <div class="school-finance-section">
 
                     <div class="school-finance-sec">
                         <div class="school-finance-contact-heading-text">
@@ -120,6 +120,22 @@
                     <div class="billing-details-heading">
                         <span>Billing Details</span>
                         <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                    </div>
+                    <div class="invoice-timesheet-checkbox">
+                        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                        <label for="vehicle1">Include Timesheet with Invoice</label>
+                    </div>
+                    <div class="billing-address-section">
+                        <h2>Billing Address</h2>
+                        <p>PO: 100071028</p>
+                        <p>London Borough of Barnet</p>
+                        <p>PO Box 328</p>
+                        <p>Darlington</p>
+                        <p>DL19PM</p>
+                    </div>
+
+                    <div class="billing-button">
+                        <button>Candidate Rates</button>
                     </div>
 
                 </div>
