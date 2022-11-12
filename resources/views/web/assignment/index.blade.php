@@ -63,7 +63,7 @@
         </div>
         <div class="assignment-first-sec">
             <div class="assignment-left-sidebar-section">
-                <div class="sidebar-sec">
+                <div class="assignment-sidebar-sec">
                     <div class="assignment-sidebar-data">
                         <h2>29</h2>
                     </div>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="sidebar-sec">
+                <div class="assignment-sidebar-sec">
                     <div class="assignment-sidebar-data3">
                         <h2>218</h2>
                     </div>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <div class="sidebar-sec">
+                <div class="assignment-sidebar-sec">
                     <div class="assignment-sidebar-data2">
                         <h2>4</h2>
                     </div>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="sidebar-sec">
+                <div class="assignment-sidebar-sec">
                     <div class="assignment-sidebar-data4">
                         <h2>2641</h2>
                     </div>
@@ -99,7 +99,7 @@
                     </div>
                 </div>
 
-                <div class="sidebar-sec">
+                <div class="assignment-sidebar-sec">
                     <div class="assignment-sidebar-data3">
                         <h2>2895</h2>
                     </div>
