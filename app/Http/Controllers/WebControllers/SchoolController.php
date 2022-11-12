@@ -102,10 +102,10 @@ class SchoolController extends Controller
                     $search_input = $request->search_input;
                     $schoolQry->where(function ($query) use ($search_input) {
                         $query->where('tbl_school.name_txt', 'LIKE', '%' . $search_input . '%')
-                            ->orWhere('tbl_schoolcontact.firstName_txt', 'LIKE', '%' . $search_input . '%')
-                            ->orWhere('tbl_schoolcontact.surname_txt', 'LIKE', '%' . $search_input . '%')
-                            // ->orWhere(DB::raw("CONCAT(`tbl_schoolcontact.firstName_txt`, ' ', `tbl_schoolcontact.surname_txt`)"), 'LIKE', "%" . $search_input . "%")
-                            ->orWhere('tbl_contactitemsch.contactItem_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('firstName_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('surname_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere(DB::raw("CONCAT(`firstName_txt`, ' ', `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere('contactItem_txt', 'LIKE', '%' . $search_input . '%')
                             ->orWhere('tbl_school.postcode_txt', 'LIKE', '%' . $search_input . '%');
                     });
                 }
@@ -237,5 +237,4 @@ class SchoolController extends Controller
             return redirect()->intended('/');
         }
     }
-
 }
