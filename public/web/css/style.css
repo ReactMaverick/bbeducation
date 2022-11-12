@@ -4,7 +4,28 @@
     width: 100%;
 }
 
-h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,strong,div,i {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span,
+p,
+button,
+label,
+th,
+td,
+tr,
+input,
+option,
+select,
+textarea,
+b,
+strong,
+div,
+i {
     font-family: 'poppins';
     /* letter-spacing: 0.6px; */
 }
@@ -467,6 +488,8 @@ h1,h2,h3,h4,h5,h6,a,span,p,button,label,th,td,tr,input,option,select,textarea,b,
 
 .dataTables_filter input {
     border: 1px solid #afabab;
+    padding: 2px 10px;
+    font-size: 14px;
 }
 
 .assignment-page-table {
@@ -1655,7 +1678,7 @@ table td {
 .school-finance-sec {
     display: flex;
     align-items: center;
-    width: 70%;
+    width: 100%;
     border-bottom: 2px solid #dddddd;
     margin-bottom: 10px;
 }
@@ -1685,7 +1708,8 @@ table td {
 
 .payment-method-type {
     width: 30%;
-    margin: 0 0 0 10px;;
+    margin: 0 0 0 10px;
+    ;
 }
 
 .payment-method-type label {
@@ -1720,22 +1744,24 @@ table td {
 }
 
 .school-finance-table-section {
-    width: 70%;
+    width: 100%;
 }
 
 .billing-details-section {
     width: 30%;
+    padding-left: 35px;
 }
 
 .billing-details-heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    padding-bottom: 5px;
 }
 
 .billing-details-heading span {
-    font-size: 12px;
+    font-size: 14px;
     color: #7f7f7f;
     /* margin-bottom: 8px; */
 }
@@ -1743,4 +1769,250 @@ table td {
 .school-finance-right-sec {
     display: flex;
     padding: 35px 13px;
+}
+
+.school-finance-section {
+    width: 70%;
+}
+
+.invoice-timesheet-checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.invoice-timesheet-checkbox label {
+    font-size: 12px;
+    color: #7f7f7f;
+    margin-left: 5px;
+    margin-bottom: 0;
+}
+
+.billing-address-section h2 {
+    font-size: 12px;
+    color: #7f7f7f;
+    margin-bottom: 10px;
+}
+
+.billing-address-section p {
+    font-size: 13px;
+    color: #3c3c3c;
+    margin-bottom: 10px;
+}
+
+.billing-address-section {
+    margin-top: 50px;
+}
+
+.billing-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.billing-button button {
+    font-size: 13px;
+    font-weight: 500;
+    color: #3c3c3c;
+    width: 50%;
+    border: 1px solid #afabab;
+    border-radius: 3px;
+    background-color: #ffc20e;
+    padding: 6px 0;
+}
+
+.dataTables_filter input:focus-visible {
+    outline: none;
+}
+
+/* ================TEACHER LIST============= */
+
+.teacher-list-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 40%;
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
+
+.school-teacher-list-heading {
+    padding: 7px 0;
+}
+
+.school-teacher-heading-text h2 {
+    font-size: 18px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-list-page-table {
+    width: 86%;
+}
+
+.teacher-list-right-sec {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 70%;
+}
+
+.preferred-list-sec {
+    width: 12%;
+    border: 1px solid #afabab;
+    padding: 4px 7px;
+}
+
+.list-form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    padding-left: 0;
+}
+
+.list-form-check:last-child {
+    margin-bottom: 0;
+}
+
+.list-form-check label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    padding-left: 6px;
+}
+
+/* =================MODAl=============== */
+
+.calendar-modal-section {
+    justify-content: center;
+}
+
+.calendar-modal-content {
+    width: 70%;
+}
+
+.calendar-modal-header {
+    background-color: #40A0ED;
+    padding: 12px;
+    align-items: center;
+}
+
+.calendar-modal-header h4 {
+    color: #fff;
+    font-size: 15px;
+}
+
+.calendar-modal-header button {
+    width: 20%;
+    font-size: 36px;
+    color: #fff;
+    opacity: 1;
+    padding: 0 !important;
+    font-weight: 400;
+}
+
+.calendar-modal-header button:hover {
+    color: #fff;
+    opacity: 1 !important;
+}
+
+.calendar-heading-sec{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 20px 0 10px 0;
+}
+
+.calendar-heading-sec h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #afabab;
+    margin-bottom: 0;
+    padding-left: 6px;
+}
+
+.modal-input-field {
+    margin-bottom: 10px;
+}
+
+.modal-input-field label {
+    font-size: 13px;
+    color: #afabab;
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+
+.modal-input-field input {
+    font-size: 13px;
+    color: #afabab;
+    font-weight: 400;
+    height: 28px;
+}
+
+.calendar-form-filter {
+    margin-bottom: 10px;
+}
+
+.calendar-form-filter label {
+    font-size: 13px;
+    color: #afabab;
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+
+.calendar-form-filter select {
+    font-size: 13px;
+    color: #afabab;
+    font-weight: 400;
+    height: 28px;
+    padding: 0 10px;
+}
+
+.modal-input-field-section {
+    padding: 0 40px;
+}
+
+.modal-side-field{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-side-field label{
+    width: 50%;
+    font-size: 13px;
+    color: #afabab;
+    font-weight: 400;
+
+}
+.modal-side-field input{
+    width: 50%;
+    font-size: 13px;
+    color: #afabab;
+    font-weight: 400;
+    height: 28px;
+}
+.second{
+    margin-top: 10px;
+}
+.calendar-modal-footer{
+    border: none;
+    justify-content: center;
+}
+.calendar-modal-footer button{
+    background-color: #70ad47;
+    border-color: #70ad47;
+}
+.calendar-modal-footer button:hover{
+    background-color: #70ad47;
+    border-color: #70ad47;
+}
+.calendar-modal-footer button:active{
+    background-color: #70ad47 !important;
+    border-color: #70ad47 !important;
+}
+.calendar-modal-footer button:focus{
+    background-color: #70ad47 !important;
+    border-color: #70ad47 !important;
+    box-shadow: none !important;
 }
