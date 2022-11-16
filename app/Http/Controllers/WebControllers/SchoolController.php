@@ -28,6 +28,7 @@ class SchoolController extends Controller
                     }
                 )
                 ->select('tbl_school.*', 't_contact.school_id as contactSchoolId', 't_contact.lastContact_dte')
+                ->where('tbl_school.company_id', $company_id)
                 ->whereIn('tbl_school.school_id', function ($query) use ($user_id) {
                     $query->select('link_id')
                         ->from('tbl_userFavourite')
@@ -75,8 +76,6 @@ class SchoolController extends Controller
                     ->LeftJoin('tbl_schoolContact', 'tbl_schoolContact.school_id', '=', 'tbl_school.school_id')
                     ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
                     ->LeftJoin('tbl_schoolContactLog', 'tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id')
-                    ->LeftJoin('tbl_asn', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
-                    ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
                     ->LeftJoin('tbl_description as AgeRange', function ($join) {
                         $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
                             ->where(function ($query) {
@@ -89,7 +88,8 @@ class SchoolController extends Controller
                                 $query->where('SchoolType.descriptionGroup_int', '=', 30);
                             });
                     })
-                    ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', DB::raw('SUM(IF(tbl_asnItem.hours_dec IS NOT NULL, tbl_asnItem.hours_dec / 6, tbl_asnItem.dayPercent_dec)) AS days_dec'), DB::raw('MAX(tbl_schoolContactLog.contactOn_dtm) AS lastContact_dte'))
+                    ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', DB::raw("(SELECT round(SUM(IF(hours_dec IS NOT NULL, hours_dec / 6, dayPercent_dec)),2) FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE school_id = tbl_school.school_id GROUP BY school_id) as days_dec"), DB::raw('MAX(tbl_schoolContactLog.contactOn_dtm) AS lastContact_dte'))
+                    ->where('tbl_school.company_id', $company_id)
                     ->whereIn('tbl_school.la_id', function ($query) {
                         $query->select('la_id')
                             ->from('tbl_localAuthority')
@@ -99,14 +99,14 @@ class SchoolController extends Controller
 
                 if ($request->search_input) {
                     $srchCnt = 1;
-                    $search_input = $request->search_input;
+                    $search_input = str_replace(" ", "", $request->search_input);
                     $schoolQry->where(function ($query) use ($search_input) {
-                        $query->where('tbl_school.name_txt', 'LIKE', '%' . $search_input . '%')
+                        $query->where(DB::raw("REPLACE(name_txt, ' ', '')"), 'LIKE', "%" . $search_input . "%")
                             ->orWhere('firstName_txt', 'LIKE', '%' . $search_input . '%')
                             ->orWhere('surname_txt', 'LIKE', '%' . $search_input . '%')
-                            ->orWhere(DB::raw("CONCAT(`firstName_txt`, ' ', `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
-                            ->orWhere('contactItem_txt', 'LIKE', '%' . $search_input . '%')
-                            ->orWhere('tbl_school.postcode_txt', 'LIKE', '%' . $search_input . '%');
+                            ->orWhere(DB::raw("CONCAT(`firstName_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere(DB::raw("REPLACE(contactItem_txt, ' ', '')"), 'LIKE', '%' . $search_input . '%')
+                            ->orWhere(DB::raw("REPLACE(postcode_txt, ' ', '')"), 'LIKE', '%' . $search_input . '%');
                     });
                 }
 
@@ -139,11 +139,11 @@ class SchoolController extends Controller
                 if ($request->dayBookedRadio && $request->booked_day) {
                     if ($request->dayBookedRadio == 'More') {
                         $srchCnt = 1;
-                        // $schoolQry->whereRaw('SUM(IF(tbl_asnItem.hours_dec IS NOT NULL, tbl_asnItem.hours_dec / 6, tbl_asnItem.dayPercent_dec)', '>', $request->booked_day);
+                        $schoolQry->where(DB::raw("(SELECT SUM(IF(hours_dec IS NOT NULL, hours_dec / 6, dayPercent_dec)) FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE school_id = tbl_school.school_id GROUP BY school_id)"), '>', $request->booked_day);
                     }
                     if ($request->dayBookedRadio == 'Less') {
                         $srchCnt = 1;
-                        // $schoolQry->whereRaw('SUM(IF(tbl_asnItem.hours_dec IS NOT NULL, tbl_asnItem.hours_dec / 6, tbl_asnItem.dayPercent_dec)', '<', $request->booked_day);
+                        $schoolQry->where(DB::raw("(SELECT SUM(IF(hours_dec IS NOT NULL, hours_dec / 6, dayPercent_dec)) FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE school_id = tbl_school.school_id GROUP BY school_id)"), '<', $request->booked_day);
                     }
                 }
 
@@ -163,7 +163,7 @@ class SchoolController extends Controller
         }
     }
 
-    public function schoolDetail(Request $request)
+    public function schoolDetail(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
@@ -172,7 +172,62 @@ class SchoolController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle]);
+            $schoolDetail = DB::table('tbl_school')
+                ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id')
+                        ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                        ->take(1);
+                })
+                ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                    $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                        ->where(function ($query) {
+                            $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                        });
+                })
+                ->LeftJoin('tbl_description as religion', function ($join) {
+                    $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                        ->where(function ($query) {
+                            $query->where('religion.descriptionGroup_int', '=', 29);
+                        });
+                })
+                ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                    $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                        ->where(function ($query) {
+                            $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                        });
+                })
+                ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                ->where('tbl_school.school_id', $id)
+                ->first();
+            // dd($schoolDetail);
+            $schoolContacts = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_description as JobRole', function ($join) {
+                    $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
+                        ->where(function ($query) {
+                            $query->where('JobRole.descriptionGroup_int', '=', 11);
+                        });
+                })
+                ->select('tbl_schoolContact.*', 'JobRole.description_txt as jobRole_txt')
+                ->where('tbl_schoolContact.school_id', $id)
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->get();
+
+            // $contactItems = DB::table('tbl_contactItemSch')
+            //     ->LeftJoin('tbl_schoolContact', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+            //     ->LeftJoin('tbl_description as JobRole', function ($join) {
+            //         $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
+            //             ->where(function ($query) {
+            //                 $query->where('JobRole.descriptionGroup_int', '=', 11);
+            //             });
+            //     })
+            //     ->select('tbl_schoolContact.*', 'JobRole.description_txt as jobRole_txt')
+            //     ->where('tbl_schoolContact.school_id', $id)
+            //     ->where('tbl_schoolContact.isCurrent_status', '-1')
+            //     ->get();
+
+            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts]);
         } else {
             return redirect()->intended('/');
         }

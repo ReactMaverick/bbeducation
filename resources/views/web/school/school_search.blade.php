@@ -13,7 +13,8 @@
 
                         <div class="school-search-section">
                             <div class="school-search-field">
-                                <input type="text" class="form-control" id="searchKey" name="searchKey" value="{{ app('request')->input('search_input') }}" >
+                                <input type="text" class="form-control" id="searchKey" name="searchKey"
+                                    value="{{ app('request')->input('search_input') }}">
                                 <button type="submit" class="btn btn-primary school-search-btn"
                                     id="normalSearchBtn">Search</button>
                                 <a href="{{ URL::to('/school-search') }}"><i class="fa-solid fa-arrows-rotate"></i></a>
@@ -34,13 +35,17 @@
                             </thead>
                             <tbody class="table-body-sec">
                                 @foreach ($schoolList as $key => $school)
-                                    <tr class="table-data">
+                                    <tr class="table-data" onclick="schoolDetail({{ $school->school_id }})">
                                         <td>{{ $school->name_txt }}</td>
                                         <td>{{ $school->ageRange_txt }}</td>
                                         <td>{{ $school->type_txt }}</td>
                                         <td>{{ $school->laName_txt }}</td>
                                         <td>{{ $school->days_dec }}</td>
-                                        <td>{{ $school->lastContact_dte }}</td>
+                                        <td>
+                                            @if ($school->lastContact_dte != 0)
+                                                {{ date('d-m-Y', strtotime($school->lastContact_dte)) }}
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -53,9 +58,14 @@
                         <form action="{{ url('/school-search') }}" method="get" id="advanceSearchForm">
                             @csrf
                             <input type="hidden" name="search" value="true">
-                            <input type="hidden" name="advance_search" id="advance_search" value="{{ app('request')->input('advance_search') }}">
+                            <input type="hidden" name="advance_search" id="advance_search"
+                                value="{{ app('request')->input('advance_search') }}">
                             <input type="hidden" name="search_input" id="search_input">
-                            <div class="advance-search-filter-section" id="advanceSearchDiv" style="<?php if(app('request')->input('advance_search')=='true'){ echo 'display: block;'; }else{ echo 'display: none;'; } ?>" >
+                            <div class="advance-search-filter-section" id="advanceSearchDiv" style="<?php if (app('request')->input('advance_search') == 'true') {
+                                echo 'display: block;';
+                            } else {
+                                echo 'display: none;';
+                            } ?>">
 
                                 <div class="form-group filter-form-group">
                                     <label for="ageRangeId">Age Range</label>
@@ -63,7 +73,8 @@
                                         style="width: 100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($ageRangeList as $key1 => $ageRange)
-                                            <option value="{{ $ageRange->description_int }}" @if(app('request')->input('ageRangeId')==$ageRange->description_int) selected @endif >
+                                            <option value="{{ $ageRange->description_int }}"
+                                                @if (app('request')->input('ageRangeId') == $ageRange->description_int) selected @endif>
                                                 {{ $ageRange->description_txt }}
                                             </option>
                                         @endforeach
@@ -76,7 +87,8 @@
                                         style="width: 100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($schoolTypeList as $key2 => $schoolType)
-                                            <option value="{{ $schoolType->description_int }}" @if(app('request')->input('schoolTypeId')==$schoolType->description_int) selected @endif >
+                                            <option value="{{ $schoolType->description_int }}"
+                                                @if (app('request')->input('schoolTypeId') == $schoolType->description_int) selected @endif>
                                                 {{ $schoolType->description_txt }}</option>
                                         @endforeach
                                     </select>
@@ -87,7 +99,9 @@
                                     <select class="form-control select2" name="laId" id="laId" style="width: 100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($laBoroughList as $key3 => $laBorough)
-                                            <option value="{{ $laBorough->la_id }}" @if(app('request')->input('laId')==$laBorough->la_id) selected @endif >{{ $laBorough->laName_txt }}</option>
+                                            <option value="{{ $laBorough->la_id }}"
+                                                @if (app('request')->input('laId') == $laBorough->la_id) selected @endif>
+                                                {{ $laBorough->laName_txt }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -100,7 +114,7 @@
                                         <div class="form-check filter-radio-field">
                                             <label class="form-check-label">
                                                 <input type="radio" class="form-check-input" name="lastContactRadio"
-                                                    value="Before" @if(app('request')->input('lastContactRadio')=='Before') checked @endif >
+                                                    value="Before" @if (app('request')->input('lastContactRadio') == 'Before') checked @endif>
                                                 <span class="radio-text">Before</span>
                                             </label>
                                         </div>
@@ -110,14 +124,15 @@
                                         <div class="form-check filter-radio-field">
                                             <label class="form-check-label">
                                                 <input type="radio" class="form-check-input" name="lastContactRadio"
-                                                    value="After" @if(app('request')->input('lastContactRadio')=='After') checked @endif >
+                                                    value="After" @if (app('request')->input('lastContactRadio') == 'After') checked @endif>
                                                 <span class="radio-text">After</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="field-input-field">
-                                    <input type="date" class="form-control" name="lasContactDate" id="lasContactDate" value="{{ app('request')->input('lasContactDate') }}">
+                                    <input type="date" class="form-control" name="lasContactDate" id="lasContactDate"
+                                        value="{{ app('request')->input('lasContactDate') }}">
                                 </div>
 
 
@@ -130,7 +145,7 @@
                                         <div class="form-check filter-radio-field">
                                             <label class="form-check-label">
                                                 <input type="radio" class="form-check-input" name="dayBookedRadio"
-                                                    value="More" @if(app('request')->input('dayBookedRadio')=='More') checked @endif >
+                                                    value="More" @if (app('request')->input('dayBookedRadio') == 'More') checked @endif>
                                                 <span class="radio-text">More than</span>
                                             </label>
                                         </div>
@@ -140,14 +155,15 @@
                                         <div class="form-check filter-radio-field">
                                             <label class="form-check-label">
                                                 <input type="radio" class="form-check-input" name="dayBookedRadio"
-                                                    value="Less" @if(app('request')->input('dayBookedRadio')=='Less') checked @endif >
+                                                    value="Less" @if (app('request')->input('dayBookedRadio') == 'Less') checked @endif>
                                                 <span class="radio-text">Less than</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="field-input-field">
-                                    <input type="number" class="form-control" name="booked_day" id="booked_day" value="{{ app('request')->input('booked_day') }}">
+                                    <input type="number" class="form-control" name="booked_day" id="booked_day"
+                                        value="{{ app('request')->input('booked_day') }}">
                                 </div>
 
                                 <div class="school-search-btn-section">
@@ -184,6 +200,10 @@
             // $('#advanceSearchDiv').css('display', 'none');
         });
 
+        function schoolDetail(school_id){
+            window.location.href = "{{ URL::to('/school-detail') }}"+'/'+school_id;
+        }
+
         $(document).on('click', '#advanceSearch', function() {
             $('#search_input').val('');
             $('#ageRangeId').val('');
@@ -211,6 +231,15 @@
             $('#search_input').val(searchKey);
             $('#advance_search').val('true');
             $("#advanceSearchForm").submit();
+        });
+
+        $(document).on('keypress', '#searchKey', function(e) {
+            var key = e.which;
+            if (key == 13) {
+                var searchKey = $('#searchKey').val();
+                $('#search_input').val(searchKey);
+                $("#advanceSearchForm").submit();
+            }
         });
     </script>
 @endsection

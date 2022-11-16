@@ -34,7 +34,7 @@
                         </thead>
                         <tbody class="table-body-sec">
                             @foreach ($fabSchoolList as $key => $fabSchool)
-                                <tr class="table-data" onclick="schoolDetail()">
+                                <tr class="table-data" onclick="schoolDetail({{ $fabSchool->school_id }})">
                                     <td>{{ $fabSchool->name_txt }}</td>
                                     <td>
                                         @if ($fabSchool->contactSchoolId == null || $fabSchool->contactSchoolId == '')
@@ -60,8 +60,8 @@
             $('#myTable').DataTable();
         });
 
-        function schoolDetail(){
-            window.location.href = "{{ URL::to('/school-detail') }}";
+        function schoolDetail(school_id){
+            window.location.href = "{{ URL::to('/school-detail') }}"+'/'+school_id;
         }
     </script>
 @endsection
