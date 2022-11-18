@@ -601,6 +601,17 @@ i {
     margin: 0;
 }
 
+.assignment-sidebar-sec-text {
+    width: 56%;
+    margin-left: 13px;
+}
+
+.assignment-sidebar-sec-text span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #afabab;
+}
+
 .checkbox-field {
     display: flex;
     align-items: center;

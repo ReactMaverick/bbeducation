@@ -20,12 +20,37 @@
         width: 170px;
         padding: 12px 0 12px 12px;
     }
+
     .first-sec {
         width: 30%;
     }
+
     .second-sec {
         width: 70%;
         margin-right: 10px;
+    }
+
+    /* ================ASSIGNMENT============ */
+
+    .dataTables_wrapper {
+        overflow-y: scroll;
+    }
+
+    .assignment-sidebar-sec-text {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .assignment-sidebar-sec-text span {
+        font-size: 11px;
+    }
+
+    .assignment-sidebar-sec {
+        flex-direction: column;
+        padding: 0;
     }
 
     /* =======TEACHER======== */
@@ -38,8 +63,20 @@
         margin: 10px 45px 0 45px;
     }
 
+        /* =============ASSIGNMENT DETAILS=========== */
+
+        .button-section {
+            width: 100%;
+            justify-content: center;
+            padding-left: 0;
+        }
+
+        .button-section button {
+            margin: 0 12px;
+        }
+
     /* ============FINANCE============= */
-    .about-finance{
+    .about-finance {
         width: 25%;
         margin: 10px 0 0 0;
     }
@@ -69,6 +106,18 @@
         justify-content: center;
     }
 
+    .sidebar-data h2 {
+        margin-left: 0 !important;
+    }
+
+    .sidebar-data2 h2 {
+        margin-left: 0 !important;
+    }
+
+    .sidebar-data3 h2 {
+        margin-left: 0 !important;
+    }
+
     .sidebar-sec-text {
         width: 27%;
     }
@@ -86,14 +135,17 @@
     .assignment-status-table {
         width: 100%;
     }
+
     .first-sec {
         width: 100%;
     }
+
     .second-sec {
         width: 100%;
         padding-right: 13px;
     }
-    .total-sec{
+
+    .total-sec {
         display: flex;
         flex-direction: column;
     }
@@ -101,12 +153,61 @@
     .dataTables_wrapper {
         overflow-x: auto;
     }
-    
 
-/* =============FINANCE============= */
+    /* =============ASSIGNMENT============= */
+
+    .assignment-sidebar-sec {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .assignment-left-sidebar-section {
+        flex-direction: column;
+    }
+
+    .assignment-sidebar-sec-text span {
+        margin-top: 10px;
+    }
+
+    .assignment-sidebar-sec-text {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* =============ASSIGNMENT DETAILS=========== */
+
+    .button-section {
+        width: 100%;
+        justify-content: center;
+        padding-left: 0;
+    }
+
+    /* =============TEACHER============== */
+
+    .teacher-left-sec {
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .teacher-all-section {
+        flex-direction: column;
+    }
+
+    .teacher-section {
+        width: 100%;
+    }
+
+    .teacher-page-table-section {
+        width: 100%;
+    }
+
+    /* =============FINANCE============= */
 
     .about-finance {
-        margin: 10px 0 0 0;;
+        margin: 10px 0 0 0;
+        ;
         width: 50%;
     }
 }
@@ -117,9 +218,11 @@
         padding-right: 13px;
         padding-left: 8px;
     }
+
     .dashboard-tab-content {
         padding-left: 0;
     }
+
     .dashboard-tab-content h2 {
         margin-left: 13px;
     }

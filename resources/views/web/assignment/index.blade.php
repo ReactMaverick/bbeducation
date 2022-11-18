@@ -67,7 +67,7 @@
                     <div class="assignment-sidebar-data">
                         <h2>29</h2>
                     </div>
-                    <div class="sidebar-sec-text">
+                    <div class="assignment-sidebar-sec-text">
                         <span>Open Assignments</span>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     <div class="assignment-sidebar-data3">
                         <h2>218</h2>
                     </div>
-                    <div class="sidebar-sec-text">
+                    <div class="assignment-sidebar-sec-text">
                         <span>Closed Assignments</span>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                     <div class="assignment-sidebar-data2">
                         <h2>4</h2>
                     </div>
-                    <div class="sidebar-sec-text">
+                    <div class="assignment-sidebar-sec-text">
                         <span>Pending Assignments</span>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                     <div class="assignment-sidebar-data4">
                         <h2>2641</h2>
                     </div>
-                    <div class="sidebar-sec-text">
+                    <div class="assignment-sidebar-sec-text">
                         <span>Completed Assignments</span>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     <div class="assignment-sidebar-data3">
                         <h2>2895</h2>
                     </div>
-                    <div class="sidebar-sec-text">
+                    <div class="assignment-sidebar-sec-text">
                         <span>All Assignments</span>
                     </div>
                 </div>
