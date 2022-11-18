@@ -49,10 +49,10 @@ Route::get('/teachers', [TeacherController::class, 'teachers']);
 Route::get('/schools', [SchoolController::class, 'schools']);
 Route::get('/school-search', [SchoolController::class, 'schoolSearch']);
 Route::get('/school-detail/{id}', [SchoolController::class, 'schoolDetail']);
-Route::get('/school-contact', [SchoolController::class, 'schoolContact']);
-Route::get('/school-assignment', [SchoolController::class, 'schoolAssignment']);
-Route::get('/school-finance', [SchoolController::class, 'schoolFinance']);
-Route::get('/school-teacher', [SchoolController::class, 'schoolTeacher']);
+Route::get('/school-contact/{id}', [SchoolController::class, 'schoolContact']);
+Route::get('/school-assignment/{id}', [SchoolController::class, 'schoolAssignment']);
+Route::get('/school-finance/{id}', [SchoolController::class, 'schoolFinance']);
+Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
 
 Route::get('/finance', [FinanceController::class, 'finance']);
 
