@@ -175,9 +175,7 @@ class SchoolController extends Controller
             $schoolDetail = DB::table('tbl_school')
                 ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
                 ->LeftJoin('tbl_schoolContactLog', function ($join) {
-                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id')
-                        ->orderBy('schoolContactLog_id', 'DESC')
-                        ->limit(1);
+                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
                 })
                 ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
                 ->LeftJoin('tbl_description as AgeRange', function ($join) {
@@ -200,6 +198,8 @@ class SchoolController extends Controller
                 })
                 ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
                 ->where('tbl_school.school_id', $id)
+                ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                // ->take(1)
                 ->first();
             // dd($schoolDetail);
             $schoolContacts = DB::table('tbl_schoolContact')
@@ -221,7 +221,7 @@ class SchoolController extends Controller
                 ->get();
 
             $contactItems = DB::table('tbl_contactItemSch')
-                ->LeftJoin('tbl_schoolContact', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->LeftJoin('tbl_schoolContact', 'tbl_contactItemSch.schoolContact_id', '=', 'tbl_schoolContact.contact_id')
                 ->LeftJoin('tbl_description as JobRole', function ($join) {
                     $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
                         ->where(function ($query) {
@@ -237,15 +237,67 @@ class SchoolController extends Controller
                 ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
                 ->where('tbl_contactItemSch.school_id', $id)
                 ->where(function ($query) {
-                    $query->where('tbl_contactItemSch.schoolContact_id', '=', '')
+                    $query->where('tbl_contactItemSch.schoolContact_id', NULL)
                         ->orWhere('tbl_schoolContact.isCurrent_status', '=', '-1');
                 })
                 ->get();
 
-            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id]);
+            $titleList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 1)
+                ->get();
+
+            $jobRoleList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 11)
+                ->get();
+
+            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function schoolAddressUpdate(Request $request)
+    {
+        $school_id = $request->school_id;
+        DB::table('tbl_school')->where('school_id', '=', $school_id)
+            ->update([
+                'address1_txt' =>    $request->address1_txt,
+                'address2_txt' =>    $request->address2_txt,
+                'address3_txt' =>    $request->address3_txt,
+                'address4_txt' =>    $request->address4_txt,
+                'postcode_txt' =>    $request->postcode_txt,
+                'baseRate_dec' =>    $request->baseRate_dec
+            ]);
+
+        return redirect('/school-detail/' . $school_id)->with('success', "Address updated successfully.");
+    }
+
+    public function schoolContactInsert(Request $request)
+    {
+        $school_id = $request->school_id;
+        $receiveVetting_status = 0;
+        if ($request->receiveVetting_status) {
+            $receiveVetting_status = -1;
+        }
+        $receiveTimesheets_status = 0;
+        if ($request->receiveTimesheets_status) {
+            $receiveTimesheets_status = -1;
+        }
+        DB::table('tbl_schoolContact')
+            ->insert([
+                'school_id' => $school_id,
+                'title_int' => $request->title_int,
+                'firstName_txt' => $request->firstName_txt,
+                'surname_txt' => $request->surname_txt,
+                'jobRole_int' => $request->jobRole_int,
+                'receiveTimesheets_status' => $receiveTimesheets_status,
+                'receiveVetting_status' => $receiveVetting_status,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        return redirect('/school-detail/' . $school_id)->with('success', "Contact added successfully.");
     }
 
     public function schoolContact(Request $request, $id)
