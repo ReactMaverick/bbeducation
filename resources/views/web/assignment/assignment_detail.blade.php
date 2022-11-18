@@ -96,51 +96,58 @@
 
             <div class="assignment-detail-right-sec">
                 <form class="filter-section">
-                    <div class="form-group filter-group-sec">
-                        <label for="inputState">Age Range</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-
-                        <label for="inputState">Age Range</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-
-                        <label for="inputState">Age Range</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-
-                        <label for="inputState">Age Range</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-
-                        <label for="inputState">Age Range</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
-
-                        <label for="inputState">Age Range</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
+                    <div class="filter-group-sec">
+                        <div class="form-group">
+                            <label for="inputState">Age Range</label>
+                            <select id="inputState" class="form-control">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputState">Age Range</label>
+                            <select id="inputState" class="form-control">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputState">Age Range</label>
+                            <select id="inputState" class="form-control">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputState">Age Range</label>
+                            <select id="inputState" class="form-control">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputState">Age Range</label>
+                            <select id="inputState" class="form-control">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputState">Age Range</label>
+                            <select id="inputState" class="form-control">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="row filter-input-sec">
-                        <div class="form-group col-md-6">
+                        <div class="form-group filter-input-sec-group col-md-6">
                             <label for="inputCity">Daily Charge</label>
                             <input type="text" class="form-control" id="inputCity" placeholder="&#163 130">
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group filter-input-sec-group2 col-md-6">
                             <label for="inputCity">Daily Pay</label>
                             <input type="text" class="form-control" id="inputCity" placeholder="&#163 80.00">
                         </div>
@@ -425,7 +432,8 @@
 
                                 <div class="modal-input-field">
                                     <label class="form-check-label">Percentage of a day</label>
-                                    <input type="number" class="form-control" name="booked_day" id="booked_day" value="">
+                                    <input type="number" class="form-control" name="booked_day" id="booked_day"
+                                        value="">
                                 </div>
 
                                 <div class="modal-input-field">
@@ -434,11 +442,11 @@
                                 </div>
 
                                 <div class="modal-side-field">
-                                <label class="form-check-label">Charge</label>
+                                    <label class="form-check-label">Charge</label>
                                     <input type="text" class="form-control" name="booked_day" id="booked_day" value="">
                                 </div>
                                 <div class="modal-side-field second">
-                                <label class="form-check-label">Pay</label>
+                                    <label class="form-check-label">Pay</label>
                                     <input type="text" class="form-control" name="booked_day" id="booked_day" value="">
                                 </div>
                             </div>

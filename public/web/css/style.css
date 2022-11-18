@@ -601,6 +601,17 @@ i {
     margin: 0;
 }
 
+.assignment-sidebar-sec-text {
+    width: 56%;
+    margin-left: 13px;
+}
+
+.assignment-sidebar-sec-text span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #afabab;
+}
+
 .checkbox-field {
     display: flex;
     align-items: center;
@@ -975,6 +986,20 @@ table td {
     border-radius: 0;
     margin-bottom: 8px;
     height: 28px;
+}
+
+.filter-input-sec {
+    margin: 0;
+}
+
+.filter-input-sec-group {
+    padding-right: 10px;
+    padding-left: 0;
+}
+
+.filter-input-sec-group2 {
+    padding-left: 10px;
+    padding-right: 0;
 }
 
 .assignment-time-table-section {
@@ -2015,4 +2040,13 @@ table td {
     background-color: #70ad47 !important;
     border-color: #70ad47 !important;
     box-shadow: none !important;
+}
+
+
+
+/* -------------TABLE ROW ACTIVE------------ */
+
+.tableRowActive {
+    background-color: #000;
+    color: #fff;
 }
