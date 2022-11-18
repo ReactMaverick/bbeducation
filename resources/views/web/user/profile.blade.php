@@ -74,7 +74,7 @@
                             Second radio
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Sign in</button>
+                    <button type="submit" class="btn btn-primary profile-signin-btn">Sign in</button>
                 </div>
 
             </form>

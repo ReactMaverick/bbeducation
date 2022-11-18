@@ -75,6 +75,12 @@
             margin: 0 12px;
         }
 
+        /* ===========PROFILE============ */
+
+        .profile-signin-btn {
+            margin-top: 10px;
+        }
+
     /* ============FINANCE============= */
     .about-finance {
         width: 25%;
@@ -158,11 +164,11 @@
 
     .assignment-sidebar-sec {
         flex-direction: column;
-        width: 100%;
+        width: 50%;
     }
 
     .assignment-left-sidebar-section {
-        flex-direction: column;
+        flex-wrap: wrap;
     }
 
     .assignment-sidebar-sec-text span {
@@ -209,6 +215,16 @@
         margin: 10px 0 0 0;
         ;
         width: 50%;
+    }
+
+    /* =============PROFILE=========== */
+
+    .profile-form {
+        width: 100%;
+    }
+    
+    .profile-signin-btn {
+        margin-top: 10px;
     }
 }
 
