@@ -176,8 +176,8 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
                 ->LeftJoin('tbl_schoolContactLog', function ($join) {
                     $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id')
-                        ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
-                        ->take(1);
+                        ->orderBy('schoolContactLog_id', 'DESC')
+                        ->limit(1);
                 })
                 ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
                 ->LeftJoin('tbl_description as AgeRange', function ($join) {
@@ -209,31 +209,46 @@ class SchoolController extends Controller
                             $query->where('JobRole.descriptionGroup_int', '=', 11);
                         });
                 })
-                ->select('tbl_schoolContact.*', 'JobRole.description_txt as jobRole_txt')
+                ->LeftJoin('tbl_description as TitleTbl', function ($join) {
+                    $join->on('TitleTbl.description_int', '=', 'tbl_schoolContact.title_int')
+                        ->where(function ($query) {
+                            $query->where('TitleTbl.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->select('tbl_schoolContact.*', 'JobRole.description_txt as jobRole_txt', 'TitleTbl.description_txt as title_txt')
                 ->where('tbl_schoolContact.school_id', $id)
                 ->where('tbl_schoolContact.isCurrent_status', '-1')
                 ->get();
 
-            // $contactItems = DB::table('tbl_contactItemSch')
-            //     ->LeftJoin('tbl_schoolContact', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
-            //     ->LeftJoin('tbl_description as JobRole', function ($join) {
-            //         $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
-            //             ->where(function ($query) {
-            //                 $query->where('JobRole.descriptionGroup_int', '=', 11);
-            //             });
-            //     })
-            //     ->select('tbl_schoolContact.*', 'JobRole.description_txt as jobRole_txt')
-            //     ->where('tbl_schoolContact.school_id', $id)
-            //     ->where('tbl_schoolContact.isCurrent_status', '-1')
-            //     ->get();
+            $contactItems = DB::table('tbl_contactItemSch')
+                ->LeftJoin('tbl_schoolContact', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->LeftJoin('tbl_description as JobRole', function ($join) {
+                    $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
+                        ->where(function ($query) {
+                            $query->where('JobRole.descriptionGroup_int', '=', 11);
+                        });
+                })
+                ->LeftJoin('tbl_description as ContactType', function ($join) {
+                    $join->on('ContactType.description_int', '=', 'tbl_contactItemSch.type_int')
+                        ->where(function ($query) {
+                            $query->where('ContactType.descriptionGroup_int', '=', 13);
+                        });
+                })
+                ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
+                ->where('tbl_contactItemSch.school_id', $id)
+                ->where(function ($query) {
+                    $query->where('tbl_contactItemSch.schoolContact_id', '=', '')
+                        ->orWhere('tbl_schoolContact.isCurrent_status', '=', '-1');
+                })
+                ->get();
 
-            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts]);
+            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id]);
         } else {
             return redirect()->intended('/');
         }
     }
 
-    public function schoolContact(Request $request)
+    public function schoolContact(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
@@ -242,13 +257,13 @@ class SchoolController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.school.school_contact", ['title' => $title, 'headerTitle' => $headerTitle]);
+            return view("web.school.school_contact", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id]);
         } else {
             return redirect()->intended('/');
         }
     }
 
-    public function schoolAssignment(Request $request)
+    public function schoolAssignment(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
@@ -257,13 +272,13 @@ class SchoolController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle]);
+            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id]);
         } else {
             return redirect()->intended('/');
         }
     }
 
-    public function schoolFinance(Request $request)
+    public function schoolFinance(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
@@ -272,13 +287,13 @@ class SchoolController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle]);
+            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id]);
         } else {
             return redirect()->intended('/');
         }
     }
 
-    public function schoolTeacher(Request $request)
+    public function schoolTeacher(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
@@ -287,7 +302,7 @@ class SchoolController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.school.school_teacher", ['title' => $title, 'headerTitle' => $headerTitle]);
+            return view("web.school.school_teacher", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id]);
         } else {
             return redirect()->intended('/');
         }

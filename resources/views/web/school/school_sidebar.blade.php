@@ -8,7 +8,7 @@
         </div>
 
         <div class="sidebar-pages-section sidebar-active">
-            <a href="{{ URL::to('/school-detail') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-detail/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-clipboard-list"></i>
 
@@ -20,7 +20,7 @@
         </div>
 
         <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/school-contact') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-contact/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-comment"></i>
                 </div>
@@ -31,7 +31,7 @@
         </div>
 
         <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/school-assignment') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-assignment/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person-chalkboard"></i>
                 </div>
@@ -42,7 +42,7 @@
         </div>
 
         <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/school-finance') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-finance/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-money-bills"></i>
                 </div>
@@ -63,7 +63,7 @@
         </div>
 
         <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/school-teacher') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-teacher/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person"></i>
                 </div>

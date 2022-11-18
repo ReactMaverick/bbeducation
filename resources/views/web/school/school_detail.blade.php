@@ -113,19 +113,38 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
-                                <tr class="school-detail-table-data">
-                                    <td>xbx</td>
-                                    <td>sgsfg</td>
-                                    <td>fffs</td>
-                                    <td>xdgsg</td>
-                                </tr>
-
-                                <tr class="school-detail-table-data">
-                                    <td>xbx</td>
-                                    <td>sgsfg</td>
-                                    <td>fffs</td>
-                                    <td>xdgsg</td>
-                                </tr>
+                                @foreach ($schoolContacts as $key1 => $Contacts)
+                                    <tr class="school-detail-table-data">
+                                        <td>{{ $Contacts->jobRole_txt }}</td>
+                                        <td>
+                                            @if ($Contacts->firstName_txt != '' && $Contacts->surname_txt != '')
+                                                {{ $Contacts->firstName_txt . ' ' . $Contacts->surname_txt }}
+                                            @elseif ($Contacts->firstName_txt != '' && $Contacts->surname_txt == '')
+                                                {{ $Contacts->firstName_txt }}
+                                            @elseif ($Contacts->title_int != '' && $Contacts->surname_txt != '')
+                                                {{ $Contacts->title_txt . ' ' . $Contacts->surname_txt }}
+                                            @elseif ($Contacts->jobRole_int != '')
+                                                {{ $Contacts->jobRole_txt . ' (name unknown)' }}
+                                            @else
+                                                {{ 'Name unknown' }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($Contacts->receiveTimesheets_status != 0)
+                                                {{ 'Y' }}
+                                            @else
+                                                {{ 'N' }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($Contacts->receiveVetting_status != 0)
+                                                {{ 'Y' }}
+                                            @else
+                                                {{ 'N' }}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -140,23 +159,23 @@
                             <div class="school-name-section">
                                 <div class="school-detail-last-contact-text">
                                     @if ($schoolDetail->schoolContactLog_id)
-                                    <p>
-                                        {{ $schoolDetail->firstName_txt }} {{ $schoolDetail->surname_txt }}
-                                        @if ($schoolDetail->method_int == 1)
-                                            {{ ' called' }}
-                                        @elseif ($schoolDetail->method_int == 2)
-                                            {{ ' emailed' }}
-                                        @elseif ($schoolDetail->method_int == 3)
-                                            {{ ' sent text' }}
-                                        @else
-                                            {{ ' met' }}
-                                        @endif
-                                        {{ ' on ' }}
-                                        @if ($schoolDetail->contactOn_dtm != 0)
-                                            {{ date('d-m-Y', strtotime($schoolDetail->contactOn_dtm)) }}
-                                        @endif
-                                        {{ '. Spoke to: ' . $schoolDetail->spokeTo_txt . ' and noted: ' . $schoolDetail->notes_txt . '.' }}
-                                    </p>
+                                        <p>
+                                            {{ $schoolDetail->firstName_txt }} {{ $schoolDetail->surname_txt }}
+                                            @if ($schoolDetail->method_int == 1)
+                                                {{ ' called' }}
+                                            @elseif ($schoolDetail->method_int == 2)
+                                                {{ ' emailed' }}
+                                            @elseif ($schoolDetail->method_int == 3)
+                                                {{ ' sent text' }}
+                                            @else
+                                                {{ ' met' }}
+                                            @endif
+                                            {{ ' on ' }}
+                                            @if ($schoolDetail->contactOn_dtm != 0)
+                                                {{ date('M d Y H:i', strtotime($schoolDetail->contactOn_dtm)) }}
+                                            @endif
+                                            {{ '. Spoke to: ' . $schoolDetail->spokeTo_txt . ' and noted: ' . $schoolDetail->notes_txt . '.' }}
+                                        </p>
                                     @else
                                         <p>We have no record of previous contact with this school.</p>
                                     @endif
@@ -189,17 +208,29 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
-                                    <tr class="school-detail-table-data">
-                                        <td>School Main</td>
-                                        <td>School Main</td>
-                                        <td>020 8359 7744</td>
-                                    </tr>
-
-                                    <tr class="school-detail-table-data">
-                                        <td>School Main</td>
-                                        <td>School Main</td>
-                                        <td>020 8359 7744</td>
-                                    </tr>
+                                    @foreach ($contactItems as $key2 => $Items)
+                                        <tr class="school-detail-table-data">
+                                            <td>
+                                                @if ($Items->schoolContact_id == '')
+                                                    {{ 'School Main' }}
+                                                @else
+                                                    @if ($Items->firstName_txt != '' && $Items->surname_txt != '')
+                                                        {{ $Items->firstName_txt . ' ' . $Items->surname_txt }}
+                                                    @elseif ($Items->firstName_txt != '' && $Items->surname_txt == '')
+                                                        {{ $Items->firstName_txt }}
+                                                    @elseif ($Items->title_int != '' && $Items->surname_txt != '')
+                                                        {{ $Items->title_txt . ' ' . $Items->surname_txt }}
+                                                    @elseif ($Items->jobRole_int != '')
+                                                        {{ $Items->jobRole_txt . ' (name unknown)' }}
+                                                    @else
+                                                        {{ 'Name unknown' }}
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td>{{ $Items->type_txt }}</td>
+                                            <td>{{ $Items->contactItem_txt }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
