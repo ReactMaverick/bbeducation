@@ -74,7 +74,7 @@
                         <div class="assignment-sidebar-data">
                             <h2>29</h2>
                         </div>
-                        <div class="sidebar-sec-text">
+                        <div class="school-assignment-sidebar-sec-text">
                             <span>Completed Assignments</span>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                         <div class="assignment-sidebar-data2">
                             <h2>4</h2>
                         </div>
-                        <div class="sidebar-sec-text">
+                        <div class="school-assignment-sidebar-sec-text">
                             <span>Total Days</span>
                         </div>
                     </div>

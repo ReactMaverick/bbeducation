@@ -800,7 +800,7 @@ table td {
 }
 
 .sidebar-col {
-    padding-right: 0;
+    padding: 0;
     background-color: #40a0ed;
 }
 
@@ -1675,6 +1675,17 @@ table td {
     width: 20%;
 }
 
+.school-assignment-sidebar-sec-text {
+    width: 56%;
+    margin-left: 13px;
+}
+
+.school-assignment-sidebar-sec-text span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #afabab;
+}
+
 /* ================SCHOOL CONTACT============ */
 
 .contact-history-heading-section {
@@ -1765,7 +1776,7 @@ table td {
 .school-finance-contact-icon-sec i {
     font-size: 25px;
     color: #48a0dc;
-    margin-left: 16px;
+    margin: 0 8px;
 }
 
 .school-finance-table-section {
