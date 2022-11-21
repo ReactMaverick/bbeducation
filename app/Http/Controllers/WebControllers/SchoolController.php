@@ -359,4 +359,5 @@ class SchoolController extends Controller
             return redirect()->intended('/');
         }
     }
+    
 }
