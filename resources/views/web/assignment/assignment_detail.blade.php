@@ -68,10 +68,12 @@
                 <div class="teacher-name">
                     <span>Dalila Kesri</span>
                 </div>
-
+                <div class="assignment-detail-user-img-sec">
                 <div class="user-img-sec">
                     <img src="{{ asset('web/images/user-img.png') }}" alt="">
                 </div>
+                </div>
+                
 
                 <div class="sidebar-user-number">
                     <span>11297</span>
@@ -97,42 +99,42 @@
             <div class="assignment-detail-right-sec">
                 <form class="filter-section">
                     <div class="filter-group-sec">
-                        <div class="form-group">
+                        <div class="form-group assignment-detail-form-group">
                             <label for="inputState">Age Range</label>
                             <select id="inputState" class="form-control">
                                 <option selected>Choose...</option>
                                 <option>...</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group assignment-detail-form-group">
                             <label for="inputState">Age Range</label>
                             <select id="inputState" class="form-control">
                                 <option selected>Choose...</option>
                                 <option>...</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group assignment-detail-form-group">
                             <label for="inputState">Age Range</label>
                             <select id="inputState" class="form-control">
                                 <option selected>Choose...</option>
                                 <option>...</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group assignment-detail-form-group">
                             <label for="inputState">Age Range</label>
                             <select id="inputState" class="form-control">
                                 <option selected>Choose...</option>
                                 <option>...</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group assignment-detail-form-group">
                             <label for="inputState">Age Range</label>
                             <select id="inputState" class="form-control">
                                 <option selected>Choose...</option>
                                 <option>...</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group assignment-detail-form-group">
                             <label for="inputState">Age Range</label>
                             <select id="inputState" class="form-control">
                                 <option selected>Choose...</option>
@@ -144,12 +146,12 @@
                     <div class="row filter-input-sec">
                         <div class="form-group filter-input-sec-group col-md-6">
                             <label for="inputCity">Daily Charge</label>
-                            <input type="text" class="form-control" id="inputCity" placeholder="&#163 130">
+                            <input type="text" class="form-control assignment-detail-form-control" id="inputCity" placeholder="&#163 130">
                         </div>
 
                         <div class="form-group filter-input-sec-group2 col-md-6">
                             <label for="inputCity">Daily Pay</label>
-                            <input type="text" class="form-control" id="inputCity" placeholder="&#163 80.00">
+                            <input type="text" class="form-control assignment-detail-form-control" id="inputCity" placeholder="&#163 80.00">
                         </div>
                     </div>
                 </form>
@@ -351,7 +353,7 @@
                                     </div>
 
 
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 second-filter-sec">
                                         <label for="inputCity">First Date</label>
                                         <input type="date" class="form-control" id="inputCity"
                                             placeholder="&#163 80.00">

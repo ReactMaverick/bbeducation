@@ -63,23 +63,161 @@
         margin: 10px 45px 0 45px;
     }
 
-        /* =============ASSIGNMENT DETAILS=========== */
+    /* =============ASSIGNMENT DETAILS=========== */
 
-        .button-section {
-            width: 100%;
-            justify-content: center;
-            padding-left: 0;
-        }
+    .button-section {
+        width: 100%;
+        justify-content: flex-start;
+        padding-left: 0;
+    }
 
-        .button-section button {
-            margin: 0 12px;
-        }
+    .sidebar-top-text {
+        padding: 0 15px;
+    }
 
-        /* ===========PROFILE============ */
+    .sidebar-top-text h2 {
+        font-size: 10px;
+    }
 
-        .profile-signin-btn {
-            margin-top: 10px;
-        }
+    .assignment-time-table-section {
+        width: 70%;
+    }
+
+    .mode-section {
+        width: 10%;
+    }
+
+    .button-section button {
+        width: 22%;
+        margin: 0 10px;
+    }
+
+    /* ================SCHOOL DETAIL=========== */
+
+    .school-detail-right-sec {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .school-details-first-sec {
+        width: 100%;
+    }
+
+    .school-details-second-sec {
+        width: 100%;
+    }
+
+    .school-heading-text {
+        width: 35%;
+    }
+
+    .school-name-text {
+        width: 55%;
+    }
+
+    .school-detail-sec h2 {
+        font-size: 15px;
+        margin: 15px 10px 50px 10px;
+    }
+
+    /* ===============SCHOOL ASSIGNMENT============== */
+
+    .school-assignment-sidebar-sec {
+        width: 30%;
+    }
+
+    .school-assignment-sidebar-sec-text {
+        width: 50%;
+    }
+
+    /* ==============SCHOOL FINANCE=============== */
+
+    .school-finance-right-sec {
+        flex-direction: column;
+    }
+
+    /* ===============SCHOOL ASSIGNMENT============== */
+
+    .school-assignment-sidebar-sec {
+        width: 50%;
+    }
+
+    .school-assignment-sidebar-sec-text {
+        width: 50%;
+    }
+
+    /* ==============SCHOOL FINANCE=============== */
+
+    .school-finance-right-sec {
+        flex-direction: column;
+    }
+
+    .school-finance-section {
+        width: 100%;
+    }
+
+    .school-finance-sec {
+        flex-direction: column;
+    }
+
+    .school-finance-contact-heading-text {
+        width: 100%;
+    }
+
+    .paid-check {
+        width: 100%;
+    }
+
+    .payment-method-type {
+        width: 100%;
+        margin: 0;
+    }
+
+    .school-finance-contact-heading {
+        width: 100%;
+    }
+
+    .paid-check label {
+        font-size: 15px;
+    }
+
+    .payment-method-type label {
+        font-size: 15px;
+    }
+
+    .school-finance-contact-icon-sec {
+        justify-content: flex-start;
+        padding: 5px 0;
+    }
+
+    .billing-details-section {
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .invoice-timesheet-checkbox label {
+        font-size: 14px;
+    }
+
+    /* ==============SCHOOL TEACHER LIST=============== */
+
+    .teacher-list-section {
+        width: 100%;
+    }
+
+    .teacher-list-right-sec {
+        width: 100%;
+    }
+
+    .preferred-list-sec {
+        width: 14%;
+    }
+
+    /* ===========PROFILE============ */
+
+    .profile-signin-btn {
+        margin-top: 10px;
+    }
 
     /* ============FINANCE============= */
     .about-finance {
@@ -187,7 +325,260 @@
     .button-section {
         width: 100%;
         justify-content: center;
+        padding: 0 10px;
+    }
+
+    .button-section button {
+        font-size: 11px;
+        margin: 0 2.5px;
+    }
+
+    .assignment-detail-right-sec {
+        flex-direction: column;
+    }
+
+    .filter-section {
+        width: 100%;
+    }
+
+    .assignment-detail-form-group {
+        width: 93%;
+    }
+
+    .filter-input-sec-group {
+        padding: 0;
+        margin: 0;
+    }
+
+    .filter-input-sec-group2 {
+        padding: 0;
+    }
+
+    .assignment-detail-form-control {
+        width: 93%;
+    }
+
+    .assignment-time-table-section {
+        width: 100%;
+        padding: 0 13px;
+    }
+
+    .date-section {
+        width: 100%;
+    }
+
+    .total-days-section {
+        flex-direction: column;
+    }
+
+    .days-slider-sec {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .status-section {
+        width: 100%;
+    }
+
+    .second-filter-sec {
+        padding-right: 0;
+        margin: 0;
+    }
+
+    .mode-section {
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    .mode-text-sec {
+        width: 70%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .assignment-notes-sec {
+        width: 100%;
+    }
+
+    .label-heading {
+        padding-right: 0;
+    }
+
+    .assignment-detail-user-img-sec {
+        display: flex;
+        justify-content: center;
+    }
+
+    .sidebar-top-text h2 {
+        font-size: 20px;
+    }
+
+    .sidebar-top-text span {
+        font-size: 15px;
+    }
+
+    .sidebar-pages span {
+        font-size: 15px;
+    }
+
+    .sidebar-user-number span {
+        font-size: 15px;
+    }
+
+    .assignment-id-text-sec span {
+        font-size: 15px;
+    }
+
+    .assignment-detail-sidebar-sec {
+        height: fit-content;
+    }
+
+    .user-img-sec img {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* =================FIND SCHOOL============== */
+
+    .school-search-section {
+        width: 100%;
+        padding: 15px;
+    }
+
+    /* ================SCHOOL DETAIL=========== */
+
+    .school-detail-right-sec {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .school-details-first-sec {
+        width: 100%;
+    }
+
+    .school-details-second-sec {
+        width: 100%;
+    }
+
+    .school-heading-text {
+        width: 35%;
+    }
+
+    .school-name-text {
+        width: 55%;
+    }
+
+    .school-detail-sec h2 {
+        font-size: 20px;
+    }
+
+    .school-detail-sec i {
+        font-size: 40px;
+    }
+
+    .school-detail-sec span {
+        font-size: 15px;
+    }
+
+    /* ============SCHOOL CONTACT=========== */
+
+    .topbar-Section i {
+        font-size: 12px;
+    }
+
+    .topbar-text {
+        font-size: 10px;
+    }
+
+    .contact-history-heading-section {
+        width: 100%;
+    }
+
+    /* ===============SCHOOL ASSIGNMENT============== */
+
+    .school-assignment-sidebar-sec {
+        width: 50%;
+    }
+
+    .school-assignment-sidebar-sec-text {
+        width: 50%;
+    }
+
+    /* ==============SCHOOL FINANCE=============== */
+
+    .school-finance-right-sec {
+        flex-direction: column;
+    }
+
+    .school-finance-section {
+        width: 100%;
+    }
+
+    .school-finance-sec {
+        flex-direction: column;
+    }
+
+    .school-finance-contact-heading-text {
+        width: 100%;
+    }
+
+    .paid-check {
+        width: 100%;
+    }
+
+    .payment-method-type {
+        width: 100%;
+        margin: 0;
+    }
+
+    .school-finance-contact-heading {
+        width: 100%;
+    }
+
+    .paid-check label {
+        font-size: 15px;
+    }
+
+    .payment-method-type label {
+        font-size: 15px;
+    }
+
+    .school-finance-contact-icon-sec {
+        justify-content: space-between;
+        padding: 5px 0;
+    }
+
+    .billing-details-section {
+        width: 100%;
         padding-left: 0;
+    }
+
+    .invoice-timesheet-checkbox label {
+        font-size: 14px;
+    }
+
+    /* ==============SCHOOL TEACHER LIST=============== */
+
+    .page-icon-sec {
+        width: 10%;
+    }
+
+    .teacher-list-section {
+        width: 100%;
+    }
+
+    .teacher-list-right-sec {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .teacher-list-page-table {
+        width: 100%;
+    }
+
+    .preferred-list-sec {
+        width: 25%;
     }
 
     /* =============TEACHER============== */
@@ -222,7 +613,7 @@
     .profile-form {
         width: 100%;
     }
-    
+
     .profile-signin-btn {
         margin-top: 10px;
     }
