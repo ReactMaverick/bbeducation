@@ -300,6 +300,18 @@ class SchoolController extends Controller
         return redirect('/school-detail/' . $school_id)->with('success', "Contact added successfully.");
     }
 
+    public function getSchoolContactDetail(Request $request)
+    {
+        $input = $request->all();
+        $contact_id = $input['contact_id'];
+
+        $contactDetail = DB::table('tbl_schoolContact')
+            ->where('contact_id',"=",$contact_id)
+            ->first();
+
+        return response()->json(['contactDetail'=>$contactDetail]);
+    }
+
     public function schoolContact(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -359,4 +371,5 @@ class SchoolController extends Controller
             return redirect()->intended('/');
         }
     }
+    
 }

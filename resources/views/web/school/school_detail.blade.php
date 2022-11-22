@@ -126,7 +126,7 @@
                             </thead>
                             <tbody class="table-body-sec">
                                 @foreach ($schoolContacts as $key1 => $Contacts)
-                                    <tr class="school-detail-table-data"
+                                    <tr class="school-detail-table-data editContactRow"
                                         onclick="contactRowSelect({{ $Contacts->contact_id }})"
                                         id="editContactRow{{ $Contacts->contact_id }}">
                                         <td>{{ $Contacts->jobRole_txt }}</td>
@@ -415,7 +415,7 @@
     <!-- Contact Add Modal -->
 
     <!-- Contact Edit Modal -->
-    <div class="modal fade" id="ContactEditModal"  aria-hidden="true">
+    <div class="modal fade" id="ContactEditModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
@@ -441,7 +441,7 @@
 
                         <div class="form-group calendar-form-filter">
                             <label for="">Title</label>
-                            <select class="form-control" name="title_int">
+                            <select class="form-control" name="title_int" id="edit_title_int">
                                 <option value="">Choose one</option>
                                 @foreach ($titleList as $key1 => $title)
                                     <option value="{{ $title->description_int }}">
@@ -453,19 +453,19 @@
 
                         <div class="modal-input-field">
                             <label class="form-check-label">First Name</label>
-                            <input type="text" class="form-control" name="firstName_txt" id=""
+                            <input type="text" class="form-control" name="firstName_txt" id="edit_firstName_txt"
                                 value="">
                         </div>
 
                         <div class="modal-input-field">
                             <label class="form-check-label">Surname</label>
-                            <input type="text" class="form-control" name="surname_txt" id=""
+                            <input type="text" class="form-control" name="surname_txt" id="edit_surname_txt"
                                 value="">
                         </div>
 
                         <div class="form-group calendar-form-filter">
                             <label for="">Job Role</label>
-                            <select class="form-control" name="jobRole_int">
+                            <select class="form-control" name="jobRole_int" id="edit_jobRole_int">
                                 <option value="">Choose one</option>
                                 @foreach ($jobRoleList as $key2 => $jobRole)
                                     <option value="{{ $jobRole->description_int }}">
@@ -476,17 +476,17 @@
                         </div>
 
                         <div class="modal-side-field">
-                            <label class="form-check-label" for="receiveVetting_status">Receive Vetting
+                            <label class="form-check-label" for="edit_receiveVetting_status">Receive Vetting
                                 Confirmations</label>
                             <input type="checkbox" class="" name="receiveVetting_status"
-                                id="receiveVetting_status" value="1">
+                                id="edit_receiveVetting_status" value="1">
                         </div>
 
                         <div class="modal-side-field">
-                            <label class="form-check-label" for="receiveTimesheets_status">Receive
+                            <label class="form-check-label" for="edit_receiveTimesheets_status">Receive
                                 Timesheets/Invoices</label>
                             <input type="checkbox" class="" name="receiveTimesheets_status"
-                                id="receiveTimesheets_status" value="1">
+                                id="edit_receiveTimesheets_status" value="1">
                         </div>
                     </div>
 
@@ -512,21 +512,32 @@
                 $('#editContactBttn').addClass('disabled-link');
             } else {
                 $('#editContactId').val(contact_id);
+                $('.editContactRow').removeClass('tableRowActive');
                 $('#editContactRow' + contact_id).addClass('tableRowActive');
                 $('#deleteContactBttn').removeClass('disabled-link');
                 $('#editContactBttn').removeClass('disabled-link');
             }
         }
 
-        // $(document).ready(function(){
-        //     $('#editContactBttn').click(function(){
-        //         $('#ContactEditModal').modal('show');
-        //     })
-        // })
-
         $(document).on('click', '#editContactBttn', function() {
-            console.log('edit modal');
-            $('#ContactEditModal').modal("show");
+            var contact_id = $('#editContactId').val();
+            if (contact_id) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('getSchoolContactDetail') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        contact_id: contact_id
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('#edit_title_int').val(data.title_int);
+                    }
+                });
+                $('#ContactEditModal').modal("show");
+            } else {
+                alert("Please select contact.");
+            }
         });
     </script>
 @endsection

@@ -51,6 +51,7 @@ Route::get('/school-search', [SchoolController::class, 'schoolSearch']);
 Route::get('/school-detail/{id}', [SchoolController::class, 'schoolDetail']);
 Route::post('/schoolAddressUpdate', [SchoolController::class, 'schoolAddressUpdate']);
 Route::post('/schoolContactInsert', [SchoolController::class, 'schoolContactInsert']);
+Route::post('/getSchoolContactDetail', [SchoolController::class, 'getSchoolContactDetail']);
 Route::get('/school-contact/{id}', [SchoolController::class, 'schoolContact']);
 Route::get('/school-assignment/{id}', [SchoolController::class, 'schoolAssignment']);
 Route::get('/school-finance/{id}', [SchoolController::class, 'schoolFinance']);
