@@ -1453,7 +1453,7 @@ table td {
 }
 
 .school-details-first-sec {
-    width: 45%;
+    width: 42%;
 }
 
 .details-heading {
@@ -1509,9 +1509,9 @@ table td {
     width: 60%;
 }
 
-/* .grid-refs-text1 {
-    width: 40%;
-} */
+.details-table {
+    padding-bottom: 5px;
+}
 
 .grid-refs-text1 p {
     font-size: 12px;
@@ -1525,7 +1525,7 @@ table td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px 0 7px 0;
+    padding-bottom: 7px;
     border-bottom: 2px solid #dddddd;
 }
 
@@ -1592,7 +1592,7 @@ table td {
 }
 
 .school-details-second-sec {
-    width: 40%;
+    width: 42%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1607,6 +1607,10 @@ table td {
     color: #000;
     font-weight: 400;
     margin-bottom: 0;
+}
+
+.school-details-contact-second-sec {
+    width: 42%;
 }
 
 /* ===============SCHOOL ASSIGNMENT============ */
@@ -2057,7 +2061,7 @@ table td {
 
 /* -------------TABLE ROW ACTIVE------------ */
 
-.tableRowActive {
+.tableRowActive td {
     background-color: #000;
     color: #fff;
 }

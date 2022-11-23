@@ -120,6 +120,13 @@
         margin: 15px 10px 50px 10px;
     }
 
+    .school-details-contact-second-sec {
+        width: 100%;
+    }
+
+    .details-heading {
+        padding: 7px 0;
+    }
     /* ===============SCHOOL ASSIGNMENT============== */
 
     .school-assignment-sidebar-sec {
@@ -480,6 +487,15 @@
     .school-detail-sec span {
         font-size: 15px;
     }
+
+    .school-details-contact-second-sec {
+        width: 100%;
+    }
+
+    .details-heading {
+        padding: 7px 0;
+    }
+
 
     /* ============SCHOOL CONTACT=========== */
 
