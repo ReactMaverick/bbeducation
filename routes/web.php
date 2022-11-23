@@ -43,6 +43,10 @@ Route::get('/dashboard', [HomeController::class, 'dashboard']);
 
 Route::get('/assignments', [AssignmentController::class, 'assignments']);
 Route::get('/assignment-details', [AssignmentController::class, 'assignmentDetails']);
+Route::get('/assignment-contact', [AssignmentController::class, 'assignmentContact']);
+Route::get('/assignment-candidate', [AssignmentController::class, 'assignmentCandidate']);
+Route::get('/assignment-school', [AssignmentController::class, 'assignmentSchool']);
+Route::get('/assignment-finance', [AssignmentController::class, 'assignmentFinance']);
 
 Route::get('/teachers', [TeacherController::class, 'teachers']);
 

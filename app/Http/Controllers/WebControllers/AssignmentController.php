@@ -73,4 +73,61 @@ class AssignmentController extends Controller
             return redirect()->intended('/');
         }
     }
+
+    public function assignmentContact(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Assignments Contact");
+            $headerTitle = "Assignments";
+            $company_id = $webUserLoginData->company_id;
+
+            return view("web.assignment.assignment_contact", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function assignmentCandidate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Assignments Candidate");
+            $headerTitle = "Assignments";
+            $company_id = $webUserLoginData->company_id;
+
+            return view("web.assignment.assignment_candidate", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function assignmentSchool(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Assignments School Detail");
+            $headerTitle = "Assignments";
+            $company_id = $webUserLoginData->company_id;
+
+            return view("web.assignment.assignment_school", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function assignmentFinance(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Assignments Finance");
+            $headerTitle = "Assignments";
+            $company_id = $webUserLoginData->company_id;
+
+            return view("web.assignment.assignment_finance", ['title' => $title, 'headerTitle' => $headerTitle]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
 }
