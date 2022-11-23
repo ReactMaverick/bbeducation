@@ -252,7 +252,12 @@ class SchoolController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 11)
                 ->get();
 
-            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList]);
+            $contactMethodList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 13)
+                ->get();
+
+            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList, 'contactMethodList' => $contactMethodList]);
         } else {
             return redirect()->intended('/');
         }
@@ -306,10 +311,59 @@ class SchoolController extends Controller
         $contact_id = $input['contact_id'];
 
         $contactDetail = DB::table('tbl_schoolContact')
-            ->where('contact_id',"=",$contact_id)
+            ->where('contact_id', "=", $contact_id)
             ->first();
+        $titleList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 1)
+            ->get();
 
-        return response()->json(['contactDetail'=>$contactDetail]);
+        $jobRoleList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 11)
+            ->get();
+
+        $view = view("web.school.contact_edit_view", ['contactDetail' => $contactDetail, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function schoolContactUpdate(Request $request)
+    {
+        $contact_id = $request->editContactId;
+        $school_id = $request->school_id;
+        $editData = array();
+        $receiveVetting_status = 0;
+        if ($request->receiveVetting_status) {
+            $receiveVetting_status = -1;
+        }
+        $receiveTimesheets_status = 0;
+        if ($request->receiveTimesheets_status) {
+            $receiveTimesheets_status = -1;
+        }
+        $editData['title_int'] = $request->title_int;
+        $editData['firstName_txt'] = $request->firstName_txt;
+        $editData['surname_txt'] = $request->surname_txt;
+        $editData['jobRole_int'] = $request->jobRole_int;
+        $editData['receiveTimesheets_status'] = $receiveTimesheets_status;
+        $editData['receiveVetting_status'] = $receiveVetting_status;
+        $editData['title_int'] = $request->title_int;
+
+        if (count($editData) > 0) {
+            $editData['timestamp_ts'] = date('Y-m-d H:i:s');
+            DB::table('tbl_schoolContact')->where('contact_id', '=', $contact_id)
+                ->update($editData);
+        }
+
+        return redirect('/school-detail/' . $school_id)->with('success', "Contact updated successfully.");
+    }
+
+    public function schoolContactDelete(Request $request)
+    {
+        $contact_id = $request->contact_id;
+        DB::table('tbl_schoolContact')->where('contact_id', '=', $contact_id)
+            ->delete();
+
+        return 1;
     }
 
     public function schoolContact(Request $request, $id)
@@ -371,5 +425,4 @@ class SchoolController extends Controller
             return redirect()->intended('/');
         }
     }
-    
 }

@@ -1,5 +1,6 @@
 <script src="{!! asset('plugins/select2/select2.full.min.js') !!}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js" integrity="sha512-XKa9Hemdy1Ui3KSGgJdgMyYlUg1gM+QhL6cnlyTe2qzMCYm4nAZ1PsVerQzTTXzonUR+dmswHqgJPuwCq1MaAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{!! asset('plugins/sweetalert/sweetalert.min.js') !!}"></script>
 
 <script>
     $(document).ready(function() {
