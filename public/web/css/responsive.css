@@ -127,6 +127,7 @@
     .details-heading {
         padding: 7px 0;
     }
+
     /* ===============SCHOOL ASSIGNMENT============== */
 
     .school-assignment-sidebar-sec {
@@ -219,6 +220,66 @@
     .preferred-list-sec {
         width: 14%;
     }
+
+    /* =============ASSIGNMENT CONTACT============= */
+
+    .assignment-contact-history-heading-section {
+        width: 100%;
+    }
+
+    .assignment-contact-page-table {
+        width: 100%;
+    }
+
+    /* ==============ASSIGNMENT CANDIDATE=========== */
+
+    .assignment-candidate-billing-details-section {
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .assignment-candidate-paid-check {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .assignment-candidate-section {
+        width: 100%;
+    }
+
+    .assignment-candidate-heading-text {
+        width: 100%;
+    }
+
+    .assignment-candidate-sec {
+        flex-direction: column;
+    }
+
+    .assignment-candidate-payment-method-type {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* ==========ASSIGNMENT SCHOOL============ */
+
+    .assignment-school-detail-right-sec {
+        flex-direction: column;
+    }
+
+    .assignment-school-details-first-sec {
+        width: 100%;
+    }
+
+    .assignment-school-details-contact-second-sec {
+        width: 100%;
+    }
+
+    /* =============ASSIGNMENT FINANCE============== */
+
+    .assignment-finance-section {
+        width: 100%;
+    }
+
 
     /* ===========PROFILE============ */
 
@@ -438,7 +499,7 @@
     }
 
     .assignment-detail-sidebar-sec {
-        height: fit-content;
+        height: auto;
     }
 
     .user-img-sec img {
@@ -623,6 +684,76 @@
         ;
         width: 50%;
     }
+
+    /* =============ASSIGNMENT CONTACT============= */
+
+    .assignment-contact-history-heading-section {
+        width: 100%;
+    }
+
+    .assignment-contact-page-table {
+        width: 100%;
+    }
+
+    .assignment-sidebar-text {
+        width: 76%;
+    }
+
+    /* ==============ASSIGNMENT CANDIDATE=========== */
+
+    .assignment-candidate-section {
+        width: 100%;
+    }
+
+    .assignment-candidate-heading-text {
+        width: 100%;
+    }
+
+    .assignment-candidate-sec {
+        flex-direction: column;
+    }
+
+    .assignment-candidate-paid-check {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .assignment-candidate-payment-method-type {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .assignment-candidate-billing-details-section {
+        width: 100%;
+        padding-left: 0;
+    }
+
+        /* ==========ASSIGNMENT SCHOOL============ */
+
+        .assignment-school-detail-right-sec {
+            flex-direction: column;
+        }
+    
+        .assignment-school-details-first-sec {
+            width: 100%;
+        }
+    
+        .assignment-school-details-contact-second-sec {
+            width: 100%;
+        }
+
+        .assignment-school-detail-right-sec {
+            width: 100%;
+            padding: 13px;
+
+        }
+
+        /* =============ASSIGNMENT FINANCE============== */
+
+        .assignment-finance-section {
+            width: 100%;
+        }
+    
 
     /* =============PROFILE=========== */
 
