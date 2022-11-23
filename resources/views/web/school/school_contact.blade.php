@@ -24,26 +24,12 @@
                         <span class="topbar-text">calendar</span>
                     </i>
                 </div>
-
                 <div class="school-assignment-sec">
-
-
                     <div class="school-assignment-section">
                         <div class="contact-history-heading-section">
                             <h2>Contact History</h2>
                             <a href="#"><i class="fa-solid fa-plus"></i></a>
                         </div>
-                        <!-- <div class="school-assignment-contact-heading">
-
-                            <div class="school-assignment-contact-icon-sec">
-                                <a href="#"><i class="fa-solid fa-xmark"></i></a>
-                                <a href="#"><i class="fa-solid fa-plus"></i></a>
-                                <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
-                            </div>
-                        </div> -->
-
-
-
                         <table class="table school-detail-page-table" id="myTable">
                             <thead>
                                 <tr class="school-detail-table-heading">
@@ -75,8 +61,6 @@
                                 </tr>
                             </tbody>
                         </table>
-
-
                     </div>
                     <div class="assignment-first-sec">
                         <div class="assignment-left-sidebar-section">
@@ -96,7 +80,6 @@
                                     <span>Callbacks Due</span>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
