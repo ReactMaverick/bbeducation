@@ -12,17 +12,17 @@
 
             <div class="col-md-10 topbar-sec">
                 <div class="topbar-Section">
-                    <i class="fa-solid fa-crown">
-                        <span class="topbar-text">All Through</span>
+                    <i class="fa-solid fa-users">
+                        <span class="topbar-text">{{ $schoolDetail->ageRange_txt }}</span>
                     </i>
                     <i class="fa-solid fa-school">
-                        <span class="topbar-text">Other</span>
+                        <span class="topbar-text">{{ $schoolDetail->type_txt }}</span>
                     </i>
                     <i class="fa-solid fa-list-ul">
-                        <span class="topbar-text">Barnet</span>
+                        <span class="topbar-text">{{ $schoolDetail->laName_txt }}</span>
                     </i>
                     <i class="fa-solid fa-flag">
-                        <span class="topbar-text">Other</span>
+                        <span class="topbar-text">{{ $schoolDetail->religion_txt }}</span>
                     </i>
                     <i class="fa-solid fa-star topbar-star-icon"></i>
                     <i class="fa-regular fa-calendar-days">
@@ -168,7 +168,7 @@
                             <tbody class="table-body-sec">
                                 @foreach ($schoolContacts as $key1 => $Contacts)
                                     <tr class="school-detail-table-data editContactRow"
-                                        onclick="contactRowSelect({{ $Contacts->contact_id }})"
+                                        onclick="contactRowSelect({{ $Contacts->contact_id }}, {{ $school_id }})"
                                         id="editContactRow{{ $Contacts->contact_id }}">
                                         <td>{{ $Contacts->jobRole_txt }}</td>
                                         <td>
@@ -229,7 +229,8 @@
                             </div>
                             <!-- </div> -->
 
-                            <table class="table school-detail-page-table" id="myTable">
+                            <input type="hidden" name="editContactItemName" id="editContactItemName" value="">
+                            <table class="table school-detail-page-table" id="">
                                 <thead>
                                     <tr class="school-detail-table-heading">
                                         <th>Person</th>
@@ -237,30 +238,43 @@
                                         <th>Details</th>
                                     </tr>
                                 </thead>
-                                <tbody class="table-body-sec">
-                                    @foreach ($contactItems as $key2 => $Items)
-                                        <tr class="school-detail-table-data">
-                                            <td>
-                                                @if ($Items->schoolContact_id == '')
-                                                    {{ 'School Main' }}
+                                <tbody class="table-body-sec" id="contactItemAjxView">
+                                    @if (count($contactItems) > 0)
+                                        @foreach ($contactItems as $key2 => $Items)
+                                            {{ $pName = '' }}
+                                            @if ($Items->schoolContact_id == '')
+                                                {{ $pName = 'School Main' }}
+                                            @else
+                                                @if ($Items->firstName_txt != '' && $Items->surname_txt != '')
+                                                    {{ $pName = $Items->firstName_txt . ' ' . $Items->surname_txt }}
+                                                @elseif ($Items->firstName_txt != '' && $Items->surname_txt == '')
+                                                    {{ $pName = $Items->firstName_txt }}
+                                                @elseif ($Items->title_int != '' && $Items->surname_txt != '')
+                                                    {{ $pName = $Items->title_txt . ' ' . $Items->surname_txt }}
+                                                @elseif ($Items->jobRole_int != '')
+                                                    {{ $pName = $Items->jobRole_txt . ' (name unknown)' }}
                                                 @else
-                                                    @if ($Items->firstName_txt != '' && $Items->surname_txt != '')
-                                                        {{ $Items->firstName_txt . ' ' . $Items->surname_txt }}
-                                                    @elseif ($Items->firstName_txt != '' && $Items->surname_txt == '')
-                                                        {{ $Items->firstName_txt }}
-                                                    @elseif ($Items->title_int != '' && $Items->surname_txt != '')
-                                                        {{ $Items->title_txt . ' ' . $Items->surname_txt }}
-                                                    @elseif ($Items->jobRole_int != '')
-                                                        {{ $Items->jobRole_txt . ' (name unknown)' }}
-                                                    @else
-                                                        {{ 'Name unknown' }}
-                                                    @endif
+                                                    {{ $pName = 'Name unknown' }}
                                                 @endif
+                                            @endif
+
+                                            <tr class="school-detail-table-data editContactItemRow"
+                                                id="editContactItemRow{{ $Items->contactItemSch_id }}"
+                                                onclick="contactItemRowSelect({{ $Items->contactItemSch_id }}, '<?php echo $pName; ?>')">
+                                                <td>
+                                                    {{ $pName }}
+                                                </td>
+                                                <td>{{ $Items->type_txt }}</td>
+                                                <td>{{ $Items->contactItem_txt }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="3">
+                                                Empty contact item.
                                             </td>
-                                            <td>{{ $Items->type_txt }}</td>
-                                            <td>{{ $Items->contactItem_txt }}</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -487,7 +501,7 @@
                         <h2>Add Contact Item</h2>
                     </div>
 
-                    <form action="{{ url('/schoolContactItemInsert') }}" method="post">
+                    <form action="{{ url('/schoolContactItemInsert') }}" method="post" class="form-validate">
                         @csrf
                         <div class="modal-input-field-section">
                             <h6>{{ $schoolDetail->name_txt }}</h6>
@@ -497,7 +511,7 @@
 
                             <div class="form-group calendar-form-filter">
                                 <label for="">Contact Method</label>
-                                <select class="form-control" name="">
+                                <select class="form-control field-validate" name="type_int" id="contactMethodId">
                                     <option value="">Choose one</option>
                                     @foreach ($contactMethodList as $key1 => $contactMethod)
                                         <option value="{{ $contactMethod->description_int }}">
@@ -508,26 +522,27 @@
                             </div>
 
                             <div class="modal-side-field">
-                                <input type="checkbox" class="" name="" id="invoiceContact" value="1"
-                                    disabled>
+                                <input type="checkbox" class="" name="receiveInvoices_status" id="invoiceContact"
+                                    value="1" disabled>
                                 <label class="form-check-label" for="invoiceContact">Invoice Contact</label>
                             </div>
 
-                            <div class="modal-input-field">
+                            <div class="form-group modal-input-field">
                                 <label class="form-check-label">Details (number/email etc.)</label>
-                                <input type="text" class="form-control" name="" id=""
-                                    value="">
+                                <input type="text" class="form-control field-validate" name="contactItem_txt"
+                                    id="" value="">
                             </div>
 
                             <div class="modal-side-field">
-                                <label class="form-check-label" for="schoolMain">School Main (not specific person)</label>
-                                <input type="checkbox" class="" name="" id="schoolMain" value="1"
-                                    checked>
+                                <label class="form-check-label" for="schoolMainId">School Main (not specific
+                                    person)</label>
+                                <input type="checkbox" class="" name="schoolMainId" id="schoolMainId"
+                                    value="1" checked>
                             </div>
 
                             <div class="form-group calendar-form-filter">
                                 <label for="">Contact Person</label>
-                                <select class="form-control" name="">
+                                <select class="form-control" name="schoolContact_id" id="schoolContactId">
                                     <option value="">Choose one</option>
                                     @foreach ($schoolContacts as $key2 => $Contacts)
                                         <?php
@@ -566,19 +581,76 @@
         </div>
         <!-- Contact Item Add Modal -->
 
+        <!-- Contact Item Edit Modal -->
+        <div class="modal fade" id="ContactItemEditModal">
+            <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+                <div class="modal-content calendar-modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header calendar-modal-header">
+                        <h4 class="modal-title">Edit School Contact Item</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="calendar-heading-sec">
+                        <i class="fa-solid fa-pencil school-edit-icon"></i>
+                        <h2>Edit Contact Item</h2>
+                    </div>
+
+                    <form action="{{ url('/schoolContactItemUpdate') }}" method="post" class="form-validate-2">
+                        @csrf
+                        <input type="hidden" name="editContactItemId" id="editContactItemId" value="">
+                        <div class="modal-input-field-section">
+                            <h6>{{ $schoolDetail->name_txt }}</h6>
+                            <h6>ID</h6>
+                            <h6>{{ $schoolDetail->school_id }}</h6>
+                            <input type="hidden" name="school_id" id="contactItemSchoolId"
+                                value="{{ $schoolDetail->school_id }}">
+
+                            <div id="AjaxContactItemEdit"></div>
+
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- Contact Item Edit Modal -->
+
         <script>
-            function contactRowSelect(contact_id) {
+            function contactRowSelect(contact_id, school_id) {
                 if ($('#editContactRow' + contact_id).hasClass('tableRowActive')) {
                     $('#editContactId').val('');
                     $('#editContactRow' + contact_id).removeClass('tableRowActive');
                     $('#deleteContactBttn').addClass('disabled-link');
                     $('#editContactBttn').addClass('disabled-link');
+
+                    $('#editContactItemId').val('');
+                    $('#deleteContactItemBttn').addClass('disabled-link');
+                    $('#editContactItemBttn').addClass('disabled-link');
+
+                    var selectStat = 'No';
+                    fetchContactItem(school_id, contact_id, selectStat);
+
+                    $('#schoolContactId').val('');
                 } else {
                     $('#editContactId').val(contact_id);
                     $('.editContactRow').removeClass('tableRowActive');
                     $('#editContactRow' + contact_id).addClass('tableRowActive');
                     $('#deleteContactBttn').removeClass('disabled-link');
                     $('#editContactBttn').removeClass('disabled-link');
+
+                    var selectStat = 'Yes';
+                    fetchContactItem(school_id, contact_id, selectStat);
+
+                    $('#schoolContactId').val(contact_id);
                 }
             }
 
@@ -632,6 +704,147 @@
                         });
                 } else {
                     swal("BumbleBee Education", "Please select one contact.");
+                }
+            });
+
+            $(document).on('change', '#contactMethodId', function() {
+                var contactMethodId = $(this).val();
+                if (contactMethodId == 1) {
+                    $("#invoiceContact").attr("disabled", false);
+                } else {
+                    $('#invoiceContact').prop('checked', false);
+                    $("#invoiceContact").attr("disabled", true);
+                }
+            });
+
+            $(document).on('change', '#schoolMainId', function() {
+                if ($(this).is(":checked")) {
+                    $('#schoolContactId').val('');
+                }
+            });
+
+            $(document).on('change', '#schoolContactId', function() {
+                var schoolContactId = $(this).val();
+                if (schoolContactId != '') {
+                    $('#schoolMainId').prop('checked', false);
+                } else {
+                    $('#schoolMainId').prop('checked', true);
+                }                
+            });
+
+            function fetchContactItem(school_id, contact_id, selectStat) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('fetchContactItemList') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        school_id: school_id,
+                        contact_id: contact_id,
+                        selectStat: selectStat
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#contactItemAjxView').html(data.html);
+                    }
+                });
+            }
+
+            function contactItemRowSelect(contactItemSch_id, name) {
+                if ($('#editContactItemRow' + contactItemSch_id).hasClass('tableRowActive')) {
+                    $('#editContactItemId').val('');
+                    $('#editContactItemName').val('');
+                    $('#editContactItemRow' + contactItemSch_id).removeClass('tableRowActive');
+                    $('#deleteContactItemBttn').addClass('disabled-link');
+                    $('#editContactItemBttn').addClass('disabled-link');
+                } else {
+                    $('#editContactItemId').val(contactItemSch_id);
+                    $('#editContactItemName').val(name);
+                    $('.editContactItemRow').removeClass('tableRowActive');
+                    $('#editContactItemRow' + contactItemSch_id).addClass('tableRowActive');
+                    $('#deleteContactItemBttn').removeClass('disabled-link');
+                    $('#editContactItemBttn').removeClass('disabled-link');
+                }
+            }
+
+            $(document).on('click', '#editContactItemBttn', function() {
+                var editContactItemId = $('#editContactItemId').val();
+                var contactItemSchoolId = $('#contactItemSchoolId').val();
+                if (editContactItemId) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('getContactItemDetail') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            editContactItemId: editContactItemId,
+                            contactItemSchoolId: contactItemSchoolId
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            $('#AjaxContactItemEdit').html(data.html);
+                        }
+                    });
+                    $('#ContactItemEditModal').modal("show");
+                } else {
+                    swal("BumbleBee Education", "Please select one contact item.");
+                }
+            });
+
+            $(document).on('change', '#editContactMethodId', function() {
+                var editContactMethodId = $(this).val();
+                if (editContactMethodId == 1) {
+                    $("#editInvoiceContact").attr("disabled", false);
+                } else {
+                    $('#editInvoiceContact').prop('checked', false);
+                    $("#editInvoiceContact").attr("disabled", true);
+                }
+            });
+
+            $(document).on('change', '#editSchoolMainId', function() {
+                if ($(this).is(":checked")) {
+                    $('#editSchoolContactId').val('');
+                }
+            });
+
+            $(document).on('change', '#editSchoolContactId', function() {
+                var editSchoolContactId = $(this).val();
+                if (editSchoolContactId != '') {
+                    $('#editSchoolMainId').prop('checked', false);
+                } else {
+                    $('#editSchoolMainId').prop('checked', true);
+                }
+            });
+
+            $(document).on('click', '#deleteContactItemBttn', function() {
+                var editContactItemId = $('#editContactItemId').val();
+                var editContactItemName = $('#editContactItemName').val();
+                if (editContactItemId) {
+                    swal({
+                            title: "BumbleBee Education",
+                            text: "Are you sure you wish to delete this contact item for "+editContactItemName+"?",
+                            buttons: {
+                                cancel: "No",
+                                Yes: "Yes"
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "Yes":
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('schoolContactItemDelete') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            editContactItemId: editContactItemId
+                                        },
+                                        success: function(data) {
+                                            $('#editContactItemRow'+editContactItemId).remove();
+                                            // location.reload();
+                                        }
+                                    });
+                            }
+                        });
+                } else {
+                    swal("BumbleBee Education", "Please select one contact item.");
                 }
             });
         </script>

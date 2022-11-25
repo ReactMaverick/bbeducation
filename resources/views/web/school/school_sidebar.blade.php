@@ -1,10 +1,9 @@
 <div class="col-md-2 sidebar-col">
     <div class="assignment-detail-sidebar-sec">
         <div class="school-detail-sec">
-            <h2>Barnet Virtual School</h2>
+            <h2>{{ $schoolDetail->name_txt }}</h2>
             <i class="fa-solid fa-school"></i>
-            <span>100960</span>
-
+            <span>{{ $schoolDetail->school_id }}</span>
         </div>
 
         <div class="sidebar-pages-section sidebar-active">

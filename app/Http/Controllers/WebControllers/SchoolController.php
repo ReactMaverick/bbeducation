@@ -237,8 +237,8 @@ class SchoolController extends Controller
                 ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
                 ->where('tbl_contactItemSch.school_id', $id)
                 ->where(function ($query) {
-                    $query->where('tbl_contactItemSch.schoolContact_id', NULL)
-                        ->orWhere('tbl_schoolContact.isCurrent_status', '=', '-1');
+                    $query->where('tbl_contactItemSch.schoolContact_id', NULL);
+                    // ->orWhere('tbl_schoolContact.isCurrent_status', '=', '-1');
                 })
                 ->get();
 
@@ -361,6 +361,188 @@ class SchoolController extends Controller
     {
         $contact_id = $request->contact_id;
         DB::table('tbl_schoolContact')->where('contact_id', '=', $contact_id)
+            ->delete();
+
+        return 1;
+    }
+
+    public function schoolContactItemInsert(Request $request)
+    {
+        $school_id = $request->school_id;
+        $receiveInvoices_status = 0;
+        if ($request->receiveInvoices_status) {
+            $receiveInvoices_status = -1;
+        }
+        $schoolContact_id = null;
+        if ($request->schoolContact_id) {
+            $schoolContact_id = $request->schoolContact_id;
+        }
+        if ($request->schoolMainId) {
+            $schoolContact_id = null;
+        }
+        DB::table('tbl_contactitemsch')
+            ->insert([
+                'school_id' => $school_id,
+                'schoolContact_id' => $schoolContact_id,
+                'type_int' => $request->type_int,
+                'contactItem_txt' => $request->contactItem_txt,
+                'receiveInvoices_status' => $receiveInvoices_status,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        return redirect('/school-detail/' . $school_id)->with('success', "Contact item added successfully.");
+    }
+
+    public function fetchContactItemList(Request $request)
+    {
+        $input = $request->all();
+        $school_id = $input['school_id'];
+        $contact_id = $input['contact_id'];
+        $selectStat = $input['selectStat'];
+
+        $contact = DB::table('tbl_contactItemSch')
+            ->LeftJoin('tbl_schoolContact', 'tbl_contactItemSch.schoolContact_id', '=', 'tbl_schoolContact.contact_id')
+            ->LeftJoin('tbl_description as JobRole', function ($join) {
+                $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
+                    ->where(function ($query) {
+                        $query->where('JobRole.descriptionGroup_int', '=', 11);
+                    });
+            })
+            ->LeftJoin('tbl_description as ContactType', function ($join) {
+                $join->on('ContactType.description_int', '=', 'tbl_contactItemSch.type_int')
+                    ->where(function ($query) {
+                        $query->where('ContactType.descriptionGroup_int', '=', 13);
+                    });
+            })
+            ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
+            ->where('tbl_contactItemSch.school_id', $school_id);
+        if ($selectStat == 'Yes') {
+            $contact->where(function ($query) use ($contact_id) {
+                $query->where('tbl_contactItemSch.schoolContact_id', $contact_id)
+                    ->orWhere('tbl_contactItemSch.schoolContact_id', NULL);
+                // ->orWhere('tbl_schoolContact.isCurrent_status', '=', '-1');
+            });
+        } else {
+            $contact->where(function ($query) {
+                $query->where('tbl_contactItemSch.schoolContact_id', NULL);
+            });
+        }
+        $contactItems = $contact->get();
+
+        $html = '';
+        if (count($contactItems) > 0) {
+            foreach ($contactItems as $key2 => $Items) {
+                $name = '';
+                if ($Items->schoolContact_id == '') {
+                    $name = 'School Main';
+                } else {
+                    if ($Items->firstName_txt != '' && $Items->surname_txt != '') {
+                        $name = $Items->firstName_txt . ' ' . $Items->surname_txt;
+                    } elseif ($Items->firstName_txt != '' && $Items->surname_txt == '') {
+                        $name = $Items->firstName_txt;
+                    } elseif ($Items->title_int != '' && $Items->surname_txt != '') {
+                        $name = $Items->title_txt . ' ' . $Items->surname_txt;
+                    } elseif ($Items->jobRole_int != '') {
+                        $name = $Items->jobRole_txt . ' (name unknown)';
+                    } else {
+                        $name = 'Name unknown';
+                    }
+                }
+                // $html .= '<tr class="school-detail-table-data editContactItemRow"
+                //     id="editContactItemRow' . $Items->contactItemSch_id . '"
+                //     onclick="contactItemRowSelect(' . $Items->contactItemSch_id . ', ' . $name . ')">
+                //     <td>' . $name . '</td>
+                //     <td>' . $Items->type_txt . '</td>
+                //     <td>' . $Items->contactItem_txt . '</td>
+                // </tr>';
+                $html .= "<tr class='school-detail-table-data editContactItemRow'
+                    id='editContactItemRow$Items->contactItemSch_id'  onclick='contactItemRowSelect($Items->contactItemSch_id, \"$name\")'>
+                    <td>$name</td>
+                    <td>$Items->type_txt</td>
+                    <td>$Items->contactItem_txt</td>
+                </tr>";
+            }
+        } else {
+            $html .= '<tr>
+                <td colspan="3">
+                    Empty contact item.
+                </td>
+            </tr>';
+        }
+
+        return response()->json(['html' => $html]);
+    }
+
+    public function getContactItemDetail(Request $request)
+    {
+        $input = $request->all();
+        $contactItemSch_id = $input['editContactItemId'];
+        $school_id = $input['contactItemSchoolId'];
+
+        $contactItemDetail = DB::table('tbl_contactitemsch')
+            ->where('contactItemSch_id', "=", $contactItemSch_id)
+            ->first();
+
+        $contactMethodList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 13)
+            ->get();
+
+        $schoolContacts = DB::table('tbl_schoolContact')
+            ->LeftJoin('tbl_description as JobRole', function ($join) {
+                $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
+                    ->where(function ($query) {
+                        $query->where('JobRole.descriptionGroup_int', '=', 11);
+                    });
+            })
+            ->LeftJoin('tbl_description as TitleTbl', function ($join) {
+                $join->on('TitleTbl.description_int', '=', 'tbl_schoolContact.title_int')
+                    ->where(function ($query) {
+                        $query->where('TitleTbl.descriptionGroup_int', '=', 1);
+                    });
+            })
+            ->select('tbl_schoolContact.*', 'JobRole.description_txt as jobRole_txt', 'TitleTbl.description_txt as title_txt')
+            ->where('tbl_schoolContact.school_id', $school_id)
+            ->where('tbl_schoolContact.isCurrent_status', '-1')
+            ->get();
+
+        $view = view("web.school.contact_item_edit_view", ['contactItemDetail' => $contactItemDetail, 'contactMethodList' => $contactMethodList, 'schoolContacts' => $schoolContacts])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function schoolContactItemUpdate(Request $request)
+    {
+        $contactItemSch_id = $request->editContactItemId;
+        $school_id = $request->school_id;
+        $receiveInvoices_status = 0;
+        if ($request->receiveInvoices_status) {
+            $receiveInvoices_status = -1;
+        }
+        $schoolContact_id = null;
+        if ($request->schoolContact_id) {
+            $schoolContact_id = $request->schoolContact_id;
+        }
+        if ($request->schoolMainId) {
+            $schoolContact_id = null;
+        }
+        DB::table('tbl_contactitemsch')
+            ->where('contactItemSch_id', '=', $contactItemSch_id)
+            ->update([
+                'schoolContact_id' => $schoolContact_id,
+                'type_int' => $request->type_int,
+                'contactItem_txt' => $request->contactItem_txt,
+                'receiveInvoices_status' => $receiveInvoices_status,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        return redirect('/school-detail/' . $school_id)->with('success', "Contact item updated successfully.");
+    }
+
+    public function schoolContactItemDelete(Request $request)
+    {
+        $contactItemSch_id = $request->editContactItemId;
+        DB::table('tbl_contactitemsch')
+            ->where('contactItemSch_id', '=', $contactItemSch_id)
             ->delete();
 
         return 1;

@@ -58,6 +58,11 @@ Route::post('/schoolContactInsert', [SchoolController::class, 'schoolContactInse
 Route::post('/getSchoolContactDetail', [SchoolController::class, 'getSchoolContactDetail']);
 Route::post('/schoolContactUpdate', [SchoolController::class, 'schoolContactUpdate']);
 Route::post('/schoolContactDelete', [SchoolController::class, 'schoolContactDelete']);
+Route::post('/schoolContactItemInsert', [SchoolController::class, 'schoolContactItemInsert']);
+Route::post('/fetchContactItemList', [SchoolController::class, 'fetchContactItemList']);
+Route::post('/getContactItemDetail', [SchoolController::class, 'getContactItemDetail']);
+Route::post('/schoolContactItemUpdate', [SchoolController::class, 'schoolContactItemUpdate']);
+Route::post('/schoolContactItemDelete', [SchoolController::class, 'schoolContactItemDelete']);
 Route::get('/school-contact/{id}', [SchoolController::class, 'schoolContact']);
 Route::get('/school-assignment/{id}', [SchoolController::class, 'schoolAssignment']);
 Route::get('/school-finance/{id}', [SchoolController::class, 'schoolFinance']);
