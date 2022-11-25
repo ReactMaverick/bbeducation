@@ -11,24 +11,8 @@
             @include('web.school.school_sidebar')
 
             <div class="col-md-10 topbar-sec">
-                <div class="topbar-Section">
-                    <i class="fa-solid fa-users">
-                        <span class="topbar-text">{{ $schoolDetail->ageRange_txt }}</span>
-                    </i>
-                    <i class="fa-solid fa-school">
-                        <span class="topbar-text">{{ $schoolDetail->type_txt }}</span>
-                    </i>
-                    <i class="fa-solid fa-list-ul">
-                        <span class="topbar-text">{{ $schoolDetail->laName_txt }}</span>
-                    </i>
-                    <i class="fa-solid fa-flag">
-                        <span class="topbar-text">{{ $schoolDetail->religion_txt }}</span>
-                    </i>
-                    <i class="fa-solid fa-star topbar-star-icon"></i>
-                    <i class="fa-regular fa-calendar-days">
-                        <span class="topbar-text">calendar</span>
-                    </i>
-                </div>
+                
+                @include('web.school.school_header')
 
                 <div class="school-detail-right-sec">
                     <div class="school-details-first-sec">
@@ -640,6 +624,7 @@
                     fetchContactItem(school_id, contact_id, selectStat);
 
                     $('#schoolContactId').val('');
+                    $('#schoolMainId').prop('checked', true);
                 } else {
                     $('#editContactId').val(contact_id);
                     $('.editContactRow').removeClass('tableRowActive');
@@ -651,6 +636,7 @@
                     fetchContactItem(school_id, contact_id, selectStat);
 
                     $('#schoolContactId').val(contact_id);
+                    $('#schoolMainId').prop('checked', false);
                 }
             }
 

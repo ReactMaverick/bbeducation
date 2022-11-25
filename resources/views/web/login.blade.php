@@ -24,7 +24,7 @@
             <div class="login-row">
                 <div class="login-section">
                     <div class="login-page-img">
-                        <img src="{{ asset('web/images/login-page-img.jpg') }}" alt="">
+                        <img src="{{ asset('web/images/logo.png') }}" alt="">
                     </div>
                     <h2>welcome to bumblebee education</h2>
 

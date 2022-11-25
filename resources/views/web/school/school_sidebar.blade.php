@@ -6,7 +6,7 @@
             <span>{{ $schoolDetail->school_id }}</span>
         </div>
 
-        <div class="sidebar-pages-section sidebar-active">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='School Detail') sidebar-active @endif">
             <a href="{{ URL::to('/school-detail/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-clipboard-list"></i>
@@ -18,7 +18,7 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='School Contact') sidebar-active @endif">
             <a href="{{ URL::to('/school-contact/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-comment"></i>
@@ -29,7 +29,7 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='School Assignment') sidebar-active @endif">
             <a href="{{ URL::to('/school-assignment/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person-chalkboard"></i>
@@ -40,7 +40,7 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='School Finance') sidebar-active @endif">
             <a href="{{ URL::to('/school-finance/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-money-bills"></i>
@@ -61,7 +61,7 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='School Teacher') sidebar-active @endif">
             <a href="{{ URL::to('/school-teacher/'.$school_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person"></i>
