@@ -292,6 +292,13 @@
         width: 25%;
         margin: 10px 0 0 0;
     }
+
+
+    /* ==============MODAL============== */
+    
+    .calendar-modal-section {
+        max-width: 80%;
+    }
 }
 
 
@@ -763,6 +770,20 @@
 
     .profile-signin-btn {
         margin-top: 10px;
+    }
+
+    /* =============MODAL============ */
+
+    .calendar-modal-header button {
+        width: 10%;
+    }
+
+    .calendar-modal-section {
+        max-width: 100%;
+    }
+
+    .modal-side-field {
+        margin-bottom: 5px;
     }
 }
 
