@@ -5,8 +5,8 @@ namespace App\Http\Controllers\WebControllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
-use DB;
-use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Carbon;
 
 class SchoolController extends Controller
@@ -38,8 +38,64 @@ class SchoolController extends Controller
                 })
                 ->get();
             // dd($fabSchoolList);
+            $laBoroughList = DB::table('tbl_localAuthority')
+                ->select('tbl_localAuthority.*')
+                ->where('tbl_localAuthority.coveredByBumbleBee_status', '<>', 0)
+                ->orderBy('laName_txt', 'ASC')
+                ->get();
+            $ageRangeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 28)
+                ->get();
+            $schoolTypeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 30)
+                ->get();
+            $religiousList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 29)
+                ->get();
 
-            return view("web.school.index", ['title' => $title, 'headerTitle' => $headerTitle, 'fabSchoolList' => $fabSchoolList]);
+            return view("web.school.index", ['title' => $title, 'headerTitle' => $headerTitle, 'fabSchoolList' => $fabSchoolList, 'laBoroughList' => $laBoroughList, 'ageRangeList' => $ageRangeList, 'schoolTypeList' => $schoolTypeList, 'religiousList' => $religiousList]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function newSchoolInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+
+            $lat_txt = 0;
+            if ($request->lat_txt) {
+                $lat_txt = $request->lat_txt;
+            }
+            $lon_txt = 0;
+            if ($request->lon_txt) {
+                $lon_txt = $request->lon_txt;
+            }
+            DB::table('tbl_school')
+                ->insert([
+                    'company_id' => $company_id,
+                    'name_txt' => $request->name_txt,
+                    'address1_txt' => $request->address1_txt,
+                    'address2_txt' => $request->address2_txt,
+                    'address3_txt' => $request->address3_txt,
+                    'address4_txt' => $request->address4_txt,
+                    'postcode_txt' => $request->postcode_txt,
+                    'lat_txt' => $lat_txt,
+                    'lon_txt' => $lon_txt,
+                    'la_id' => $request->la_id,
+                    'ageRange_int' => $request->ageRange_int,
+                    'type_int' => $request->type_int,
+                    'religion_int' => $request->religion_int,
+                    'website_txt' => $request->website_txt,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect('/schools')->with('success', "School added successfully.");
         } else {
             return redirect()->intended('/');
         }
