@@ -80,8 +80,8 @@
 
     <!-- Contact Add Modal -->
     <div class="modal fade" id="ContactHistoryAddModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 700px;">
-            <div class="modal-content calendar-modal-content" style="width: 100%">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -145,7 +145,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 modal-form-right-sec">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Notes</label>
                                     <textarea name="" id="" cols="30" rows="5" class="form-control field-validate"></textarea>
@@ -217,7 +217,7 @@
                     <div class="modal-footer calendar-modal-footer">
                         <button type="button" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>
 

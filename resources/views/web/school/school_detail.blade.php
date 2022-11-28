@@ -289,8 +289,8 @@
                         @csrf
                         <div class="modal-input-field-section">
                             <h6>{{ $schoolDetail->name_txt }}</h6>
-                            <h6>ID</h6>
-                            <h6>{{ $schoolDetail->school_id }}</h6>
+                            <span>ID</span>
+                            <p>{{ $schoolDetail->school_id }}</p>
                             <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
 
                             <div class="modal-input-field">
@@ -318,12 +318,14 @@
                                 <input type="number" class="form-control" name="baseRate_dec" id=""
                                     value="{{ $schoolDetail->baseRate_dec }}">
                             </div>
-
-                            <a href="#">Get Grid References</a>
+                        <div class="modal-grid-reference-text">
+                        <a href="#">Get Grid References</a>
+                        </div>
+                            
 
                             <div class="modal-input-field">
                                 <label class="form-check-label">Grid References</label>
-                                <h6>{{ $schoolDetail->lat_txt . ', ' . $schoolDetail->lon_txt }}</h6>
+                                <h2>{{ $schoolDetail->lat_txt . ', ' . $schoolDetail->lon_txt }}</h2>
                             </div>
                         </div>
 
@@ -331,7 +333,7 @@
                         <div class="modal-footer calendar-modal-footer">
                             <button type="submit" class="btn btn-secondary">Submit</button>
 
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
 

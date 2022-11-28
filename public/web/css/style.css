@@ -1927,10 +1927,15 @@ table td {
 
 .calendar-modal-section {
     justify-content: center;
+    max-width: 700px;
 }
 
 .calendar-modal-content {
-    width: 70%;
+    width: 100%;
+}
+
+.modal-form-right-sec {
+    padding-right: 0;
 }
 
 .calendar-modal-header {
@@ -1945,7 +1950,7 @@ table td {
 }
 
 .calendar-modal-header button {
-    width: 20%;
+    width: 7%;
     font-size: 36px;
     color: #fff;
     opacity: 1;
@@ -1979,14 +1984,14 @@ table td {
 
 .modal-input-field label {
     font-size: 13px;
-    color: #afabab;
+    color: #3a3a3a;
     font-weight: 400;
     margin-bottom: 5px;
 }
 
 .modal-input-field input {
     font-size: 13px;
-    color: #afabab;
+    color: #3a3a3a;
     font-weight: 400;
     height: 28px;
 }
@@ -1997,21 +2002,38 @@ table td {
 
 .calendar-form-filter label {
     font-size: 13px;
-    color: #afabab;
+    color: #3a3a3a;
     font-weight: 400;
     margin-bottom: 5px;
 }
 
 .calendar-form-filter select {
     font-size: 13px;
-    color: #afabab;
+    color: #3a3a3a;
     font-weight: 400;
     height: 28px;
     padding: 0 10px;
 }
 
 .modal-input-field-section {
-    padding: 0 40px;
+    padding: 0 20px 0 40px;
+}
+
+.modal-input-field-section h6 {
+    text-align: center;
+    font-size: 15px;
+    color: #3a3a3a;
+}
+
+.modal-input-field-section span {
+    font-size: 13px;
+    color: #3a3a3a;
+}
+
+.modal-input-field-section p {
+    font-size: 13px;
+    color: #3a3a3a;
+    margin-bottom: 0;
 }
 
 .modal-side-field{
@@ -2023,16 +2045,16 @@ table td {
 .modal-side-field label{
     width: 50%;
     font-size: 13px;
-    color: #afabab;
+    color: #3a3a3a;
     font-weight: 400;
 
 }
 .modal-side-field input{
-    width: 50%;
+    width: 5%;
     font-size: 13px;
     color: #afabab;
     font-weight: 400;
-    height: 28px;
+    height: 12px;
 }
 .second{
     margin-top: 10px;
@@ -2044,6 +2066,7 @@ table td {
 .calendar-modal-footer button{
     background-color: #70ad47;
     border-color: #70ad47;
+    margin: 0 20px;
 }
 .calendar-modal-footer button:hover{
     background-color: #70ad47;
@@ -2059,6 +2082,53 @@ table td {
     box-shadow: none !important;
 }
 
+.calendar-modal-footer .cancel-btn {
+    background-color: #ff3737;
+}
+
+.calendar-modal-footer .cancel-btn:hover {
+    background-color: #ff3737;
+}
+
+.calendar-modal-footer .cancel-btn:active {
+    background-color: #ff3737 !important;
+}
+
+.calendar-modal-footer .cancel-btn:focus {
+    background-color: #ff3737 !important;
+}
+
+.modal-grid-reference-text {
+    display: flex;
+    justify-content: center;
+    background-color: #afabab;
+    border-radius: 5px;
+    margin: 10px 0;
+    /* cursor: pointer; */
+}
+
+.modal-grid-reference-text:hover {
+    background-color: #E3F8F9;
+}
+
+.modal-grid-reference-text a {
+    font-size: 13px;
+    color: #3a3a3a;
+    font-weight: 500;
+    padding: 3px;
+    width: 100%;
+    text-align: center;
+}
+
+.modal-grid-reference-text:hover a {
+    text-decoration: none;
+    color: #3a3a3a;
+}
+
+.modal-input-field-section h2 {
+    font-size: 15px;
+    color: #3a3a3a;
+}
 
 /* ==========ASSIGNMENT CONTACT=============== */
 
