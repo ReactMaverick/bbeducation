@@ -1927,7 +1927,7 @@ table td {
 
 .calendar-modal-section {
     justify-content: center;
-    max-width: 700px;
+    max-width: 50%;
 }
 
 .calendar-modal-content {
