@@ -1980,6 +1980,7 @@ table td {
 
 .modal-input-field {
     margin-bottom: 10px;
+    padding-right: 0;
 }
 
 .modal-input-field label {
@@ -1998,6 +1999,7 @@ table td {
 
 .calendar-form-filter {
     margin-bottom: 10px;
+    padding-right: 0;
 }
 
 .calendar-form-filter label {
