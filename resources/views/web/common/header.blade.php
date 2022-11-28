@@ -8,7 +8,7 @@
 
     <div class="header-user-profile-sec">
         <div class="header-logo">
-            <img src="{{ asset('web/images/logo.png') }}" alt="">
+            <img src="{{ asset($webUserLoginData->company_logo) }}" alt="">
             <span>
                 @if ($webUserLoginData && isset($webUserLoginData->company_name))
                     {{ $webUserLoginData->company_name }}

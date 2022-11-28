@@ -110,9 +110,10 @@ i {
 }
 
 .login-page-img img {
-    width: 65px;
-    height: 65px;
+    width: 60%;
+    /* height: 65px; */
     object-fit: cover;
+    margin-bottom: 20px;
 }
 
 .form-group.has-error label {

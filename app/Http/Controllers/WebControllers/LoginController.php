@@ -46,7 +46,7 @@ class LoginController extends Controller
 
                 $administrators = DB::table('tbl_user')
                     ->LeftJoin('company', 'company.company_id', '=', 'tbl_user.company_id')
-                    ->select('tbl_user.*', 'company.company_name')
+                    ->select('tbl_user.*', 'company.company_name', 'company.company_logo')
                     ->where('tbl_user.user_id', $admin->user_id)
                     ->get();
                 Session::put('webUserLoginData', $administrators[0]);
