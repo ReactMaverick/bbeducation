@@ -16,54 +16,54 @@
                     <div class="assignment-finance-heading-section">
                         <h2>Finance</h2>
                         <div class="assignment-finance-icon-section">
-                        <a href="#"><i class="fa-solid fa-square-check"></i></a>
-                        <a href="#"><i class="fa-solid fa-file-lines"></i></a>
-                        <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                            <a href="#"><i class="fa-solid fa-square-check"></i></a>
+                            <a href="#"><i class="fa-solid fa-file-lines"></i></a>
+                            <a href="#"><i class="fa-solid fa-envelope"></i></a>
                         </div>
-                        
+
                     </div>
                     <div class="assignment-finance-table-section">
-                    <table class="table school-detail-page-table" id="myTable">
-                        <thead>
-                            <tr class="school-detail-table-heading">
-                                <th>Invoice ID</th>
-                                <th>Invoice Date</th>
-                                <th>Net</th>
-                                <th>Vat</th>
-                                <th>Gross</th>
-                                <th>Date Paid</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-body-sec">
-                            <tr class="school-detail-table-data">
-                                <td>School Main</td>
-                                <td>School Main</td>
-                                <td>020 8359 7744</td>
-                                <td>020 8359 7744</td>
-                                <td>020 8359 7744</td>
-                                <td>020 8359 7744</td>
-                            </tr>
+                        <table class="table school-detail-page-table" id="myTable">
+                            <thead>
+                                <tr class="school-detail-table-heading">
+                                    <th>Invoice ID</th>
+                                    <th>Invoice Date</th>
+                                    <th>Net</th>
+                                    <th>Vat</th>
+                                    <th>Gross</th>
+                                    <th>Date Paid</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body-sec">
+                                <tr class="school-detail-table-data">
+                                    <td>School Main</td>
+                                    <td>School Main</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                </tr>
 
-                            <tr class="school-detail-table-data">
-                                <td>School Main</td>
-                                <td>School Main</td>
-                                <td>020 8359 7744</td>
-                                <td>020 8359 7744</td>
-                                <td>020 8359 7744</td>
-                                <td>020 8359 7744</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                <tr class="school-detail-table-data">
+                                    <td>School Main</td>
+                                    <td>School Main</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                    <td>020 8359 7744</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-    <script>
-    $(document).ready(function() {
-        $('#myTable').DataTable();
-    });
-    </script>
+<script>
+$(document).ready(function() {
+    $('#myTable').DataTable();
+});
+</script>
 @endsection

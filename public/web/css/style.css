@@ -143,7 +143,7 @@ i {
     border: none;
     margin-bottom: 0;
     color: #fff;
-    padding: 12px 0 12px 12px;
+    padding: 6px 0 6px 12px;
     font-size: 12px;
     width: 162.8px;
 }
@@ -159,6 +159,7 @@ i {
 
 .dashboard-tab-section {
     background-color: #40a0ed;
+    box-shadow: rgb(64 160 237) 0px 3px 8px;
 }
 
 .nav-tabs .nav-link.active {
@@ -745,8 +746,8 @@ i {
 }
 
 .header-logo img {
-    width: 75px;
-    height: 75px;
+    width: 22%;
+    height: 22%;
     object-fit: cover;
 }
 
@@ -761,7 +762,7 @@ i {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 25px 0;
+    padding: 6px 0;
 }
 
 .user-name-sec {
@@ -797,7 +798,7 @@ table td {
 }
 
 .assignment-detail-page-section {
-    padding-top: 5px;
+    margin-top: 3px;
 }
 
 .sidebar-col {
@@ -928,7 +929,7 @@ table td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #00000029;
+    background-color: #3a3a3a73;
     padding: 12px;
 }
 
@@ -938,7 +939,7 @@ table td {
 
 .topbar-Section i {
     font-size: 16px;
-    color: #3e3e3e;
+    color: #000;
 }
 
 .trash-icon {
@@ -1472,7 +1473,7 @@ table td {
 }
 
 .details-heading i {
-    font-size: 15px;
+    font-size: 20px;
     color: #000;
 }
 
@@ -1548,7 +1549,7 @@ table td {
 }
 
 .contact-icon-sec i {
-    font-size: 25px;
+    font-size: 20px;
     color: #48a0dc;
     margin-left: 20px;
 }
@@ -1655,7 +1656,7 @@ table td {
 }
 
 .school-assignment-contact-icon-sec i {
-    font-size: 25px;
+    font-size: 20px;
     color: #48a0dc;
     margin-left: 20px;
 }
@@ -1710,7 +1711,7 @@ table td {
 }
 
 .contact-history-heading-section i {
-    font-size: 25px;
+    font-size: 20px;
     color: #48a0dc;
     margin-left: 20px;
 }
@@ -1780,7 +1781,7 @@ table td {
 }
 
 .school-finance-contact-icon-sec i {
-    font-size: 25px;
+    font-size: 20px;
     color: #48a0dc;
     margin: 0 8px;
 }
@@ -2375,7 +2376,202 @@ table td {
     width: 100%;
 }
 
+/* ================TEACHER DETAIL=============== */
 
+.teacher-detail-user-img-sec {
+    margin-bottom: 10px;
+}
+
+.sidebar-top-text span {
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.sidebar-top-text p {
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+/* =============TEACHER PROFESSION============ */
+
+.teacher-profession-heading-text label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.teacher-profession-heading-text {
+    width: 35%;
+}
+
+.teacher-profession-heading-text h2 {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-profession-name-text {
+    width: 65%;
+}
+
+.teacher-profession-name-text p {
+    font-size: 12px;
+    color: #000;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+
+/* ==============TEACHER HEALTH============= */
+
+.teacher-health-first-sec {
+    width: 49%;
+}
+
+.teacher-health-second-sec {
+    width: 49%;
+}
+
+.teacher-prefernce-heading-text label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.teacher-prefernce-heading-text {
+    width: 40%;
+}
+
+.teacher-prefernce-heading-text h2 {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-prefernce-name-text {
+    width: 60%;
+}
+
+.teacher-prefernce-name-text h2 {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+/* ==============TEACHER REFERENCE=============== */
+
+.teacher-reference-section {
+    width: 100%;
+}
+
+.references-bottom-sec {
+    display: flex;
+    align-items: center;
+    padding: 0 22px 0 0;
+    margin: 7.5px 0;
+    width: 20%;
+}
+
+/* ===============TEACHER PAYROLL============ */
+
+.payroll-bottom-text {
+    padding: 0 35px 35px 35px;
+}
+
+.payroll-bottom-text p {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+
+/* =============TEACHER DOCUMENT============== */
+
+.teacher-document-first-sec {
+    display: flex;
+    justify-content: space-between;
+}
+
+.about-school-section {
+    width: 100%;
+}
+
+.teacher-document-section {
+    width: 100%;
+}
+
+.teacher-document-heading-text {
+    width: 60%;
+}
+
+.teacher-document-heading-text h2 {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-document-heading-text label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-document-name-text {
+    width: 40%;
+}
+
+.teacher-document-name-text h2 {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-document-second-heading-text {
+    width: 35%;
+}
+
+.teacher-document-second-heading-text h2 {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-document-second-heading-text label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-document-second-name-text {
+    width: 15%;
+}
+
+.teacher-document-second-name-text p {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-document-third-name-text {
+    width: 50%;
+}
+
+.teacher-document-third-name-text p {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.teacher-document-table-sec {
+    width: 49%;
+}
 
 
 /* -------------TABLE ROW ACTIVE------------ */

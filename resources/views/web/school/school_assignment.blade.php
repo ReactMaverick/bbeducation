@@ -2,7 +2,7 @@
 @section('content')
 <div class="assignment-detail-page-section">
     <div class="row assignment-detail-row">
-        
+
         @include('web.school.school_sidebar')
 
         <div class="col-md-10 topbar-sec">
@@ -68,27 +68,27 @@
 
 
                 </div>
-            <div class="assignment-first-sec">
-                <div class="assignment-left-sidebar-section">
-                    <div class="school-assignment-sidebar-sec">
-                        <div class="assignment-sidebar-data">
-                            <h2>29</h2>
+                <div class="assignment-first-sec">
+                    <div class="assignment-left-sidebar-section">
+                        <div class="school-assignment-sidebar-sec">
+                            <div class="assignment-sidebar-data">
+                                <h2>29</h2>
+                            </div>
+                            <div class="school-assignment-sidebar-sec-text">
+                                <span>Completed Assignments</span>
+                            </div>
                         </div>
-                        <div class="school-assignment-sidebar-sec-text">
-                            <span>Completed Assignments</span>
+                        <div class="school-assignment-sidebar-sec">
+                            <div class="assignment-sidebar-data2">
+                                <h2>4</h2>
+                            </div>
+                            <div class="school-assignment-sidebar-sec-text">
+                                <span>Total Days</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="school-assignment-sidebar-sec">
-                        <div class="assignment-sidebar-data2">
-                            <h2>4</h2>
-                        </div>
-                        <div class="school-assignment-sidebar-sec-text">
-                            <span>Total Days</span>
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
-            </div>
             </div>
 
         </div>
