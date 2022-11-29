@@ -2369,6 +2369,15 @@ table td {
     margin-left: 15px;
 }
 
+/* ================TEACHER PENDING REFERENCE=============== */
+
+.teacher-pending-reference-section {
+    width: 100%;
+}
+
+
+
+
 /* -------------TABLE ROW ACTIVE------------ */
 
 .tableRowActive td {
