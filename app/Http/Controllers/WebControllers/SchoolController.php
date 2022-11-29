@@ -329,7 +329,8 @@ class SchoolController extends Controller
                 'address3_txt' =>    $request->address3_txt,
                 'address4_txt' =>    $request->address4_txt,
                 'postcode_txt' =>    $request->postcode_txt,
-                'baseRate_dec' =>    $request->baseRate_dec
+                'baseRate_dec' =>    $request->baseRate_dec,
+                'website_txt' =>    $request->website_txt
             ]);
 
         return redirect('/school-detail/' . $school_id)->with('success', "Address updated successfully.");
@@ -700,6 +701,40 @@ class SchoolController extends Controller
         }
     }
 
+    public function schoolContactLogInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $school_id = $request->school_id;
+            $callbackOn_dtm = null;
+            if ($request->callBackCheck && $request->quick_setting_date && $request->quick_setting_time) {
+                $d = date("Y-m-d", strtotime($request->quick_setting_date));
+                $callbackOn_dtm = $d . ' ' . $request->quick_setting_time . ':00';
+            }
+
+            DB::table('tbl_schoolContactLog')
+                ->insert([
+                    'school_id' => $school_id,
+                    'spokeTo_id' => $request->spokeTo_id,
+                    'spokeTo_txt' => $request->spokeTo_txt,
+                    'method_int' => $request->method_int,
+                    'notes_txt' => $request->notes_txt,
+                    'contactAbout_int' => $request->contactAbout_int,
+                    'outcome_int' => $request->outcome_int,
+                    'contactOn_dtm' => date('Y-m-d H:i:s'),
+                    'contactBy_id' => $user_id,
+                    'callbackOn_dtm' => $callbackOn_dtm,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect('/school-contact/' . $school_id)->with('success', "Contact history added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
     public function schoolAssignment(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -739,7 +774,42 @@ class SchoolController extends Controller
                 // ->take(1)
                 ->first();
 
-            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail]);
+            $assignmentList = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_asn.teacher_id')
+                ->LeftJoin('tbl_teacherdbs', 'tbl_teacherdbs.teacher_id', '=', 'tbl_asn.teacher_id')
+                ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_asn.school_id')
+                ->LeftJoin('tbl_description as yearDescription', function ($join) {
+                    $join->on('yearDescription.description_int', '=', 'tbl_asn.ageRange_int')
+                        ->where(function ($query) {
+                            $query->where('yearDescription.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as assStatusDescription', function ($join) {
+                    $join->on('assStatusDescription.description_int', '=', 'tbl_asn.status_int')
+                        ->where(function ($query) {
+                            $query->where('assStatusDescription.descriptionGroup_int', '=', 33);
+                        });
+                })
+                ->LeftJoin('tbl_description as teacherProff', function ($join) {
+                    $join->on('teacherProff.description_int', '=', 'tbl_asn.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('teacherProff.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as assType', function ($join) {
+                    $join->on('assType.description_int', '=', 'tbl_asn.asnLength_int')
+                        ->where(function ($query) {
+                            $query->where('assType.descriptionGroup_int', '=', 35);
+                        });
+                })
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'),)
+                ->where('tbl_asn.school_id', $id)
+                ->groupBy('tbl_asn.asn_id')
+                ->orderBy('tbl_asn.createdOn_dtm', 'DESC')
+                ->get();
+
+            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'assignmentList' => $assignmentList]);
         } else {
             return redirect()->intended('/');
         }
@@ -784,7 +854,35 @@ class SchoolController extends Controller
                 // ->take(1)
                 ->first();
 
-            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail]);
+            $schoolInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->leftJoin(
+                    DB::raw('(SELECT school_id, contactItem_txt As email_txt FROM tbl_contactItemSch WHERE school_id = ' . $id . ' AND receiveInvoices_status <> 0 LIMIT 1) AS t_email'),
+                    function ($join) {
+                        $join->on('tbl_invoice.school_id', '=', 't_email.school_id');
+                    }
+                )
+                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'), 'email_txt')
+                ->where('tbl_invoice.school_id', $id)
+                ->groupBy('tbl_invoice.invoice_id')
+                // ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ->get();
+
+            $schoolTimesheet = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_asn.teacher_id')
+                ->select('tbl_asn.*', DB::raw('COUNT(asnItem_id) AS items_int'), 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                ->where('tbl_asn.school_id', $id)
+                ->whereDate('tbl_asnItem.asnDate_dte', '<', date('Y-m-d'))
+                ->where('tbl_asn.status_int', 3)
+                ->where('timesheet_id', null)
+                ->groupBy('tbl_asn.teacher_id')
+                // ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ->get();
+
+            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet]);
         } else {
             return redirect()->intended('/');
         }

@@ -106,7 +106,8 @@
                             <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Spoke to (specific contact)</label>
-                                    <select class="form-control field-validate SpokeToId" name="" id="SpokeToId" onchange="selectSpokeTo(this.value, this.options[this.selectedIndex].getAttribute('sName'))" >
+                                    <select class="form-control field-validate SpokeToId" name="spokeTo_id" id="SpokeToId"
+                                        onchange="selectSpokeTo(this.value, this.options[this.selectedIndex].getAttribute('sName'))">
                                         <option value="">Choose one</option>
                                         @foreach ($schoolContacts as $key1 => $Contacts)
                                             {{ $name = '' }}
@@ -130,12 +131,13 @@
 
                                 <div class="modal-input-field">
                                     <label class="form-check-label">Spoke to</label>
-                                    <input type="text" class="form-control" name="" id="sopkeToText" value="">
+                                    <input type="text" class="form-control" name="spokeTo_txt" id="sopkeToText"
+                                        value="">
                                 </div>
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Contact Method</label>
-                                    <select class="form-control field-validate" name="">
+                                    <select class="form-control field-validate" name="method_int">
                                         <option value="">Choose one</option>
                                         @foreach ($methodList as $key2 => $method)
                                             <option value="{{ $method->description_int }}">
@@ -148,12 +150,12 @@
                             <div class="col-md-6 modal-form-right-sec">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Notes</label>
-                                    <textarea name="" id="" cols="30" rows="5" class="form-control field-validate"></textarea>
+                                    <textarea name="notes_txt" id="" cols="30" rows="5" class="form-control field-validate"></textarea>
                                 </div>
 
                                 <div class="modal-side-field">
                                     <label class="form-check-label" for="callBackId">Callback</label>
-                                    <input type="checkbox" class="callBackId" name="" id="callBackId" value="1">
+                                    <input type="checkbox" class="" name="callBackCheck" id="callBackId" value="1">
                                 </div>
                             </div>
                         </div>
@@ -161,7 +163,7 @@
                             <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Contact Reason</label>
-                                    <select class="form-control" name="title_int">
+                                    <select class="form-control" name="contactAbout_int">
                                         <option value="">Choose one</option>
                                         @foreach ($reasonList as $key4 => $reason)
                                             <option value="{{ $reason->description_int }}">
@@ -173,7 +175,7 @@
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Call Outcome</label>
-                                    <select class="form-control" name="title_int">
+                                    <select class="form-control" name="outcome_int">
                                         <option value="">Choose one</option>
                                         @foreach ($outcomeList as $key5 => $outcome)
                                             <option value="{{ $outcome->description_int }}">
@@ -187,24 +189,28 @@
                                 <div class="row" id="quickSettingDiv" style="display: none;">
                                     <div class="form-group calendar-form-filter col-md-12">
                                         <label for="">Quick Setting</label>
-                                        <select class="form-control" name="">
+                                        <select class="form-control" name="quick_setting"
+                                            onchange="quickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))">
                                             <option value="">Choose one</option>
                                             @foreach ($quickSettingList as $key3 => $quickSetting)
-                                            <option value="{{ $quickSetting->description_int }}">
-                                                {{ $quickSetting->description_txt }}
-                                            </option>
-                                        @endforeach
+                                                <option settingTxt="{{ $quickSetting->description_txt }}"
+                                                    value="{{ $quickSetting->description_int }}">
+                                                    {{ $quickSetting->description_txt }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="modal-input-field col-md-6">
                                         <label class="form-check-label">Date</label>
-                                        <input type="date" class="form-control" name="" id="" value="">
+                                        <input type="date" class="form-control" name="quick_setting_date" id="DateId"
+                                            value="">
                                     </div>
 
                                     <div class="modal-input-field col-md-6">
                                         <label class="form-check-label">Time</label>
-                                        <input type="time" class="form-control" name="" id="" value="">
+                                        <input type="time" class="form-control" name="quick_setting_time" id="timeId"
+                                            value="">
                                     </div>
                                 </div>
 
@@ -215,7 +221,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary">Submit</button>
+                        <button type="submit" class="btn btn-secondary">Submit</button>
 
                         <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
@@ -231,7 +237,7 @@
             $('#myTable').DataTable();
         });
 
-        function selectSpokeTo(contact_id, contact_name){
+        function selectSpokeTo(contact_id, contact_name) {
             if (contact_id) {
                 $('#sopkeToText').val(contact_name);
             } else {
@@ -240,11 +246,64 @@
         }
 
         $(document).on('change', '#callBackId', function() {
-                if ($(this).is(":checked")) {
-                    $('#quickSettingDiv').show();
-                }else{
-                    $('#quickSettingDiv').hide();
+            $('#quickSettingId').val('');
+            $('#DateId').val('');
+            $('#timeId').val('');
+            if ($(this).is(":checked")) {
+                $('#quickSettingDiv').show();
+            } else {
+                $('#quickSettingDiv').hide();
+            }
+        });
+
+        function quickSettingChange(setting_id, setting_text) {
+            if (setting_id && setting_text) {
+                var arr = setting_text.split(" ");
+                var today = new Date();
+                var newdate = new Date(today);
+                if (arr.length > 0 && arr[1] == 'Minutes') {
+                    newdate.setMinutes(newdate.getMinutes() + parseInt(arr[0]));
                 }
-            });
+                if (arr.length > 0 && arr[1] == 'Hour') {
+                    newdate.setHours(newdate.getHours() + parseInt(arr[0]));
+                }
+                if (arr.length > 0 && arr[1] == 'Day') {
+                    newdate.setDate(newdate.getDate() + parseInt(arr[0]));
+                }
+                if (arr.length > 0 && arr[1] == 'Week') {
+                    newdate.setDate(newdate.getDate() + 7);
+                }
+                if (arr.length > 0 && arr[1] == 'Month') {
+                    newdate.setMonth(newdate.getMonth() + parseInt(arr[0]));
+                }
+                if (arr.length > 0 && arr[1] == 'Year') {
+                    newdate.setFullYear(newdate.getFullYear() + parseInt(arr[0]));
+                }
+                var fdate = new Date(newdate);
+
+                if ((fdate.getDate()).toString().length < 2) {
+                    var dateString = '0' + fdate.getDate();
+                } else {
+                    var dateString = fdate.getDate();
+                }
+                if ((fdate.getHours()).toString().length < 2) {
+                    var hourString = '0' + fdate.getHours();
+                } else {
+                    var hourString = fdate.getHours();
+                }
+                if ((fdate.getMinutes()).toString().length < 2) {
+                    var minuteString = '0' + fdate.getMinutes();
+                } else {
+                    var minuteString = fdate.getMinutes();
+                }
+                var DateValue = fdate.getFullYear() + '-' + (fdate.getMonth() + 1) + '-' + dateString;
+                var TimeValue = hourString + ':' + minuteString;
+                $('#DateId').val(DateValue);
+                $('#timeId').val(TimeValue);
+            } else {
+                $('#DateId').val('');
+                $('#timeId').val('');
+            }
+        }
     </script>
 @endsection

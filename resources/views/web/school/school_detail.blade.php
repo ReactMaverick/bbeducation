@@ -293,39 +293,50 @@
                             <p>{{ $schoolDetail->school_id }}</p>
                             <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
 
-                            <div class="modal-input-field">
-                                <label class="form-check-label">Address</label>
-                                <input type="text" class="form-control mb-1" name="address1_txt" id=""
-                                    value="{{ $schoolDetail->address1_txt }}">
-                                <input type="text" class="form-control mb-1" name="address2_txt" id=""
-                                    value="{{ $schoolDetail->address2_txt }}">
-                                <input type="text" class="form-control mb-1" name="address3_txt" id=""
-                                    value="{{ $schoolDetail->address3_txt }}">
-                                <input type="text" class="form-control" name="address4_txt" id=""
-                                    value="{{ $schoolDetail->address4_txt }}">
-                                {{-- <input type="text" class="form-control" name="" id="" value="{{ $schoolDetail->address5_txt }}">
-                            --}}
-                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Address</label>
+                                        <input type="text" class="form-control mb-1" name="address1_txt"
+                                            id="" value="{{ $schoolDetail->address1_txt }}">
+                                        <input type="text" class="form-control mb-1" name="address2_txt"
+                                            id="" value="{{ $schoolDetail->address2_txt }}">
+                                        <input type="text" class="form-control mb-1" name="address3_txt"
+                                            id="" value="{{ $schoolDetail->address3_txt }}">
+                                        <input type="text" class="form-control" name="address4_txt" id=""
+                                            value="{{ $schoolDetail->address4_txt }}">
+                                        {{-- <input type="text" class="form-control" name="" id="" value="{{ $schoolDetail->address5_txt }}">
+                                    --}}
+                                    </div>
 
-                            <div class="modal-input-field">
-                                <label class="form-check-label">Postcode</label>
-                                <input type="text" class="form-control" name="postcode_txt" id=""
-                                    value="{{ $schoolDetail->postcode_txt }}">
-                            </div>
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Postcode</label>
+                                        <input type="text" class="form-control" name="postcode_txt" id=""
+                                            value="{{ $schoolDetail->postcode_txt }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 modal-form-right-sec">
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Website</label>
+                                        <input type="text" class="form-control" name="website_txt" id=""
+                                            value="{{ $schoolDetail->website_txt }}">
+                                    </div>
 
-                            <div class="modal-input-field">
-                                <label class="form-check-label">Base Rate</label>
-                                <input type="number" class="form-control" name="baseRate_dec" id=""
-                                    value="{{ $schoolDetail->baseRate_dec }}">
-                            </div>
-                            <div class="modal-grid-reference-text">
-                                <a href="#">Get Grid References</a>
-                            </div>
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Base Rate</label>
+                                        <input type="number" class="form-control" name="baseRate_dec" id=""
+                                            value="{{ $schoolDetail->baseRate_dec }}">
+                                    </div>
+                                    <div class="modal-grid-reference-text">
+                                        <a href="#">Get Grid References</a>
+                                    </div>
 
 
-                            <div class="modal-input-field">
-                                <label class="form-check-label">Grid References</label>
-                                <h2>{{ $schoolDetail->lat_txt . ', ' . $schoolDetail->lon_txt }}</h2>
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Grid References</label>
+                                        <h2>{{ $schoolDetail->lat_txt . ', ' . $schoolDetail->lon_txt }}</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -362,58 +373,63 @@
                         @csrf
                         <div class="modal-input-field-section">
                             <h6>{{ $schoolDetail->name_txt }}</h6>
-                            <h6>ID</h6>
-                            <h6>{{ $schoolDetail->school_id }}</h6>
+                            <span>ID</span>
+                            <p>{{ $schoolDetail->school_id }}</p>
                             <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
 
-                            <div class="form-group calendar-form-filter">
-                                <label for="">Title</label>
-                                <select class="form-control" name="title_int">
-                                    <option value="">Choose one</option>
-                                    @foreach ($titleList as $key1 => $title)
-                                        <option value="{{ $title->description_int }}">
-                                            {{ $title->description_txt }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Title</label>
+                                        <select class="form-control" name="title_int">
+                                            <option value="">Choose one</option>
+                                            @foreach ($titleList as $key1 => $title)
+                                                <option value="{{ $title->description_int }}">
+                                                    {{ $title->description_txt }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                            <div class="modal-input-field">
-                                <label class="form-check-label">First Name</label>
-                                <input type="text" class="form-control" name="firstName_txt" id=""
-                                    value="">
-                            </div>
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">First Name</label>
+                                        <input type="text" class="form-control" name="firstName_txt" id=""
+                                            value="">
+                                    </div>
 
-                            <div class="modal-input-field">
-                                <label class="form-check-label">Surname</label>
-                                <input type="text" class="form-control" name="surname_txt" id=""
-                                    value="">
-                            </div>
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Surname</label>
+                                        <input type="text" class="form-control" name="surname_txt" id=""
+                                            value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 modal-form-right-sec">
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Job Role</label>
+                                        <select class="form-control" name="jobRole_int">
+                                            <option value="">Choose one</option>
+                                            @foreach ($jobRoleList as $key2 => $jobRole)
+                                                <option value="{{ $jobRole->description_int }}">
+                                                    {{ $jobRole->description_txt }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                            <div class="form-group calendar-form-filter">
-                                <label for="">Job Role</label>
-                                <select class="form-control" name="jobRole_int">
-                                    <option value="">Choose one</option>
-                                    @foreach ($jobRoleList as $key2 => $jobRole)
-                                        <option value="{{ $jobRole->description_int }}">
-                                            {{ $jobRole->description_txt }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                    <div class="modal-side-field">
+                                        <label class="form-check-label" for="receiveVetting_status">Receive Vetting
+                                            Confirmations</label>
+                                        <input type="checkbox" class="" name="receiveVetting_status"
+                                            id="receiveVetting_status" value="1">
+                                    </div>
 
-                            <div class="modal-side-field">
-                                <label class="form-check-label" for="receiveVetting_status">Receive Vetting
-                                    Confirmations</label>
-                                <input type="checkbox" class="" name="receiveVetting_status"
-                                    id="receiveVetting_status" value="1">
-                            </div>
-
-                            <div class="modal-side-field">
-                                <label class="form-check-label" for="receiveTimesheets_status">Receive
-                                    Timesheets/Invoices</label>
-                                <input type="checkbox" class="" name="receiveTimesheets_status"
-                                    id="receiveTimesheets_status" value="1">
+                                    <div class="modal-side-field">
+                                        <label class="form-check-label" for="receiveTimesheets_status">Receive
+                                            Timesheets/Invoices</label>
+                                        <input type="checkbox" class="" name="receiveTimesheets_status"
+                                            id="receiveTimesheets_status" value="1">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -421,7 +437,7 @@
                         <div class="modal-footer calendar-modal-footer">
                             <button type="submit" class="btn btn-secondary">Submit</button>
 
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
 
@@ -451,8 +467,8 @@
                         <input type="hidden" name="editContactId" id="editContactId" value="">
                         <div class="modal-input-field-section">
                             <h6>{{ $schoolDetail->name_txt }}</h6>
-                            <h6>ID</h6>
-                            <h6>{{ $schoolDetail->school_id }}</h6>
+                            <span>ID</span>
+                            <p>{{ $schoolDetail->school_id }}</p>
                             <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
 
                             <div id="contactEditAjax"></div>
@@ -462,7 +478,7 @@
                         <div class="modal-footer calendar-modal-footer">
                             <button type="submit" class="btn btn-secondary">Submit</button>
 
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
 
@@ -491,66 +507,71 @@
                         @csrf
                         <div class="modal-input-field-section">
                             <h6>{{ $schoolDetail->name_txt }}</h6>
-                            <h6>ID</h6>
-                            <h6>{{ $schoolDetail->school_id }}</h6>
+                            <span>ID</span>
+                            <p>{{ $schoolDetail->school_id }}</p>
                             <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
 
-                            <div class="form-group calendar-form-filter">
-                                <label for="">Contact Method</label>
-                                <select class="form-control field-validate" name="type_int" id="contactMethodId">
-                                    <option value="">Choose one</option>
-                                    @foreach ($contactMethodList as $key1 => $contactMethod)
-                                        <option value="{{ $contactMethod->description_int }}">
-                                            {{ $contactMethod->description_txt }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Contact Method</label>
+                                        <select class="form-control field-validate" name="type_int" id="contactMethodId">
+                                            <option value="">Choose one</option>
+                                            @foreach ($contactMethodList as $key1 => $contactMethod)
+                                                <option value="{{ $contactMethod->description_int }}">
+                                                    {{ $contactMethod->description_txt }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                            <div class="modal-side-field">
-                                <input type="checkbox" class="" name="receiveInvoices_status" id="invoiceContact"
-                                    value="1" disabled>
-                                <label class="form-check-label" for="invoiceContact">Invoice Contact</label>
-                            </div>
+                                    <div class="modal-side-field">
+                                        <input type="checkbox" class="" name="receiveInvoices_status"
+                                            id="invoiceContact" value="1" disabled>
+                                        <label class="form-check-label" for="invoiceContact">Invoice Contact</label>
+                                    </div>
 
-                            <div class="form-group modal-input-field">
-                                <label class="form-check-label">Details (number/email etc.)</label>
-                                <input type="text" class="form-control field-validate" name="contactItem_txt"
-                                    id="" value="">
-                            </div>
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Details (number/email etc.)</label>
+                                        <input type="text" class="form-control field-validate" name="contactItem_txt"
+                                            id="" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 modal-form-right-sec">
+                                    <div class="modal-side-field">
+                                        <label class="form-check-label" for="schoolMainId">School Main (not specific
+                                            person)</label>
+                                        <input type="checkbox" class="" name="schoolMainId" id="schoolMainId"
+                                            value="1" checked>
+                                    </div>
 
-                            <div class="modal-side-field">
-                                <label class="form-check-label" for="schoolMainId">School Main (not specific
-                                    person)</label>
-                                <input type="checkbox" class="" name="schoolMainId" id="schoolMainId"
-                                    value="1" checked>
-                            </div>
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Contact Person</label>
+                                        <select class="form-control" name="schoolContact_id" id="schoolContactId">
+                                            <option value="">Choose one</option>
+                                            @foreach ($schoolContacts as $key2 => $Contacts)
+                                                <?php
+                                                $cName = '';
+                                                if ($Contacts->firstName_txt != '' && $Contacts->surname_txt != '') {
+                                                    $cName = $Contacts->firstName_txt . ' ' . $Contacts->surname_txt;
+                                                } elseif ($Contacts->firstName_txt != '' && $Contacts->surname_txt == '') {
+                                                    $cName = $Contacts->firstName_txt;
+                                                } elseif ($Contacts->title_int != '' && $Contacts->surname_txt != '') {
+                                                    $cName = $Contacts->title_txt . ' ' . $Contacts->surname_txt;
+                                                } elseif ($Contacts->jobRole_int != '') {
+                                                    $cName = $Contacts->jobRole_txt . ' (name unknown)';
+                                                } else {
+                                                    $cName = 'Name unknown';
+                                                }
+                                                ?>
 
-                            <div class="form-group calendar-form-filter">
-                                <label for="">Contact Person</label>
-                                <select class="form-control" name="schoolContact_id" id="schoolContactId">
-                                    <option value="">Choose one</option>
-                                    @foreach ($schoolContacts as $key2 => $Contacts)
-                                        <?php
-                                        $cName = '';
-                                        if ($Contacts->firstName_txt != '' && $Contacts->surname_txt != '') {
-                                            $cName = $Contacts->firstName_txt . ' ' . $Contacts->surname_txt;
-                                        } elseif ($Contacts->firstName_txt != '' && $Contacts->surname_txt == '') {
-                                            $cName = $Contacts->firstName_txt;
-                                        } elseif ($Contacts->title_int != '' && $Contacts->surname_txt != '') {
-                                            $cName = $Contacts->title_txt . ' ' . $Contacts->surname_txt;
-                                        } elseif ($Contacts->jobRole_int != '') {
-                                            $cName = $Contacts->jobRole_txt . ' (name unknown)';
-                                        } else {
-                                            $cName = 'Name unknown';
-                                        }
-                                        ?>
-
-                                        <option value="{{ $Contacts->contact_id }}">
-                                            {{ $cName }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                                <option value="{{ $Contacts->contact_id }}">
+                                                    {{ $cName }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -558,7 +579,7 @@
                         <div class="modal-footer calendar-modal-footer">
                             <button type="submit" class="btn btn-secondary">Submit</button>
 
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
 
@@ -588,8 +609,8 @@
                         <input type="hidden" name="editContactItemId" id="editContactItemId" value="">
                         <div class="modal-input-field-section">
                             <h6>{{ $schoolDetail->name_txt }}</h6>
-                            <h6>ID</h6>
-                            <h6>{{ $schoolDetail->school_id }}</h6>
+                            <span>ID</span>
+                            <p>{{ $schoolDetail->school_id }}</p>
                             <input type="hidden" name="school_id" id="contactItemSchoolId"
                                 value="{{ $schoolDetail->school_id }}">
 
@@ -601,7 +622,7 @@
                         <div class="modal-footer calendar-modal-footer">
                             <button type="submit" class="btn btn-secondary">Submit</button>
 
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
 

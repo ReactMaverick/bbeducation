@@ -41,13 +41,16 @@ Route::get('/profile', [LoginController::class, 'profile']);
 
 Route::get('/dashboard', [HomeController::class, 'dashboard']);
 
+// Assignment
 Route::get('/assignments', [AssignmentController::class, 'assignments']);
 Route::get('/assignment-details', [AssignmentController::class, 'assignmentDetails']);
 Route::get('/assignment-contact', [AssignmentController::class, 'assignmentContact']);
 Route::get('/assignment-candidate', [AssignmentController::class, 'assignmentCandidate']);
 Route::get('/assignment-school', [AssignmentController::class, 'assignmentSchool']);
 Route::get('/assignment-finance', [AssignmentController::class, 'assignmentFinance']);
+// Assignment
 
+// Teacher
 Route::get('/teachers', [TeacherController::class, 'teachers']);
 Route::get('/teacher-search', [TeacherController::class, 'teacherSearch']);
 Route::get('/teacher-detail/{id}', [TeacherController::class, 'teacherDetail']);
@@ -59,7 +62,9 @@ Route::get('/teacher-references', [TeacherController::class, 'teacherReference']
 Route::get('/teacher-documents', [TeacherController::class, 'teacherDocuments']);
 Route::get('/teacher-contact-log', [TeacherController::class, 'teacherContactLog']);
 Route::get('/teacher-payroll', [TeacherController::class, 'teacherPayroll']);
+// Teacher
 
+// School
 Route::get('/schools', [SchoolController::class, 'schools']);
 Route::post('/newSchoolInsert', [SchoolController::class, 'newSchoolInsert']);
 Route::get('/school-search', [SchoolController::class, 'schoolSearch']);
@@ -75,10 +80,16 @@ Route::post('/getContactItemDetail', [SchoolController::class, 'getContactItemDe
 Route::post('/schoolContactItemUpdate', [SchoolController::class, 'schoolContactItemUpdate']);
 Route::post('/schoolContactItemDelete', [SchoolController::class, 'schoolContactItemDelete']);
 Route::get('/school-contact/{id}', [SchoolController::class, 'schoolContact']);
+Route::post('/schoolContactLogInsert', [SchoolController::class, 'schoolContactLogInsert']);
 Route::get('/school-assignment/{id}', [SchoolController::class, 'schoolAssignment']);
 Route::get('/school-finance/{id}', [SchoolController::class, 'schoolFinance']);
 Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
+// School
 
+// Finance
 Route::get('/finance', [FinanceController::class, 'finance']);
+// Finance
 
+// Management
 Route::get('/management', [ManagementController::class, 'management']);
+// Management
