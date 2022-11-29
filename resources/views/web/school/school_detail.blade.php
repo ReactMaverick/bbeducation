@@ -11,7 +11,7 @@
             @include('web.school.school_sidebar')
 
             <div class="col-md-10 topbar-sec">
-                
+
                 @include('web.school.school_header')
 
                 <div class="school-detail-right-sec">
@@ -318,10 +318,10 @@
                                 <input type="number" class="form-control" name="baseRate_dec" id=""
                                     value="{{ $schoolDetail->baseRate_dec }}">
                             </div>
-                        <div class="modal-grid-reference-text">
-                        <a href="#">Get Grid References</a>
-                        </div>
-                            
+                            <div class="modal-grid-reference-text">
+                                <a href="#">Get Grid References</a>
+                            </div>
+
 
                             <div class="modal-input-field">
                                 <label class="form-check-label">Grid References</label>
@@ -610,230 +610,233 @@
         </div>
         <!-- Contact Item Edit Modal -->
 
-        <script>
-            function contactRowSelect(contact_id, school_id) {
-                if ($('#editContactRow' + contact_id).hasClass('tableRowActive')) {
-                    $('#editContactId').val('');
-                    $('#editContactRow' + contact_id).removeClass('tableRowActive');
-                    $('#deleteContactBttn').addClass('disabled-link');
-                    $('#editContactBttn').addClass('disabled-link');
+    </div>
 
-                    $('#editContactItemId').val('');
-                    $('#deleteContactItemBttn').addClass('disabled-link');
-                    $('#editContactItemBttn').addClass('disabled-link');
+    <script>
+        function contactRowSelect(contact_id, school_id) {
+            if ($('#editContactRow' + contact_id).hasClass('tableRowActive')) {
+                $('#editContactId').val('');
+                $('#editContactRow' + contact_id).removeClass('tableRowActive');
+                $('#deleteContactBttn').addClass('disabled-link');
+                $('#editContactBttn').addClass('disabled-link');
 
-                    var selectStat = 'No';
-                    fetchContactItem(school_id, contact_id, selectStat);
+                $('#editContactItemId').val('');
+                $('#deleteContactItemBttn').addClass('disabled-link');
+                $('#editContactItemBttn').addClass('disabled-link');
 
-                    $('#schoolContactId').val('');
-                    $('#schoolMainId').prop('checked', true);
-                } else {
-                    $('#editContactId').val(contact_id);
-                    $('.editContactRow').removeClass('tableRowActive');
-                    $('#editContactRow' + contact_id).addClass('tableRowActive');
-                    $('#deleteContactBttn').removeClass('disabled-link');
-                    $('#editContactBttn').removeClass('disabled-link');
+                var selectStat = 'No';
+                fetchContactItem(school_id, contact_id, selectStat);
 
-                    var selectStat = 'Yes';
-                    fetchContactItem(school_id, contact_id, selectStat);
+                $('#schoolContactId').val('');
+                $('#schoolMainId').prop('checked', true);
+            } else {
+                $('#editContactId').val(contact_id);
+                $('.editContactRow').removeClass('tableRowActive');
+                $('#editContactRow' + contact_id).addClass('tableRowActive');
+                $('#deleteContactBttn').removeClass('disabled-link');
+                $('#editContactBttn').removeClass('disabled-link');
 
-                    $('#schoolContactId').val(contact_id);
-                    $('#schoolMainId').prop('checked', false);
-                }
+                var selectStat = 'Yes';
+                fetchContactItem(school_id, contact_id, selectStat);
+
+                $('#schoolContactId').val(contact_id);
+                $('#schoolMainId').prop('checked', false);
             }
+        }
 
-            $(document).on('click', '#editContactBttn', function() {
-                var contact_id = $('#editContactId').val();
-                if (contact_id) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ url('getSchoolContactDetail') }}',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            contact_id: contact_id
-                        },
-                        success: function(data) {
-                            //console.log(data);
-                            $('#contactEditAjax').html(data.html);
-                        }
-                    });
-                    $('#ContactEditModal').modal("show");
-                } else {
-                    swal("BumbleBee Education", "Please select one contact.");
-                }
-            });
-
-            $(document).on('click', '#deleteContactBttn', function() {
-                var contact_id = $('#editContactId').val();
-                if (contact_id) {
-                    swal({
-                            title: "BumbleBee Education",
-                            text: "Are you sure you wish to remove this member of staff?",
-                            buttons: {
-                                cancel: "No",
-                                Yes: "Yes"
-                            },
-                        })
-                        .then((value) => {
-                            switch (value) {
-                                case "Yes":
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '{{ url('schoolContactDelete') }}',
-                                        data: {
-                                            "_token": "{{ csrf_token() }}",
-                                            contact_id: contact_id
-                                        },
-                                        success: function(data) {
-                                            location.reload();
-                                        }
-                                    });
-                            }
-                        });
-                } else {
-                    swal("BumbleBee Education", "Please select one contact.");
-                }
-            });
-
-            $(document).on('change', '#contactMethodId', function() {
-                var contactMethodId = $(this).val();
-                if (contactMethodId == 1) {
-                    $("#invoiceContact").attr("disabled", false);
-                } else {
-                    $('#invoiceContact').prop('checked', false);
-                    $("#invoiceContact").attr("disabled", true);
-                }
-            });
-
-            $(document).on('change', '#schoolMainId', function() {
-                if ($(this).is(":checked")) {
-                    $('#schoolContactId').val('');
-                }
-            });
-
-            $(document).on('change', '#schoolContactId', function() {
-                var schoolContactId = $(this).val();
-                if (schoolContactId != '') {
-                    $('#schoolMainId').prop('checked', false);
-                } else {
-                    $('#schoolMainId').prop('checked', true);
-                }                
-            });
-
-            function fetchContactItem(school_id, contact_id, selectStat) {
+        $(document).on('click', '#editContactBttn', function() {
+            var contact_id = $('#editContactId').val();
+            if (contact_id) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ url('fetchContactItemList') }}',
+                    url: '{{ url('getSchoolContactDetail') }}',
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        school_id: school_id,
-                        contact_id: contact_id,
-                        selectStat: selectStat
+                        contact_id: contact_id
                     },
                     success: function(data) {
                         //console.log(data);
-                        $('#contactItemAjxView').html(data.html);
+                        $('#contactEditAjax').html(data.html);
                     }
                 });
+                $('#ContactEditModal').modal("show");
+            } else {
+                swal("BumbleBee Education", "Please select one contact.");
             }
+        });
 
-            function contactItemRowSelect(contactItemSch_id, name) {
-                if ($('#editContactItemRow' + contactItemSch_id).hasClass('tableRowActive')) {
-                    $('#editContactItemId').val('');
-                    $('#editContactItemName').val('');
-                    $('#editContactItemRow' + contactItemSch_id).removeClass('tableRowActive');
-                    $('#deleteContactItemBttn').addClass('disabled-link');
-                    $('#editContactItemBttn').addClass('disabled-link');
-                } else {
-                    $('#editContactItemId').val(contactItemSch_id);
-                    $('#editContactItemName').val(name);
-                    $('.editContactItemRow').removeClass('tableRowActive');
-                    $('#editContactItemRow' + contactItemSch_id).addClass('tableRowActive');
-                    $('#deleteContactItemBttn').removeClass('disabled-link');
-                    $('#editContactItemBttn').removeClass('disabled-link');
-                }
-            }
-
-            $(document).on('click', '#editContactItemBttn', function() {
-                var editContactItemId = $('#editContactItemId').val();
-                var contactItemSchoolId = $('#contactItemSchoolId').val();
-                if (editContactItemId) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ url('getContactItemDetail') }}',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            editContactItemId: editContactItemId,
-                            contactItemSchoolId: contactItemSchoolId
+        $(document).on('click', '#deleteContactBttn', function() {
+            var contact_id = $('#editContactId').val();
+            if (contact_id) {
+                swal({
+                        title: "BumbleBee Education",
+                        text: "Are you sure you wish to remove this member of staff?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
                         },
-                        success: function(data) {
-                            //console.log(data);
-                            $('#AjaxContactItemEdit').html(data.html);
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('schoolContactDelete') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        contact_id: contact_id
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
                         }
                     });
-                    $('#ContactItemEditModal').modal("show");
-                } else {
-                    swal("BumbleBee Education", "Please select one contact item.");
-                }
-            });
+            } else {
+                swal("BumbleBee Education", "Please select one contact.");
+            }
+        });
 
-            $(document).on('change', '#editContactMethodId', function() {
-                var editContactMethodId = $(this).val();
-                if (editContactMethodId == 1) {
-                    $("#editInvoiceContact").attr("disabled", false);
-                } else {
-                    $('#editInvoiceContact').prop('checked', false);
-                    $("#editInvoiceContact").attr("disabled", true);
-                }
-            });
+        $(document).on('change', '#contactMethodId', function() {
+            var contactMethodId = $(this).val();
+            if (contactMethodId == 1) {
+                $("#invoiceContact").attr("disabled", false);
+            } else {
+                $('#invoiceContact').prop('checked', false);
+                $("#invoiceContact").attr("disabled", true);
+            }
+        });
 
-            $(document).on('change', '#editSchoolMainId', function() {
-                if ($(this).is(":checked")) {
-                    $('#editSchoolContactId').val('');
-                }
-            });
+        $(document).on('change', '#schoolMainId', function() {
+            if ($(this).is(":checked")) {
+                $('#schoolContactId').val('');
+            }
+        });
 
-            $(document).on('change', '#editSchoolContactId', function() {
-                var editSchoolContactId = $(this).val();
-                if (editSchoolContactId != '') {
-                    $('#editSchoolMainId').prop('checked', false);
-                } else {
-                    $('#editSchoolMainId').prop('checked', true);
-                }
-            });
+        $(document).on('change', '#schoolContactId', function() {
+            var schoolContactId = $(this).val();
+            if (schoolContactId != '') {
+                $('#schoolMainId').prop('checked', false);
+            } else {
+                $('#schoolMainId').prop('checked', true);
+            }
+        });
 
-            $(document).on('click', '#deleteContactItemBttn', function() {
-                var editContactItemId = $('#editContactItemId').val();
-                var editContactItemName = $('#editContactItemName').val();
-                if (editContactItemId) {
-                    swal({
-                            title: "BumbleBee Education",
-                            text: "Are you sure you wish to delete this contact item for "+editContactItemName+"?",
-                            buttons: {
-                                cancel: "No",
-                                Yes: "Yes"
-                            },
-                        })
-                        .then((value) => {
-                            switch (value) {
-                                case "Yes":
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '{{ url('schoolContactItemDelete') }}',
-                                        data: {
-                                            "_token": "{{ csrf_token() }}",
-                                            editContactItemId: editContactItemId
-                                        },
-                                        success: function(data) {
-                                            $('#editContactItemRow'+editContactItemId).remove();
-                                            // location.reload();
-                                        }
-                                    });
-                            }
-                        });
-                } else {
-                    swal("BumbleBee Education", "Please select one contact item.");
+        function fetchContactItem(school_id, contact_id, selectStat) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('fetchContactItemList') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    school_id: school_id,
+                    contact_id: contact_id,
+                    selectStat: selectStat
+                },
+                success: function(data) {
+                    //console.log(data);
+                    $('#contactItemAjxView').html(data.html);
                 }
             });
-        </script>
-    @endsection
+        }
+
+        function contactItemRowSelect(contactItemSch_id, name) {
+            if ($('#editContactItemRow' + contactItemSch_id).hasClass('tableRowActive')) {
+                $('#editContactItemId').val('');
+                $('#editContactItemName').val('');
+                $('#editContactItemRow' + contactItemSch_id).removeClass('tableRowActive');
+                $('#deleteContactItemBttn').addClass('disabled-link');
+                $('#editContactItemBttn').addClass('disabled-link');
+            } else {
+                $('#editContactItemId').val(contactItemSch_id);
+                $('#editContactItemName').val(name);
+                $('.editContactItemRow').removeClass('tableRowActive');
+                $('#editContactItemRow' + contactItemSch_id).addClass('tableRowActive');
+                $('#deleteContactItemBttn').removeClass('disabled-link');
+                $('#editContactItemBttn').removeClass('disabled-link');
+            }
+        }
+
+        $(document).on('click', '#editContactItemBttn', function() {
+            var editContactItemId = $('#editContactItemId').val();
+            var contactItemSchoolId = $('#contactItemSchoolId').val();
+            if (editContactItemId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('getContactItemDetail') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editContactItemId: editContactItemId,
+                        contactItemSchoolId: contactItemSchoolId
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#AjaxContactItemEdit').html(data.html);
+                    }
+                });
+                $('#ContactItemEditModal').modal("show");
+            } else {
+                swal("BumbleBee Education", "Please select one contact item.");
+            }
+        });
+
+        $(document).on('change', '#editContactMethodId', function() {
+            var editContactMethodId = $(this).val();
+            if (editContactMethodId == 1) {
+                $("#editInvoiceContact").attr("disabled", false);
+            } else {
+                $('#editInvoiceContact').prop('checked', false);
+                $("#editInvoiceContact").attr("disabled", true);
+            }
+        });
+
+        $(document).on('change', '#editSchoolMainId', function() {
+            if ($(this).is(":checked")) {
+                $('#editSchoolContactId').val('');
+            }
+        });
+
+        $(document).on('change', '#editSchoolContactId', function() {
+            var editSchoolContactId = $(this).val();
+            if (editSchoolContactId != '') {
+                $('#editSchoolMainId').prop('checked', false);
+            } else {
+                $('#editSchoolMainId').prop('checked', true);
+            }
+        });
+
+        $(document).on('click', '#deleteContactItemBttn', function() {
+            var editContactItemId = $('#editContactItemId').val();
+            var editContactItemName = $('#editContactItemName').val();
+            if (editContactItemId) {
+                swal({
+                        title: "BumbleBee Education",
+                        text: "Are you sure you wish to delete this contact item for " + editContactItemName +
+                            "?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('schoolContactItemDelete') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        editContactItemId: editContactItemId
+                                    },
+                                    success: function(data) {
+                                        $('#editContactItemRow' + editContactItemId).remove();
+                                        // location.reload();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("BumbleBee Education", "Please select one contact item.");
+            }
+        });
+    </script>
+@endsection
