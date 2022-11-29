@@ -43,7 +43,7 @@
                                 <?php $completeCount = 0; ?>
                                 @foreach ($assignmentList as $key => $Assignment)
                                     @if ($Assignment->assignmentStatus == 'Completed')
-                                    <?php $completeCount += 1; ?>
+                                        <?php $completeCount += 1; ?>
                                     @endif
                                     <tr class="table-data" onclick="assignmentDetail()">
                                         <td>{{ $Assignment->yearGroup }}</td>
@@ -100,7 +100,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -110,7 +109,7 @@
             $('#myTable').DataTable();
         });
 
-        function assignmentDetail(){
+        function assignmentDetail() {
             window.location.href = "{{ URL::to('/assignment-details') }}";
         }
     </script>

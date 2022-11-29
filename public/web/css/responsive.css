@@ -295,9 +295,35 @@
 
 
     /* ==============MODAL============== */
-    
+
     .calendar-modal-section {
         max-width: 80%;
+    }
+
+
+    /* ==============TEACHER HEALTH============== */
+
+    .teacher-health-first-sec {
+        width: 100%;
+    }
+
+    .teacher-health-second-sec {
+        width: 100%;
+    }
+
+    .teacher-prefernce-heading-text {
+        width: 50%;
+    }
+
+    .teacher-prefernce-name-text {
+        width: 50%;
+    }
+
+    /* ==============TEACHER REFERENCE=============== */
+
+    .references-bottom-sec {
+        width: 50%;
+        justify-content: center;
     }
 }
 
@@ -735,32 +761,57 @@
         padding-left: 0;
     }
 
-        /* ==========ASSIGNMENT SCHOOL============ */
+    /* ==========ASSIGNMENT SCHOOL============ */
 
-        .assignment-school-detail-right-sec {
-            flex-direction: column;
-        }
-    
-        .assignment-school-details-first-sec {
-            width: 100%;
-        }
-    
-        .assignment-school-details-contact-second-sec {
-            width: 100%;
-        }
+    .assignment-school-detail-right-sec {
+        flex-direction: column;
+    }
 
-        .assignment-school-detail-right-sec {
-            width: 100%;
-            padding: 13px;
+    .assignment-school-details-first-sec {
+        width: 100%;
+    }
 
-        }
+    .assignment-school-details-contact-second-sec {
+        width: 100%;
+    }
 
-        /* =============ASSIGNMENT FINANCE============== */
+    .assignment-school-detail-right-sec {
+        width: 100%;
+        padding: 13px;
 
-        .assignment-finance-section {
-            width: 100%;
-        }
-    
+    }
+
+    /* =============ASSIGNMENT FINANCE============== */
+
+    .assignment-finance-section {
+        width: 100%;
+    }
+
+    /* ==============TEACHER HEALTH============== */
+
+    .teacher-health-first-sec {
+        width: 100%;
+    }
+
+    .teacher-health-second-sec {
+        width: 100%;
+    }
+
+    .teacher-prefernce-heading-text {
+        width: 50%;
+    }
+
+    .teacher-prefernce-name-text {
+        width: 50%;
+    }
+
+    /* ==============TEACHER REFERENCE=============== */
+
+    .references-bottom-sec {
+        width: 50%;
+        justify-content: center;
+    }
+
 
     /* =============PROFILE=========== */
 
