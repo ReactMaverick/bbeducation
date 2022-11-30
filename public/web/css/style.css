@@ -1645,6 +1645,8 @@ table td {
 }
 
 .school-assignment-contact-heading {
+    display: flex;
+    justify-content: space-between;
     padding: 15px 0 7px 0;
 }
 
