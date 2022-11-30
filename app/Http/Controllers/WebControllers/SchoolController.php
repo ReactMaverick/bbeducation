@@ -774,7 +774,7 @@ class SchoolController extends Controller
                 // ->take(1)
                 ->first();
 
-            $assignmentList = DB::table('tbl_asn')
+            $assignment = DB::table('tbl_asn')
                 ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
                 ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_asn.teacher_id')
                 ->LeftJoin('tbl_student', 'tbl_student.student_id', '=', 'tbl_asn.student_id')
@@ -814,14 +814,22 @@ class SchoolController extends Controller
                         ->where(function ($query) {
                             $query->where('teacherProff.descriptionGroup_int', '=', 7);
                         });
-                })                
-                ->select('tbl_asn.*', 'yearGroupType.description_txt as yearGroupTxt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), 'teacherProff.description_txt as teacherProfession', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', DB::raw('MIN(asnDate_dte) AS firstDate_dte'), 'tbl_student.firstName_txt as studentfirstName', 'tbl_student.surname_txt as studentsurname_txt')
-                ->where('tbl_asn.school_id', $id)
-                ->groupBy('tbl_asn.asn_id')
+                })
+                ->select('tbl_asn.*', 'yearGroupType.description_txt as yearGroupTxt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'assType.description_txt as assignmentType', 'subjectType.description_txt as subjectTxt', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), 'teacherProff.description_txt as teacherProfession', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', DB::raw('MIN(asnDate_dte) AS firstDate_dte'), 'tbl_student.firstName_txt as studentfirstName', 'tbl_student.surname_txt as studentsurname_txt')
+                ->where('tbl_asn.school_id', $id);
+            if ($request->include != 1 && $request->status) {
+                $assignment->where('tbl_asn.status_int', $request->status);
+            }
+            $assignmentList = $assignment->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_asn.createdOn_dtm', 'DESC')
                 ->get();
 
-            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'assignmentList' => $assignmentList]);
+            $statusList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 33)
+                ->get();
+
+            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'assignmentList' => $assignmentList, 'statusList' => $statusList]);
         } else {
             return redirect()->intended('/');
         }
