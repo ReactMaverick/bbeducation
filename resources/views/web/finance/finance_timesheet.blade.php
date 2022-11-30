@@ -9,22 +9,20 @@
 
             <div class="topbar-Section">
                 <i class="fa-solid fa-address-book">
-                    <span class="topbar-text">Has Perm, Position</span>
+                    <span class="topbar-text">Timesheets</span>
                 </i>
-                <i class="fa-solid fa-users">
-                    <span class="topbar-text">Secondary</span>
+                <i class="fa-solid fa-money-bills">
+                    <span class="topbar-text">Invoices</span>
                 </i>
-                <i class="fa-brands fa-black-tie">
-                    <span class="topbar-text">Teacher</span>
+                <i class="fa-solid fa-user">
+                    <span class="topbar-text">Payroll</span>
                 </i>
-                <i class="fa-solid fa-star topbar-star-icon"></i>
-
-                <i class="fa-regular fa-calendar-days">
-                    <span class="topbar-text">Calendar</span>
+                <i class="fa-solid fa-piggy-bank">
+                    <span class="topbar-text">Remittance</span>
                 </i>
 
                 <a href="#">
-                    <i class="fa-solid fa-trash trash-icon"></i>
+                    <i class="fa-solid fa-money-bills bills-icon"></i>
                 </a>
             </div>
 
