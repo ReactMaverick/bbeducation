@@ -821,15 +821,20 @@ class SchoolController extends Controller
                 $assignment->where('tbl_asn.status_int', $request->status);
             }
             $assignmentList = $assignment->groupBy('tbl_asn.asn_id')
-                ->orderBy('tbl_asn.createdOn_dtm', 'DESC')
+                ->orderBy('tbl_asn.createdOn_dtm', 'ASC')
                 ->get();
+
+            $completeCount = DB::table('tbl_asn')
+                ->where('tbl_asn.school_id', $id)
+                ->where('tbl_asn.status_int', 3)
+                ->count();
 
             $statusList = DB::table('tbl_description')
                 ->select('tbl_description.*')
                 ->where('tbl_description.descriptionGroup_int', 33)
                 ->get();
 
-            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'assignmentList' => $assignmentList, 'statusList' => $statusList]);
+            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'assignmentList' => $assignmentList, 'statusList' => $statusList, 'completeCount' => $completeCount]);
         } else {
             return redirect()->intended('/');
         }
