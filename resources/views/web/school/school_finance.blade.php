@@ -6,24 +6,8 @@
             @include('web.school.school_sidebar')
 
             <div class="col-md-10 topbar-sec">
-                <div class="topbar-Section">
-                    <i class="fa-solid fa-crown">
-                        <span class="topbar-text">All Through</span>
-                    </i>
-                    <i class="fa-solid fa-school">
-                        <span class="topbar-text">Other</span>
-                    </i>
-                    <i class="fa-solid fa-list-ul">
-                        <span class="topbar-text">Barnet</span>
-                    </i>
-                    <i class="fa-solid fa-flag">
-                        <span class="topbar-text">Other</span>
-                    </i>
-                    <i class="fa-solid fa-star topbar-star-icon"></i>
-                    <i class="fa-regular fa-calendar-days">
-                        <span class="topbar-text">calendar</span>
-                    </i>
-                </div>
+                
+                @include('web.school.school_header')
 
                 <div class="school-finance-right-sec">
 

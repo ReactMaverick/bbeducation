@@ -88,6 +88,10 @@ Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
 
 // Finance
 Route::get('/finance', [FinanceController::class, 'finance']);
+Route::get('/finance-timesheets', [FinanceController::class, 'financeTimesheets']);
+Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
+Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
+Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 // Finance
 
 // Management

@@ -10,25 +10,25 @@
                 </div>
                 <div class="teacher-left-sec">
                     <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-file-lines"></i>
+                        <a href="{{ URL::to('/finance-timesheets') }}"> <i class="fa-solid fa-file-lines"></i>
                             <p>Timesheets</p>
                         </a>
                     </div>
 
                     <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-money-bills"></i>
+                        <a href="{{ URL::to('/finance-invoices') }}"> <i class="fa-solid fa-money-bills"></i>
                             <p>Invoicing</p>
                         </a>
                     </div>
 
                     <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-piggy-bank"></i>
+                        <a href="{{ URL::to('/finance-payroll') }}"> <i class="fa-solid fa-piggy-bank"></i>
                             <p>Payroll</p>
                         </a>
                     </div>
 
                     <div class="about-finance">
-                        <a href="#"> <i class="fa-regular fa-file-lines"></i>
+                        <a href="{{ URL::to('/finance-remittance') }}"> <i class="fa-regular fa-file-lines"></i>
                             <p>Remit Invoice</p>
                         </a>
                     </div>

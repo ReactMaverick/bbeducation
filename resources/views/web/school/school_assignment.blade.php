@@ -17,12 +17,22 @@
                             <h2>Assignments</h2>
                         </div>
                         <div class="school-assignment-contact-heading">
+                            <div class="form-check paid-check">
+                                <label for="vehicle3">Include All</label>
+                                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
 
-                            {{-- <div class="school-assignment-contact-icon-sec">
-                            <a href="#"><i class="fa-solid fa-xmark"></i></a>
-                            <a href="#"><i class="fa-solid fa-plus"></i></a>
-                            <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
-                        </div> --}}
+                                <label for="inputState">Payment Method</label>
+                                <select id="inputState" class="form-control">
+                                    <option selected>Choose...</option>
+                                    <option>...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="school-assignment-contact-icon-sec">
+                                <a href="javascript:void(0)"><i class="fa-solid fa-xmark"></i></a>
+                                <a href="javascript:void(0)"><i class="fa-solid fa-plus"></i></a>
+                                <a href="javascript:void(0)"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                            </div>
                         </div>
 
 
@@ -49,7 +59,7 @@
                                         <td>{{ $Assignment->yearGroup }}</td>
                                         <td>{{ $Assignment->assignmentStatus }}</td>
                                         <td>{{ $Assignment->assignmentType }}</td>
-                                        <td>{{ $Assignment->dayPercent_dec }} {{ $Assignment->type_txt }}</td>
+                                        <td>{{ $Assignment->days_dec }} {{ $Assignment->type_txt }}</td>
                                         <td>
                                             @if ($Assignment->techerFirstname || $Assignment->techerSurname)
                                                 {{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}
