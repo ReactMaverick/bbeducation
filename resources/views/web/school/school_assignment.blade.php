@@ -18,16 +18,22 @@
                         </div>
                         <div class="school-assignment-contact-heading">
                             <div class="form-check paid-check">
-                                <label for="vehicle3">Include All</label>
-                                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                                <label for="includeAll">Include All</label>
+                                <input type="checkbox" id="includeAll" name="include" value="1"
+                                    @if (app('request')->input('include') == '1') checked @endif>
 
-                                <label for="inputState">Payment Method</label>
-                                <select id="inputState" class="form-control">
-                                    <option selected>Choose...</option>
-                                    <option>...</option>
+                                <label>Status</label>
+                                <select id="assignmentStatus" class="form-control">
+                                    <option value="">Choose One</option>
+                                    @foreach ($statusList as $key1 => $status)
+                                        <option value="{{ $status->description_int }}"
+                                            @if (app('request')->input('status') == $status->description_int) selected @endif>
+                                            {{ $status->description_txt }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
-                            
+
                             <div class="school-assignment-contact-icon-sec">
                                 <a href="javascript:void(0)"><i class="fa-solid fa-xmark"></i></a>
                                 <a href="javascript:void(0)"><i class="fa-solid fa-plus"></i></a>
@@ -55,8 +61,37 @@
                                     @if ($Assignment->assignmentStatus == 'Completed')
                                         <?php $completeCount += 1; ?>
                                     @endif
+                                    <?php
+                                    $yDescription = '';
+                                    if (in_array($Assignment->ageRange_int, ['1', '2', '3', '4'])) {
+                                        if ($Assignment->yearGroup_int != null) {
+                                            $yDescription .= $Assignment->yearGroupTxt;
+                                        } else {
+                                            $yDescription .= '';
+                                        }
+                                        if ($Assignment->subject_int != null && $Assignment->yearGroup_int != null) {
+                                            $yDescription .= ' - ';
+                                        } else {
+                                            $yDescription .= '';
+                                        }
+                                        if ($Assignment->subject_int != null) {
+                                            $yDescription .= $Assignment->subjectTxt;
+                                        } else {
+                                            $yDescription .= '';
+                                        }
+                                    } else {
+                                        $yDescription .= $Assignment->subjectTxt;
+                                    }
+                                    
+                                    ?>
                                     <tr class="table-data" onclick="assignmentDetail()">
-                                        <td>{{ $Assignment->yearGroup }}</td>
+                                        <td>
+                                            @if ($yDescription == null || $yDescription == '')
+                                                {{ $Assignment->yearGroup }}
+                                            @else
+                                                {{ $yDescription }}
+                                            @endif
+                                        </td>
                                         <td>{{ $Assignment->assignmentStatus }}</td>
                                         <td>{{ $Assignment->assignmentType }}</td>
                                         <td>{{ $Assignment->days_dec }} {{ $Assignment->type_txt }}</td>
@@ -68,15 +103,15 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($Assignment->createdOn_dtm)
-                                                {{ date('d-m-Y', strtotime($Assignment->createdOn_dtm)) }}
+                                            @if ($Assignment->firstDate_dte)
+                                                {{ date('d-m-Y', strtotime($Assignment->firstDate_dte)) }}
                                             @else
                                                 {{ date('d-m-Y', strtotime($Assignment->timestamp_ts)) }}
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($Assignment->createdOn_dtm)
-                                                {{ date('l', strtotime($Assignment->createdOn_dtm)) }}
+                                            @if ($Assignment->firstDate_dte)
+                                                {{ date('l', strtotime($Assignment->firstDate_dte)) }}
                                             @else
                                                 {{ date('l', strtotime($Assignment->timestamp_ts)) }}
                                             @endif
@@ -100,7 +135,7 @@
                             </div>
                             <div class="school-assignment-sidebar-sec">
                                 <div class="assignment-sidebar-data2">
-                                    <h2>4</h2>
+                                    <h2>{{ $completeCount }}</h2>
                                 </div>
                                 <div class="school-assignment-sidebar-sec-text">
                                     <span>Total Days</span>
