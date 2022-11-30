@@ -2766,6 +2766,13 @@ table td {
     justify-content: space-between;
 }
 
+/* ============FINANCE TIMESHEET============= */
+
+.bills-icon {
+    font-size: 30px !important;
+    color: #fff !important;
+}
+
 
 /* -------------TABLE ROW ACTIVE------------ */
 
