@@ -7,238 +7,173 @@
 
         <div class="col-md-10 topbar-sec">
 
-            <div class="topbar-Section">
-                <i class="fa-solid fa-address-book">
-                    <span class="topbar-text">Timesheets</span>
-                </i>
-                <i class="fa-solid fa-money-bills">
-                    <span class="topbar-text">Invoices</span>
-                </i>
-                <i class="fa-solid fa-user">
-                    <span class="topbar-text">Payroll</span>
-                </i>
-                <i class="fa-solid fa-piggy-bank">
-                    <span class="topbar-text">Remittance</span>
-                </i>
-
-                <a href="#">
-                    <i class="fa-solid fa-money-bills bills-icon"></i>
-                </a>
-            </div>
-
-            <div class="school-detail-right-sec">
-                <div class="school-details-first-sec">
-                    <div class="details-heading">
-                        <h2>Profession</h2>
-                        <a data-toggle="modal" data-target="#DetailModal" style="cursor: pointer;"><i
-                                class="fa-solid fa-pencil"></i></a>
-                    </div>
-
-                    <div class="about-school-section">
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>Candidate Type</h2>
-                            </div>
-                            <div class="teacher-profession-name-text">
-                                <p>Teacher</p>
-                            </div>
-                        </div>
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>SubType</h2>
-                            </div>
-                            <!-- <div class="teacher-profession-name-text">
-                                <p>Mr</p>
-                            </div> -->
-                        </div>
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>Age Range</h2>
-                            </div>
-                            <div class="grid-refs-sec">
-                                <div class="grid-refs-text1">
-                                    <p>Secondary</p>
-                                </div>
-
-                                <!-- <div class="grid-refs-text1">
-                                    <p>Alonso</p>
-                                </div> -->
-
-                            </div>
-                        </div>
-
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <label for="vehicle1">NQT Required</label>
-                            </div>
-                            <div class="teacher-profession-heading-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                            </div>
-                        </div>
-
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>NQT Completed</h2>
-                            </div>
-                            <!-- <div class="teacher-profession-name-text">
-                                <p>abc</p>
-                            </div> -->
-                        </div>
-
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>TRN</h2>
-                            </div>
-                            <!-- <div class="teacher-profession-name-text">
-                                <p>12-04-1992</p>
-                            </div> -->
-                        </div>
-
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>Imported Title</h2>
-                            </div>
-                            <!-- <div class="teacher-profession-name-text">
-                                <p>Spanish</p>
-                            </div> -->
-                        </div>
-                    </div>
+            <div class="finance-topbar-Section">
+                <div class="topbar-finance-list-page">
+                    <a href="#">
+                        <i class="fa-solid fa-address-book topbar-active">
+                            <span class="finance-topbar-text">Timesheets</span>
+                        </i>
+                    </a>
+                    <a href="#">
+                        <i class="fa-solid fa-money-bills">
+                            <span class="finance-topbar-text">Invoices</span>
+                        </i>
+                    </a>
+                    <a href="#">
+                        <i class="fa-solid fa-user">
+                            <span class="finance-topbar-text">Payroll</span>
+                        </i>
+                    </a>
+                    <a href="#">
+                        <i class="fa-solid fa-piggy-bank">
+                            <span class="finance-topbar-text">Remittance</span>
+                        </i>
+                    </a>
                 </div>
 
-                <div class="school-details-second-sec">
-                    <div>
-                        <div class="details-heading">
-                            <h2>Interview</h2>
-                            <a data-toggle="modal" data-target="#DetailModal" style="cursor: pointer;"><i
-                                    class="fa-solid fa-pencil"></i></a>
-                        </div>
+                <div class="bills-icon-section">
+                    <a href="#">
+                        <i class="fa-solid fa-money-bills bills-icon"></i>
+                    </a>
+                </div>
 
-                        <!-- <div class="about-school-section"> -->
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>Notes</h2>
-                            </div>
-                            <!-- <div class="teacher-profession-headnameing-text">
-                                <p>Flat 3, 14 Cholmeley Park</p>
-                                <p>N6 5EU</p>
-                            </div> -->
-                        </div>
+            </div>
 
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>Interview Quality</h2>
-                            </div>
-                            <!-- <div class="teacher-profession-name-text">
-                                <p>51.5742105</p>
-                                <p>-0.1434667</p>
-                            </div> -->
-                        </div>
+            <div class="timesheet-top-section">
+                <div class="form-group timesheet-top-input-sec">
+                    <label for="staticEmail" class="col-form-label">Timesheet-Until</label>
+                    <input type="date" id="staticEmail" placeholder="25-11-2022" value="">
+                </div>
 
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>Language Skills</h2>
-                            </div>
-                            <!-- <div class="teacher-profession-name-text">
-                                <p>51.5742105</p>
-                                <p>-0.1434667</p>
-                            </div> -->
-                        </div>
-
-                        <div class="school-name-section">
-                            <div class="teacher-profession-heading-text">
-                                <h2>interview Details</h2>
-                            </div>
-                            <div class="teacher-profession-name-text">
-                                <p>Interviewed by Georgia Symeou on 24-05-2016</p>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="timesheet-process-btn">
+                    <button>S:\Timesheet To Process</button>
                 </div>
             </div>
 
-            <div class="school-detail-right-sec">
+            <div class="finance-timesheet-right-sec">
 
-                <div class="school-details-contact-second-sec">
+                <div class="finance-timesheet-contact-first-sec">
                     <div class="contact-heading">
                         <div class="contact-heading-text">
-                            <h2>Teaching Subjects</h2>
+                            <h2>Select a file</h2>
                         </div>
                         <div class="contact-icon-sec">
                             <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-plus"></i>
+                                <i class="fa-solid fa-arrows-rotate"></i>
                             </a>
                             <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
-                                <i class="fa-solid fa-pencil school-edit-icon"></i>
+                                <i class="fa-solid fa-folder-open"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="assignment-finance-table-section">
-                        <table class="table school-detail-page-table" id="myTable">
+                    <div class="finance-list-section">
+
+                    <div class="finance-list-text-section">
+                        <div class="finance-list-text">
+                            <ul>
+                                <li class="timesheet-list-active">New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+
+                            <ul>
+                                <li>New Text Document.txt</li>
+                            </ul>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+
+                <div class="finance-timesheet-contact-second-sec">
+                    <div class="finance-timesheet-table-section">
+                        <table class="table finance-timesheet-page-table" id="myTable">
                             <thead>
                                 <tr class="school-detail-table-heading">
-                                    <th>Subject</th>
-                                    <th>Main</th>
+                                    <th>School</th>
+                                    <th>Days</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
                                 <tr class="school-detail-table-data editContactRow">
-                                    <td></td>
-                                    <td>Y</td>
+                                    <td>Acland Burghley School</td>
+                                    <td>432</td>
                                 </tr>
                                 <tr class="school-detail-table-data editContactRow">
-                                    <td></td>
-                                    <td>N</td>
+                                    <td>Acland Burghley School</td>
+                                    <td>432</td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-
-                <div class="school-details-contact-second-sec">
-                    <div class="contact-heading">
-                        <div class="contact-heading-text">
-                            <h2>Qualifications</h2>
+                        <div class="table-bottom-text">
+                            <span>Double-click to open the school</span>
                         </div>
-                        <div class="contact-icon-sec">
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-minus"></i>
-                            </a>
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-plus"></i>
-                            </a>
-                            <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
-                                <i class="fa-solid fa-pencil school-edit-icon"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="assignment-finance-table-section">
-                        <table class="table school-detail-page-table" id="myTable">
-                            <thead>
-                                <tr class="school-detail-table-heading">
-                                    <th>Type</th>
-                                    <th>Qualification</th>
-                                    <th>QTS</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body-sec">
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>BA</td>
-                                    <td>Primary Education</td>
-                                    <td>N</td>
-                                </tr>
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>MA</td>
-                                    <td>Physical Activity, Health & Sports Training</td>
-                                    <td>Y</td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
             </div>
+
+            <div class="finance-timesheet-second-table-section">
+                        <table class="table finance-timesheet-page-table" id="myTable">
+                            <thead>
+                                <tr class="school-detail-table-heading">
+                                    <th>School</th>
+                                    <th>Days</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body-sec">
+                                <tr class="school-detail-table-data editContactRow">
+                                    <td>Acland Burghley School</td>
+                                    <td>432</td>
+                                </tr>
+                                <tr class="school-detail-table-data editContactRow">
+                                    <td>Acland Burghley School</td>
+                                    <td>432</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="table-assignment-bottom-text-sec">
+                            <div class="table-bottom-text">
+                            <span>Double-click to open the assignment</span>
+                            </div>
+                            
+
+                            <div class="finance-contact-icon-sec">
+                                <a style="cursor: pointer" class="disabled-link" id="deleteContactBttn">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                                <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
         </div>
     </div>
 </div>
