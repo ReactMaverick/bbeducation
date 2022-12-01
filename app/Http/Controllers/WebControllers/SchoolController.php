@@ -879,20 +879,22 @@ class SchoolController extends Controller
                 // ->take(1)
                 ->first();
 
-            $schoolInvoices = DB::table('tbl_invoice')
+            $Invoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->leftJoin(
-                    DB::raw('(SELECT school_id, contactItem_txt As email_txt FROM tbl_contactItemSch WHERE school_id = ' . $id . ' AND receiveInvoices_status <> 0 LIMIT 1) AS t_email'),
-                    function ($join) {
-                        $join->on('tbl_invoice.school_id', '=', 't_email.school_id');
-                    }
-                )
+                // ->leftJoin(
+                //     DB::raw('(SELECT school_id, contactItem_txt As email_txt FROM tbl_contactItemSch WHERE school_id = ' . $id . ' AND receiveInvoices_status <> 0 LIMIT 1) AS t_email'),
+                //     function ($join) {
+                //         $join->on('tbl_invoice.school_id', '=', 't_email.school_id');
+                //     }
+                // )
                 ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
-                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'), 'email_txt')
-                ->where('tbl_invoice.school_id', $id)
-                ->groupBy('tbl_invoice.invoice_id')
-                // ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+                ->where('tbl_invoice.school_id', $id);
+            if ($request->include != 1 && $request->method) {
+                $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
+            }
+            $schoolInvoices = $Invoices->groupBy('tbl_invoice.invoice_id')
                 ->get();
 
             $schoolTimesheet = DB::table('tbl_asn')
@@ -904,10 +906,15 @@ class SchoolController extends Controller
                 ->where('tbl_asn.status_int', 3)
                 ->where('timesheet_id', null)
                 ->groupBy('tbl_asn.teacher_id')
-                // ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ->orderBy(DB::raw('COUNT(asnItem_id)'), 'DESC')
                 ->get();
 
-            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet]);
+            $paymentMethodList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 42)
+                ->get();
+
+            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet, 'paymentMethodList' => $paymentMethodList]);
         } else {
             return redirect()->intended('/');
         }
@@ -952,7 +959,26 @@ class SchoolController extends Controller
                 // ->take(1)
                 ->first();
 
-            return view("web.school.school_teacher", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail]);
+            $teacherList = DB::table('tbl_schoolTeacherList')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn  LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE school_id = ' . $id . ' GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_schoolTeacherList.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_schoolTeacherList.teacher_id')
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->select('tbl_schoolTeacherList.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'applicationStatus.description_txt as status_txt', 'daysWorked_dec')
+                ->where('tbl_schoolTeacherList.school_id', $id)
+                ->groupBy('tbl_schoolTeacherList.teacher_id')
+                ->get();
+
+            return view("web.school.school_teacher", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'teacherList' => $teacherList]);
         } else {
             return redirect()->intended('/');
         }

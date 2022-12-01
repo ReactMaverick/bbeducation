@@ -1,12 +1,17 @@
 @extends('web.layout')
 @section('content')
+    <style>
+        .disabled-link {
+            pointer-events: none;
+        }
+    </style>
     <div class="assignment-detail-page-section">
         <div class="row assignment-detail-row">
 
             @include('web.school.school_sidebar')
 
             <div class="col-md-10 topbar-sec">
-                
+
                 @include('web.school.school_header')
 
                 <div class="school-finance-right-sec">
@@ -19,15 +24,21 @@
                                 <h2>Finance</h2>
                             </div>
                             <div class="form-check paid-check">
-                                <label for="vehicle3">Include paid</label>
-                                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat"><br>
+                                <label for="includePaid">Include paid</label>
+                                <input type="checkbox" id="includePaid" name="include" value="1"
+                                    <?php
+                                    echo app('request')->input('include') == 1 ? 'checked' : ''; ?>><br>
                             </div>
 
                             <div class="form-group payment-method-type">
-                                <label for="inputState">Payment Method</label>
-                                <select id="inputState" class="form-control">
-                                    <option selected>Choose...</option>
-                                    <option>...</option>
+                                <label>Payment Method</label>
+                                <select id="paymentMethod" name="method" class="form-control">
+                                    <option value="">Choose One</option>
+                                    @foreach ($paymentMethodList as $key1 => $paymentMethod)
+                                        <option value="{{ $paymentMethod->description_int }}" <?php echo app('request')->input('method') == $paymentMethod->description_int ? 'selected' : ''; ?>>
+                                            {{ $paymentMethod->description_txt }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="school-finance-contact-heading">
@@ -85,16 +96,16 @@
                                 </thead>
                                 <tbody class="table-body-sec">
                                     @foreach ($schoolTimesheet as $key => $Timesheet)
-                                    <tr class="school-detail-table-data">
-                                        <td>
-                                            @if ($Timesheet->knownAs_txt == null || $Timesheet->knownAs_txt == '')
-                                                {{ $Timesheet->firstName_txt.' '.$Timesheet->surname_txt }}
-                                            @else
-                                            {{ $Timesheet->knownAs_txt.' '.$Timesheet->surname_txt }}
-                                            @endif
-                                        </td>
-                                        <td>{{ $Timesheet->items_int }}</td>
-                                    </tr>
+                                        <tr class="school-detail-table-data">
+                                            <td>
+                                                @if ($Timesheet->knownAs_txt == null || $Timesheet->knownAs_txt == '')
+                                                    {{ $Timesheet->firstName_txt . ' ' . $Timesheet->surname_txt }}
+                                                @else
+                                                    {{ $Timesheet->knownAs_txt . ' ' . $Timesheet->surname_txt }}
+                                                @endif
+                                            </td>
+                                            <td>{{ $Timesheet->items_int }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -106,16 +117,30 @@
                             <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
                         </div>
                         <div class="invoice-timesheet-checkbox">
-                            <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                            <label for="vehicle1">Include Timesheet with Invoice</label>
+                            <input type="checkbox" id="includeTimesheetId" name="" value="1"
+                                @if ($schoolDetail->timesheetWithInvoice_status == -1) checked @endif class="disabled-link">
+                            <label for="includeTimesheetId" class="disabled-link">Include Timesheet with Invoice</label>
                         </div>
                         <div class="billing-address-section">
                             <h2>Billing Address</h2>
-                            <p>PO: 100071028</p>
-                            <p>London Borough of Barnet</p>
-                            <p>PO Box 328</p>
-                            <p>Darlington</p>
-                            <p>DL19PM</p>
+                            @if ($schoolDetail->billingAddress1_txt)
+                                <p>{{ $schoolDetail->billingAddress1_txt }}</p>
+                            @endif
+                            @if ($schoolDetail->billingAddress2_txt)
+                                <p>{{ $schoolDetail->billingAddress2_txt }}</p>
+                            @endif
+                            @if ($schoolDetail->billingAddress3_txt)
+                                <p>{{ $schoolDetail->billingAddress3_txt }}</p>
+                            @endif
+                            @if ($schoolDetail->billingAddress4_txt)
+                                <p>{{ $schoolDetail->billingAddress4_txt }}</p>
+                            @endif
+                            @if ($schoolDetail->billingAddress5_txt)
+                                <p>{{ $schoolDetail->billingAddress5_txt }}</p>
+                            @endif
+                            @if ($schoolDetail->billingPostcode_txt)
+                                <p>{{ $schoolDetail->billingPostcode_txt }}</p>
+                            @endif
                         </div>
 
                         <div class="billing-button">
@@ -135,5 +160,53 @@
         $(document).ready(function() {
             $('#myTable, #myTable1').DataTable();
         });
+
+        $(document).on('change', '#includePaid', function() {
+            if ($(this).is(":checked")) {
+                $('#paymentMethod').val('');
+                filtering(1, '');
+            } else {
+                $('#paymentMethod').val(1);
+                filtering('', 1);
+            }
+        });
+
+        $(document).on('change', '#paymentMethod', function() {
+            var paymentMethod = $(this).val();
+            if (paymentMethod != '') {
+                $('#includePaid').prop('checked', false);
+                filtering('', paymentMethod);
+            } else {
+                $('#includePaid').prop('checked', true);
+                filtering(1, '');
+            }
+        });
+
+        function filtering(include, method) {
+            //alert(sort_val);
+            var qUrl = ""
+            var current_url = window.location.href;
+            var base_url = current_url.split("?")[0];
+            var hashes = current_url.split("?")[1];
+            var hash = hashes.split('&');
+            for (var i = 0; i < hash.length; i++) {
+                params = hash[i].split("=");
+                if (params[0] == 'include') {
+                    params[1] = include;
+                }
+                if (params[0] == 'method') {
+                    params[1] = method;
+                }
+                paramJoin = params.join("=");
+                qUrl = "" + qUrl + paramJoin + "&";
+            }
+            if (qUrl != '') {
+                qUrl = qUrl.substr(0, qUrl.length - 1);
+            }
+
+            var joinUrl = base_url + "?" + qUrl
+            //alert("My favourite sports are: " + joinUrl);
+            window.location.assign(joinUrl);
+        }
     </script>
 @endsection

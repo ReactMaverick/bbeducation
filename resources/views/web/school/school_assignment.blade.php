@@ -68,13 +68,7 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
-                                <?php //$completeCount = 0;
-                                ?>
                                 @foreach ($assignmentList as $key => $Assignment)
-                                    @if ($Assignment->assignmentStatus == 'Completed')
-                                        <?php //$completeCount += 1;
-                                        ?>
-                                    @endif
                                     <?php
                                     $yDescription = '';
                                     if (in_array($Assignment->ageRange_int, ['1', '2', '3', '4'])) {
