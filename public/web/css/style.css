@@ -2768,9 +2768,348 @@ table td {
 
 /* ============FINANCE TIMESHEET============= */
 
-.bills-icon {
-    font-size: 30px !important;
+.finance-topbar-Section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3a3a3a73;
+    padding: 0 15px;
+}
+
+.topbar-finance-list-page {
+    display: flex;
+}
+
+.topbar-finance-list-page i {
+    font-size: 16px;
+    color: #000;
+    padding: 10px 20px;
+}
+
+.topbar-active {
+    border-bottom: 3px solid #000;
+}
+
+.bills-icon-section i {
+    font-size: 30px;
+    color: #fff;
+    border: none;
+}
+
+.topbar-finance-list-page .finance-topbar-text {
+    margin-left: 3px;
+}
+
+.finance-topbar-text {
+    font-size: 13px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.finance-timesheet-right-sec {
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+    padding: 15px 35px;
+    width: 75%;
+}
+
+.finance-timesheet-contact-second-sec {
+    width: 55%;
+}
+
+.timesheet-top-section {
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+    width: 60%;
+    padding: 10px 0 10px 35px;
+}
+
+.timesheet-top-input-sec {
+    display: flex;
+    width: 40%;
+    margin-bottom: 0;
+}
+
+.timesheet-top-input-sec label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+}
+
+.timesheet-top-input-sec input {
+    font-size: 12px;
+    margin-left: 10px;
+    height: 28px;
+    text-align: center;
+    width: 43%;
+    border: 2px solid #afabab;
+    border-radius: 3px;
+}
+
+.timesheet-process-btn {
+    width: 60%;
+}
+
+.timesheet-process-btn button {
+    width: 100%;
+    height: 28px;
+    border: 2px solid #afabab;
+    border-radius: 3px;
+    background-color: #fff;
+    font-size: 12px;
+}
+
+.finance-timesheet-contact-first-sec {
+    width: 40%;
+}
+
+.finance-list-section {
+    margin-top: 10px;
+}
+
+.finance-list-text-section {
+    border: 1px solid #afabab;
+    max-height: 200px;
+    min-height: 200px;
+    overflow-y: scroll;
+}
+
+.finance-timesheet-table-section {
+    margin-top: 40px;
+}
+
+.finance-list-text ul li {
+    font-size: 12px;
+    color: #3a3a3a;
+    padding-left: 6px;
+    list-style-type: none;
+}
+
+.finance-list-text ul {
+    margin-bottom: 5px;
+    padding-left: 0;
+}
+
+.timesheet-list-active {
+    background-color: #000;
     color: #fff !important;
+}
+
+.table-bottom-text span {
+    font-size: 11px;
+    color: #afabab;
+    font-style: italic;
+}
+
+.finance-timesheet-page-table {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.finance-timesheet-second-table-section {
+    margin-top: 20px;
+    width: 60%;
+    padding: 0 35px;
+}
+
+.table-assignment-bottom-text-sec {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 5px;
+}
+
+.finance-contact-icon-sec {
+    display: flex;
+    align-items: center;
+}
+
+.finance-contact-icon-sec i {
+    font-size: 20px;
+    color: #48a0dc;
+    margin-left: 20px;
+}
+
+/* =================FINANCE INVOICES=============== */
+
+.finance-invoice-right-sec {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    width: 100%;
+}
+
+.finance-invoice-contact-first-sec {
+    width: 45%;
+}
+
+.invoice-top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.invoice-top-input-sec {
+    display: flex;
+    width: 40%;
+    margin-bottom: 0;
+}
+
+.invoice-top-input-sec label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+    padding-bottom: 0;
+}
+
+.invoice-top-input-sec input {
+    font-size: 12px;
+    margin-left: 10px;
+    height: 28px;
+    text-align: center;
+    width: 52%;
+    border: 2px solid #afabab;
+    border-radius: 3px;
+}
+
+.invoice-top-btn-sec button {
+    font-size: 14px;
+    font-weight: 500;
+    color: #3a3a3a;
+    background-color: #FFC20E;
+    border: 1px solid #000;
+    /* margin-right: 25px; */
+    border-radius: 5px;
+    width: 105px;
+}
+
+.invoice-edit-icon i {
+    font-size: 20px;
+    color: #000;
+}
+
+
+
+.finance-invoice-contact-second-sec {
+    width: 52%;
+}
+
+.invoice-top-first-input-sec {
+    display: flex;
+    /* width: 27%; */
+    margin-bottom: 0;
+}
+
+.invoice-top-first-input-sec label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+    padding-bottom: 0;
+}
+
+.invoice-top-first-input-sec input {
+    font-size: 12px;
+    margin-left: 10px;
+    height: 28px;
+    text-align: center;
+    width: 52%;
+    border: 2px solid #afabab;
+    border-radius: 3px;
+}
+
+.invoice-top-second-input-sec {
+    display: flex;
+    width: 20%;
+    margin-bottom: 0;
+}
+
+.invoice-top-second-input-sec label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+    padding-bottom: 0;
+}
+
+.invoice-top-second-input-sec input {
+    font-size: 12px;
+    margin-left: 10px;
+    height: 28px;
+    text-align: center;
+    width: 80%;
+    border: 2px solid #afabab;
+    border-radius: 3px;
+}
+
+.finance-invoice-icon-sec i {
+    font-size: 20px;
+    color: #48a0dc;
+    margin-left: 10px;
+}
+
+.invoice-top-second-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.invoice-checkbox-sec label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.invoice-checkbox-top-section {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.finance-invoice-icon-sec {
+    position: relative;
+}
+
+.invoice-second-edit-icon i {
+    font-size: 20px;
+    color: #000;
+    margin-left: 5px;
+}
+
+.finance-invoice-second-icon-sec {
+    position: absolute;
+    top: -4px;
+    right: 0px;
+}
+
+.finance-invoice-second-icon-sec i {
+    font-size: 18px;
+    color: #000;
+}
+
+.finance-invoice-table-section {
+    margin-top: 25px;
+}
+
+.invoice-process-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.invoice-process-btn button {
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #ffc20e;
+    color: #3a3a3a;
+    border: 1px solid #9dc3e6;
+    border-radius: 5px;
+    padding: 5px 15px;
 }
 
 
