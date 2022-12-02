@@ -3,9 +3,7 @@
 <div class="assignment-detail-page-section">
     <div class="row assignment-detail-row">
 
-        @include('web.teacher.teacher_sidebar')
-
-        <div class="col-md-10 topbar-sec">
+        <div class="col-md-12 topbar-sec">
 
             <div class="finance-topbar-Section">
                 <div class="topbar-finance-list-page">
@@ -68,45 +66,45 @@
                     </div>
                     <div class="finance-list-section">
 
-                    <div class="finance-list-text-section">
-                        <div class="finance-list-text">
-                            <ul>
-                                <li class="timesheet-list-active">New Text Document.txt</li>
-                            </ul>
+                        <div class="finance-list-text-section">
+                            <div class="finance-list-text">
+                                <ul>
+                                    <li class="timesheet-list-active">New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
 
-                            <ul>
-                                <li>New Text Document.txt</li>
-                            </ul>
+                                <ul>
+                                    <li>New Text Document.txt</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
 
@@ -140,40 +138,40 @@
             </div>
 
             <div class="finance-timesheet-second-table-section">
-                        <table class="table finance-timesheet-page-table" id="myTable">
-                            <thead>
-                                <tr class="school-detail-table-heading">
-                                    <th>School</th>
-                                    <th>Days</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body-sec">
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>Acland Burghley School</td>
-                                    <td>432</td>
-                                </tr>
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>Acland Burghley School</td>
-                                    <td>432</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="table-assignment-bottom-text-sec">
-                            <div class="table-bottom-text">
-                            <span>Double-click to open the assignment</span>
-                            </div>
-                            
-
-                            <div class="finance-contact-icon-sec">
-                                <a style="cursor: pointer" class="disabled-link" id="deleteContactBttn">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </a>
-                                <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </a>
-                            </div>
-                        </div>
+                <table class="table finance-timesheet-page-table" id="myTable">
+                    <thead>
+                        <tr class="school-detail-table-heading">
+                            <th>School</th>
+                            <th>Days</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body-sec">
+                        <tr class="school-detail-table-data editContactRow">
+                            <td>Acland Burghley School</td>
+                            <td>432</td>
+                        </tr>
+                        <tr class="school-detail-table-data editContactRow">
+                            <td>Acland Burghley School</td>
+                            <td>432</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="table-assignment-bottom-text-sec">
+                    <div class="table-bottom-text">
+                        <span>Double-click to open the assignment</span>
                     </div>
+
+
+                    <div class="finance-contact-icon-sec">
+                        <a style="cursor: pointer" class="disabled-link" id="deleteContactBttn">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                        <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

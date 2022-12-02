@@ -2949,7 +2949,7 @@ margin-top: 5px;
 .invoice-top-section {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     width: 100%;
 }
 
@@ -2991,8 +2991,6 @@ margin-top: 5px;
     font-size: 20px;
     color: #000;
 }
-
-
 
 .finance-invoice-contact-second-sec {
     width: 52%;
@@ -3112,6 +3110,169 @@ margin-top: 5px;
     padding: 5px 15px;
 }
 
+/* =============FINANCE PAYROLL============= */
+
+.finance-payroll-contact-first-sec {
+    width: 49%;
+}
+
+.finance-payroll-top-sec {
+    display: flex;
+    width: 90%;
+    justify-content: center;
+}
+
+.finance-payroll-top-btn-sec button {
+    font-size: 14px;
+    font-weight: 500;
+    color: #3a3a3a;
+    background-color: #FFC20E;
+    border: 1px solid #000;
+    margin: 0 7px;
+    border-radius: 5px;
+    width: 105px;
+}
+
+.finance-payroll-top-second-sec {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.finance-payroll-pay-date-sec span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #afabab;
+    margin-right: 15px;
+}
+
+.finance-payroll-top-btn-sec {
+    display: flex;
+    align-items: center;
+}
+
+.finance-payroll-top-btn-sec span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #3a3a3a;
+    margin: 0 5px;
+    padding: 0 10px;
+    border: 1px solid #afabab;
+    border-radius: 3px;
+}
+
+.finance-payroll-top-btn-sec i {
+    font-size: 30px;
+    color: #000;
+}
+
+.finance-payroll-icon i {
+    font-size: 20px;
+    color: #40A0ED;
+}
+
+.finance-payroll-table-section {
+    display: flex;
+    margin-top: 10px;
+}
+
+.finance-payroll-page-table {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 0;
+    /* padding: 0 10px; */
+    margin-right: 10px;
+}
+
+.finance-payroll-page-second-table {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 0;
+    /* padding: 0 10px; */
+    margin-left: 10px;
+}
+
+/* ============FINANCE REMITTANCE============== */
+
+.finance-remittance-payment-method {
+    width: 20%;
+    margin-bottom: 0;
+}
+
+.finance-remittance-payment-method label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+    margin-bottom: 5px;
+}
+
+.finance-remittance-payment-method select {
+    padding: 0;
+    height: 28px;
+    color: #3a3a3a;
+    font-size: 12px;
+}
+
+.finance-remittance-top-sec {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 20%;
+}
+
+.finance-remittance-contact-first-sec {
+    width: 79%;
+}
+
+.finance-remittance-contact-second-sec {
+    width: 19%;
+    margin-top: 50px;
+    padding-right: 20px;
+}
+
+.remittance-top-icon i {
+    font-size: 20px;
+    color: #40a0ed;
+    margin-left: 8px;
+}
+
+.amount-owed-heading-sec {
+    margin-bottom: 15px;
+}
+
+.amount-owed-heading-sec h2 {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #000;
+    margin-bottom: 15px;
+}
+
+.amount-owed-price-sec {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.amount-owed-heading-sec p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.amount-owed-heading-sec span {
+    font-size: 12px;
+    font-weight: 500;
+    color: #afabab;
+    margin-right: 6px;
+}
+
+.Amount-owed-icon-sec i {
+    font-size: 20px;
+    color: #40a0ed;
+}
 
 /* -------------TABLE ROW ACTIVE------------ */
 
