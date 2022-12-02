@@ -53,7 +53,7 @@
                                     <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
                                 </div>
                                 <div class="invoice-checkbox-sec">
-                                    <label for="vehicle1">Show Sent</label>
+                                    <label for="vehicle1">Include Paid</label>
                                 </div>
                             </div>
                             <div class="remittance-top-icon">
@@ -67,11 +67,16 @@
                         <table class="table finance-timesheet-page-table" id="myTable">
                             <thead>
                                 <tr class="school-detail-table-heading">
+                                    <th>Invoice ID</th>
+                                    <th>Invoice Date</th>
                                     <th>School</th>
-                                    <th>Teacher</th>
-                                    <th>Date</th>
-                                    <th>Charge</th>
-                                    <th>Pay</th>
+                                    <th>Paid On</th>
+                                    <th>Remitted By</th>
+                                    <th>Sent On</th>
+                                    <th>Sent By</th>
+                                    <th>Net</th>
+                                    <th>VAT</th>
+                                    <th>Gross</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
@@ -79,15 +84,25 @@
                                     <td>Acland Burghley School</td>
                                     <td>Vivian Amoako</td>
                                     <td>19-09-2022</td>
-                                    <td>117</td>
-                                    <td>74.52</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
                                 </tr>
                                 <tr class="school-detail-table-data editContactRow">
                                     <td>Acland Burghley School</td>
                                     <td>Vivian Amoako</td>
                                     <td>19-09-2022</td>
-                                    <td>117</td>
-                                    <td>74.52</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
+                                    <td>19-09-2022</td>
                                 </tr>
                             </tbody>
                         </table>
