@@ -16,6 +16,18 @@
 </script>
 <?php } ?>
 
+<?php if (Session::has('error')){ ?>
+<script>
+    $(document).ready(function() {
+        swal(
+            'Failed!',
+            '<?php echo session('error'); ?>',
+            'danger'
+        );
+    });
+</script>
+<?php } ?>
+
 <script>
     $(document).ready(function() {
         $(".select2").select2();
@@ -100,6 +112,22 @@
             }
         });
 
+        //file validate
+        $(".file-validate").each(function() {
+            if ($('.file-validate').get(0).files.length === 0) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                var ext = $('.file-validate').val().split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
@@ -173,6 +201,21 @@
             $(this).closest(".form-group").addClass('has-error');
             //$(this).next(".error-content").removeClass('hidden');
             error = "has error";
+        }
+    });
+
+    $(document).on('keyup focusout', '.file-validate', function(e) {
+        if ($('.file-validate').get(0).files.length === 0) {
+            $(this).closest(".form-group").addClass('has-error');
+            error = "has error";
+        } else {
+            var ext = $('.file-validate').val().split('.').pop().toLowerCase();
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
         }
     });
     /******* field validate 1 ********/
@@ -255,6 +298,22 @@
             }
         });
 
+        //file validate
+        $(".file-validate-2").each(function() {
+            if ($('.file-validate-2').get(0).files.length === 0) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                var ext = $('.file-validate-2').val().split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
@@ -328,6 +387,21 @@
             $(this).closest(".form-group").addClass('has-error');
             //$(this).next(".error-content").removeClass('hidden');
             error = "has error";
+        }
+    });
+
+    $(document).on('keyup focusout', '.file-validate-2', function(e) {
+        if ($('.file-validate-2').get(0).files.length === 0) {
+            $(this).closest(".form-group").addClass('has-error');
+            error = "has error";
+        } else {
+            var ext = $('.file-validate-2').val().split('.').pop().toLowerCase();
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
         }
     });
     /******* field validate 2 ********/

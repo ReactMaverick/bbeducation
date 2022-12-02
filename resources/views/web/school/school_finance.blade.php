@@ -114,7 +114,7 @@
                     <div class="billing-details-section">
                         <div class="billing-details-heading">
                             <span>Billing Details</span>
-                            <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                            <a data-toggle="modal" data-target="#editBillingAddressModal" style="cursor: pointer;" title="Edit billing address"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
                         </div>
                         <div class="invoice-timesheet-checkbox">
                             <input type="checkbox" id="includeTimesheetId" name="" value="1"
@@ -155,6 +155,82 @@
             </div>
         </div>
     </div>
+
+    <!-- Billing Address Edit Modal -->
+    <div class="modal fade" id="editBillingAddressModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Edit School Billing Information</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Edit Billing Detail</h2>
+                </div>
+
+                <form action="{{ url('/schoolBillingAddressUpdate') }}" method="post">
+                    @csrf
+                    <div class="modal-input-field-section">
+                        <h6>{{ $schoolDetail->name_txt }}</h6>
+                        <span>ID</span>
+                        <p>{{ $schoolDetail->school_id }}</p>
+                        <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
+                        <input type="hidden" name="include" value="{{ app('request')->input('include') }}">
+                        <input type="hidden" name="method" value="{{ app('request')->input('method') }}">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="modal-input-field">
+                                    <label class="form-check-label">Address</label>
+                                    <input type="text" class="form-control mb-1" name="billingAddress1_txt"
+                                        id="" value="{{ $schoolDetail->billingAddress1_txt }}">
+                                    <input type="text" class="form-control mb-1" name="billingAddress2_txt"
+                                        id="" value="{{ $schoolDetail->billingAddress2_txt }}">
+                                    <input type="text" class="form-control mb-1" name="billingAddress3_txt"
+                                        id="" value="{{ $schoolDetail->billingAddress3_txt }}">
+                                    <input type="text" class="form-control mb-1" name="billingAddress4_txt" id=""
+                                        value="{{ $schoolDetail->billingAddress4_txt }}">
+                                    <input type="text" class="form-control" name="billingAddress5_txt" id="" value="{{ $schoolDetail->billingAddress5_txt }}">
+                                </div>
+
+                                <div class="modal-input-field">
+                                    <label class="form-check-label">Postcode</label>
+                                    <input type="text" class="form-control" name="billingPostcode_txt" id=""
+                                        value="{{ $schoolDetail->billingPostcode_txt }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6 modal-form-right-sec">
+                                <div class="modal-side-field">
+                                    <input type="checkbox" class="" name="timesheetWithInvoice_status"
+                                        id="timesheetWithInvoice_status" value="1" >
+                                    <label class="form-check-label" for="timesheetWithInvoice_status">Include timesheet with invoice</label>
+                                </div>
+
+                                <div class="modal-side-field">
+                                    <input type="checkbox" class="" name="isFactored_status"
+                                        id="isFactored_status" value="1" >
+                                    <label class="form-check-label" for="isFactored_status">Factored</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Billing Address Edit Modal -->
 
     <script>
         $(document).ready(function() {

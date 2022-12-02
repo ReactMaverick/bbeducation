@@ -84,6 +84,12 @@ Route::post('/schoolContactLogInsert', [SchoolController::class, 'schoolContactL
 Route::get('/school-assignment/{id}', [SchoolController::class, 'schoolAssignment']);
 Route::get('/school-finance/{id}', [SchoolController::class, 'schoolFinance']);
 Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
+Route::get('/school-document/{id}', [SchoolController::class, 'schoolDocument']);
+Route::post('/schoolDocumentInsert', [SchoolController::class, 'schoolDocumentInsert']);
+Route::post('/getSchoolDocDetail', [SchoolController::class, 'getSchoolDocDetail']);
+Route::post('/schoolDocumentUpdate', [SchoolController::class, 'schoolDocumentUpdate']);
+Route::post('/schoolDocumentDelete', [SchoolController::class, 'schoolDocumentDelete']);
+Route::post('/schoolBillingAddressUpdate', [SchoolController::class, 'schoolBillingAddressUpdate']);
 // School
 
 // Finance

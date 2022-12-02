@@ -928,6 +928,10 @@ class SchoolController extends Controller
             $headerTitle = "Schools";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
+            $tStatus = 'All';
+            if ($request->status) {
+                $tStatus = $request->status;
+            }
 
             $schoolDetail = DB::table('tbl_school')
                 ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
@@ -959,7 +963,7 @@ class SchoolController extends Controller
                 // ->take(1)
                 ->first();
 
-            $teacherList = DB::table('tbl_schoolTeacherList')
+            $teacher = DB::table('tbl_schoolTeacherList')
                 ->leftJoin(
                     DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn  LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE school_id = ' . $id . ' GROUP BY teacher_id) AS t_days'),
                     function ($join) {
@@ -974,13 +978,226 @@ class SchoolController extends Controller
                         });
                 })
                 ->select('tbl_schoolTeacherList.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'applicationStatus.description_txt as status_txt', 'daysWorked_dec')
-                ->where('tbl_schoolTeacherList.school_id', $id)
-                ->groupBy('tbl_schoolTeacherList.teacher_id')
+                ->where('tbl_schoolTeacherList.school_id', $id);
+            if ($tStatus != 'all') {
+                if ($tStatus == 'preferred') {
+                    $teacher->where('tbl_schoolTeacherList.rejectOrPreferred_int', 1);
+                }
+                if ($tStatus == 'rejected') {
+                    $teacher->where('tbl_schoolTeacherList.rejectOrPreferred_int', 2);
+                }
+            }
+            $teacherList = $teacher->groupBy('tbl_schoolTeacherList.teacher_id')
                 ->get();
 
-            return view("web.school.school_teacher", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'teacherList' => $teacherList]);
+            return view("web.school.school_teacher", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'teacherList' => $teacherList, 'tStatus' => $tStatus]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function schoolDocument(Request $request, $id)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "School Document");
+            $headerTitle = "Schools";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            $schoolDetail = DB::table('tbl_school')
+                ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                })
+                ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                    $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                        ->where(function ($query) {
+                            $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                        });
+                })
+                ->LeftJoin('tbl_description as religion', function ($join) {
+                    $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                        ->where(function ($query) {
+                            $query->where('religion.descriptionGroup_int', '=', 29);
+                        });
+                })
+                ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                    $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                        ->where(function ($query) {
+                            $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                        });
+                })
+                ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                ->where('tbl_school.school_id', $id)
+                ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ->first();
+
+            $documentList = DB::table('tbl_schooldocument')
+                ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_schooldocument.school_id')
+                ->select('tbl_schooldocument.*', 'tbl_school.name_txt')
+                ->where('tbl_schooldocument.school_id', $id)
+                ->orderBy('tbl_schooldocument.uploadOn_dtm', 'DESC')
+                ->get();
+
+            return view("web.school.school_document", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'documentList' => $documentList]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolDocumentInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $school_id = $request->school_id;
+
+            $fPath = '';
+            $fType = '';
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            if ($image = $request->file('file')) {
+                $extension = $image->extension();
+                $file_name = $image->getClientOriginalName();
+                if (in_array(strtolower($extension), $allowed_types)) {
+                    $rand = mt_rand(100000, 999999);
+                    $name = time() . "_" . $rand . "_" . $file_name;
+                    $image->move('images/school', $name);
+                    $fPath = 'images/school/' . $name;
+                    $fType = $extension;
+                } else {
+                    return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
+                }
+            } else {
+                return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
+            }
+
+            DB::table('tbl_schooldocument')
+                ->insert([
+                    'school_id' => $school_id,
+                    'file_location' => $fPath,
+                    'file_name' => $request->file_name,
+                    'file_type' => $fType,
+                    'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                    'loggedBy_id' => $user_id,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect('/school-document/' . $school_id)->with('success', "Document added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function getSchoolDocDetail(Request $request)
+    {
+        $input = $request->all();
+        $schoolDocument_id = $input['editDocumentId'];
+
+        $docDetail = DB::table('tbl_schooldocument')
+            ->where('schoolDocument_id', "=", $schoolDocument_id)
+            ->first();
+
+        $view = view("web.school.document_edit_view", ['docDetail' => $docDetail])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function schoolDocumentUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $school_id = $request->school_id;
+            $editDocumentId = $request->editDocumentId;
+            $file_location = $request->file_location;
+
+            $fPath = '';
+            $fType = '';
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            if ($image = $request->file('file')) {
+                $extension = $image->extension();
+                $file_name = $image->getClientOriginalName();
+                if (in_array(strtolower($extension), $allowed_types)) {
+                    $rand = mt_rand(100000, 999999);
+                    $name = time() . "_" . $rand . "_" . $file_name;
+                    $image->move('images/school', $name);
+                    $fPath = 'images/school/' . $name;
+                    $fType = $extension;
+                    if (file_exists($file_location)) {
+                        unlink($file_location);
+                    }
+                } else {
+                    return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
+                }
+            } else {
+                return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
+            }
+
+            DB::table('tbl_schooldocument')
+                ->where('schoolDocument_id', '=', $editDocumentId)
+                ->update([
+                    'file_location' => $fPath,
+                    'file_name' => $request->file_name,
+                    'file_type' => $fType,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect('/school-document/' . $school_id)->with('success', "Document updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolDocumentDelete(Request $request)
+    {
+        $editDocumentId = $request->editDocumentId;
+        $docDetail = DB::table('tbl_schooldocument')
+            ->where('schoolDocument_id', "=", $editDocumentId)
+            ->first();
+        if ($docDetail) {
+            DB::table('tbl_schooldocument')
+                ->where('schoolDocument_id', "=", $editDocumentId)
+                ->delete();
+
+            if (file_exists($docDetail->file_location)) {
+                unlink($docDetail->file_location);
+            }
+        }
+        return 1;
+    }
+
+    public function schoolBillingAddressUpdate(Request $request)
+    {
+        $school_id = $request->school_id;
+        $include = $request->include;
+        $method = $request->method;
+        $editData = array();
+        $timesheetWithInvoice_status = 0;
+        if ($request->timesheetWithInvoice_status) {
+            $timesheetWithInvoice_status = -1;
+        }
+        $isFactored_status = 0;
+        if ($request->isFactored_status) {
+            $isFactored_status = -1;
+        }
+        $editData['billingAddress1_txt'] = $request->billingAddress1_txt;
+        $editData['billingAddress2_txt'] = $request->billingAddress2_txt;
+        $editData['billingAddress3_txt'] = $request->billingAddress3_txt;
+        $editData['billingAddress4_txt'] = $request->billingAddress4_txt;
+        $editData['billingAddress5_txt'] = $request->billingAddress5_txt;
+        $editData['billingPostcode_txt'] = $request->billingPostcode_txt;
+        $editData['timesheetWithInvoice_status'] = $timesheetWithInvoice_status;
+        $editData['isFactored_status'] = $isFactored_status;
+
+        if (count($editData) > 0) {
+            // $editData['timestamp_ts'] = date('Y-m-d H:i:s');
+            DB::table('tbl_school')->where('school_id', '=', $school_id)
+                ->update($editData);
+        }
+
+        return redirect('/school-finance/' . $school_id.'?include='.$include.'&method='.$method)->with('success', "Billing details updated successfully.");
     }
 }

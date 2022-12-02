@@ -66,12 +66,19 @@
 
                             <div class="preferred-list-sec">
                                 <div class="form-check list-form-check">
-                                    <input type="radio" id="html" name="fav_language" value="HTML">
-                                    <label for="html">Preferred</label>
+                                    <input type="radio" id="AllId" name="rejectOrPreferred" value="all" <?php
+                                    echo app('request')->input('status') == 'all' ? 'checked' : ''; ?> >
+                                    <label for="AllId">All</label>
                                 </div>
                                 <div class="form-check list-form-check">
-                                    <input type="radio" id="html" name="fav_language" value="HTML">
-                                    <label for="html">Rejected</label>
+                                    <input type="radio" id="PreferredId" name="rejectOrPreferred" value="preferred" <?php
+                                    echo app('request')->input('status') == 'preferred' ? 'checked' : ''; ?> >
+                                    <label for="PreferredId">Preferred</label>
+                                </div>
+                                <div class="form-check list-form-check">
+                                    <input type="radio" id="RejectedId" name="rejectOrPreferred" value="rejected" <?php
+                                    echo app('request')->input('status') == 'rejected' ? 'checked' : ''; ?> >
+                                    <label for="RejectedId">Rejected</label>
                                 </div>
                             </div>
                         </div>
@@ -85,6 +92,28 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable();
+
+            $('input[type=radio][name=rejectOrPreferred]').change(function() {
+                var status = this.value;
+                var qUrl = ""
+                var current_url = window.location.href;
+                var base_url = current_url.split("?")[0];
+                var hashes = current_url.split("?")[1];
+                var hash = hashes.split('&');
+                for (var i = 0; i < hash.length; i++) {
+                    params = hash[i].split("=");
+                    if (params[0] == 'status') {
+                        params[1] = status;
+                    }
+                    paramJoin = params.join("=");
+                    qUrl = "" + qUrl + paramJoin + "&";
+                }
+                if (qUrl != '') {
+                    qUrl = qUrl.substr(0, qUrl.length - 1);
+                }
+                var joinUrl = base_url + "?" + qUrl;
+                window.location.assign(joinUrl);
+            });
         });
     </script>
 @endsection
