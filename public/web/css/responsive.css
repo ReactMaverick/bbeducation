@@ -325,6 +325,112 @@
         width: 50%;
         justify-content: center;
     }
+
+    /* ================TEACHER CALENDAR=============== */
+
+    .sidebar-mode-check i {
+        font-size: 20px;
+    }
+
+    .teacher-calendar-slider {
+        padding: 0 0 0 15px;
+    }
+
+    /* ===============TEACHER DETAIL================ */
+
+    .user-img-sec {
+        padding: 10px;
+    }
+
+    .user-img-sec img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .sidebar-pages {
+        margin-left: 5px;
+        align-items: flex-start;
+    }
+
+    /* ================TEACHER DOCUMENTS=============== */
+
+    .teacher-document-table-sec {
+        width: 100%;
+    }
+
+    /* =================TEACHER PAYROLL============== */
+
+    .payroll-bottom-text {
+        padding: 0 15px 35px 15px;
+    }
+
+    /* ================FINANCE TIMESHEET=========== */
+
+    .timesheet-top-section {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .timesheet-top-input-sec {
+        width: 50%;
+    }
+
+    .timesheet-top-input-sec input {
+        width: 50%;
+    }
+
+    .timesheet-process-btn {
+        width: 50%;
+    }
+
+    .finance-timesheet-right-sec {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .finance-timesheet-second-table-section {
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    /* =============FINANCE INVOICES=============== */
+
+    .finance-invoice-right-sec {
+        flex-direction: column;
+    }
+
+    .finance-invoice-contact-first-sec {
+        width: 100%;
+    }
+
+    .finance-invoice-contact-second-sec {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    /* ================FINANCE PAYROLL================ */
+
+    .finance-payroll-contact-first-sec {
+        width: 100%;
+    }
+
+    /* ==============FINANCE REMITTANCE================= */
+
+    .finance-remittance-contact-first-sec {
+        width: 100%;
+    }
+    .finance-remittance-payment-method {
+        width: 47%;
+    }
+
+    .finance-remittance-top-sec {
+        width: 47%;
+    }
+
+    .finance-remittance-contact-second-sec {
+        width: 100%;
+        padding-right: 0;
+    }
 }
 
 
@@ -714,8 +820,58 @@
 
     .about-finance {
         margin: 10px 0 0 0;
-        ;
         width: 50%;
+    }
+
+    /* ===============FINANCE TIMESHEET=============== */
+
+    .topbar-finance-list-page {
+        padding: 5px;
+    }
+
+    .topbar-finance-list-page i {
+        font-size: 15px;
+        padding: 0;
+    }
+
+    .finance-topbar-text {
+        font-size: 11px;
+    }
+
+    .bills-icon-section i {
+        font-size: 15px;
+    }
+
+    .timesheet-top-section {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .timesheet-top-input-sec {
+        width: 55%;
+    }
+
+    .timesheet-process-btn {
+        width: 45%;
+    }
+
+    .finance-timesheet-right-sec {
+        width: 100%;
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .finance-timesheet-contact-first-sec {
+        width: 100%;
+    }
+
+    .finance-timesheet-contact-second-sec {
+        width: 100%;
+    }
+
+    .finance-timesheet-second-table-section {
+        width: 100%;
+        padding: 0 15px;
     }
 
     /* =============ASSIGNMENT CONTACT============= */
@@ -835,6 +991,172 @@
 
     .modal-side-field {
         margin-bottom: 5px;
+    }
+
+    /* ===============TEACHER CALENDAR============= */
+
+    .teacher-calendar-sec {
+        flex-direction: column;
+    }
+
+    .teacher-calendar-sidebar-section {
+        display: flex;
+        justify-content: space-between;
+        height: auto;
+        padding: 20px;
+        width: 100%;
+    }
+
+    .sidebar-mode-check {
+        margin-bottom: 0;
+    }
+
+    .teacher-calendar-slider {
+        overflow-x: scroll;
+        margin-top: 10px;
+        padding: 0;
+    }
+
+    .teacher-calendar-table-section {
+        width: 500px;
+    }
+
+    .teacher-calendar-days-field {
+        width: auto;
+        padding: 5px;
+    }
+
+    .teacher-calendar-days-field2 {
+        width: auto;
+        padding: 5px;
+    }
+
+    .teacher-calendar-days-field3 {
+        width: auto;
+        padding: 5px;
+    }
+
+    /* ================TEACHER DOCUMENTS============ */
+
+    .teacher-document-heading-text {
+        width: 80%;
+    }
+
+    .teacher-document-name-text {
+        width: 20%;
+    }
+
+    .teacher-document-table-sec {
+        width: 100%;
+    }
+
+    .teacher-document-second-heading-text {
+        width: 45%;
+    }
+
+    .teacher-document-second-name-text {
+        width: 5%;
+    }
+
+    .teacher-document-third-name-text {
+        padding-left: 15px;
+    }
+
+    /* =================TEACHER PAYROLL============== */
+
+    .payroll-bottom-text {
+        padding: 0 15px 35px 15px;
+    }
+
+    /* =============FINANCE INVOICES=============== */
+
+    .finance-invoice-right-sec {
+        flex-direction: column;
+        overflow-x: scroll;
+    }
+
+    .finance-invoice-contact-first-sec {
+        width: 650px;
+    }
+
+    .finance-invoice-contact-second-sec {
+        width: 650px;
+        margin-top: 20px;
+    }
+
+    .invoice-top-input-sec label {
+        font-size: 11px;
+        padding-top: 0;
+    }
+
+    .invoice-top-first-input-sec label {
+        font-size: 11px;
+        padding-top: 0;
+    }
+
+    .invoice-top-input-sec {
+        align-items: center;
+    }
+
+    .invoice-top-first-input-sec {
+        align-items: center;
+    }
+
+    /* =================FINANCE PAYROLL=============== */
+
+    .finance-payroll-contact-first-sec {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .finance-payroll-page-table {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .finance-payroll-page-second-table {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .finance-payroll-table-section {
+        flex-direction: column;
+    }
+
+    /* ================FINANCE REMITTANCE============= */
+
+    .finance-remittance-contact-first-sec {
+        width: 100%;
+    }
+    
+    .finance-remittance-payment-method {
+        width: 50%;
+    }
+
+    .finance-remittance-top-sec {
+        width: 50%;
+    }
+
+    .finance-invoice-table-section {
+        overflow-x: scroll;
+        margin-top: 10px;
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+.finance-invoice-table-section::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .finance-invoice-table-section {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+    .finance-remittance-contact-second-sec {
+        width: 100%;
+        margin-top: 25px;
+        padding-right: 0;
     }
 }
 

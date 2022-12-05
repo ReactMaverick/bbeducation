@@ -231,7 +231,7 @@
                                 <div class="teacher-document-second-heading-text">
                                     <h2>Right to Work</h2>
                                 </div>
-                                <div class="teacher-document-second-name-text">
+                                <div class="teacher-document-second-text">
                                     <p>EU Citizen</p>
                                 </div>
                             </div>

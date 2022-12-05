@@ -23,151 +23,153 @@
                 </div>
             </div>
 
-            <div class="teacher-calendar-table-section">
-                <div class="total-days-slider-sec">
-                    <div class="total-days-text">
-                        <div class="assignment-date">
-                            <i class="fa-solid fa-caret-left"></i>
-                        </div>
-                        <div class="teacher-calendar-date-text">
-                            <span>Mon 28 November 2022</span>
-                        </div>
-                        <div class="assignment-date2">
-                            <i class="fa-solid fa-caret-right"></i>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="teacher-calendar-days-sec">
-                    <div class="teacher-calendar-total-days-text">
-                        <p>211 days total:</p>
-                    </div>
-                    <div class="teacher-calendar-days-text">
-                        <p>Monday</p>
-                        <p class="teacher-calendar-bottom-text">41.46</p>
-                    </div>
-                    <div class="teacher-calendar-days-text">
-                        <p>Tuesday</p>
-                        <p class="teacher-calendar-bottom-text">43.46</p>
-                    </div>
-                    <div class="teacher-calendar-days-text">
-                        <p>Wednesday</p>
-                        <p class="teacher-calendar-bottom-text">43.46</p>
-                    </div>
-                    <div class="teacher-calendar-days-text">
-                        <p>Thursday</p>
-                        <p class="teacher-calendar-bottom-text">42.3</p>
-                    </div>
-                    <div class="teacher-calendar-days-text">
-                        <p>Friday</p>
-                        <p class="teacher-calendar-bottom-text">40.3</p>
+            <div class="teacher-calendar-slider">
+                <div class="teacher-calendar-table-section">
+                    <div class="total-days-slider-sec">
+                        <div class="total-days-text">
+                            <div class="assignment-date">
+                                <i class="fa-solid fa-caret-left"></i>
+                            </div>
+                            <div class="teacher-calendar-date-text">
+                                <span>Mon 28 November 2022</span>
+                            </div>
+                            <div class="assignment-date2">
+                                <i class="fa-solid fa-caret-right"></i>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- <div class="teacher-calendar-days-text">
+                    <div class="teacher-calendar-days-sec">
+                        <div class="teacher-calendar-total-days-text">
+                            <p>211 days total:</p>
+                        </div>
+                        <div class="teacher-calendar-days-text">
+                            <p>Monday</p>
+                            <p class="teacher-calendar-bottom-text">41.46</p>
+                        </div>
+                        <div class="teacher-calendar-days-text">
+                            <p>Tuesday</p>
+                            <p class="teacher-calendar-bottom-text">43.46</p>
+                        </div>
+                        <div class="teacher-calendar-days-text">
+                            <p>Wednesday</p>
+                            <p class="teacher-calendar-bottom-text">43.46</p>
+                        </div>
+                        <div class="teacher-calendar-days-text">
+                            <p>Thursday</p>
+                            <p class="teacher-calendar-bottom-text">42.3</p>
+                        </div>
+                        <div class="teacher-calendar-days-text">
+                            <p>Friday</p>
+                            <p class="teacher-calendar-bottom-text">40.3</p>
+                        </div>
+
+                        <!-- <div class="teacher-calendar-days-text">
                         <p>Sun</p>
                     </div> -->
-                </div>
-                <div class="calendar-section">
+                    </div>
+                    <div class="calendar-section">
 
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field3">
-                            <p>Bede Abii</p>
-                            <p>5.4 Days for BB</p>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field3">
+                                <p>Bede Abii</p>
+                                <p>5.4 Days for BB</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>West hampstead Primary School: Whole Day</p>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>West hampstead Primary School: Whole Day</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>West hampstead Primary School: Whole Day</p>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>West hampstead Primary School: Whole Day</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>West hampstead Primary School: Whole Day</p>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>West hampstead Primary School: Whole Day</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>West hampstead Primary School: Whole Day</p>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>West hampstead Primary School: Whole Day</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>West hampstead Primary School: Whole Day</p>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>West hampstead Primary School: Whole Day</p>
+                            </div>
                         </div>
+
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field3">
+                                <p>Bede Abii</p>
+                                <p>5.4 Days for BB</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field2">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field2">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field2">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field2">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field2">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field3">
+                                <p>Bede Abii</p>
+                                <p>5.4 Days for BB</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+                        <div class="date-left-teacher-calendar">
+                            <div class="teacher-calendar-days-field">
+                                <p>Tetherdown Primary School: 1.08 Hours</p>
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field3">
-                            <p>Bede Abii</p>
-                            <p>5.4 Days for BB</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field2">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field2">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field2">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field2">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field2">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field3">
-                            <p>Bede Abii</p>
-                            <p>5.4 Days for BB</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-                    <div class="date-left-teacher-calendar">
-                        <div class="teacher-calendar-days-field">
-                            <p>Tetherdown Primary School: 1.08 Hours</p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- <form class="status-section">
+                    <!-- <form class="status-section">
                     <div class="row">
                         <div class="form-group col-md-6 second-filter-sec">
                             <label for="inputState">Status</label>
@@ -184,7 +186,9 @@
                         </div>
                     </div>
                 </form> -->
+                </div>
             </div>
+
         </div>
     </div>
 
