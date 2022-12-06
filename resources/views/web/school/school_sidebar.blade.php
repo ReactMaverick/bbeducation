@@ -41,7 +41,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle']=='School Finance') sidebar-active @endif">
-            <a href="{{ URL::to('/school-finance/'.$school_id.'?include=&method=1') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-finance/'.$school_id.'?include=&method=') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-money-bills"></i>
                 </div>

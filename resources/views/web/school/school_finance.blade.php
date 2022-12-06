@@ -43,17 +43,38 @@
                             </div>
                             <div class="school-finance-contact-heading">
                                 <div class="school-finance-contact-icon-sec">
-                                    <a href="#"><i class="fa-solid fa-square-check"></i></a>
-                                    <a href="#"><i class="fa-solid fa-money-bills"></i></a>
-                                    <a href="#"><i class="fa-solid fa-arrow-up"></i></a>
-                                    <a href="#"><i class="fa-solid fa-id-card"></i></a>
-                                    <a href="#"><i class="fa-solid fa-envelope"></i></a>
-                                    <a href="#"><i class="fa-solid fa-plus"></i></a>
-                                    <a href="#"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                        <i class="fa-solid fa-square-check"></i>
+                                    </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                        <i class="fa-solid fa-money-bills"></i>
+                                    </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                        <i class="fa-solid fa-arrow-up"></i>
+                                    </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                        <i class="fa-solid fa-id-card"></i>
+                                    </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </a>
+                                    <a style="cursor: pointer" id="invoiceAddBttn"
+                                        onclick="invoiceAdd('<?php echo $school_id; ?>', '<?php echo app('request')->input('include'); ?>', '<?php echo app('request')->input('method'); ?>')">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="InvoiceEditBttn">
+                                        <i class="fa-solid fa-pencil school-edit-icon"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
 
+                        <input type="hidden" name="" id="editInvoiceId" value="">
+                        <input type="hidden" name="" id="editInvoiceSchoolId" value="{{ $school_id }}">
+                        <input type="hidden" name="" id="editInvoiceIncludeId"
+                            value="{{ app('request')->input('include') }}">
+                        <input type="hidden" name="" id="editInvoiceMethodId"
+                            value="{{ app('request')->input('method') }}">
 
                         <div class="school-finance-table-section">
                             <table class="table school-detail-page-table" id="myTable">
@@ -69,7 +90,9 @@
                                 </thead>
                                 <tbody class="table-body-sec">
                                     @foreach ($schoolInvoices as $key => $Invoices)
-                                        <tr class="school-detail-table-data">
+                                        <tr class="school-detail-table-data editInvoiceRow"
+                                            onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
+                                            id="editInvoiceRow{{ $Invoices->invoice_id }}">
                                             <td>{{ $Invoices->invoice_id }}</td>
                                             <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
                                             <td>{{ $Invoices->net_dec }}</td>
@@ -114,7 +137,8 @@
                     <div class="billing-details-section">
                         <div class="billing-details-heading">
                             <span>Billing Details</span>
-                            <a data-toggle="modal" data-target="#editBillingAddressModal" style="cursor: pointer;" title="Edit billing address"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                            <a data-toggle="modal" data-target="#editBillingAddressModal" style="cursor: pointer;"
+                                title="Edit billing address"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
                         </div>
                         <div class="invoice-timesheet-checkbox">
                             <input type="checkbox" id="includeTimesheetId" name="" value="1"
@@ -192,9 +216,10 @@
                                         id="" value="{{ $schoolDetail->billingAddress2_txt }}">
                                     <input type="text" class="form-control mb-1" name="billingAddress3_txt"
                                         id="" value="{{ $schoolDetail->billingAddress3_txt }}">
-                                    <input type="text" class="form-control mb-1" name="billingAddress4_txt" id=""
-                                        value="{{ $schoolDetail->billingAddress4_txt }}">
-                                    <input type="text" class="form-control" name="billingAddress5_txt" id="" value="{{ $schoolDetail->billingAddress5_txt }}">
+                                    <input type="text" class="form-control mb-1" name="billingAddress4_txt"
+                                        id="" value="{{ $schoolDetail->billingAddress4_txt }}">
+                                    <input type="text" class="form-control" name="billingAddress5_txt" id=""
+                                        value="{{ $schoolDetail->billingAddress5_txt }}">
                                 </div>
 
                                 <div class="modal-input-field">
@@ -206,13 +231,14 @@
                             <div class="col-md-6 modal-form-right-sec">
                                 <div class="modal-side-field">
                                     <input type="checkbox" class="" name="timesheetWithInvoice_status"
-                                        id="timesheetWithInvoice_status" value="1" >
-                                    <label class="form-check-label" for="timesheetWithInvoice_status">Include timesheet with invoice</label>
+                                        id="timesheetWithInvoice_status" value="1">
+                                    <label class="form-check-label" for="timesheetWithInvoice_status">Include timesheet
+                                        with invoice</label>
                                 </div>
 
                                 <div class="modal-side-field">
                                     <input type="checkbox" class="" name="isFactored_status"
-                                        id="isFactored_status" value="1" >
+                                        id="isFactored_status" value="1">
                                     <label class="form-check-label" for="isFactored_status">Factored</label>
                                 </div>
                             </div>
@@ -252,10 +278,11 @@
             if (paymentMethod != '') {
                 $('#includePaid').prop('checked', false);
                 filtering('', paymentMethod);
-            } else {
-                $('#includePaid').prop('checked', true);
-                filtering(1, '');
             }
+            // else {
+            //     $('#includePaid').prop('checked', true);
+            //     filtering(1, '');
+            // }
         });
 
         function filtering(include, method) {
@@ -284,5 +311,72 @@
             //alert("My favourite sports are: " + joinUrl);
             window.location.assign(joinUrl);
         }
+
+        function invoiceAdd(school_id, include, method) {
+            swal({
+                    title: "",
+                    text: "Are you sure you wish to add new invoice?",
+                    buttons: {
+                        cancel: "No",
+                        Yes: "Yes"
+                    },
+                })
+                .then((value) => {
+                    switch (value) {
+                        case "Yes":
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url('schoolFinanceInvoiceInsert') }}',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    school_id: school_id,
+                                    include: include,
+                                    method: method
+                                },
+                                success: function(data) {
+                                    // console.log(data);
+                                    var include1 = '';
+                                    if (data.include != null) {
+                                        include1 = data.include;
+                                    }
+                                    var method1 = '';
+                                    if (data.method != null) {
+                                        method1 = data.method;
+                                    }
+                                    var rUrl = '<?php echo url('/school-finance-invoice-edit/'); ?>' + '/' + data.school_id + '/' + data
+                                        .invoice_id + '?include=' + include1 + '&method=' + method1;
+                                    window.location.assign(rUrl);
+                                }
+                            });
+                    }
+                });
+        }
+
+        function editInvoiceRowSelect(invoice_id) {
+            if ($('#editInvoiceRow' + invoice_id).hasClass('tableRowActive')) {
+                $('#editInvoiceId').val('');
+                $('#editInvoiceRow' + invoice_id).removeClass('tableRowActive');
+                $('#InvoiceEditBttn').addClass('disabled-link');
+            } else {
+                $('#editInvoiceId').val(invoice_id);
+                $('.editInvoiceRow').removeClass('tableRowActive');
+                $('#editInvoiceRow' + invoice_id).addClass('tableRowActive');
+                $('#InvoiceEditBttn').removeClass('disabled-link');
+            }
+        }
+
+        $(document).on('click', '#InvoiceEditBttn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            var editInvoiceSchoolId = $('#editInvoiceSchoolId').val();
+            var editInvoiceIncludeId = $('#editInvoiceIncludeId').val();
+            var editInvoiceMethodId = $('#editInvoiceMethodId').val();
+            if (editInvoiceId) {
+                var rUrl = '<?php echo url('/school-finance-invoice-edit/'); ?>' + '/' + editInvoiceSchoolId + '/' + editInvoiceId + '?include=' +
+                    editInvoiceIncludeId + '&method=' + editInvoiceMethodId;
+                window.location.assign(rUrl);
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
     </script>
 @endsection

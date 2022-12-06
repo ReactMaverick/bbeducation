@@ -83,6 +83,13 @@ Route::get('/school-contact/{id}', [SchoolController::class, 'schoolContact']);
 Route::post('/schoolContactLogInsert', [SchoolController::class, 'schoolContactLogInsert']);
 Route::get('/school-assignment/{id}', [SchoolController::class, 'schoolAssignment']);
 Route::get('/school-finance/{id}', [SchoolController::class, 'schoolFinance']);
+Route::post('/schoolFinanceInvoiceInsert', [SchoolController::class, 'schoolFinanceInvoiceInsert']);
+Route::get('/school-finance-invoice-edit/{id}/{invoice_id}', [SchoolController::class, 'schoolFinanceInvoiceEdit']);
+Route::post('/schoolFinanceInvItemInsert', [SchoolController::class, 'schoolFinanceInvItemInsert']);
+Route::post('/getInvoiceItemDetail', [SchoolController::class, 'getInvoiceItemDetail']);
+Route::post('/schoolFinanceInvItemUpdate', [SchoolController::class, 'schoolFinanceInvItemUpdate']);
+Route::post('/schoolFinanceInvItemDelete', [SchoolController::class, 'schoolFinanceInvItemDelete']);
+Route::post('/schoolFinanceInvoiceUpdate', [SchoolController::class, 'schoolFinanceInvoiceUpdate']);
 Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
 Route::get('/school-document/{id}', [SchoolController::class, 'schoolDocument']);
 Route::post('/schoolDocumentInsert', [SchoolController::class, 'schoolDocumentInsert']);
@@ -102,4 +109,6 @@ Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance'
 
 // Management
 Route::get('/management', [ManagementController::class, 'management']);
+Route::get('/management-user', [ManagementController::class, 'managementUser']);
+Route::get('/management-mailshot', [ManagementController::class, 'managementMailshot']);
 // Management

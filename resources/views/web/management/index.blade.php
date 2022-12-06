@@ -9,7 +9,7 @@
             </div>
             <div class="teacher-left-sec">
                 <div class="about-finance">
-                    <a href="#"> <i class="fa-solid fa-magnifying-glass"></i>
+                    <a href="{{ URL::to('/management-user') }}"> <i class="fa-solid fa-magnifying-glass"></i>
                         <p>Open Users</p>
                     </a>
                 </div>
@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="about-finance">
-                    <a href="#"> <i class="fa-solid fa-envelope"></i>
+                    <a href="{{ URL::to('/management-mailshot') }}"> <i class="fa-solid fa-envelope"></i>
                         <p>Mailshots</p>
                     </a>
                 </div>

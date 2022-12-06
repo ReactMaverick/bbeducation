@@ -920,6 +920,182 @@ class SchoolController extends Controller
         }
     }
 
+    public function schoolFinanceInvoiceInsert(Request $request)
+    {
+        $user_id = '';
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $user_id = $webUserLoginData->user_id;
+        }
+        $school_id = $request->school_id;
+        $include = $request->include;
+        $method = $request->method;
+        $invoice_id = DB::table('tbl_invoice')
+            ->insertGetId([
+                'school_id' => $school_id,
+                'invoiceDate_dte' => date('Y-m-d'),
+                'paymentLoggedBy_id' => $user_id,
+                'sentOn_dte' => date('Y-m-d'),
+                'sentBy_int' => $user_id,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        return response()->json(['school_id' => $school_id, 'include' => $include, 'method' => $method, 'invoice_id' => $invoice_id]);
+    }
+
+    public function schoolFinanceInvoiceEdit(Request $request, $id, $invoice_id)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "School Finance");
+            $headerTitle = "Schools";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $include = $request->include;
+            $method = $request->method;
+
+            $schoolDetail = DB::table('tbl_school')
+                ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                })
+                ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                    $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                        ->where(function ($query) {
+                            $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                        });
+                })
+                ->LeftJoin('tbl_description as religion', function ($join) {
+                    $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                        ->where(function ($query) {
+                            $query->where('religion.descriptionGroup_int', '=', 29);
+                        });
+                })
+                ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                    $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                        ->where(function ($query) {
+                            $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                        });
+                })
+                ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                ->where('tbl_school.school_id', $id)
+                ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ->first();
+
+            $paymentMethodList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 42)
+                ->get();
+
+            $invoiceDetail = DB::table('tbl_invoice')
+                ->select('tbl_invoice.*')
+                ->where('tbl_invoice.invoice_id', $invoice_id)
+                ->first();
+            $invoiceItemList = DB::table('tbl_invoiceItem')
+                ->select('tbl_invoiceItem.*')
+                ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+                ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+                ->get();
+
+            return view("web.school.school_invoice_edit", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'invoice_id' => $invoice_id, 'include' => $include, 'method' => $method, 'schoolDetail' => $schoolDetail, 'paymentMethodList' => $paymentMethodList, 'invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolFinanceInvItemInsert(Request $request)
+    {
+        $invoice_id = $request->invoice_id;
+
+        DB::table('tbl_invoiceItem')
+            ->insert([
+                'invoice_id' => $invoice_id,
+                'description_txt' => $request->description_txt,
+                'numItems_dec' => $request->numItems_dec,
+                'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                'charge_dec' => $request->charge_dec,
+                'cost_dec' => $request->cost_dec,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        return redirect()->back();
+    }
+
+    public function getInvoiceItemDetail(Request $request)
+    {
+        $input = $request->all();
+        $invoiceItem_id = $input['editInvItemId'];
+
+        $itemDetail = DB::table('tbl_invoiceItem')
+            ->where('invoiceItem_id', "=", $invoiceItem_id)
+            ->first();
+
+        $view = view("web.school.invoice_item_edit_view", ['itemDetail' => $itemDetail])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function schoolFinanceInvItemUpdate(Request $request)
+    {
+        $invoiceItem_id = $request->editInvItemId;
+
+        DB::table('tbl_invoiceItem')
+            ->where('invoiceItem_id', $invoiceItem_id)
+            ->update([
+                'description_txt' => $request->description_txt,
+                'numItems_dec' => $request->numItems_dec,
+                'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                'charge_dec' => $request->charge_dec,
+                'cost_dec' => $request->cost_dec,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        return redirect()->back();
+    }
+
+    public function schoolFinanceInvItemDelete(Request $request)
+    {
+        $invoiceItem_id = $request->editInvItemId;
+        DB::table('tbl_invoiceItem')
+            ->where('invoiceItem_id', $invoiceItem_id)
+            ->delete();
+
+        return 1;
+    }
+
+    public function schoolFinanceInvoiceUpdate(Request $request)
+    {
+        $invoice_id = $request->invoice_id;
+        $editData = array();
+
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $editData['paymentLoggedBy_id'] = $webUserLoginData->user_id;
+            $editData['sentBy_int'] = $webUserLoginData->user_id;
+        }
+        if ($request->factored_status) {
+            $editData['factored_status'] = -1;
+        }
+        if ($request->creditNote_status) {
+            $editData['creditNote_status'] = -1;
+        }
+        if ($request->invoiceDate_dte != 0) {
+            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
+        }
+        if ($request->paidOn_dte != 0) {
+            $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
+        }
+        $editData['paymentMethod_int'] = $request->paymentMethod_int;
+        $editData['sentOn_dte'] = date('Y-m-d');
+        $editData['timestamp_ts'] = date('Y-m-d H:i:s');
+
+        DB::table('tbl_invoice')
+            ->where('invoice_id', $invoice_id)
+            ->update($editData);
+
+        return redirect()->back()->with('success', "Invoice updated successfully.");
+    }
+
     public function schoolTeacher(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -1198,6 +1374,6 @@ class SchoolController extends Controller
                 ->update($editData);
         }
 
-        return redirect('/school-finance/' . $school_id.'?include='.$include.'&method='.$method)->with('success', "Billing details updated successfully.");
+        return redirect('/school-finance/' . $school_id . '?include=' . $include . '&method=' . $method)->with('success', "Billing details updated successfully.");
     }
 }
