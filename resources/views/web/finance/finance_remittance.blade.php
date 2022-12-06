@@ -5,27 +5,40 @@
         <div class="col-md-12 topbar-sec">
 
             <div class="finance-topbar-Section">
-                <div class="topbar-finance-list-page">
-                    <a href="#">
-                        <i class="fa-solid fa-address-book topbar-active">
-                            <span class="finance-topbar-text">Timesheets</span>
-                        </i>
-                    </a>
-                    <a href="#">
-                        <i class="fa-solid fa-money-bills">
-                            <span class="finance-topbar-text">Invoices</span>
-                        </i>
-                    </a>
-                    <a href="#">
-                        <i class="fa-solid fa-user">
-                            <span class="finance-topbar-text">Payroll</span>
-                        </i>
-                    </a>
-                    <a href="#">
-                        <i class="fa-solid fa-piggy-bank">
-                            <span class="finance-topbar-text">Remittance</span>
-                        </i>
-                    </a>
+            <div class="finance-topbar">
+                    <div class="topbar-finance-list-page topbar-active">
+                        <a href="#">
+                            <i class="fa-solid fa-address-book">
+                                <span class="finance-topbar-text">Timesheets</span>
+                            </i>
+                        </a>
+                    </div>
+
+                    <div class="topbar-finance-list-page">
+
+                        <a href="#">
+                            <i class="fa-solid fa-money-bills">
+                                <span class="finance-topbar-text">Invoices</span>
+                            </i>
+                        </a>
+                    </div>
+
+                    <div class="topbar-finance-list-page">
+                        <a href="#">
+                            <i class="fa-solid fa-user">
+                                <span class="finance-topbar-text">Payroll</span>
+                            </i>
+                        </a>
+
+                    </div>
+
+                    <div class="topbar-finance-list-page">
+                        <a href="#">
+                            <i class="fa-solid fa-piggy-bank">
+                                <span class="finance-topbar-text">Remittance</span>
+                            </i>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="bills-icon-section">

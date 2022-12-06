@@ -30,7 +30,7 @@
                 <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <div class="page-name-sec">
-                    <span>Profession/Qualifications</span>
+                    <span>Profession / Qualifications</span>
                 </div>
             </a>
         </div>
@@ -41,7 +41,7 @@
                 <i class="fa-solid fa-desktop"></i>
                 </div>
                 <div class="page-name-sec">
-                    <span>Preferences/Health</span>
+                    <span>Preferences / Health</span>
                 </div>
             </a>
         </div>
