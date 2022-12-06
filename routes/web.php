@@ -90,6 +90,8 @@ Route::post('/getInvoiceItemDetail', [SchoolController::class, 'getInvoiceItemDe
 Route::post('/schoolFinanceInvItemUpdate', [SchoolController::class, 'schoolFinanceInvItemUpdate']);
 Route::post('/schoolFinanceInvItemDelete', [SchoolController::class, 'schoolFinanceInvItemDelete']);
 Route::post('/schoolFinanceInvoiceUpdate', [SchoolController::class, 'schoolFinanceInvoiceUpdate']);
+Route::post('/schoolCreditInvoiceInsert', [SchoolController::class, 'schoolCreditInvoiceInsert']);
+Route::post('/invoiceDetailForSplit', [SchoolController::class, 'invoiceDetailForSplit']);
 Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
 Route::get('/school-document/{id}', [SchoolController::class, 'schoolDocument']);
 Route::post('/schoolDocumentInsert', [SchoolController::class, 'schoolDocumentInsert']);

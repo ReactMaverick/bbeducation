@@ -43,26 +43,33 @@
                             </div>
                             <div class="school-finance-contact-heading">
                                 <div class="school-finance-contact-icon-sec">
-                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                    <a style="cursor: pointer" class="disabled-link" id="remitInvoiceBtn"
+                                        title="Remit Invoice">
                                         <i class="fa-solid fa-square-check"></i>
                                     </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                    <a style="cursor: pointer" class="disabled-link" id="creditNoteBttn"
+                                        title="Create Credit Note">
                                         <i class="fa-solid fa-money-bills"></i>
                                     </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                    <a style="cursor: pointer" class="disabled-link" id="splitInvoiceBtn"
+                                        title="Split Invoice">
                                         <i class="fa-solid fa-arrow-up"></i>
                                     </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                    <a style="cursor: pointer" class="disabled-link" id="previewInvoiceBtn"
+                                        title="Preview Invoice">
                                         <i class="fa-solid fa-id-card"></i>
                                     </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="">
+                                    <a style="cursor: pointer" class="disabled-link" id="sendInvoiceBtn"
+                                        title="Send Invoice">
                                         <i class="fa-solid fa-envelope"></i>
                                     </a>
                                     <a style="cursor: pointer" id="invoiceAddBttn"
-                                        onclick="invoiceAdd('<?php echo $school_id; ?>', '<?php echo app('request')->input('include'); ?>', '<?php echo app('request')->input('method'); ?>')">
+                                        onclick="invoiceAdd('<?php echo $school_id; ?>', '<?php echo app('request')->input('include'); ?>', '<?php echo app('request')->input('method'); ?>')"
+                                        title="Create Invoice">
                                         <i class="fa-solid fa-plus"></i>
                                     </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="InvoiceEditBttn">
+                                    <a style="cursor: pointer" class="disabled-link" id="InvoiceEditBttn"
+                                        title="Edit invoice">
                                         <i class="fa-solid fa-pencil school-edit-icon"></i>
                                     </a>
                                 </div>
@@ -231,14 +238,16 @@
                             <div class="col-md-6 modal-form-right-sec">
                                 <div class="modal-side-field">
                                     <input type="checkbox" class="" name="timesheetWithInvoice_status"
-                                        id="timesheetWithInvoice_status" value="1">
+                                        id="timesheetWithInvoice_status" value="1"
+                                        @if ($schoolDetail->timesheetWithInvoice_status == -1) checked @endif>
                                     <label class="form-check-label" for="timesheetWithInvoice_status">Include timesheet
                                         with invoice</label>
                                 </div>
 
                                 <div class="modal-side-field">
                                     <input type="checkbox" class="" name="isFactored_status"
-                                        id="isFactored_status" value="1">
+                                        id="isFactored_status" value="1"
+                                        @if ($schoolDetail->isFactored_status == -1) checked @endif>
                                     <label class="form-check-label" for="isFactored_status">Factored</label>
                                 </div>
                             </div>
@@ -257,6 +266,47 @@
         </div>
     </div>
     <!-- Billing Address Edit Modal -->
+
+    <!-- Split Invoice Modal -->
+    <div class="modal fade" id="splitInvoiceModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width:100%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Split Invoice</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Split Invoice Id - <span id="spanInvId"></span></h2>
+                </div>
+
+                <form action="{{ url('/schoolSplitInvoiceCreate') }}" method="post" class=""
+                    enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="splitInvoiceId" id="splitInvoiceId" value="">
+                    <input type="hidden" name="splitInvoiceSchoolId" id="splitInvoiceSchoolId" value="">
+                    <div class="modal-input-field-section">
+                        <span>School</span>
+                        <p>{{ $schoolDetail->name_txt }}</p>
+
+                        <div class="row" id="invoiceISplitAjax" style="width: 100%;"></div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="splitInvSubmitBtn">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Split Invoice Modal -->
 
     <script>
         $(document).ready(function() {
@@ -357,11 +407,21 @@
                 $('#editInvoiceId').val('');
                 $('#editInvoiceRow' + invoice_id).removeClass('tableRowActive');
                 $('#InvoiceEditBttn').addClass('disabled-link');
+                $('#remitInvoiceBtn').addClass('disabled-link');
+                $('#creditNoteBttn').addClass('disabled-link');
+                $('#splitInvoiceBtn').addClass('disabled-link');
+                $('#previewInvoiceBtn').addClass('disabled-link');
+                $('#sendInvoiceBtn').addClass('disabled-link');
             } else {
                 $('#editInvoiceId').val(invoice_id);
                 $('.editInvoiceRow').removeClass('tableRowActive');
                 $('#editInvoiceRow' + invoice_id).addClass('tableRowActive');
                 $('#InvoiceEditBttn').removeClass('disabled-link');
+                $('#remitInvoiceBtn').removeClass('disabled-link');
+                $('#creditNoteBttn').removeClass('disabled-link');
+                $('#splitInvoiceBtn').removeClass('disabled-link');
+                $('#previewInvoiceBtn').removeClass('disabled-link');
+                $('#sendInvoiceBtn').removeClass('disabled-link');
             }
         }
 
@@ -374,6 +434,85 @@
                 var rUrl = '<?php echo url('/school-finance-invoice-edit/'); ?>' + '/' + editInvoiceSchoolId + '/' + editInvoiceId + '?include=' +
                     editInvoiceIncludeId + '&method=' + editInvoiceMethodId;
                 window.location.assign(rUrl);
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#creditNoteBttn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            var editInvoiceSchoolId = $('#editInvoiceSchoolId').val();
+            var editInvoiceIncludeId = $('#editInvoiceIncludeId').val();
+            var editInvoiceMethodId = $('#editInvoiceMethodId').val();
+            if (editInvoiceId) {
+                swal({
+                        title: "",
+                        text: "You currently have an invoice selected. Do you want to create a credit copy of that invoice?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('schoolCreditInvoiceInsert') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        editInvoiceId: editInvoiceId,
+                                        school_id: editInvoiceSchoolId
+                                    },
+                                    success: function(data) {
+                                        // console.log(data);
+                                        var rUrl = '<?php echo url('/school-finance-invoice-edit/'); ?>' + '/' +
+                                            editInvoiceSchoolId + '/' + data.invoice_id +
+                                            '?include=' +
+                                            editInvoiceIncludeId + '&method=' + editInvoiceMethodId;
+                                        window.location.assign(rUrl);
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#splitInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            var editInvoiceSchoolId = $('#editInvoiceSchoolId').val();
+            if (editInvoiceId) {
+                $('#splitInvoiceId').val(editInvoiceId);
+                $('#splitInvoiceSchoolId').val(editInvoiceSchoolId);
+                $('#spanInvId').html(editInvoiceId);
+                swal({
+                        title: "",
+                        text: "You currently have an invoice selected. Do you want to split that invoice?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('invoiceDetailForSplit') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        editInvoiceId: editInvoiceId
+                                    },
+                                    success: function(data) {
+                                        //console.log(data);
+                                        $('#invoiceISplitAjax').html(data.html);
+                                    }
+                                });
+                                $('#splitInvoiceModal').modal("show");
+                        }
+                    });
             } else {
                 swal("", "Please select one invoice.");
             }

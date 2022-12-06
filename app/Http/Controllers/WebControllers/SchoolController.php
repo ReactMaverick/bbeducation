@@ -1096,6 +1096,72 @@ class SchoolController extends Controller
         return redirect()->back()->with('success', "Invoice updated successfully.");
     }
 
+    public function schoolCreditInvoiceInsert(Request $request)
+    {
+        $editInvoiceId = $request->editInvoiceId;
+        $user_id = '';
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $user_id = $webUserLoginData->user_id;
+        }
+        $invoiceDetail = DB::table('tbl_invoice')
+            ->select('tbl_invoice.*')
+            ->where('tbl_invoice.invoice_id', $editInvoiceId)
+            ->first();
+        $invoiceItemList = DB::table('tbl_invoiceItem')
+            ->select('tbl_invoiceItem.*')
+            ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+            ->get();
+
+        $school_id = $request->school_id;
+        $invoice_id = DB::table('tbl_invoice')
+            ->insertGetId([
+                'school_id' => $school_id,
+                'invoiceDate_dte' => date('Y-m-d'),
+                'paymentLoggedBy_id' => $user_id,
+                'sentOn_dte' => date('Y-m-d'),
+                'sentBy_int' => $user_id,
+                'creditNote_status' => -1,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+        if (count($invoiceItemList) > 0) {
+            foreach ($invoiceItemList as $key => $value) {
+                DB::table('tbl_invoiceItem')
+                    ->insert([
+                        'invoice_id' => $invoice_id,
+                        'description_txt' => $value->description_txt,
+                        'numItems_dec' => $value->numItems_dec,
+                        'dateFor_dte' => $value->dateFor_dte,
+                        'charge_dec' => '-'.$value->charge_dec,
+                        'cost_dec' => '-'.$value->cost_dec,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+            }
+        }
+
+        return response()->json(['invoice_id' => $invoice_id]);
+    }
+
+    public function invoiceDetailForSplit(Request $request)
+    {
+        $input = $request->all();
+        $editInvoiceId = $input['editInvoiceId'];
+
+        $invoiceDetail = DB::table('tbl_invoice')
+            ->select('tbl_invoice.*')
+            ->where('tbl_invoice.invoice_id', $editInvoiceId)
+            ->first();
+        $invoiceItemList = DB::table('tbl_invoiceItem')
+            ->select('tbl_invoiceItem.*')
+            ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+            ->get();
+
+        $view = view("web.school.invoice_split_view", ['invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList])->render();
+        return response()->json(['html' => $view]);
+    }
+
     public function schoolTeacher(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
