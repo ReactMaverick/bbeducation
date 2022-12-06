@@ -5,7 +5,7 @@
     <div class="teacher-all-section">
         <div class="finance-section">
             <div class="teacher-page-sec">
-                <h2>Finance</h2>
+                <h2>Management</h2>
             </div>
             <div class="teacher-left-sec">
                 <div class="about-finance">

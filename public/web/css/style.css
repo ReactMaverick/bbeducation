@@ -630,7 +630,7 @@ i {
 
 /* ==========TEACHER PAGE============ */
 
-.teacher-page-sec {
+.teacher-page-sec h2 {
     font-size: 24px;
     color: #afabab;
     font-weight: 400;
@@ -2828,12 +2828,13 @@ table td {
     font-weight: 500;
 }
 
-.finance-timesheet-right-sec {
+.finance-timesheet-total-section {
+    width: 65%;
+}
+
+.finance-timesheet-left-sec {
     display: flex;
-    /* align-items: center; */
     justify-content: space-between;
-    padding: 15px 35px;
-    width: 75%;
 }
 
 .finance-timesheet-contact-second-sec {
@@ -2842,10 +2843,8 @@ table td {
 
 .timesheet-top-section {
     display: flex;
-    /* align-items: center; */
     justify-content: space-between;
-    width: 60%;
-    padding: 10px 0 10px 35px;
+    width: 75%;
 }
 
 .timesheet-top-input-sec {
@@ -2933,8 +2932,7 @@ table td {
 
 .finance-timesheet-second-table-section {
     margin-top: 20px;
-    width: 60%;
-    padding: 0 35px;
+    width: 85%;
 }
 
 .table-assignment-bottom-text-sec {
@@ -2954,6 +2952,31 @@ margin-top: 5px;
     color: #48a0dc;
     margin-left: 20px;
 }
+
+/* .finance-timesheet-section {
+    width: 65%;
+} */
+
+.finance-timesheet-right-sec {
+    width: 35%;    
+}
+
+.finance-timesheet-right-inner-section {
+    border: 1px solid #afabab;
+    height: 100vh;
+    margin-left: 25px;
+}
+
+.finance-timesheet-top-total-section {
+    display: flex;
+    padding: 15px;
+}
+
+.finance-timesheet-right-inner-section iframe {
+    width: 100%;
+    height: 100%;
+}
+
 
 /* =================FINANCE INVOICES=============== */
 
@@ -3294,6 +3317,221 @@ margin-top: 5px;
 .Amount-owed-icon-sec i {
     font-size: 20px;
     color: #40a0ed;
+}
+
+/* ==================MANAGEMENT USER=============== */
+
+.management-user-sidebar-top-text {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.management-user-img-sec {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #fff;
+    margin: 15px 5px 0 5px;
+    padding: 10px;
+}
+
+.management-user-img-sec img {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.management-user-img-sec i {
+    font-size: 22px;
+    color: #3e3e3e;
+    background-color: #40a0ed;
+    position: absolute;
+    top: 20%;
+    right: 43%;
+    border-radius: 100%;
+    padding: 3%;
+    margin-bottom: 0;
+}
+
+.management-user-first-sec {
+    width: 45%;
+}
+
+.management-user-second-sec {
+    width: 45%;
+}
+
+.management-user-section {
+    display: flex;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.management-user-text-sec {
+    width: 40%;
+}
+
+.management-user-text-sec label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.management-user-input-sec {
+    width: 60%;
+}
+
+.management-user-input-sec input {
+    font-size: 12px;
+    color: #000;
+    font-weight: 400;
+    height: 28px;
+    padding: 5px;
+
+}
+
+.management-user-select-sec {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.management-user-select-sec label {
+    width: 40%;
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.management-user-select-sec select {
+    width: 60%;
+    font-size: 12px;
+    color: #000;
+    font-weight: 400;
+    height: 28px;
+    padding: 0;
+}
+
+.management-user-btn-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.management-user-btn button {
+    width: 171px;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #ffc20e;
+    color: #3a3a3a;
+    border: 1px solid #9dc3e6;
+    border-radius: 5px;
+    padding: 5px 0;
+    margin: 0 8px;
+}
+
+/* =================MANAGEMENT MAILSHOT================ */
+
+.management-mailshot-all-section {
+    display: flex;
+}
+
+.management-mailshot-left-sec {
+    width: 60%;
+}
+
+.management-mailshot-heading-section {
+    width: 30%;
+}
+
+.management-mailshot-heading-section h2 {
+    font-size: 24px;
+    color: #afabab;
+    font-weight: 400;
+    margin-right: 25px;
+    border-bottom: 2px solid #afabab;
+    padding-bottom: 5px;
+}
+
+.mailshot-page-sub-heading h2 {
+    font-size: 14px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.management-mailshot-input-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.management-mailshot-section {
+    display: flex;
+    margin-top: 5px;
+    align-items: center;
+    width: 100%;
+    padding-right: 15px;
+}
+
+.management-mailshot-text-sec {
+    width: 24%;
+}
+
+.management-mailshot-text-sec label {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.management-mailshot-input-sec {
+    width: 70%;
+}
+
+.management-mailshot-input-sec input {
+    font-size: 12px;
+    color: #000;
+    font-weight: 400;
+    height: 28px;
+    padding: 5px;
+}
+
+.management-mailshot-btn-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.management-mailshot-bottom-text span {
+    font-size: 12px;
+    color: #afabab;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
+.management-mailshot-btn button {
+    width: 171px;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #70ad47;
+    color: #fff;
+    border: 1px solid #9dc3e6;
+    border-radius: 5px;
+    padding: 5px 0;
+}
+
+.management-mailshot-right-sec {
+    width: 40%;
+    padding-left: 30px;
+}
+
+.management-mailshot-table-section {
+    margin-top: 53px;
 }
 
 /* -------------TABLE ROW ACTIVE------------ */
