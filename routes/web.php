@@ -52,6 +52,7 @@ Route::get('/assignment-finance', [AssignmentController::class, 'assignmentFinan
 
 // Teacher
 Route::get('/teachers', [TeacherController::class, 'teachers']);
+Route::post('/newTeacherInsert', [TeacherController::class, 'newTeacherInsert']);
 Route::get('/teacher-search', [TeacherController::class, 'teacherSearch']);
 Route::get('/teacher-detail/{id}', [TeacherController::class, 'teacherDetail']);
 Route::get('/teacher-pending-reference', [TeacherController::class, 'teacherPendingReference']);
@@ -92,6 +93,8 @@ Route::post('/schoolFinanceInvItemDelete', [SchoolController::class, 'schoolFina
 Route::post('/schoolFinanceInvoiceUpdate', [SchoolController::class, 'schoolFinanceInvoiceUpdate']);
 Route::post('/schoolCreditInvoiceInsert', [SchoolController::class, 'schoolCreditInvoiceInsert']);
 Route::post('/invoiceDetailForSplit', [SchoolController::class, 'invoiceDetailForSplit']);
+Route::post('/schoolSplitInvoiceCreate', [SchoolController::class, 'schoolSplitInvoiceCreate']);
+Route::get('/school-invoice-pdf/{id}/{invoice_id}', [SchoolController::class, 'schoolInvoicePdf']);
 Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
 Route::get('/school-document/{id}', [SchoolController::class, 'schoolDocument']);
 Route::post('/schoolDocumentInsert', [SchoolController::class, 'schoolDocumentInsert']);

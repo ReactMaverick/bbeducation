@@ -284,7 +284,7 @@
                 </div>
 
                 <form action="{{ url('/schoolSplitInvoiceCreate') }}" method="post" class=""
-                    enctype="multipart/form-data">
+                    enctype="multipart/form-data" id="splitInvoiceForm">
                     @csrf
                     <input type="hidden" name="splitInvoiceId" id="splitInvoiceId" value="">
                     <input type="hidden" name="splitInvoiceSchoolId" id="splitInvoiceSchoolId" value="">
@@ -513,6 +513,32 @@
                                 $('#splitInvoiceModal').modal("show");
                         }
                     });
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#splitInvSubmitBtn', function() {
+            var splitInvoiceItemCount = $('#splitInvoiceItemCount').val();
+            var splitInvoiceSelectedItems = $('#splitInvoiceSelectedItems').val();
+
+            if (splitInvoiceItemCount > 1) {
+                if (splitInvoiceSelectedItems != '') {
+                    $('#splitInvoiceForm').submit()
+                } else {
+                    swal("", "You haven't selected any items to add to a split invoice.");
+                }
+            } else {
+                swal("", "You can't split a single invoice item there needs to be a minimum of two items.");
+            }
+        });
+
+        $(document).on('click', '#previewInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            var editInvoiceSchoolId = $('#editInvoiceSchoolId').val();
+            if (editInvoiceSchoolId && editInvoiceId) {
+                var rUrl = '<?php echo url('/school-invoice-pdf/'); ?>' + '/' + editInvoiceSchoolId + '/' + editInvoiceId;
+                window.open(rUrl, '_blank');
             } else {
                 swal("", "Please select one invoice.");
             }

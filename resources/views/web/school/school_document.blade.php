@@ -1,10 +1,10 @@
 @extends('web.layout')
 @section('content')
-<style>
-    .disabled-link {
-        pointer-events: none;
-    }
-</style>
+    <style>
+        .disabled-link {
+            pointer-events: none;
+        }
+    </style>
     <div class="assignment-detail-page-section">
         <div class="row assignment-detail-row">
 
@@ -43,16 +43,29 @@
                                             <th>#</th>
                                             <th>File Name</th>
                                             <th>File Type</th>
+                                            <th>Document Type</th>
+                                            <th>Other</th>
                                             <th>Date</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-body-sec">
                                         @foreach ($documentList as $key => $document)
-                                            <tr class="school-detail-table-data editDocumentRow" id="editDocumentRow{{ $document->schoolDocument_id }}" onclick="documentRowSelect({{ $document->schoolDocument_id }})">
-                                                <td>{{ $key+1 }}</td>
-                                                <td><a href="{{ asset($document->file_location) }}" target="_blank">{{ $document->file_name }}</a></td>
+                                            <tr class="school-detail-table-data editDocumentRow"
+                                                id="editDocumentRow{{ $document->schoolDocument_id }}"
+                                                onclick="documentRowSelect({{ $document->schoolDocument_id }})">
+                                                <td>{{ $key + 1 }}</td>
+                                                <td><a href="{{ asset($document->file_location) }}"
+                                                        target="_blank">{{ $document->file_name }}</a></td>
                                                 <td>{{ $document->file_type }}</td>
-                                                <td>{{ date("d-m-Y",strtotime($document->uploadOn_dtm)) }}</td>
+                                                <td>{{ $document->document_type_text }}</td>
+                                                <td>
+                                                    @if ($document->documentType == 1)
+                                                        {{ $document->othersText }}
+                                                    @else
+                                                        {{ 'N/A' }}
+                                                    @endif
+                                                </td>
+                                                <td>{{ date('d-m-Y', strtotime($document->uploadOn_dtm)) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -83,7 +96,8 @@
                     <h2>Add Document</h2>
                 </div>
 
-                <form action="{{ url('/schoolDocumentInsert') }}" method="post" class="form-validate" enctype="multipart/form-data">
+                <form action="{{ url('/schoolDocumentInsert') }}" method="post" class="form-validate"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>{{ $schoolDetail->name_txt }}</h6>
@@ -94,15 +108,37 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Document Name</label>
-                                    <input type="text" class="form-control field-validate" name="file_name" id="" value="">
+                                    <label class="form-check-label">Document Name</label><span style="color: red;">*</span>
+                                    <input type="text" class="form-control field-validate" name="file_name"
+                                        id="" value="">
+                                </div>
+
+                                <div class="form-group calendar-form-filter">
+                                    <label for="">Document Type</label><span style="color: red;">*</span>
+                                    <select class="form-control field-validate" name="documentType" id="documentType">
+                                        <option value="">Choose one</option>
+                                        @foreach ($typeList as $key5 => $type)
+                                            <option value="{{ $type->document_type_id }}">
+                                                {{ $type->document_type_text }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="modal-input-field form-group" id="othersTextDiv" style="display: none;">
+                                    <label class="form-check-label">Others</label><span style="color: red;">*</span>
+                                    <input type="text" class="form-control" name="othersText" id="othersText"
+                                        value="">
                                 </div>
 
                                 <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Upload Document</label>
-                                    <input type="file" class="form-control file-validate" name="file" id="" value=""><span> *Only file type 'jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx'</span>
+                                    <label class="form-check-label">Upload Document</label><span
+                                        style="color: red;">*</span>
+                                    <input type="file" class="form-control file-validate" name="file" id=""
+                                        value=""><span> *Only file type 'jpg', 'png', 'jpeg', 'pdf', 'doc',
+                                        'docx'</span>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
 
@@ -135,7 +171,8 @@
                     <h2>Edit Document</h2>
                 </div>
 
-                <form action="{{ url('/schoolDocumentUpdate') }}" method="post" class="form-validate-2" enctype="multipart/form-data">
+                <form action="{{ url('/schoolDocumentUpdate') }}" method="post" class="form-validate-2"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="editDocumentId" id="editDocumentId" value="">
                     <div class="modal-input-field-section">
@@ -230,6 +267,19 @@
                     });
             } else {
                 swal("", "Please select one contact.");
+            }
+        });
+
+        $(document).on('change', '#documentType', function() {
+            var documentType = $(this).val();
+            if (documentType != '' && documentType == 1) {
+                $('#othersTextDiv').show();
+                $('#othersText').addClass('field-validate');
+            } else {
+                $('#othersTextDiv').hide();
+                $('#othersText').val('');
+                $('#othersText').removeClass('field-validate');
+                $('#othersText').closest(".form-group").removeClass('has-error');
             }
         });
     </script>

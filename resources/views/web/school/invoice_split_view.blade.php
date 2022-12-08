@@ -13,8 +13,8 @@
 </div>
 <div class="col-md-6"></div>
 
-<input type="hidden" name="" id="splitInvoiceItemCount" value="{{ count($invoiceItemList) }}">
-<input type="hidden" name="" id="splitInvoiceSelectedItems" value="">
+<input type="hidden" name="splitInvoiceItemCount" id="splitInvoiceItemCount" value="{{ count($invoiceItemList) }}">
+<input type="hidden" name="splitInvoiceSelectedItems" id="splitInvoiceSelectedItems" value="">
 
 <div class="col-md-12" style="width: 100%;">
     <table class="table school-detail-page-table" id="splitItemTable" style="width: 100%;">

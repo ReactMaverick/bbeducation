@@ -179,7 +179,7 @@
                     <div class="modal-footer calendar-modal-footer">
                         <button type="submit" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>
 

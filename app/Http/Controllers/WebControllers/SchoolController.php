@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Carbon;
+use PDF;
 
 class SchoolController extends Controller
 {
@@ -1079,10 +1080,10 @@ class SchoolController extends Controller
         if ($request->creditNote_status) {
             $editData['creditNote_status'] = -1;
         }
-        if ($request->invoiceDate_dte != 0) {
+        if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
             $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
         }
-        if ($request->paidOn_dte != 0) {
+        if ($request->paidOn_dte != null || $request->paidOn_dte != '') {
             $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
         }
         $editData['paymentMethod_int'] = $request->paymentMethod_int;
@@ -1133,8 +1134,8 @@ class SchoolController extends Controller
                         'description_txt' => $value->description_txt,
                         'numItems_dec' => $value->numItems_dec,
                         'dateFor_dte' => $value->dateFor_dte,
-                        'charge_dec' => '-'.$value->charge_dec,
-                        'cost_dec' => '-'.$value->cost_dec,
+                        'charge_dec' => '-' . $value->charge_dec,
+                        'cost_dec' => '-' . $value->cost_dec,
                         'timestamp_ts' => date('Y-m-d H:i:s')
                     ]);
             }
@@ -1160,6 +1161,117 @@ class SchoolController extends Controller
 
         $view = view("web.school.invoice_split_view", ['invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList])->render();
         return response()->json(['html' => $view]);
+    }
+
+    public function schoolSplitInvoiceCreate(Request $request)
+    {
+        // dd($request->all());
+        $user_id = '';
+        $editData = array();
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $user_id = $webUserLoginData->user_id;
+        }
+        $splitInvoiceId = $request->splitInvoiceId;
+        $school_id = $request->splitInvoiceSchoolId;
+
+        if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
+            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
+        }
+        if ($request->paidOn_dte != null || $request->paidOn_dte != '') {
+            $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
+        }
+        DB::table('tbl_invoice')
+            ->where('invoice_id', $splitInvoiceId)
+            ->update($editData);
+
+        $invoice_id = DB::table('tbl_invoice')
+            ->insertGetId([
+                'school_id' => $school_id,
+                'invoiceDate_dte' => date('Y-m-d'),
+                'paymentLoggedBy_id' => $user_id,
+                'sentOn_dte' => date('Y-m-d'),
+                'sentBy_int' => $user_id,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+        $splitInvoiceSelectedItems = $request->splitInvoiceSelectedItems;
+        $selectedIdArray = explode(",", $splitInvoiceSelectedItems);
+        foreach ($selectedIdArray as $key => $value) {
+            $invoiceItemDet = DB::table('tbl_invoiceItem')
+                ->select('tbl_invoiceItem.*')
+                ->where('tbl_invoiceItem.invoiceItem_id', $value)
+                ->first();
+            if ($invoiceItemDet) {
+                DB::table('tbl_invoiceItem')
+                    ->insert([
+                        'invoice_id' => $invoice_id,
+                        'description_txt' => $invoiceItemDet->description_txt,
+                        'numItems_dec' => $invoiceItemDet->numItems_dec,
+                        'dateFor_dte' => $invoiceItemDet->dateFor_dte,
+                        'charge_dec' => $invoiceItemDet->charge_dec,
+                        'cost_dec' => $invoiceItemDet->cost_dec,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+
+                DB::table('tbl_invoiceItem')
+                    ->where('invoiceItem_id', $value)
+                    ->delete();
+            }
+        }
+
+        $msg = "New invoice has been created with the ID : " . $invoice_id;
+        return redirect()->back()->with('success', $msg);
+    }
+
+    public function schoolInvoicePdf(Request $request, $id, $invoice_id)
+    {
+        $schoolDetail = DB::table('tbl_school')
+            ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+            ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+            })
+            ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+            ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                    ->where(function ($query) {
+                        $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                    });
+            })
+            ->LeftJoin('tbl_description as religion', function ($join) {
+                $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                    ->where(function ($query) {
+                        $query->where('religion.descriptionGroup_int', '=', 29);
+                    });
+            })
+            ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                    ->where(function ($query) {
+                        $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                    });
+            })
+            ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+            ->where('tbl_school.school_id', $id)
+            ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+            ->first();
+
+        $schoolInvoices = DB::table('tbl_invoice')
+            ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+            ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+            ->where('tbl_invoice.invoice_id', $invoice_id)
+            ->groupBy('tbl_invoice.invoice_id')
+            ->first();
+        $invoiceItemList = DB::table('tbl_invoiceItem')
+            ->select('tbl_invoiceItem.*')
+            ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+            ->get();
+
+        $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList]);
+        $pdfName = 'invoice-' . $id . '.pdf';
+        // return $pdf->download('test.pdf');
+        return $pdf->stream($pdfName);
     }
 
     public function schoolTeacher(Request $request, $id)
@@ -1278,12 +1390,18 @@ class SchoolController extends Controller
 
             $documentList = DB::table('tbl_schooldocument')
                 ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_schooldocument.school_id')
-                ->select('tbl_schooldocument.*', 'tbl_school.name_txt')
+                ->LeftJoin('document_type', 'document_type.document_type_id', '=', 'tbl_schooldocument.documentType')
+                ->select('tbl_schooldocument.*', 'tbl_school.name_txt', 'document_type.document_type_text')
                 ->where('tbl_schooldocument.school_id', $id)
                 ->orderBy('tbl_schooldocument.uploadOn_dtm', 'DESC')
                 ->get();
 
-            return view("web.school.school_document", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'documentList' => $documentList]);
+            $typeList = DB::table('document_type')
+                ->select('document_type.*')
+                ->orderBy('document_type.document_type_id', 'DESC')
+                ->get();
+
+            return view("web.school.school_document", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'documentList' => $documentList, 'typeList' => $typeList]);
         } else {
             return redirect()->intended('/');
         }
@@ -1306,8 +1424,8 @@ class SchoolController extends Controller
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('images/school', $name);
-                    $fPath = 'images/school/' . $name;
+                    $image->move('public/images/school', $name);
+                    $fPath = 'public/images/school/' . $name;
                     $fType = $extension;
                 } else {
                     return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
@@ -1321,6 +1439,8 @@ class SchoolController extends Controller
                     'school_id' => $school_id,
                     'file_location' => $fPath,
                     'file_name' => $request->file_name,
+                    'documentType' => $request->documentType,
+                    'othersText' => $request->othersText,
                     'file_type' => $fType,
                     'uploadOn_dtm' => date('Y-m-d H:i:s'),
                     'loggedBy_id' => $user_id,
@@ -1341,8 +1461,12 @@ class SchoolController extends Controller
         $docDetail = DB::table('tbl_schooldocument')
             ->where('schoolDocument_id', "=", $schoolDocument_id)
             ->first();
+        $typeList = DB::table('document_type')
+            ->select('document_type.*')
+            ->orderBy('document_type.document_type_id', 'DESC')
+            ->get();
 
-        $view = view("web.school.document_edit_view", ['docDetail' => $docDetail])->render();
+        $view = view("web.school.document_edit_view", ['docDetail' => $docDetail, 'typeList' => $typeList])->render();
         return response()->json(['html' => $view]);
     }
 
@@ -1365,8 +1489,8 @@ class SchoolController extends Controller
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('images/school', $name);
-                    $fPath = 'images/school/' . $name;
+                    $image->move('public/images/school', $name);
+                    $fPath = 'public/images/school/' . $name;
                     $fType = $extension;
                     if (file_exists($file_location)) {
                         unlink($file_location);
@@ -1383,6 +1507,8 @@ class SchoolController extends Controller
                 ->update([
                     'file_location' => $fPath,
                     'file_name' => $request->file_name,
+                    'documentType' => $request->documentType,
+                    'othersText' => $request->othersText,
                     'file_type' => $fType,
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
