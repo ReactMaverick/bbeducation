@@ -128,16 +128,6 @@
         padding: 7px 0;
     }
 
-    /* ===============SCHOOL ASSIGNMENT============== */
-
-    .school-assignment-sidebar-sec {
-        width: 30%;
-    }
-
-    .school-assignment-sidebar-sec-text {
-        width: 50%;
-    }
-
     /* ==============SCHOOL FINANCE=============== */
 
     .school-finance-right-sec {
@@ -173,7 +163,7 @@
     }
 
     .paid-check {
-        width: 100%;
+        width: 100% !important;
     }
 
     .payment-method-type {
@@ -781,6 +771,36 @@
         width: 50%;
     }
 
+    .paid-check {
+        width: 100% !important;
+    }
+
+    .school-assignment-contact-checkbox {
+        width: 30%;
+    }
+
+    .school-assignment-contact-select-field {
+        width: 70%;
+    }
+
+    .school-assignment-contact-heading {
+        flex-direction: column;
+    }
+
+    .school-assignment-contact-icon-sec {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    .school-assignment-contact-search {
+        width: 100%;
+    }
+
+    .school-assignment-contact-icon-sec i {
+        margin-left: 15px;
+    }
+
     /* ==============SCHOOL FINANCE=============== */
 
     .school-finance-right-sec {
@@ -1243,6 +1263,16 @@
         width: 100%;
         margin-top: 25px;
         padding-right: 0;
+    }
+
+    .bills-icon-section img {
+        width: 30px;
+        height: 26px;
+    }
+
+    .remittance-top-icon img {
+        width: 30px;
+        height: 31px;
     }
 
     /* ===============MANAGEMENT USER=============== */

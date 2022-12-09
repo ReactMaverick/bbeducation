@@ -43,7 +43,7 @@
 
                 <div class="bills-icon-section">
                     <a href="#">
-                        <i class="fa-solid fa-money-bills bills-icon"></i>
+                    <img src="{{ asset('web/company_logo/money.png') }}" alt="">
                     </a>
                 </div>
 
@@ -71,7 +71,7 @@
                             </div>
                             <div class="remittance-top-icon">
                                 <a href="#"><i class="fa-solid fa-square-check"></i></a>
-                                <a href="#"><i class="fa-solid fa-file-lines"></i></a>
+                                <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                             </div>
                         </div>
 
