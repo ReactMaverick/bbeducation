@@ -20,7 +20,7 @@
                         <h2>References</h2>
                         <div class="assignment-finance-icon-section">
                             <a href="#"><i class="fa-solid fa-square-check"></i></a>
-                            <a href="#"><i class="fa-solid fa-file-lines"></i></a>
+                            <a href="#"><img src="{{ asset('web/company_logo/search-file.png') }}" alt=""></a>
                             <a href="#"><i class="fa-solid fa-envelope"></i></a>
                             <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
                                 <i class="fa-solid fa-plus"></i>

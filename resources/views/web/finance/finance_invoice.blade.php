@@ -138,7 +138,7 @@
 
                         <div class="finance-invoice-icon-sec">
                             <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                            <img src="{{ asset('web/company_logo/diverge.png') }}" alt="">
                             </a>
                         </div>
 

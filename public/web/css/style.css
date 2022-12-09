@@ -1825,6 +1825,12 @@ table td {
     margin: 0 8px;
 }
 
+.school-finance-contact-icon-sec img {
+    width: 24px;
+    height: 20px;
+    object-fit: cover;
+    margin: 0 8px;
+}
 .school-finance-table-section {
     width: 100%;
 }
@@ -2529,6 +2535,13 @@ table td {
     width: 20%;
 }
 
+.assignment-finance-icon-section img {
+    width: 24px;
+    height: 20px;
+    object-fit: cover;
+    margin-left: 15px;
+}
+
 /* ===============TEACHER PAYROLL============ */
 
 .payroll-bottom-text {
@@ -2632,6 +2645,13 @@ table td {
 
 .teacher-document-table-sec {
     width: 49%;
+}
+
+.contact-icon-sec img {
+    width: 24px;
+    height: 20px;
+    object-fit: cover;
+    margin-left: 20px;
 }
 
 
@@ -2815,6 +2835,13 @@ table td {
 .bills-icon-section i {
     font-size: 30px;
     color: #fff;
+    border: none;
+}
+
+.bills-icon-section img {
+    width: 50px;
+    height: 41px;
+    object-fit: cover;
     border: none;
 }
 
@@ -3093,6 +3120,13 @@ margin-top: 5px;
     margin-left: 10px;
 }
 
+.finance-invoice-icon-sec img {
+    width: 24px;
+    height: 20px;
+    object-fit: cover;
+    margin-left: 10px;
+}
+
 .invoice-top-second-section {
     display: flex;
     justify-content: space-between;
@@ -3278,6 +3312,13 @@ margin-top: 5px;
 .remittance-top-icon i {
     font-size: 25px;
     color: #40a0ed;
+    margin-left: 8px;
+}
+
+.remittance-top-icon img {
+    width: 29px;
+    height: 30px;
+    object-fit: cover;
     margin-left: 8px;
 }
 

@@ -49,15 +49,15 @@
                                     </a>
                                     <a style="cursor: pointer" class="disabled-link" id="creditNoteBttn"
                                         title="Create Credit Note">
-                                        <i class="fa-solid fa-money-bills"></i>
+                                        <img src="{{ asset('web/company_logo/money.png') }}" alt="">
                                     </a>
                                     <a style="cursor: pointer" class="disabled-link" id="splitInvoiceBtn"
                                         title="Split Invoice">
-                                        <i class="fa-solid fa-arrow-up"></i>
+                                        <img src="{{ asset('web/company_logo/diverge.png') }}" alt="">
                                     </a>
                                     <a style="cursor: pointer" class="disabled-link" id="previewInvoiceBtn"
                                         title="Preview Invoice">
-                                        <i class="fa-solid fa-id-card"></i>
+                                        <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                                     </a>
                                     <a style="cursor: pointer" class="disabled-link" id="sendInvoiceBtn"
                                         title="Send Invoice">

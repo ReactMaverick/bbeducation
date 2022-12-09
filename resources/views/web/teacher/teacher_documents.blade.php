@@ -215,7 +215,7 @@
                                 <div class="teacher-document-second-name-text">
                                     <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
                                 </div>
-                                
+
                             </div>
 
                             <div class="school-name-section">
@@ -223,7 +223,7 @@
                                     <h2>EEA Restriction Check</h2>
                                 </div>
                                 <div class="teacher-document-second-name-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
                                 </div>
                             </div>
 
@@ -245,9 +245,26 @@
                 <div class="teacher-document-table-sec">
                     <div class="contact-heading">
                         <div class="contact-heading-text">
-                            <h2>Teaching Subjects</h2>
+                            <h2>Filed Documents</h2>
                         </div>
                         <div class="contact-icon-sec">
+
+                            <a href="#">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
+
+                            <a href="#">
+                                <i class="fa-solid fa-envelope"></i>
+                            </a>
+
+                            <a href="#">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </a>
+
+                            <a href="#">
+                                <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
+                            </a>
+
                             <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
                                 <i class="fa-solid fa-plus"></i>
                             </a>
@@ -260,8 +277,8 @@
                         <table class="table school-detail-page-table" id="myTable">
                             <thead>
                                 <tr class="school-detail-table-heading">
-                                    <th>Subject</th>
-                                    <th>Main</th>
+                                    <th>Type</th>
+                                    <th>Name</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
@@ -282,11 +299,11 @@
                 <div class="teacher-document-table-sec">
                     <div class="contact-heading">
                         <div class="contact-heading-text">
-                            <h2>Qualifications</h2>
+                            <h2>DBS Records</h2>
                         </div>
                         <div class="contact-icon-sec">
-                        <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-minus"></i>
+                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
+                            <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                             </a>
                             <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
                                 <i class="fa-solid fa-plus"></i>
@@ -300,9 +317,9 @@
                         <table class="table school-detail-page-table" id="myTable">
                             <thead>
                                 <tr class="school-detail-table-heading">
-                                    <th>Type</th>
-                                    <th>Qualification</th>
-                                    <th>QTS</th>
+                                    <th>Certificate</th>
+                                    <th>Date</th>
+                                    <th>Expiry</th>
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
