@@ -54,15 +54,15 @@ Route::get('/assignment-finance', [AssignmentController::class, 'assignmentFinan
 Route::get('/teachers', [TeacherController::class, 'teachers']);
 Route::post('/newTeacherInsert', [TeacherController::class, 'newTeacherInsert']);
 Route::get('/teacher-search', [TeacherController::class, 'teacherSearch']);
-Route::get('/teacher-detail/{id}', [TeacherController::class, 'teacherDetail']);
 Route::get('/teacher-pending-reference', [TeacherController::class, 'teacherPendingReference']);
 Route::get('/teacher-calendar', [TeacherController::class, 'teacherCalendar']);
-Route::get('/profession-qualification', [TeacherController::class, 'teacherProfession']);
-Route::get('/preference-health', [TeacherController::class, 'teacherHealth']);
-Route::get('/teacher-references', [TeacherController::class, 'teacherReference']);
-Route::get('/teacher-documents', [TeacherController::class, 'teacherDocuments']);
-Route::get('/teacher-contact-log', [TeacherController::class, 'teacherContactLog']);
-Route::get('/teacher-payroll', [TeacherController::class, 'teacherPayroll']);
+Route::get('/teacher-detail/{id}', [TeacherController::class, 'teacherDetail']);
+Route::get('/profession-qualification/{id}', [TeacherController::class, 'teacherProfession']);
+Route::get('/preference-health/{id}', [TeacherController::class, 'teacherHealth']);
+Route::get('/teacher-references/{id}', [TeacherController::class, 'teacherReference']);
+Route::get('/teacher-documents/{id}', [TeacherController::class, 'teacherDocuments']);
+Route::get('/teacher-contact-log/{id}', [TeacherController::class, 'teacherContactLog']);
+Route::get('/teacher-payroll/{id}', [TeacherController::class, 'teacherPayroll']);
 // Teacher
 
 // School
