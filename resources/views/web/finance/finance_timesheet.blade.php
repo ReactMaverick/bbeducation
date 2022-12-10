@@ -195,7 +195,7 @@
 
                 <div class="finance-timesheet-right-sec">
                     <div class="finance-timesheet-right-inner-section">
-                    <iframe src="https://www.wikipedia.org/" title="W3Schools Free Online Web Tutorials"></iframe>
+                    <iframe src="https://www.google.com/webhp?igu=1"></iframe>
                     </div>
                 </div>
             </div>
