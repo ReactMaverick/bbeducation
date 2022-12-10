@@ -144,6 +144,14 @@
         width: 50%;
     }
 
+    .school-assignment-contact-checkbox {
+        width: 25%;
+    }
+
+    .school-assignment-contact-select-field {
+        width: 75%;
+    }
+
     /* ==============SCHOOL FINANCE=============== */
 
     .school-finance-right-sec {
@@ -250,10 +258,16 @@
         margin-left: 0;
     }
 
+    
+    .assignment-candidate-check-icon {
+        justify-content: flex-start;
+    }
+
     /* ==========ASSIGNMENT SCHOOL============ */
 
     .assignment-school-detail-right-sec {
         flex-direction: column;
+        padding: 15px;
     }
 
     .assignment-school-details-first-sec {
