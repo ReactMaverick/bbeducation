@@ -110,8 +110,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
-                                    <label for="">Title</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate" name="title_int"  style="width:100%;">
+                                    <label for="">Title</label>
+                                    <select class="form-control" name="title_int"  style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($titleList as $key1 => $title)
                                             <option value="{{ $title->description_int }}">

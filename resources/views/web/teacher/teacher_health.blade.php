@@ -17,7 +17,7 @@
             <div class="school-detail-right-sec">
                 <div class="teacher-health-first-sec">
                     <div class="details-heading">
-                        <h2>Profession</h2>
+                        <h2>Preferences</h2>
                         <a data-toggle="modal" data-target="#DetailModal" style="cursor: pointer;"><i
                                 class="fa-solid fa-pencil"></i></a>
                     </div>
@@ -28,7 +28,8 @@
                                 <label for="vehicle1">Can Drive</label>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                <input type="checkbox" id="" name="" value="1" disabled
+                                        {{ $teacherDetail->prefDrive_status == '-1' ? 'checked' : '' }}>
                             </div>
                         </div>
                         <div class="school-name-section">
@@ -36,7 +37,8 @@
                                 <label for="vehicle1">Daily Supply</label>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                <input type="checkbox" id="" name="" value="1" disabled
+                                        {{ $teacherDetail->prefDailySupply_status == '-1' ? 'checked' : '' }}>
                             </div>
                         </div>
                         <div class="school-name-section">
@@ -44,7 +46,8 @@
                                 <label for="vehicle1">Long Term</label>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                <input type="checkbox" id="" name="" value="1" disabled
+                                        {{ $teacherDetail->prefLongTerm_status == '-1' ? 'checked' : '' }}>
                             </div>
                         </div>
 
@@ -53,7 +56,8 @@
                                 <label for="vehicle1">Early Morning Calls</label>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                <input type="checkbox" id="" name="" value="1" disabled
+                                        {{ $teacherDetail->prefEarlyMorningCall_status == '-1' ? 'checked' : '' }}>
                             </div>
                         </div>
 
@@ -62,7 +66,8 @@
                                 <label for="vehicle1">SEN Interested</label>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                <input type="checkbox" id="" name="" value="1" disabled
+                                        {{ $teacherDetail->prefSEN_status == '-1' ? 'checked' : '' }}>
                             </div>
                         </div>
 
@@ -71,7 +76,8 @@
                                 <label for="vehicle1">SEN Experience</label>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                                <input type="checkbox" id="" name="" value="1" disabled
+                                        {{ $teacherDetail->prefSENExperience_status == '-1' ? 'checked' : '' }}>
                             </div>
                         </div>
 
@@ -80,7 +86,7 @@
                                 <h2>Max. Distance</h2>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <p>10</p>
+                                <p>{{ $teacherDetail->prefDistance_int }}</p>
                             </div>
                         </div>
 
@@ -88,45 +94,45 @@
                             <div class="teacher-prefernce-heading-text">
                                 <h2>Pref. Year Group</h2>
                             </div>
-                            <!-- <div class="teacher-prefernce-name-text">
-                                <p>10</p>
-                            </div> -->
+                            <div class="teacher-prefernce-name-text">
+                                <p>{{ $teacherDetail->prefYearGroup_int }}</p>
+                            </div>
                         </div>
 
                         <div class="school-name-section">
                             <div class="teacher-prefernce-heading-text">
                                 <h2>Ideal job</h2>
                             </div>
-                            <!-- <div class="teacher-prefernce-name-text">
-                                <p>10</p>
-                            </div> -->
+                            <div class="teacher-prefernce-name-text">
+                                <p>{{ $teacherDetail->prefIdealJob_txt }}</p>
+                            </div>
                         </div>
 
                         <div class="school-name-section">
                             <div class="teacher-prefernce-heading-text">
                                 <h2>Other Agencies</h2>
                             </div>
-                            <!-- <div class="teacher-prefernce-name-text">
-                                <p>10</p>
-                            </div> -->
+                            <div class="teacher-prefernce-name-text">
+                                <p>{{ $teacherDetail->otherAgencies_txt }}</p>
+                            </div>
                         </div>
 
                         <div class="school-name-section">
                             <div class="teacher-prefernce-heading-text">
-                                <h2>Current rate</h2>
+                                <h2>Current Rate</h2>
                             </div>
-                            <!-- <div class="teacher-prefernce-name-text">
-                                <p>10</p>
-                            </div> -->
+                            <div class="teacher-prefernce-name-text">
+                                <p>{{ $teacherDetail->currentRate_dec }}</p>
+                            </div>
                         </div>
 
                         <div class="school-name-section">
                             <div class="teacher-prefernce-heading-text">
                                 <h2>Previous Schools</h2>
                             </div>
-                            <!-- <div class="teacher-prefernce-name-text">
-                                <p>10</p>
-                            </div> -->
+                            <div class="teacher-prefernce-name-text">
+                                <p>{{ $teacherDetail->previousSchools_txt }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,7 +151,7 @@
                                 <h2>Occupational Health</h2>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <p>No assessment necessary</p>
+                                <p>{{ $teacherDetail->occupationalHealth_txt }}</p>
                             </div>
                         </div>
 
@@ -153,10 +159,9 @@
                             <div class="teacher-prefernce-heading-text">
                                 <h2>Health Issues</h2>
                             </div>
-                            <!-- <div class="teacher-prefernce-name-text">
-                                <p>51.5742105</p>
-                                <p>-0.1434667</p>
-                            </div> -->
+                            <div class="teacher-prefernce-name-text">
+                                <p>{{ $teacherDetail->healthIssues_txt }}</p>
+                            </div>
                         </div>
 
                         <div class="school-name-section">
@@ -164,7 +169,7 @@
                                 <h2>Health Decoration Date</h2>
                             </div>
                             <div class="teacher-prefernce-name-text">
-                                <p>24-05-2016</p>
+                                <p>{{ date("d-m-Y",strtotime($teacherDetail->healthDeclaration_dte)) }}</p>
                             </div>
                         </div>
                     </div>
