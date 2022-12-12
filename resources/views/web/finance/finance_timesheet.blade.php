@@ -44,7 +44,7 @@
 
                 <div class="bills-icon-section">
                     <a href="#">
-                        <i class="fa-solid fa-money-bills bills-icon"></i>
+                    <img src="http://localhost/git/bbeducation/public/web/company_logo/money.png" alt="">
                     </a>
                 </div>
 
