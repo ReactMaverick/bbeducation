@@ -387,7 +387,19 @@ class TeacherController extends Controller
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
-            return view("web.teacher.teacher_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail]);
+            $contactItemList = DB::table('tbl_contactItemTch')
+                ->LeftJoin('tbl_description', function ($join) {
+                    $join->on('tbl_description.description_int', '=', 'tbl_contactItemTch.type_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_description.descriptionGroup_int', '=', 9);
+                        });
+                })
+                ->select('tbl_contactItemTch.*', 'tbl_description.description_txt as type_txt')
+                ->where('tbl_contactItemTch.teacher_id', $id)
+                ->orderBy('tbl_contactItemTch.type_int')
+                ->get();
+
+            return view("web.teacher.teacher_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'contactItemList' => $contactItemList]);
         } else {
             return redirect()->intended('/');
         }
@@ -926,5 +938,4 @@ class TeacherController extends Controller
             return redirect()->intended('/');
         }
     }
-    
 }

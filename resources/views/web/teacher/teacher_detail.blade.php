@@ -179,14 +179,12 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
+                                    @foreach ($contactItemList as $key => $contactItem)
                                     <tr class="school-detail-table-data editContactRow">
-                                        <td>Email</td>
-                                        <td>alberto.ojaguren@gmail.com</td>
+                                        <td>{{ $contactItem->type_txt }}</td>
+                                        <td>{{ $contactItem->contactItem_txt }}</td>
                                     </tr>
-                                    <tr class="school-detail-table-data editContactRow">
-                                        <td>Mobile phone (main)</td>
-                                        <td>07438145122</td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
