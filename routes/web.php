@@ -63,6 +63,17 @@ Route::post('/teacherEmergencyContactUpdate', [TeacherController::class, 'teache
 Route::post('/teacherContactItemInsert', [TeacherController::class, 'teacherContactItemInsert']);
 Route::post('/teacherContactItemEdit', [TeacherController::class, 'teacherContactItemEdit']);
 Route::post('/teacherContactItemUpdate', [TeacherController::class, 'teacherContactItemUpdate']);
+Route::post('/teacherProfessionUpdate', [TeacherController::class, 'teacherProfessionUpdate']);
+Route::post('/teacherInterviewUpdate', [TeacherController::class, 'teacherInterviewUpdate']);
+Route::post('/teachingSubjectInsert', [TeacherController::class, 'teachingSubjectInsert']);
+Route::post('/teachingSubjectEdit', [TeacherController::class, 'teachingSubjectEdit']);
+Route::post('/teachingSubjectUpdate', [TeacherController::class, 'teachingSubjectUpdate']);
+Route::post('/teacherQualificationInsert', [TeacherController::class, 'teacherQualificationInsert']);
+Route::post('/teacherQualificationEdit', [TeacherController::class, 'teacherQualificationEdit']);
+Route::post('/teacherQualificationUpdate', [TeacherController::class, 'teacherQualificationUpdate']);
+Route::post('/teacherQualificationDelete', [TeacherController::class, 'teacherQualificationDelete']);
+Route::post('/teacherPreferenceUpdate', [TeacherController::class, 'teacherPreferenceUpdate']);
+Route::post('/teacherHealthUpdate', [TeacherController::class, 'teacherHealthUpdate']);
 Route::get('/profession-qualification/{id}', [TeacherController::class, 'teacherProfession']);
 Route::get('/preference-health/{id}', [TeacherController::class, 'teacherHealth']);
 Route::get('/teacher-references/{id}', [TeacherController::class, 'teacherReference']);

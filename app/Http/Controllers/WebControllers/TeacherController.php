@@ -85,7 +85,7 @@ class TeacherController extends Controller
             if ($request->NQTRequired_status) {
                 $NQTRequired_status = -1;
             }
-            $NQTCompleted_dte = null;
+            $NQTCompleted_dte = NULL;
             if ($request->NQTCompleted_dte != '') {
                 $NQTCompleted_dte = date("Y-m-d", strtotime($request->NQTCompleted_dte));
             }
@@ -429,92 +429,120 @@ class TeacherController extends Controller
 
     public function teacherDetailUpdate(Request $request)
     {
-        $teacher_id = $request->teacher_id;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
 
-        $validator = Validator::make($request->all(), [
-            'firstName_txt' => 'required',
-            'surname_txt' => 'required',
-            'DOB_dte' => 'required',
-            'nationality_int' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->with('error', "Please fill all mandatory fields.");
-        }
-
-        DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
-            ->update([
-                'title_int' => $request->title_int,
-                'firstName_txt' => $request->firstName_txt,
-                'surname_txt' => $request->surname_txt,
-                'knownAs_txt' => $request->knownAs_txt,
-                'maidenPreviousNames_txt' => $request->maidenPreviousNames_txt,
-                'middleNames_txt' => $request->middleNames_txt,
-                'nationality_int' => $request->nationality_int,
-                'DOB_dte' => date("Y-m-d", strtotime($request->DOB_dte))
+            $validator = Validator::make($request->all(), [
+                'firstName_txt' => 'required',
+                'surname_txt' => 'required',
+                'DOB_dte' => 'required',
+                'nationality_int' => 'required',
             ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
 
-        return redirect()->back()->with('success', "Details updated successfully.");
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'title_int' => $request->title_int,
+                    'firstName_txt' => $request->firstName_txt,
+                    'surname_txt' => $request->surname_txt,
+                    'knownAs_txt' => $request->knownAs_txt,
+                    'maidenPreviousNames_txt' => $request->maidenPreviousNames_txt,
+                    'middleNames_txt' => $request->middleNames_txt,
+                    'nationality_int' => $request->nationality_int,
+                    'DOB_dte' => date("Y-m-d", strtotime($request->DOB_dte))
+                ]);
+
+            return redirect()->back()->with('success', "Details updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function teacherAddressUpdate(Request $request)
     {
-        $teacher_id = $request->teacher_id;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
 
-        $validator = Validator::make($request->all(), [
-            'postcode_txt' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->with('error', "Please fill all mandatory fields.");
-        }
-
-        DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
-            ->update([
-                'address1_txt' => $request->address1_txt,
-                'address2_txt' => $request->address2_txt,
-                'address3_txt' => $request->address3_txt,
-                'address4_txt' => $request->address4_txt,
-                'postcode_txt' => $request->postcode_txt
+            $validator = Validator::make($request->all(), [
+                'postcode_txt' => 'required',
             ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
 
-        return redirect()->back()->with('success', "Address updated successfully.");
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'address1_txt' => $request->address1_txt,
+                    'address2_txt' => $request->address2_txt,
+                    'address3_txt' => $request->address3_txt,
+                    'address4_txt' => $request->address4_txt,
+                    'postcode_txt' => $request->postcode_txt
+                ]);
+
+            return redirect()->back()->with('success', "Address updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function teacherEmergencyContactUpdate(Request $request)
     {
-        $teacher_id = $request->teacher_id;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
 
-        DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
-            ->update([
-                'emergencyContactName_txt' => $request->emergencyContactName_txt,
-                'emergencyContactNum1_txt' => $request->emergencyContactNum1_txt,
-                'emergencyContactNum2_txt' => $request->emergencyContactNum2_txt,
-                'emergencyContactRelation_int' => $request->emergencyContactRelation_int
-            ]);
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'emergencyContactName_txt' => $request->emergencyContactName_txt,
+                    'emergencyContactNum1_txt' => $request->emergencyContactNum1_txt,
+                    'emergencyContactNum2_txt' => $request->emergencyContactNum2_txt,
+                    'emergencyContactRelation_int' => $request->emergencyContactRelation_int
+                ]);
 
-        return redirect()->back()->with('success', "Emergency contact updated successfully.");
+            return redirect()->back()->with('success', "Emergency contact updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function teacherContactItemInsert(Request $request)
     {
-        $teacher_id = $request->teacher_id;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
 
-        $validator = Validator::make($request->all(), [
-            'type_int' => 'required',
-            'contactItem_txt' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->with('error', "Please fill all mandatory fields.");
-        }
-
-        DB::table('tbl_contactItemTch')
-            ->insert([
-                'teacher_id' => $teacher_id,
-                'type_int' => $request->type_int,
-                'contactItem_txt' => $request->contactItem_txt,
-                'timestamp_ts' => date('Y-m-d H:i:s')
+            $validator = Validator::make($request->all(), [
+                'type_int' => 'required',
+                'contactItem_txt' => 'required',
             ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
 
-        return redirect()->back()->with('success', "Contact item added successfully.");
+            DB::table('tbl_contactItemTch')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'type_int' => $request->type_int,
+                    'contactItem_txt' => $request->contactItem_txt,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Contact item added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function teacherContactItemEdit(Request $request)
@@ -536,24 +564,31 @@ class TeacherController extends Controller
 
     public function teacherContactItemUpdate(Request $request)
     {
-        $contactItemTch_id = $request->contactItemTch_id;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $contactItemTch_id = $request->contactItemTch_id;
 
-        $validator = Validator::make($request->all(), [
-            'type_int' => 'required',
-            'contactItem_txt' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->with('error', "Please fill all mandatory fields.");
-        }
-
-        DB::table('tbl_contactItemTch')
-            ->where('contactItemTch_id', $contactItemTch_id)
-            ->update([
-                'type_int' => $request->type_int,
-                'contactItem_txt' => $request->contactItem_txt
+            $validator = Validator::make($request->all(), [
+                'type_int' => 'required',
+                'contactItem_txt' => 'required',
             ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
 
-        return redirect()->back()->with('success', "Contact item updated successfully.");
+            DB::table('tbl_contactItemTch')
+                ->where('contactItemTch_id', $contactItemTch_id)
+                ->update([
+                    'type_int' => $request->type_int,
+                    'contactItem_txt' => $request->contactItem_txt
+                ]);
+
+            return redirect()->back()->with('success', "Contact item updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function teacherProfession(Request $request, $id)
@@ -667,10 +702,305 @@ class TeacherController extends Controller
                 ->orderBy('tbl_teacherQualification.qualified_dte', 'ASC')
                 ->get();
 
-            return view("web.teacher.teacher_profession", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications]);
+            $candidateList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 7)
+                ->get();
+
+            $agerangeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 5)
+                ->get();
+
+            $interviewQualityList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 22)
+                ->get();
+
+            $languageSkillList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 23)
+                ->get();
+
+            $subjectList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 6)
+                ->get();
+
+            $typeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 14)
+                ->get();
+
+            $subTypeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 15)
+                ->get();
+
+            return view("web.teacher.teacher_profession", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications, 'candidateList' => $candidateList, 'agerangeList' => $agerangeList, 'interviewQualityList' => $interviewQualityList, 'languageSkillList' => $languageSkillList, 'subjectList' => $subjectList, 'typeList' => $typeList, 'subTypeList' => $subTypeList]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function teacherProfessionUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $NQTRequired_status = 0;
+            if ($request->NQTRequired_status) {
+                $NQTRequired_status = -1;
+            }
+            $NQTCompleted_dte = NULL;
+            if ($request->NQTCompleted_dte != '') {
+                $NQTCompleted_dte = date("Y-m-d", strtotime($request->NQTCompleted_dte));
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'professionalType_int' => $request->professionalType_int,
+                    'ageRangeSpecialism_int' => $request->ageRangeSpecialism_int,
+                    'NQTRequired_status' => $NQTRequired_status,
+                    'NQTCompleted_dte' => $NQTCompleted_dte,
+                    'profTRN_txt' => $request->profTRN_txt
+                ]);
+
+            return redirect()->back()->with('success', "Professional details updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherInterviewUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $interviewCompletedOn_dtm = NULL;
+            if ($request->interviewCompletedOn_dtm != '') {
+                $interviewCompletedOn_dtm = date("Y-m-d H:i:s", strtotime($request->interviewCompletedOn_dtm));
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'interviewQuality_int' => $request->interviewQuality_int,
+                    'interviewLanguageSkills_int' => $request->interviewLanguageSkills_int,
+                    'interviewCompletedOn_dtm' => $interviewCompletedOn_dtm,
+                    'interviewNotes_txt' => $request->interviewNotes_txt,
+                    'interviewBy_id' => $user_id
+                ]);
+
+            return redirect()->back()->with('success', "Interview details updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teachingSubjectInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+
+            $validator = Validator::make($request->all(), [
+                'subject_id' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $isMain_status = 0;
+            if ($request->isMain_status) {
+                $isMain_status = -1;
+            }
+
+            DB::table('tbl_teacherSubject')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'subject_id' => $request->subject_id,
+                    'isMain_status' => $isMain_status,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teaching subject added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teachingSubjectEdit(Request $request)
+    {
+        $input = $request->all();
+        $teacherSubjectId = $input['teacherSubjectId'];
+
+        $Detail = DB::table('tbl_teacherSubject')
+            ->where('teacherSubject_id', "=", $teacherSubjectId)
+            ->first();
+        $subjectList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 6)
+            ->get();
+
+        $view = view("web.teacher.edit_teacher_subject_view", ['Detail' => $Detail, 'subjectList' => $subjectList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teachingSubjectUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $teacherSubject_id = $request->teacherSubjectIdEdit;
+
+            $validator = Validator::make($request->all(), [
+                'subject_id' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $isMain_status = 0;
+            if ($request->isMain_status) {
+                $isMain_status = -1;
+            }
+
+            DB::table('tbl_teacherSubject')
+                ->where('teacherSubject_id', $teacherSubject_id)
+                ->update([
+                    'subject_id' => $request->subject_id,
+                    'isMain_status' => $isMain_status,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teaching subject updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherQualificationInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+
+            $validator = Validator::make($request->all(), [
+                'type_int' => 'required',
+                'subType_int' => 'required',
+                'title_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $givesQTS_status = 0;
+            if ($request->givesQTS_status) {
+                $givesQTS_status = -1;
+            }
+            $qualified_dte = NULL;
+            if ($request->qualified_dte != '') {
+                $qualified_dte = date("Y-m-d", strtotime($request->qualified_dte));
+            }
+
+            DB::table('tbl_teacherQualification')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'type_int' => $request->type_int,
+                    'subType_int' => $request->subType_int,
+                    'title_txt' => $request->title_txt,
+                    'givesQTS_status' => $givesQTS_status,
+                    'awardingBody_txt' => $request->awardingBody_txt,
+                    'qualified_dte' => $qualified_dte,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Qualification added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherQualificationEdit(Request $request)
+    {
+        $input = $request->all();
+        $teacherQualificationId = $input['teacherQualificationId'];
+
+        $Detail = DB::table('tbl_teacherQualification')
+            ->where('qualification_id', "=", $teacherQualificationId)
+            ->first();
+        $typeList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 14)
+            ->get();
+
+        $subTypeList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 15)
+            ->get();
+
+        $view = view("web.teacher.edit_teacher_qualification_view", ['Detail' => $Detail, 'typeList' => $typeList, 'subTypeList' => $subTypeList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teacherQualificationUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $qualification_id = $request->qualification_id;
+
+            $validator = Validator::make($request->all(), [
+                'type_int' => 'required',
+                'subType_int' => 'required',
+                'title_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $givesQTS_status = 0;
+            if ($request->givesQTS_status) {
+                $givesQTS_status = -1;
+            }
+            $qualified_dte = NULL;
+            if ($request->qualified_dte != '') {
+                $qualified_dte = date("Y-m-d", strtotime($request->qualified_dte));
+            }
+
+            DB::table('tbl_teacherQualification')
+                ->where('qualification_id', $qualification_id)
+                ->update([
+                    'type_int' => $request->type_int,
+                    'subType_int' => $request->subType_int,
+                    'title_txt' => $request->title_txt,
+                    'givesQTS_status' => $givesQTS_status,
+                    'awardingBody_txt' => $request->awardingBody_txt,
+                    'qualified_dte' => $qualified_dte
+                ]);
+
+            return redirect()->back()->with('success', "Qualification updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherQualificationDelete(Request $request)
+    {
+        $qualification_id = $request->teacherQualificationId;
+        DB::table('tbl_teacherQualification')
+            ->where('qualification_id', $qualification_id)
+            ->delete();
+
+        return 1;
     }
 
     public function teacherHealth(Request $request, $id)
@@ -757,6 +1087,85 @@ class TeacherController extends Controller
                 ->first();
 
             return view("web.teacher.teacher_health", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherPreferenceUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $prefDrive_status = 0;
+            if ($request->prefDrive_status) {
+                $prefDrive_status = -1;
+            }
+            $prefDailySupply_status = 0;
+            if ($request->prefDailySupply_status) {
+                $prefDailySupply_status = -1;
+            }
+            $prefLongTerm_status = 0;
+            if ($request->prefLongTerm_status) {
+                $prefLongTerm_status = -1;
+            }
+            $prefEarlyMorningCall_status = 0;
+            if ($request->prefEarlyMorningCall_status) {
+                $prefEarlyMorningCall_status = -1;
+            }
+            $prefSEN_status = 0;
+            if ($request->prefSEN_status) {
+                $prefSEN_status = -1;
+            }
+            $prefSENExperience_status = 0;
+            if ($request->prefSENExperience_status) {
+                $prefSENExperience_status = -1;
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'prefDrive_status' => $prefDrive_status,
+                    'prefDailySupply_status' => $prefDailySupply_status,
+                    'prefLongTerm_status' => $prefLongTerm_status,
+                    'prefEarlyMorningCall_status' => $prefEarlyMorningCall_status,
+                    'prefSEN_status' => $prefSEN_status,
+                    'prefSENExperience_status' => $prefSENExperience_status,
+                    'prefDistance_int' => $request->prefDistance_int,
+                    'prefYearGroup_int' => $request->prefYearGroup_int,
+                    'prefIdealJob_txt' => $request->prefIdealJob_txt,
+                    'otherAgencies_txt' => $request->otherAgencies_txt,
+                    'currentRate_dec' => $request->currentRate_dec,
+                    'previousSchools_txt' => $request->previousSchools_txt
+                ]);
+
+            return redirect()->back()->with('success', "Preference updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherHealthUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $healthDeclaration_dte = NULL;
+            if ($request->healthDeclaration_dte != '') {
+                $healthDeclaration_dte = date("Y-m-d", strtotime($request->healthDeclaration_dte));
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'healthDeclaration_dte' => $healthDeclaration_dte,
+                    'occupationalHealth_txt' => $request->occupationalHealth_txt,
+                    'healthIssues_txt' => $request->healthIssues_txt
+                ]);
+
+            return redirect()->back()->with('success', "Health updated successfully.");
         } else {
             return redirect()->intended('/');
         }

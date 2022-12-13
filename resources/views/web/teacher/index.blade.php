@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <!-- Document Add Modal -->
+    <!-- Teacher Add Modal -->
     <div class="modal fade" id="addNewTeacherModal">
         <div class="modal-dialog modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content" style="width:100%;">
@@ -249,7 +249,7 @@
             </div>
         </div>
     </div>
-    <!-- Document Add Modal -->
+    <!-- Teacher Add Modal -->
 
     <script>
         $(document).ready(function() {
