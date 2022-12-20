@@ -199,9 +199,10 @@
                                         <input type="checkbox" id="" name="" value="1" disabled
                                             {{ $teacherDetail->vetNCTLChecked_dte != null ? 'checked' : '' }}>
                                     </div>
-                                    {{-- <div class="teacher-document-third-name-text">
-                                        <p>Expires on 13-06-2017</p>
-                                    </div> --}}
+                                    <div class="teacher-document-third-name-text">
+                                        <p>{{ $teacherDetail->vetNCTLChecked_dte != null ? 'Expires on ' . date('d-m-Y', strtotime($teacherDetail->vetNCTLChecked_dte . ' +1 years')) : '' }}
+                                        </p>
+                                    </div>
                                 </div>
 
                                 <div class="school-name-section">
@@ -363,13 +364,16 @@
                                 <h2>DBS Records</h2>
                             </div>
                             <div class="contact-icon-sec">
-                                <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
+                                <a style="cursor: pointer" class="disabled-link" id="deleteDbsRecordBttn">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                                <a style="cursor: pointer;" class="disabled-link" id="viewDbsRecordBttn">
                                     <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                                 </a>
-                                <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
+                                <a data-toggle="modal" data-target="#dbsRecordAddModal" style="cursor: pointer;">
                                     <i class="fa-solid fa-plus"></i>
                                 </a>
-                                <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
+                                <a style="cursor: pointer;" class="disabled-link" id="editDbsRecordBttn">
                                     <i class="fa-solid fa-pencil school-edit-icon"></i>
                                 </a>
                             </div>
@@ -384,20 +388,31 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
-                                    <tr class="school-detail-table-data editContactRow">
-                                        <td>BA</td>
-                                        <td>Primary Education</td>
-                                        <td>N</td>
-                                    </tr>
-                                    <tr class="school-detail-table-data editContactRow">
-                                        <td>MA</td>
-                                        <td>Physical Activity, Health & Sports Training</td>
-                                        <td>Y</td>
-                                    </tr>
+                                    @if (count($DBS_list) > 0)
+                                        @foreach ($DBS_list as $key => $DBS)
+                                            <tr class="school-detail-table-data editDBSRow"
+                                                id="editDBSRow{{ $DBS->DBS_id }}"
+                                                onclick="DBSRowSelect({{ $DBS->DBS_id }})">
+                                                <td>{{ $DBS->certificateNumber_txt }}</td>
+                                                <td>{{ $DBS->DBSDate_dte != null ? date('d-m-Y', strtotime($DBS->DBSDate_dte)) : '' }}
+                                                </td>
+                                                <td>{{ $DBS->DBSDate_dte != null ? date('d-m-Y', strtotime($DBS->DBSDate_dte . ' +3 years')) : '' }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr class="school-detail-table-data">
+                                            <td colspan="3">
+                                                No record found.
+                                            </td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+                    <input type="hidden" name="DBSId" id="DBSId" value="">
 
                 </div>
             </div>
@@ -443,14 +458,16 @@
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docDriversLicence_status">Driver's Licence</label>
+                                        <label class="form-check-label" for="docDriversLicence_status">Driver's
+                                            Licence</label>
                                         <input type="checkbox" class="" name="docDriversLicence_status"
                                             id="docDriversLicence_status" value="1"
                                             {{ $teacherDetail->docDriversLicence_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docBankStatement_status">Bank Statement</label>
+                                        <label class="form-check-label" for="docBankStatement_status">Bank
+                                            Statement</label>
                                         <input type="checkbox" class="" name="docBankStatement_status"
                                             id="docBankStatement_status" value="1"
                                             {{ $teacherDetail->docBankStatement_status == '-1' ? 'checked' : '' }}>
@@ -458,9 +475,8 @@
 
                                     <div class="modal-side-field mb-2">
                                         <label class="form-check-label" for="docDBS_status">DBS</label>
-                                        <input type="checkbox" class="" name="docDBS_status"
-                                            id="docDBS_status" value="1"
-                                            {{ $teacherDetail->docDBS_status == '-1' ? 'checked' : '' }}>
+                                        <input type="checkbox" class="" name="docDBS_status" id="docDBS_status"
+                                            value="1" {{ $teacherDetail->docDBS_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
@@ -493,20 +509,24 @@
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docTelephoneBill_status">Telephone Bill</label>
-                                        <input type="checkbox" class="" name="docTelephoneBill_status" id="docTelephoneBill_status"
-                                            value="1" {{ $teacherDetail->docTelephoneBill_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="docTelephoneBill_status">Telephone
+                                            Bill</label>
+                                        <input type="checkbox" class="" name="docTelephoneBill_status"
+                                            id="docTelephoneBill_status" value="1"
+                                            {{ $teacherDetail->docTelephoneBill_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docBenefitStatement_status">Benefit Statement</label>
+                                        <label class="form-check-label" for="docBenefitStatement_status">Benefit
+                                            Statement</label>
                                         <input type="checkbox" class="" name="docBenefitStatement_status"
                                             id="docBenefitStatement_status" value="1"
                                             {{ $teacherDetail->docBenefitStatement_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docCreditCardBill_status">Credit Card Bill</label>
+                                        <label class="form-check-label" for="docCreditCardBill_status">Credit Card
+                                            Bill</label>
                                         <input type="checkbox" class="" name="docCreditCardBill_status"
                                             id="docCreditCardBill_status" value="1"
                                             {{ $teacherDetail->docCreditCardBill_status == '-1' ? 'checked' : '' }}>
@@ -520,7 +540,8 @@
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docCouncilTax_status">Counsil Tax Bill</label>
+                                        <label class="form-check-label" for="docCouncilTax_status">Counsil Tax
+                                            Bill</label>
                                         <input type="checkbox" class="" name="docCouncilTax_status"
                                             id="docCouncilTax_status" value="1"
                                             {{ $teacherDetail->docCouncilTax_status == '-1' ? 'checked' : '' }}>
@@ -575,7 +596,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="vetUpdateService_status">Vetting Update Service</label>
+                                        <label class="form-check-label" for="vetUpdateService_status">Vetting Update
+                                            Service</label>
                                         <input type="checkbox" class="" name="vetUpdateService_status"
                                             id="vetUpdateService_status" value="1"
                                             {{ $teacherDetail->vetUpdateService_status == '-1' ? 'checked' : '' }}>
@@ -583,8 +605,9 @@
 
                                     <div class="form-group modal-input-field">
                                         <label class="form-check-label">Date Register On Update</label>
-                                        <input type="date" class="form-control" name="vetUpdateServiceChecked_dte"
-                                            id="" value="{{ date("Y-m-d",strtotime($teacherDetail->vetUpdateServiceChecked_dte)) }}">
+                                        <input type="date" class="form-control" name="vetUpdateServiceReg_dte"
+                                            id=""
+                                            value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('Y-m-d', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}">
                                     </div>
 
                                     <div class="modal-side-field mb-2">
@@ -609,7 +632,8 @@
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="vetDisqualAssociation_status">Disqualification Check</label>
+                                        <label class="form-check-label"
+                                            for="vetDisqualAssociation_status">Disqualification Check</label>
                                         <input type="checkbox" class="" name="vetDisqualAssociation_status"
                                             id="vetDisqualAssociation_status" value="1"
                                             {{ $teacherDetail->vetDisqualAssociation_status == '-1' ? 'checked' : '' }}>
@@ -617,7 +641,8 @@
                                 </div>
                                 <div class="col-md-6 modal-form-right-sec">
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="safeguardingInduction_status">Safeguarding Induction</label>
+                                        <label class="form-check-label" for="safeguardingInduction_status">Safeguarding
+                                            Induction</label>
                                         <input type="checkbox" class="" name="safeguardingInduction_status"
                                             id="safeguardingInduction_status" value="1"
                                             {{ $teacherDetail->safeguardingInduction_status == '-1' ? 'checked' : '' }}>
@@ -625,10 +650,11 @@
 
                                     <div class="form-group calendar-form-filter">
                                         <label for="">Right to Work</label>
-                                        <select class="form-control select2" name="rightToWork_int"  style="width:100%;">
+                                        <select class="form-control select2" name="rightToWork_int" style="width:100%;">
                                             <option value="">Choose one</option>
                                             @foreach ($RTW_list as $key2 => $RTW)
-                                                <option value="{{ $RTW->description_int }}" {{ $teacherDetail->rightToWork_int == $RTW->description_int ? 'selected' : '' }} >
+                                                <option value="{{ $RTW->description_int }}"
+                                                    {{ $teacherDetail->rightToWork_int == $RTW->description_int ? 'selected' : '' }}>
                                                     {{ $RTW->description_txt }}
                                                 </option>
                                             @endforeach
@@ -642,21 +668,24 @@
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="vetEEARestriction_status">EEA Restriction Check</label>
+                                        <label class="form-check-label" for="vetEEARestriction_status">EEA Restriction
+                                            Check</label>
                                         <input type="checkbox" class="" name="vetEEARestriction_status"
                                             id="vetEEARestriction_status" value="1"
                                             {{ $teacherDetail->vetEEARestriction_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="vetRadical_status">Redicalisation Check</label>
+                                        <label class="form-check-label" for="vetRadical_status">Redicalisation
+                                            Check</label>
                                         <input type="checkbox" class="" name="vetRadical_status"
                                             id="vetRadical_status" value="1"
                                             {{ $teacherDetail->vetRadical_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="vetQualification_status">Qualifications Check</label>
+                                        <label class="form-check-label" for="vetQualification_status">Qualifications
+                                            Check</label>
                                         <input type="checkbox" class="" name="vetQualification_status"
                                             id="vetQualification_status" value="1"
                                             {{ $teacherDetail->vetQualification_status == '-1' ? 'checked' : '' }}>
@@ -677,5 +706,255 @@
             </div>
         </div>
         <!-- Vetting Edit Modal -->
+
+        <!-- Teacher DBS Add Modal -->
+        <div class="modal fade" id="dbsRecordAddModal">
+            <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+                <div class="modal-content calendar-modal-content" style="width:100%;">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header calendar-modal-header">
+                        <h4 class="modal-title">Add Teacher DBS</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="calendar-heading-sec">
+                        <i class="fa-solid fa-pencil school-edit-icon"></i>
+                        <h2>Add DBS</h2>
+                    </div>
+
+                    <form action="{{ url('/newTeacherDbsInsert') }}" method="post" class="form-validate">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            <h6>
+                                @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
+                                    {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                                @else
+                                    {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                                @endif
+                            </h6>
+                            {{-- <span>ID</span>
+                            <p>{{ $teacherDetail->teacher_id }}</p> --}}
+                            <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Certificate Number</label><span
+                                            style="color: red;">*</span>
+                                        <input type="text" class="form-control field-validate"
+                                            name="certificateNumber_txt" id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Certificate Date</label><span
+                                            style="color: red;">*</span>
+                                        <input type="date" class="form-control field-validate" name="DBSDate_dte"
+                                            id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Position Applied For</label>
+                                        <input type="text" class="form-control" name="positionAppliedFor_txt"
+                                            id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Employer Name</label>
+                                        <input type="text" class="form-control" name="employerName_txt"
+                                            id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Registered Body</label>
+                                        <input type="text" class="form-control" name="registeredBody_txt"
+                                            id="" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="modal-side-field mb-2">
+                                        <input type="checkbox" class="" name="dbsWarning_status"
+                                            id="dbsWarning_status" value="1">
+                                        <label class="form-check-label" for="dbsWarning_status">Flag Warning</label>
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Warning Message</label>
+                                        <textarea name="dbsWarning_txt" id="dbsWarning_txt" cols="30" rows="3" class="form-control" disabled></textarea>
+                                    </div>
+
+                                    <div class="modal-side-field mb-2">
+                                        <input type="checkbox" class="" name="lastCheckedOn" id="lastCheckedOn"
+                                            value="1">
+                                        <label class="form-check-label" for="lastCheckedOn">Update 'Last Checked On' date
+                                            to today's date</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
+
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- Teacher DBS Add Modal -->
+
+        <!-- Teacher DBS Edit Modal -->
+        <div class="modal fade" id="dbsRecordEditModal">
+            <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+                <div class="modal-content calendar-modal-content" style="width:100%;">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header calendar-modal-header">
+                        <h4 class="modal-title">Add Teacher DBS</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="calendar-heading-sec">
+                        <i class="fa-solid fa-pencil school-edit-icon"></i>
+                        <h2>Add DBS</h2>
+                    </div>
+
+                    <form action="{{ url('/newTeacherDbsInsert') }}" method="post" class="form-validate">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            <h6>
+                                @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
+                                    {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                                @else
+                                    {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                                @endif
+                            </h6>
+                            {{-- <span>ID</span>
+                            <p>{{ $teacherDetail->teacher_id }}</p> --}}
+                            <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
+                            <input type="hidden" name="editDBSId" id="editDBSId" value="">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Certificate Number</label><span
+                                            style="color: red;">*</span>
+                                        <input type="text" class="form-control field-validate"
+                                            name="certificateNumber_txt" id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Certificate Date</label><span
+                                            style="color: red;">*</span>
+                                        <input type="date" class="form-control field-validate" name="DBSDate_dte"
+                                            id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Position Applied For</label>
+                                        <input type="text" class="form-control" name="positionAppliedFor_txt"
+                                            id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Employer Name</label>
+                                        <input type="text" class="form-control" name="employerName_txt"
+                                            id="" value="">
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Registered Body</label>
+                                        <input type="text" class="form-control" name="registeredBody_txt"
+                                            id="" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="modal-side-field mb-2">
+                                        <input type="checkbox" class="" name="dbsWarning_status"
+                                            id="dbsWarning_status" value="1">
+                                        <label class="form-check-label" for="dbsWarning_status">Flag Warning</label>
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Warning Message</label>
+                                        <textarea name="dbsWarning_txt" id="dbsWarning_txt" cols="30" rows="3" class="form-control" disabled></textarea>
+                                    </div>
+
+                                    <div class="modal-side-field mb-2">
+                                        <input type="checkbox" class="" name="lastCheckedOn" id="lastCheckedOn"
+                                            value="1">
+                                        <label class="form-check-label" for="lastCheckedOn">Update 'Last Checked On' date
+                                            to today's date</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
+
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- Teacher DBS Edit Modal -->
+
+        <script>
+            $("#dbsWarning_status").change(function() {
+                if ($(this).is(":checked")) {
+                    $('#dbsWarning_txt').attr('disabled', false);
+                } else {
+                    $('#dbsWarning_txt').attr('disabled', true);
+                }
+            });
+
+            function DBSRowSelect(DBS_id) {
+                if ($('#editDBSRow' + DBS_id).hasClass('tableRowActive')) {
+                    $('#DBSId').val('');
+                    $('#editDBSRow' + DBS_id).removeClass('tableRowActive');
+                    $('#deleteDbsRecordBttn').addClass('disabled-link');
+                    $('#viewDbsRecordBttn').addClass('disabled-link');
+                    $('#editDbsRecordBttn').addClass('disabled-link');
+                } else {
+                    $('#DBSId').val(DBS_id);
+                    $('.editDBSRow').removeClass('tableRowActive');
+                    $('#editDBSRow' + DBS_id).addClass('tableRowActive');
+                    $('#deleteDbsRecordBttn').removeClass('disabled-link');
+                    $('#viewDbsRecordBttn').removeClass('disabled-link');
+                    $('#editDbsRecordBttn').removeClass('disabled-link');
+                }
+            }
+
+            // $(document).on('click', '#editDbsRecordBttn', function() {
+            //     var teacherReferenceId = $('#teacherReferenceId').val();
+            //     if (teacherReferenceId) {
+            //         $('#editTeacherReferenceId').val(teacherReferenceId);
+            //         $.ajax({
+            //             type: 'POST',
+            //             url: '{{ url('teacherReferenceEdit') }}',
+            //             data: {
+            //                 "_token": "{{ csrf_token() }}",
+            //                 teacherReferenceId: teacherReferenceId
+            //             },
+            //             success: function(data) {
+            //                 //console.log(data);
+            //                 $('#editReferenceAjax').html(data.html);
+            //             }
+            //         });
+            //         $('#editTeacherReferenceModal').modal("show");
+            //     } else {
+            //         swal("", "Please select one reference.");
+            //     }
+            // });
+        </script>
 
     @endsection

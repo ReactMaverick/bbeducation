@@ -1478,7 +1478,12 @@ class TeacherController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 39)
                 ->get();
 
-            return view("web.teacher.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list]);
+            $DBS_list = DB::table('tbl_teacherdbs')
+                ->select('tbl_teacherdbs.*')
+                ->where('tbl_teacherdbs.teacher_id', $id)
+                ->get();
+
+            return view("web.teacher.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list]);
         } else {
             return redirect()->intended('/');
         }
@@ -1562,6 +1567,152 @@ class TeacherController extends Controller
                 ]);
 
             return redirect()->back()->with('success', "Document updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherVettingUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $vetUpdateService_status = 0;
+            $vetUpdateServiceChecked_dte = NULL;
+            if ($request->vetUpdateService_status) {
+                $vetUpdateService_status = -1;
+                $vetUpdateServiceChecked_dte = date("Y-m-d");
+            }
+            $vetUpdateServiceReg_dte = NULL;
+            if ($request->vetUpdateServiceReg_dte != '') {
+                $vetUpdateServiceReg_dte = date("Y-m-d", strtotime($request->vetUpdateServiceReg_dte));
+            }
+            $vetList99Checked_dte = NULL;
+            if ($request->vetList99Checked_dte) {
+                $vetList99Checked_dte = date("Y-m-d");
+            }
+            $vetNctlExempt_dte = NULL;
+            if ($request->vetNctlExempt_dte) {
+                $vetNctlExempt_dte = date("Y-m-d");
+            }
+            $vetNCTLChecked_dte = NULL;
+            if ($request->vetNCTLChecked_dte) {
+                $vetNCTLChecked_dte = date("Y-m-d");
+            }
+            $vetDisqualAssociation_status = 0;
+            $vetDisqualAssociation_dte = NULL;
+            if ($request->vetDisqualAssociation_status) {
+                $vetDisqualAssociation_status = -1;
+                $vetDisqualAssociation_dte = date("Y-m-d");
+            }
+            $safeguardingInduction_status = 0;
+            $safeguardingInduction_dte = NULL;
+            if ($request->safeguardingInduction_status) {
+                $safeguardingInduction_status = -1;
+                $safeguardingInduction_dte = date("Y-m-d");
+            }
+            $vets128_status = 0;
+            $vets128_dte = NULL;
+            if ($request->vets128_status) {
+                $vets128_status = -1;
+                $vets128_dte = date("Y-m-d");
+            }
+            $vetEEARestriction_status = 0;
+            $vetEEARestriction_dte = NULL;
+            if ($request->vetEEARestriction_status) {
+                $vetEEARestriction_status = -1;
+                $vetEEARestriction_dte = date("Y-m-d");
+            }
+            $vetRadical_status = 0;
+            $vetRadical_dte = NULL;
+            if ($request->vetRadical_status) {
+                $vetRadical_status = -1;
+                $vetRadical_dte = date("Y-m-d");
+            }
+            $vetQualification_status = 0;
+            $vetQualification_dte = NULL;
+            if ($request->vetQualification_status) {
+                $vetQualification_status = -1;
+                $vetQualification_dte = date("Y-m-d");
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'vetUpdateService_status' => $vetUpdateService_status,
+                    'vetUpdateServiceChecked_dte' => $vetUpdateServiceChecked_dte,
+                    'vetUpdateServiceReg_dte' => $vetUpdateServiceReg_dte,
+                    'vetList99Checked_dte' => $vetList99Checked_dte,
+                    'vetNctlExempt_dte' => $vetNctlExempt_dte,
+                    'vetNCTLChecked_dte' => $vetNCTLChecked_dte,
+                    'vetDisqualAssociation_status' => $vetDisqualAssociation_status,
+                    'vetDisqualAssociation_dte' => $vetDisqualAssociation_dte,
+                    'safeguardingInduction_status' => $safeguardingInduction_status,
+                    'safeguardingInduction_dte' => $safeguardingInduction_dte,
+                    'rightToWork_int' => $request->rightToWork_int,
+                    'vets128_status' => $vets128_status,
+                    'vets128_dte' => $vets128_dte,
+                    'vetEEARestriction_status' => $vetEEARestriction_status,
+                    'vetEEARestriction_dte' => $vetEEARestriction_dte,
+                    'vetRadical_status' => $vetRadical_status,
+                    'vetRadical_dte' => $vetRadical_dte,
+                    'vetQualification_status' => $vetQualification_status,
+                    'vetQualification_dte' => $vetQualification_dte
+                ]);
+
+            return redirect()->back()->with('success', "Teacher vetting updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function newTeacherDbsInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $validator = Validator::make($request->all(), [
+                'certificateNumber_txt' => 'required',
+                'DBSDate_dte' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $DBSDate_dte = NULL;
+            if ($request->DBSDate_dte != '') {
+                $DBSDate_dte = date("Y-m-d", strtotime($request->DBSDate_dte));
+            }
+            $dbsWarning_status = 0;
+            if ($request->dbsWarning_status) {
+                $dbsWarning_status = -1;
+            }
+            $dbsWarning_txt = NULL;
+            if ($request->dbsWarning_txt) {
+                $dbsWarning_txt = $request->dbsWarning_txt;
+            }
+            $lastCheckedOn_dte = date("Y-m-d");
+            if ($request->lastCheckedOn) {
+                $lastCheckedOn_dte = date("Y-m-d");
+            }
+
+            DB::table('tbl_teacherdbs')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'certificateNumber_txt' => $request->certificateNumber_txt,
+                    'DBSDate_dte' => $DBSDate_dte,
+                    'positionAppliedFor_txt' => $request->positionAppliedFor_txt,
+                    'employerName_txt' => $request->employerName_txt,
+                    'registeredBody_txt' => $request->registeredBody_txt,
+                    'dbsWarning_status' => $dbsWarning_status,
+                    'dbsWarning_txt' => $dbsWarning_txt,
+                    'lastCheckedOn_dte' => $lastCheckedOn_dte,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "DBS record added successfully.");
         } else {
             return redirect()->intended('/');
         }
