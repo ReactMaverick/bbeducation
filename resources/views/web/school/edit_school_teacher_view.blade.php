@@ -19,17 +19,17 @@
         <tbody class="table-body-sec" id="editSearchTeacherView">
             <tr class="table-data">
                 @foreach ($teacherList as $key => $teacher)
-                <td>
-                    @if ($teacher->knownAs_txt == null && $teacher->knownAs_txt == '')
-                    {{ $teacher->firstName_txt . ' ' . $teacher->surname_txt }}
-                    @else
-                    {{ $teacher->firstName_txt . ' (' . $teacher->knownAs_txt . ') ' . $teacher->surname_txt }}
-                    @endif
-                </td>
-                <td>{{ $teacher->professionalType_txt }}</td>
-                <td>{{ $teacher->appStatus_txt }}</td>
-                <td>{{ $teacher->daysWorked_dec }}</td>
-                <td>{{ $teacher->ageRangeSpecialism_txt }}</td>
+                    <td>
+                        @if ($teacher->knownAs_txt == null && $teacher->knownAs_txt == '')
+                            {{ $teacher->firstName_txt . ' ' . $teacher->surname_txt }}
+                        @else
+                            {{ $teacher->firstName_txt . ' (' . $teacher->knownAs_txt . ') ' . $teacher->surname_txt }}
+                        @endif
+                    </td>
+                    <td>{{ $teacher->professionalType_txt }}</td>
+                    <td>{{ $teacher->appStatus_txt }}</td>
+                    <td>{{ $teacher->daysWorked_dec }}</td>
+                    <td>{{ $teacher->ageRangeSpecialism_txt }}</td>
                 @endforeach
             </tr>
         </tbody>
@@ -75,39 +75,38 @@
 </div>
 
 <script>
-$(document).on('keyup', '#editSearchTeacherKey', function() {
-    var editSearchTeacherKey = $(this).val();
-    if (editSearchTeacherKey.length > 3) {
-        $('#editSearchTeacherId').val('');
-        $.ajax({
-            type: 'POST',
-            url: '{{ url('
-            editSearchTeacherList ') }}',
-            data: {
-                "_token": "{{ csrf_token() }}",
-                searchTeacherKey: editSearchTeacherKey
-            },
-            success: function(data) {
-                // console.log(data);
-                if (data == 'login') {
-                    var loginUrl = '<?php echo url('/'); ?>';
-                    window.location.assign(loginUrl);
-                } else {
-                    $('#editSearchTeacherView').html(data.html);
+    $(document).on('keyup', '#editSearchTeacherKey', function() {
+        var editSearchTeacherKey = $(this).val();
+        if (editSearchTeacherKey.length > 3) {
+            $('#editSearchTeacherId').val('');
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('editSearchTeacherList') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    searchTeacherKey: editSearchTeacherKey
+                },
+                success: function(data) {
+                    // console.log(data);
+                    if (data == 'login') {
+                        var loginUrl = '<?php echo url('/'); ?>';
+                        window.location.assign(loginUrl);
+                    } else {
+                        $('#editSearchTeacherView').html(data.html);
+                    }
                 }
-            }
-        });
-    }
-});
+            });
+        }
+    });
 
-function editSearchTeacherRowSelect(teacher_id) {
-    if ($('#editSearchTeacherRow' + teacher_id).hasClass('tableRowActive')) {
-        $('#editSearchTeacherId').val('');
-        $('#editSearchTeacherRow' + teacher_id).removeClass('tableRowActive');
-    } else {
-        $('#editSearchTeacherId').val(teacher_id);
-        $('.editSearchTeacherRow').removeClass('tableRowActive');
-        $('#editSearchTeacherRow' + teacher_id).addClass('tableRowActive');
+    function editSearchTeacherRowSelect(teacher_id) {
+        if ($('#editSearchTeacherRow' + teacher_id).hasClass('tableRowActive')) {
+            $('#editSearchTeacherId').val('');
+            $('#editSearchTeacherRow' + teacher_id).removeClass('tableRowActive');
+        } else {
+            $('#editSearchTeacherId').val(teacher_id);
+            $('.editSearchTeacherRow').removeClass('tableRowActive');
+            $('#editSearchTeacherRow' + teacher_id).addClass('tableRowActive');
+        }
     }
-}
 </script>

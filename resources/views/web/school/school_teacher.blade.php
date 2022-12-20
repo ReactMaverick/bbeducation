@@ -78,7 +78,8 @@
                             </div>
 
                             <input type="hidden" name="editTeacherId" id="editTeacherId" value="">
-                            <input type="hidden" name="editSchoolId" id="editSchoolId" value="{{ $schoolDetail->school_id }}">
+                            <input type="hidden" name="editSchoolId" id="editSchoolId"
+                                value="{{ $schoolDetail->school_id }}">
 
                             <div class="preferred-list-sec">
                                 <div class="form-check list-form-check">
@@ -123,7 +124,7 @@
                     <div class="col-md-8">
                         <div class="school-search-section add-school-search-section">
                             <div class="school-search-field add-school-search-field">
-                            <span>Teacher</span>
+                                <span>Teacher</span>
                                 <label for="">Search For</label>
                                 <input type="text" class="form-control" id="searchTeacherKey" name="searchTeacherKey"
                                     value="">
