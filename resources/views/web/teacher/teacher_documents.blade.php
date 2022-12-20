@@ -575,94 +575,91 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docPassport_status">Passport</label>
-                                        <input type="checkbox" class="" name="docPassport_status"
-                                            id="docPassport_status" value="1"
-                                            {{ $teacherDetail->docPassport_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetUpdateService_status">Vetting Update Service</label>
+                                        <input type="checkbox" class="" name="vetUpdateService_status"
+                                            id="vetUpdateService_status" value="1"
+                                            {{ $teacherDetail->vetUpdateService_status == '-1' ? 'checked' : '' }}>
+                                    </div>
+
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Date Register On Update</label>
+                                        <input type="date" class="form-control" name="vetUpdateServiceChecked_dte"
+                                            id="" value="{{ date("Y-m-d",strtotime($teacherDetail->vetUpdateServiceChecked_dte)) }}">
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docDriversLicence_status">Driver's Licence</label>
-                                        <input type="checkbox" class="" name="docDriversLicence_status"
-                                            id="docDriversLicence_status" value="1"
-                                            {{ $teacherDetail->docDriversLicence_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetList99Checked_dte">List 99</label>
+                                        <input type="checkbox" class="" name="vetList99Checked_dte"
+                                            id="vetList99Checked_dte" value="1"
+                                            {{ $teacherDetail->vetList99Checked_dte != null ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docBankStatement_status">Bank Statement</label>
-                                        <input type="checkbox" class="" name="docBankStatement_status"
-                                            id="docBankStatement_status" value="1"
-                                            {{ $teacherDetail->docBankStatement_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetNctlExempt_dte">NCTL Exempt</label>
+                                        <input type="checkbox" class="" name="vetNctlExempt_dte"
+                                            id="vetNctlExempt_dte" value="1"
+                                            {{ $teacherDetail->vetNctlExempt_dte != null ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docDBS_status">DBS</label>
-                                        <input type="checkbox" class="" name="docDBS_status"
-                                            id="docDBS_status" value="1"
-                                            {{ $teacherDetail->docDBS_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetNCTLChecked_dte">NCTL Check</label>
+                                        <input type="checkbox" class="" name="vetNCTLChecked_dte"
+                                            id="vetNCTLChecked_dte" value="1"
+                                            {{ $teacherDetail->vetNCTLChecked_dte != null ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docDisqualForm_status">Disqual. Form</label>
-                                        <input type="checkbox" class="" name="docDisqualForm_status"
-                                            id="docDisqualForm_status" value="1"
-                                            {{ $teacherDetail->docDisqualForm_status == '-1' ? 'checked' : '' }}>
-                                    </div>
-
-                                    <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docHealthDec_status">Health Dec.</label>
-                                        <input type="checkbox" class="" name="docHealthDec_status"
-                                            id="docHealthDec_status" value="1"
-                                            {{ $teacherDetail->docHealthDec_status == '-1' ? 'checked' : '' }}>
-                                    </div>
-
-                                    <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docEUCard_status">EU Card</label>
-                                        <input type="checkbox" class="" name="docEUCard_status"
-                                            id="docEUCard_status" value="1"
-                                            {{ $teacherDetail->docEUCard_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetDisqualAssociation_status">Disqualification Check</label>
+                                        <input type="checkbox" class="" name="vetDisqualAssociation_status"
+                                            id="vetDisqualAssociation_status" value="1"
+                                            {{ $teacherDetail->vetDisqualAssociation_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                 </div>
                                 <div class="col-md-6 modal-form-right-sec">
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docUtilityBill_status">Utility Bill</label>
-                                        <input type="checkbox" class="" name="docUtilityBill_status"
-                                            id="docUtilityBill_status" value="1"
-                                            {{ $teacherDetail->docUtilityBill_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="safeguardingInduction_status">Safeguarding Induction</label>
+                                        <input type="checkbox" class="" name="safeguardingInduction_status"
+                                            id="safeguardingInduction_status" value="1"
+                                            {{ $teacherDetail->safeguardingInduction_status == '-1' ? 'checked' : '' }}>
+                                    </div>
+
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Right to Work</label>
+                                        <select class="form-control select2" name="rightToWork_int"  style="width:100%;">
+                                            <option value="">Choose one</option>
+                                            @foreach ($RTW_list as $key2 => $RTW)
+                                                <option value="{{ $RTW->description_int }}" {{ $teacherDetail->rightToWork_int == $RTW->description_int ? 'selected' : '' }} >
+                                                    {{ $RTW->description_txt }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docTelephoneBill_status">Telephone Bill</label>
-                                        <input type="checkbox" class="" name="docTelephoneBill_status" id="docTelephoneBill_status"
-                                            value="1" {{ $teacherDetail->docTelephoneBill_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vets128_status">s128 Management Check</label>
+                                        <input type="checkbox" class="" name="vets128_status" id="vets128_status"
+                                            value="1" {{ $teacherDetail->vets128_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docBenefitStatement_status">Benefit Statement</label>
-                                        <input type="checkbox" class="" name="docBenefitStatement_status"
-                                            id="docBenefitStatement_status" value="1"
-                                            {{ $teacherDetail->docBenefitStatement_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetEEARestriction_status">EEA Restriction Check</label>
+                                        <input type="checkbox" class="" name="vetEEARestriction_status"
+                                            id="vetEEARestriction_status" value="1"
+                                            {{ $teacherDetail->vetEEARestriction_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docCreditCardBill_status">Credit Card Bill</label>
-                                        <input type="checkbox" class="" name="docCreditCardBill_status"
-                                            id="docCreditCardBill_status" value="1"
-                                            {{ $teacherDetail->docCreditCardBill_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetRadical_status">Redicalisation Check</label>
+                                        <input type="checkbox" class="" name="vetRadical_status"
+                                            id="vetRadical_status" value="1"
+                                            {{ $teacherDetail->vetRadical_status == '-1' ? 'checked' : '' }}>
                                     </div>
 
                                     <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docP45P60_status">P45/P60</label>
-                                        <input type="checkbox" class="" name="docP45P60_status"
-                                            id="docP45P60_status" value="1"
-                                            {{ $teacherDetail->docP45P60_status == '-1' ? 'checked' : '' }}>
-                                    </div>
-
-                                    <div class="modal-side-field mb-2">
-                                        <label class="form-check-label" for="docCouncilTax_status">Counsil Tax Bill</label>
-                                        <input type="checkbox" class="" name="docCouncilTax_status"
-                                            id="docCouncilTax_status" value="1"
-                                            {{ $teacherDetail->docCouncilTax_status == '-1' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="vetQualification_status">Qualifications Check</label>
+                                        <input type="checkbox" class="" name="vetQualification_status"
+                                            id="vetQualification_status" value="1"
+                                            {{ $teacherDetail->vetQualification_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                 </div>
                             </div>

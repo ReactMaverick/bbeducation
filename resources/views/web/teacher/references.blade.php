@@ -267,6 +267,56 @@
     </div>
     <!-- Teacher Reference Edit Modal -->
 
+    <!-- Teacher Receive Reference Edit Modal -->
+    <div class="modal fade" id="receiveTeacherReferenceModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width:100%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Receive Teacher Reference</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Receive Teacher Reference</h2>
+                </div>
+
+                <form action="{{ url('/receiveReferenceUpdate') }}" method="post" class="form-validate-2">
+                    @csrf
+                    <div class="modal-input-field-section">
+                        <h6>
+                            @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
+                                {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                            @else
+                                {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                            @endif
+                        </h6>
+                        {{-- <span>ID</span>
+                        <p>{{ $teacherDetail->teacher_id }}</p> --}}
+                        <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
+                        <input type="hidden" name="teacherReference_id" id="editTeacherReferenceId" value="">
+
+                        <div class="row">
+
+                        </div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary">Complete</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Save For Later</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Teacher Receive Reference Edit Modal -->
+
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable();
@@ -308,6 +358,28 @@
                     }
                 });
                 $('#editTeacherReferenceModal').modal("show");
+            } else {
+                swal("", "Please select one reference.");
+            }
+        });
+
+        $(document).on('click', '#receiveReferenceBttn', function() {
+            var teacherReferenceId = $('#teacherReferenceId').val();
+            if (teacherReferenceId) {
+                $('#editTeacherReferenceId').val(teacherReferenceId);
+                // $.ajax({
+                //     type: 'POST',
+                //     url: '{{ url('teacherReferenceEdit') }}',
+                //     data: {
+                //         "_token": "{{ csrf_token() }}",
+                //         teacherReferenceId: teacherReferenceId
+                //     },
+                //     success: function(data) {
+                //         //console.log(data);
+                //         $('#editReferenceAjax').html(data.html);
+                //     }
+                // });
+                $('#receiveTeacherReferenceModal').modal("show");
             } else {
                 swal("", "Please select one reference.");
             }
