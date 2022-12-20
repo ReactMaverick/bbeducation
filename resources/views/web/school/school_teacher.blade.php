@@ -121,15 +121,17 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="school-search-section">
-                            <div class="school-search-field">
+                        <div class="school-search-section add-school-search-section">
+                            <div class="school-search-field add-school-search-field">
+                            <span>Teacher</span>
+                                <label for="">Search For</label>
                                 <input type="text" class="form-control" id="searchTeacherKey" name="searchTeacherKey"
                                     value="">
                             </div>
                         </div>
-                        <table class="table assignment-page-table">
+                        <table class="table assignment-page-table add-school-teacher-page-table">
                             <thead>
-                                <tr class="table-heading">
+                                <tr class="table-heading add-school-teacher-table">
                                     <th>Name</th>
                                     <th>Type</th>
                                     <th>Status</th>
