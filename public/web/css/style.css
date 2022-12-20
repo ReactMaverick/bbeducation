@@ -3595,3 +3595,48 @@ margin-top: 5px;
 .dataTables_filter label {
     font-size: 15px;
 }
+
+
+/* ============ADD SCHOOL TEACHER MODAL TABLE============= */
+
+.add-school-teacher-page-table {
+    margin-left: 40px;
+}
+
+.add-school-teacher-table {
+    padding-left: 10px;
+}
+
+.add-school-teacher-table th {
+    padding-left: 10px;
+}
+
+.add-school-search-section {
+    width: 100%;
+}
+
+.add-school-search-field {
+    display: flex;
+    align-items: center;
+    padding: 15px 15px 15px 40px;
+}
+
+.add-school-search-field span {
+    font-size: 15px;
+    font-weight: 400;
+    color: #afabab;
+    margin-right: 65px;
+}
+
+.add-school-search-field label {
+    font-size: 14px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.add-school-search-field input {
+    height: 28px;
+    border-radius: 0;
+    margin-left: 10px;
+    width: 50%;
+}
