@@ -77,9 +77,18 @@ Route::post('/teacherHealthUpdate', [TeacherController::class, 'teacherHealthUpd
 Route::get('/profession-qualification/{id}', [TeacherController::class, 'teacherProfession']);
 Route::get('/preference-health/{id}', [TeacherController::class, 'teacherHealth']);
 Route::get('/teacher-references/{id}', [TeacherController::class, 'teacherReference']);
+Route::post('/newTeacherReferenceInsert', [TeacherController::class, 'newTeacherReferenceInsert']);
+Route::post('/teacherReferenceEdit', [TeacherController::class, 'teacherReferenceEdit']);
+Route::post('/newTeacherReferenceUpdate', [TeacherController::class, 'newTeacherReferenceUpdate']);
 Route::get('/teacher-documents/{id}', [TeacherController::class, 'teacherDocuments']);
+Route::post('/teacherDocumentListUpdate', [TeacherController::class, 'teacherDocumentListUpdate']);
 Route::get('/teacher-contact-log/{id}', [TeacherController::class, 'teacherContactLog']);
+Route::post('/teacherContactLogInsert', [TeacherController::class, 'teacherContactLogInsert']);
+Route::post('/teacherContactLogEdit', [TeacherController::class, 'teacherContactLogEdit']);
+Route::post('/teacherContactLogUpdate', [TeacherController::class, 'teacherContactLogUpdate']);
+Route::post('/teacherContactLogDelete', [TeacherController::class, 'teacherContactLogDelete']);
 Route::get('/teacher-payroll/{id}', [TeacherController::class, 'teacherPayroll']);
+Route::post('/teacherPayrollUpdate', [TeacherController::class, 'teacherPayrollUpdate']);
 // Teacher
 
 // School
@@ -99,6 +108,9 @@ Route::post('/schoolContactItemUpdate', [SchoolController::class, 'schoolContact
 Route::post('/schoolContactItemDelete', [SchoolController::class, 'schoolContactItemDelete']);
 Route::get('/school-contact/{id}', [SchoolController::class, 'schoolContact']);
 Route::post('/schoolContactLogInsert', [SchoolController::class, 'schoolContactLogInsert']);
+Route::post('/schoolContactHistoryEdit', [SchoolController::class, 'schoolContactHistoryEdit']);
+Route::post('/schoolContactLogUpdate', [SchoolController::class, 'schoolContactLogUpdate']);
+Route::post('/schoolContactHistoryDelete', [SchoolController::class, 'schoolContactHistoryDelete']);
 Route::get('/school-assignment/{id}', [SchoolController::class, 'schoolAssignment']);
 Route::get('/school-finance/{id}', [SchoolController::class, 'schoolFinance']);
 Route::post('/schoolFinanceInvoiceInsert', [SchoolController::class, 'schoolFinanceInvoiceInsert']);
@@ -111,8 +123,16 @@ Route::post('/schoolFinanceInvoiceUpdate', [SchoolController::class, 'schoolFina
 Route::post('/schoolCreditInvoiceInsert', [SchoolController::class, 'schoolCreditInvoiceInsert']);
 Route::post('/invoiceDetailForSplit', [SchoolController::class, 'invoiceDetailForSplit']);
 Route::post('/schoolSplitInvoiceCreate', [SchoolController::class, 'schoolSplitInvoiceCreate']);
+Route::post('/schoolInvoiceRemit', [SchoolController::class, 'schoolInvoiceRemit']);
 Route::get('/school-invoice-pdf/{id}/{invoice_id}', [SchoolController::class, 'schoolInvoicePdf']);
+Route::post('/schoolInvoiceDelete', [SchoolController::class, 'schoolInvoiceDelete']);
 Route::get('/school-teacher/{id}', [SchoolController::class, 'schoolTeacher']);
+Route::post('/searchTeacherList', [SchoolController::class, 'searchTeacherList']);
+Route::post('/schoolTeacherInsert', [SchoolController::class, 'schoolTeacherInsert']);
+Route::post('/schoolTeacherEdit', [SchoolController::class, 'schoolTeacherEdit']);
+Route::post('/editSearchTeacherList', [SchoolController::class, 'editSearchTeacherList']);
+Route::post('/schoolTeacherUpdate', [SchoolController::class, 'schoolTeacherUpdate']);
+Route::post('/schoolTeacherDelete', [SchoolController::class, 'schoolTeacherDelete']);
 Route::get('/school-document/{id}', [SchoolController::class, 'schoolDocument']);
 Route::post('/schoolDocumentInsert', [SchoolController::class, 'schoolDocumentInsert']);
 Route::post('/getSchoolDocDetail', [SchoolController::class, 'getSchoolDocDetail']);

@@ -63,6 +63,9 @@
                                         title="Send Invoice">
                                         <i class="fa-solid fa-envelope"></i>
                                     </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="deleteInvoiceBttn">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </a>
                                     <a style="cursor: pointer" id="invoiceAddBttn"
                                         onclick="invoiceAdd('<?php echo $school_id; ?>', '<?php echo app('request')->input('include'); ?>', '<?php echo app('request')->input('method'); ?>')"
                                         title="Create Invoice">
@@ -314,25 +317,27 @@
         });
 
         $(document).on('change', '#includePaid', function() {
+            var method = "<?php echo app('request')->input('method'); ?>";
             if ($(this).is(":checked")) {
-                $('#paymentMethod').val('');
-                filtering(1, '');
+                $('#paymentMethod').val(method);
+                filtering(1, method);
             } else {
-                $('#paymentMethod').val(1);
-                filtering('', 1);
+                $('#paymentMethod').val(method);
+                filtering('', method);
             }
         });
 
         $(document).on('change', '#paymentMethod', function() {
             var paymentMethod = $(this).val();
+            var include = "<?php echo app('request')->input('include'); ?>";
             if (paymentMethod != '') {
-                $('#includePaid').prop('checked', false);
-                filtering('', paymentMethod);
+                // $('#includePaid').prop('checked', false);
+                filtering(include, paymentMethod);
             }
-            // else {
-            //     $('#includePaid').prop('checked', true);
-            //     filtering(1, '');
-            // }
+            else {
+                // $('#includePaid').prop('checked', true);
+                filtering(include, '');
+            }
         });
 
         function filtering(include, method) {
@@ -412,6 +417,7 @@
                 $('#splitInvoiceBtn').addClass('disabled-link');
                 $('#previewInvoiceBtn').addClass('disabled-link');
                 $('#sendInvoiceBtn').addClass('disabled-link');
+                $('#deleteInvoiceBttn').addClass('disabled-link');
             } else {
                 $('#editInvoiceId').val(invoice_id);
                 $('.editInvoiceRow').removeClass('tableRowActive');
@@ -422,6 +428,7 @@
                 $('#splitInvoiceBtn').removeClass('disabled-link');
                 $('#previewInvoiceBtn').removeClass('disabled-link');
                 $('#sendInvoiceBtn').removeClass('disabled-link');
+                $('#deleteInvoiceBttn').removeClass('disabled-link');
             }
         }
 
@@ -539,6 +546,70 @@
             if (editInvoiceSchoolId && editInvoiceId) {
                 var rUrl = '<?php echo url('/school-invoice-pdf/'); ?>' + '/' + editInvoiceSchoolId + '/' + editInvoiceId;
                 window.open(rUrl, '_blank');
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#remitInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                swal({
+                        title: "",
+                        text: "You currently have an invoice selected. Do you want to remit that invoice?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('schoolInvoiceRemit') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        editInvoiceId: editInvoiceId
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#deleteInvoiceBttn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to remove this invoice?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('schoolInvoiceDelete') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        editInvoiceId: editInvoiceId
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                        }
+                    });
             } else {
                 swal("", "Please select one invoice.");
             }

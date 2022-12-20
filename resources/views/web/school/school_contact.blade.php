@@ -1,5 +1,10 @@
 @extends('web.layout')
 @section('content')
+    <style>
+        .disabled-link {
+            pointer-events: none;
+        }
+    </style>
     <div class="assignment-detail-page-section">
         <div class="row assignment-detail-row">
 
@@ -11,12 +16,31 @@
 
                 <div class="school-assignment-sec">
                     <div class="school-assignment-section">
-                        <div class="contact-history-heading-section">
+                        {{-- <div class="contact-history-heading-section">
                             <h2>Contact History</h2>
                             <a data-toggle="modal" data-target="#ContactHistoryAddModal" style="cursor: pointer;">
                                 <i class="fa-solid fa-plus"></i>
                             </a>
+                        </div> --}}
+                        <div class="teacher-list-section">
+                            <div class="school-teacher-heading-text">
+                                <h2>Contact History</h2>
+                            </div>
+                            <div class="school-teacher-list-heading">
+                                <div class="school-assignment-contact-icon-sec">
+                                    <a style="cursor: pointer" class="disabled-link" id="deleteContactHistoryBttn">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </a>
+                                    <a data-toggle="modal" data-target="#ContactHistoryAddModal" style="cursor: pointer;">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </a>
+                                    <a style="cursor: pointer;" class="disabled-link" id="editContactHistoryBttn">
+                                        <i class="fa-solid fa-pencil school-edit-icon"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
+
                         <table class="table school-detail-page-table" id="myTable">
                             <thead>
                                 <tr class="school-detail-table-heading">
@@ -29,9 +53,11 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
-                                {{ $dueCallCount = 0 }}
+                                <?php $dueCallCount = 0; ?>
                                 @foreach ($ContactHistory as $key => $History)
-                                    <tr class="school-detail-table-data">
+                                    <tr class="school-detail-table-data editContactHistoryRow"
+                                    id="editContactHistoryRow{{ $History->schoolContactLog_id }}"
+                                    onclick="contactHistoryRowSelect({{ $History->schoolContactLog_id }})">
                                         <td style="width: 40%">{{ $History->notes_txt }}</td>
                                         <td>{{ $History->spokeTo_txt }}</td>
                                         <td>{{ $History->firstName_txt . ' ' . $History->surname_txt }}</td>
@@ -42,7 +68,7 @@
                                                 {{ 'N' }}
                                             @elseif ($History->callbackOn_dtm >= date('Y-m-d H:i:s'))
                                                 {{ 'Y' }}
-                                                {{ $dueCallCount += 1 }}
+                                                <?php $dueCallCount += 1; ?>
                                             @else
                                                 {{ 'N' }}
                                             @endif
@@ -52,6 +78,10 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <input type="hidden" name="ContactHistoryId" id="ContactHistoryId" value="">
+                    <input type="hidden" name="editSchoolId" id="editSchoolId" value="{{ $school_id }}">
+
                     <div class="assignment-first-sec">
                         <div class="assignment-left-sidebar-section">
                             <div class="sidebar-sec">
@@ -146,21 +176,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-6 modal-form-right-sec">
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Notes</label>
-                                    <textarea name="notes_txt" id="" cols="30" rows="5" class="form-control field-validate"></textarea>
-                                </div>
 
-                                <div class="modal-side-field">
-                                    <label class="form-check-label" for="callBackId">Callback</label>
-                                    <input type="checkbox" class="" name="callBackCheck" id="callBackId" value="1">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Contact Reason</label>
                                     <select class="form-control" name="contactAbout_int">
@@ -185,12 +201,23 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 modal-form-right-sec">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Notes</label>
+                                    <textarea name="notes_txt" id="" cols="30" rows="5" class="form-control field-validate"></textarea>
+                                </div>
+
+                                <div class="modal-side-field">
+                                    <label class="form-check-label" for="callBackId">Callback</label>
+                                    <input type="checkbox" class="" name="callBackCheck" id="callBackId"
+                                        value="1">
+                                </div>
+
                                 <div class="row" id="quickSettingDiv" style="display: none;">
                                     <div class="form-group calendar-form-filter col-md-12">
                                         <label for="">Quick Setting</label>
                                         <select class="form-control" name="quick_setting"
-                                            onchange="quickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))">
+                                            onchange="quickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))" id="quickSettingId">
                                             <option value="">Choose one</option>
                                             @foreach ($quickSettingList as $key3 => $quickSetting)
                                                 <option settingTxt="{{ $quickSetting->description_txt }}"
@@ -203,17 +230,16 @@
 
                                     <div class="modal-input-field col-md-6">
                                         <label class="form-check-label">Date</label>
-                                        <input type="date" class="form-control" name="quick_setting_date" id="DateId"
-                                            value="">
+                                        <input type="date" class="form-control" name="quick_setting_date"
+                                            id="DateId" value="">
                                     </div>
 
                                     <div class="modal-input-field col-md-6">
                                         <label class="form-check-label">Time</label>
-                                        <input type="time" class="form-control" name="quick_setting_time" id="timeId"
-                                            value="">
+                                        <input type="time" class="form-control" name="quick_setting_time"
+                                            id="timeId" value="">
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -231,6 +257,48 @@
         </div>
     </div>
     <!-- Contact Add Modal -->
+
+    <!-- Contact Edit Modal -->
+    <div class="modal fade" id="ContactHistoryEditModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Edit School Contact</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Edit School Contact</h2>
+                </div>
+
+                <form action="{{ url('/schoolContactLogUpdate') }}" method="post" class="form-validate-2">
+                    @csrf
+                    <div class="modal-input-field-section">
+                        <h6>{{ $schoolDetail->name_txt }}</h6>
+                        {{-- <h6>ID</h6>
+                        <h6>{{ $schoolDetail->school_id }}</h6> --}}
+                        <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
+                        <input type="hidden" name="schoolContactLog_id" id="editContactHistoryId" value="">
+
+                        <div class="row" id="schoolContactAjax"></div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Contact Edit Modal -->
 
     <script>
         $(document).ready(function() {
@@ -281,6 +349,11 @@
                 }
                 var fdate = new Date(newdate);
 
+                if ((fdate.getMonth() + 1).toString().length < 2) {
+                    var monthString = '0' + (fdate.getMonth() + 1);
+                } else {
+                    var monthString = (fdate.getMonth() + 1);
+                }
                 if ((fdate.getDate()).toString().length < 2) {
                     var dateString = '0' + fdate.getDate();
                 } else {
@@ -296,7 +369,7 @@
                 } else {
                     var minuteString = fdate.getMinutes();
                 }
-                var DateValue = fdate.getFullYear() + '-' + (fdate.getMonth() + 1) + '-' + dateString;
+                var DateValue = fdate.getFullYear() + '-' + monthString + '-' + dateString;
                 var TimeValue = hourString + ':' + minuteString;
                 $('#DateId').val(DateValue);
                 $('#timeId').val(TimeValue);
@@ -305,5 +378,76 @@
                 $('#timeId').val('');
             }
         }
+
+        function contactHistoryRowSelect(schoolContactLog_id) {
+            if ($('#editContactHistoryRow' + schoolContactLog_id).hasClass('tableRowActive')) {
+                $('#ContactHistoryId').val('');
+                $('#editContactHistoryRow' + schoolContactLog_id).removeClass('tableRowActive');
+                $('#deleteContactHistoryBttn').addClass('disabled-link');
+                $('#editContactHistoryBttn').addClass('disabled-link');
+            } else {
+                $('#ContactHistoryId').val(schoolContactLog_id);
+                $('.editContactHistoryRow').removeClass('tableRowActive');
+                $('#editContactHistoryRow' + schoolContactLog_id).addClass('tableRowActive');
+                $('#deleteContactHistoryBttn').removeClass('disabled-link');
+                $('#editContactHistoryBttn').removeClass('disabled-link');
+            }
+        }
+
+        $(document).on('click', '#editContactHistoryBttn', function() {
+            var ContactHistoryId = $('#ContactHistoryId').val();
+            var editSchoolId = $('#editSchoolId').val();
+            if (ContactHistoryId) {
+                $('#editContactHistoryId').val(ContactHistoryId);
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('schoolContactHistoryEdit') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        ContactHistoryId: ContactHistoryId,
+                        editSchoolId: editSchoolId
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#schoolContactAjax').html(data.html);
+                    }
+                });
+                $('#ContactHistoryEditModal').modal("show");
+            } else {
+                swal("", "Please select one contact.");
+            }
+        });
+
+        $(document).on('click', '#deleteContactHistoryBttn', function() {
+            var ContactHistoryId = $('#ContactHistoryId').val();
+            if (ContactHistoryId) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to remove this contact history?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('schoolContactHistoryDelete') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        ContactHistoryId: ContactHistoryId
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one contact.");
+            }
+        });
     </script>
 @endsection

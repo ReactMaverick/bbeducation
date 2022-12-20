@@ -1254,7 +1254,137 @@ class TeacherController extends Controller
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
-            return view("web.teacher.references", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail]);
+            $referenceList = DB::table('tbl_teacherReference')
+                ->leftJoin(
+                    DB::raw('(SELECT teacherReference_id, DATE(MAX(sentOn_dtm)) AS lastSent_dte, COUNT(referenceSend_id) AS totalSent_int FROM tbl_teacherReferenceRequest GROUP BY teacherReference_id) AS t_sent'),
+                    function ($join) {
+                        $join->on('tbl_teacherReference.teacherReference_id', '=', 't_sent.teacherReference_id');
+                    }
+                )
+                ->select('tbl_teacherReference.*', 'lastSent_dte', 'totalSent_int')
+                ->where('tbl_teacherReference.teacher_id', $id)
+                ->get();
+
+            $referenceTypeList = DB::table('tbl_referenceType')
+                ->select('tbl_referenceType.*')
+                ->get();
+
+            return view("web.teacher.references", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'referenceList' => $referenceList, 'referenceTypeList' => $referenceTypeList]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function newTeacherReferenceInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $validator = Validator::make($request->all(), [
+                'referenceType_id' => 'required',
+                'employer_txt' => 'required',
+                'postcode_txt' => 'required',
+                'refereeName_txt' => 'required',
+                'refereeEmail_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $employedFrom_dte = NULL;
+            if ($request->employedFrom_dte != '') {
+                $employedFrom_dte = date("Y-m-d", strtotime($request->employedFrom_dte));
+            }
+            $employedUntil_dte = NULL;
+            if ($request->employedUntil_dte != '') {
+                $employedUntil_dte = date("Y-m-d", strtotime($request->employedUntil_dte));
+            }
+
+            DB::table('tbl_teacherReference')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'referenceType_id' => $request->referenceType_id,
+                    'employer_txt' => $request->employer_txt,
+                    'address1_txt' => $request->address1_txt,
+                    'address2_txt' => $request->address2_txt,
+                    'address3_txt' => $request->address3_txt,
+                    'addrress4_txt' => $request->addrress4_txt,
+                    'postcode_txt' => $request->postcode_txt,
+                    'refereeName_txt' => $request->refereeName_txt,
+                    'refereeEmail_txt' => $request->refereeEmail_txt,
+                    'employedFrom_dte' => $employedFrom_dte,
+                    'employedUntil_dte' => $employedUntil_dte,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teacher reference added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherReferenceEdit(Request $request)
+    {
+        $input = $request->all();
+        $teacherReferenceId = $input['teacherReferenceId'];
+
+        $Detail = DB::table('tbl_teacherReference')
+            ->where('teacherReference_id', "=", $teacherReferenceId)
+            ->first();
+        $referenceTypeList = DB::table('tbl_referenceType')
+            ->select('tbl_referenceType.*')
+            ->get();
+
+        $view = view("web.teacher.edit_teacher_reference_view", ['Detail' => $Detail, 'referenceTypeList' => $referenceTypeList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function newTeacherReferenceUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $teacherReference_id = $request->teacherReference_id;
+            $validator = Validator::make($request->all(), [
+                'referenceType_id' => 'required',
+                'employer_txt' => 'required',
+                'postcode_txt' => 'required',
+                'refereeName_txt' => 'required',
+                'refereeEmail_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $employedFrom_dte = NULL;
+            if ($request->employedFrom_dte != '') {
+                $employedFrom_dte = date("Y-m-d", strtotime($request->employedFrom_dte));
+            }
+            $employedUntil_dte = NULL;
+            if ($request->employedUntil_dte != '') {
+                $employedUntil_dte = date("Y-m-d", strtotime($request->employedUntil_dte));
+            }
+
+            DB::table('tbl_teacherReference')
+                ->where('teacherReference_id', $teacherReference_id)
+                ->update([
+                    'referenceType_id' => $request->referenceType_id,
+                    'employer_txt' => $request->employer_txt,
+                    'address1_txt' => $request->address1_txt,
+                    'address2_txt' => $request->address2_txt,
+                    'address3_txt' => $request->address3_txt,
+                    'addrress4_txt' => $request->addrress4_txt,
+                    'postcode_txt' => $request->postcode_txt,
+                    'refereeName_txt' => $request->refereeName_txt,
+                    'refereeEmail_txt' => $request->refereeEmail_txt,
+                    'employedFrom_dte' => $employedFrom_dte,
+                    'employedUntil_dte' => $employedUntil_dte,
+                    // 'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teacher reference updated successfully.");
         } else {
             return redirect()->intended('/');
         }
@@ -1343,7 +1473,95 @@ class TeacherController extends Controller
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
-            return view("web.teacher.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail]);
+            $RTW_list = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 39)
+                ->get();
+
+            return view("web.teacher.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherDocumentListUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $docPassport_status = 0;
+            if ($request->docPassport_status) {
+                $docPassport_status = -1;
+            }
+            $docDriversLicence_status = 0;
+            if ($request->docDriversLicence_status) {
+                $docDriversLicence_status = -1;
+            }
+            $docBankStatement_status = 0;
+            if ($request->docBankStatement_status) {
+                $docBankStatement_status = -1;
+            }
+            $docDBS_status = 0;
+            if ($request->docDBS_status) {
+                $docDBS_status = -1;
+            }
+            $docDisqualForm_status = 0;
+            if ($request->docDisqualForm_status) {
+                $docDisqualForm_status = -1;
+            }
+            $docHealthDec_status = 0;
+            if ($request->docHealthDec_status) {
+                $docHealthDec_status = -1;
+            }
+            $docEUCard_status = 0;
+            if ($request->docEUCard_status) {
+                $docEUCard_status = -1;
+            }
+            $docUtilityBill_status = 0;
+            if ($request->docUtilityBill_status) {
+                $docUtilityBill_status = -1;
+            }
+            $docTelephoneBill_status = 0;
+            if ($request->docTelephoneBill_status) {
+                $docTelephoneBill_status = -1;
+            }
+            $docBenefitStatement_status = 0;
+            if ($request->docBenefitStatement_status) {
+                $docBenefitStatement_status = -1;
+            }
+            $docCreditCardBill_status = 0;
+            if ($request->docCreditCardBill_status) {
+                $docCreditCardBill_status = -1;
+            }
+            $docP45P60_status = 0;
+            if ($request->docP45P60_status) {
+                $docP45P60_status = -1;
+            }
+            $docCouncilTax_status = 0;
+            if ($request->docCouncilTax_status) {
+                $docCouncilTax_status = -1;
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'docPassport_status' => $docPassport_status,
+                    'docDriversLicence_status' => $docDriversLicence_status,
+                    'docBankStatement_status' => $docBankStatement_status,
+                    'docDBS_status' => $docDBS_status,
+                    'docDisqualForm_status' => $docDisqualForm_status,
+                    'docHealthDec_status' => $docHealthDec_status,
+                    'docEUCard_status' => $docEUCard_status,
+                    'docUtilityBill_status' => $docUtilityBill_status,
+                    'docTelephoneBill_status' => $docTelephoneBill_status,
+                    'docBenefitStatement_status' => $docBenefitStatement_status,
+                    'docCreditCardBill_status' => $docCreditCardBill_status,
+                    'docP45P60_status' => $docP45P60_status,
+                    'docCouncilTax_status' => $docCouncilTax_status
+                ]);
+
+            return redirect()->back()->with('success', "Document updated successfully.");
         } else {
             return redirect()->intended('/');
         }
@@ -1432,10 +1650,125 @@ class TeacherController extends Controller
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
-            return view("web.teacher.teacher_contact_log", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail]);
+            $teacherContactLogs = DB::table('tbl_teacherContactLog')
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_teacherContactLog.contactBy_id')
+                ->LeftJoin('tbl_description', function ($join) {
+                    $join->on('tbl_description.description_int', '=', 'tbl_teacherContactLog.method_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_description.descriptionGroup_int', '=', 17);
+                        });
+                })
+                ->select('tbl_teacherContactLog.*', 'tbl_description.description_txt as method_txt', 'tbl_user.firstName_txt', 'tbl_user.surname_txt')
+                ->where('tbl_teacherContactLog.teacher_id', $id)
+                ->orderBy('tbl_teacherContactLog.contactOn_dtm', 'DESC')
+                ->get();
+
+            $methodList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 17)
+                ->get();
+
+            $quickSettingList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 18)
+                ->get();
+
+            return view("web.teacher.teacher_contact_log", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherContactLogs' => $teacherContactLogs, 'methodList' => $methodList, 'quickSettingList' => $quickSettingList]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function teacherContactLogInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $callbackOn_dtm = null;
+            if ($request->callBackCheck && $request->quick_setting_date && $request->quick_setting_time) {
+                $d = date("Y-m-d", strtotime($request->quick_setting_date));
+                $callbackOn_dtm = $d . ' ' . $request->quick_setting_time . ':00';
+            }
+
+            DB::table('tbl_teacherContactLog')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'method_int' => $request->method_int,
+                    'notes_txt' => $request->notes_txt,
+                    'contactOn_dtm' => date('Y-m-d H:i:s'),
+                    'contactBy_id' => $user_id,
+                    'callbackOn_dtm' => $callbackOn_dtm,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teacher contact log added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherContactLogEdit(Request $request)
+    {
+        $input = $request->all();
+        $teacherContactLog_id = $input['contactLogId'];
+
+        $contactDetail = DB::table('tbl_teacherContactLog')
+            ->where('teacherContactLog_id', "=", $teacherContactLog_id)
+            ->first();
+
+        $methodList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 17)
+            ->get();
+
+        $quickSettingList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 18)
+            ->get();
+
+        $view = view("web.teacher.contact_log_edit_view", ['contactDetail' => $contactDetail, 'quickSettingList' => $quickSettingList, 'methodList' => $methodList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teacherContactLogUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacherContactLog_id = $request->editContactLogId;
+            $callbackOn_dtm = null;
+            if ($request->callBackCheck && $request->quick_setting_date && $request->quick_setting_time) {
+                $d = date("Y-m-d", strtotime($request->quick_setting_date));
+                $callbackOn_dtm = $d . ' ' . $request->quick_setting_time . ':00';
+            }
+
+            DB::table('tbl_teacherContactLog')
+                ->where('teacherContactLog_id', $teacherContactLog_id)
+                ->update([
+                    'method_int' => $request->method_int,
+                    'notes_txt' => $request->notes_txt,
+                    'contactOn_dtm' => date('Y-m-d H:i:s'),
+                    'contactBy_id' => $user_id,
+                    'callbackOn_dtm' => $callbackOn_dtm,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teacher contact log updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherContactLogDelete(Request $request)
+    {
+        $teacherContactLog_id = $request->contactLogId;
+        DB::table('tbl_teacherContactLog')
+            ->where('teacherContactLog_id', $teacherContactLog_id)
+            ->delete();
+        return 1;
     }
 
     public function teacherPayroll(Request $request, $id)
@@ -1521,7 +1854,40 @@ class TeacherController extends Controller
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
-            return view("web.teacher.teacher_payroll", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail]);
+            $bankList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 36)
+                ->get();
+
+            return view("web.teacher.teacher_payroll", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'bankList' => $bankList]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherPayrollUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $basePayRate_dec = 0;
+            if ($request->basePayRate_dec != '') {
+                $basePayRate_dec = $request->basePayRate_dec;
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'NINumber_txt' => $request->NINumber_txt,
+                    'bank_int' => $request->bank_int,
+                    'sortCode_int' => $request->sortCode_int,
+                    'accountNumber_txt' => $request->accountNumber_txt,
+                    'basePayRate_dec' => $basePayRate_dec,
+                    'RACSnumber_txt' => $request->RACSnumber_txt
+                ]);
+
+            return redirect()->back()->with('success', "Bank/Payroll updated successfully.");
         } else {
             return redirect()->intended('/');
         }

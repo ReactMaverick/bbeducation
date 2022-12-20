@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Carbon;
 use PDF;
+use Illuminate\Support\Facades\Validator;
 
 class SchoolController extends Controller
 {
@@ -736,6 +737,102 @@ class SchoolController extends Controller
         }
     }
 
+    public function schoolContactHistoryEdit(Request $request)
+    {
+        $input = $request->all();
+        $schoolContactLog_id = $input['ContactHistoryId'];
+        $school_id = $input['editSchoolId'];
+
+        $contactDetail = DB::table('tbl_schoolContactLog')
+            ->where('schoolContactLog_id', "=", $schoolContactLog_id)
+            ->first();
+
+        $schoolContacts = DB::table('tbl_schoolContact')
+            ->LeftJoin('tbl_description as JobRole', function ($join) {
+                $join->on('JobRole.description_int', '=', 'tbl_schoolContact.jobRole_int')
+                    ->where(function ($query) {
+                        $query->where('JobRole.descriptionGroup_int', '=', 11);
+                    });
+            })
+            ->LeftJoin('tbl_description as TitleTbl', function ($join) {
+                $join->on('TitleTbl.description_int', '=', 'tbl_schoolContact.title_int')
+                    ->where(function ($query) {
+                        $query->where('TitleTbl.descriptionGroup_int', '=', 1);
+                    });
+            })
+            ->select('tbl_schoolContact.*', 'JobRole.description_txt as jobRole_txt', 'TitleTbl.description_txt as title_txt')
+            ->where('tbl_schoolContact.school_id', $school_id)
+            ->where('tbl_schoolContact.isCurrent_status', '-1')
+            ->get();
+
+        $quickSettingList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 18)
+            ->get();
+
+        $methodList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 17)
+            ->get();
+
+        $reasonList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 31)
+            ->get();
+
+        $outcomeList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 32)
+            ->get();
+
+        $view = view("web.school.contact_history_edit_view", ['contactDetail' => $contactDetail, 'schoolContacts' => $schoolContacts, 'quickSettingList' => $quickSettingList, 'methodList' => $methodList, 'reasonList' => $reasonList, 'outcomeList' => $outcomeList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function schoolContactLogUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $school_id = $request->school_id;
+            $schoolContactLog_id = $request->schoolContactLog_id;
+            $callbackOn_dtm = null;
+            if ($request->callBackCheck && $request->quick_setting_date && $request->quick_setting_time) {
+                $d = date("Y-m-d", strtotime($request->quick_setting_date));
+                $callbackOn_dtm = $d . ' ' . $request->quick_setting_time . ':00';
+            }
+
+            DB::table('tbl_schoolContactLog')
+                ->where('schoolContactLog_id', $schoolContactLog_id)
+                ->update([
+                    'spokeTo_id' => $request->spokeTo_id,
+                    'spokeTo_txt' => $request->spokeTo_txt,
+                    'method_int' => $request->method_int,
+                    'notes_txt' => $request->notes_txt,
+                    'contactAbout_int' => $request->contactAbout_int,
+                    'outcome_int' => $request->outcome_int,
+                    'contactOn_dtm' => date('Y-m-d H:i:s'),
+                    'contactBy_id' => $user_id,
+                    'callbackOn_dtm' => $callbackOn_dtm,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect('/school-contact/' . $school_id)->with('success', "Contact history updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolContactHistoryDelete(Request $request)
+    {
+        $schoolContactLog_id = $request->ContactHistoryId;
+        DB::table('tbl_schoolContactLog')
+            ->where('schoolContactLog_id', $schoolContactLog_id)
+            ->delete();
+        return 1;
+    }
+
     public function schoolAssignment(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -892,7 +989,10 @@ class SchoolController extends Controller
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                 ->where('tbl_invoice.school_id', $id);
-            if ($request->include != 1 && $request->method) {
+            if ($request->include == '') {
+                $Invoices->where('tbl_invoice.paidOn_dte', NULL);
+            }
+            if ($request->method) {
                 $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
             }
             $schoolInvoices = $Invoices->groupBy('tbl_invoice.invoice_id')
@@ -1274,6 +1374,30 @@ class SchoolController extends Controller
         return $pdf->stream($pdfName);
     }
 
+    public function schoolInvoiceRemit(Request $request)
+    {
+        $invoice_id = $request->editInvoiceId;
+        DB::table('tbl_invoice')
+            ->where('invoice_id', $invoice_id)
+            ->update([
+                'paidOn_dte' => date("Y-m-d")
+            ]);
+        return 1;
+    }
+
+    public function schoolInvoiceDelete(Request $request)
+    {
+        $editInvoiceId = $request->editInvoiceId;
+        DB::table('tbl_invoice')
+            ->where('invoice_id', $editInvoiceId)
+            ->delete();
+        DB::table('tbl_invoiceItem')
+            ->where('invoice_id', $editInvoiceId)
+            ->delete();
+
+        return 1;
+    }
+
     public function schoolTeacher(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -1350,6 +1474,341 @@ class SchoolController extends Controller
         }
     }
 
+    public function searchTeacherList(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $searchTeacherKey = $input['searchTeacherKey'];
+            $teacherList = array();
+
+            if ($searchTeacherKey) {
+                $teacherQry = DB::table('tbl_teacher')
+                    ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                    ->leftJoin(
+                        DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                        function ($join) {
+                            $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                        }
+                    )
+                    ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                        $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                            ->where(function ($query) {
+                                $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as professionalType', function ($join) {
+                        $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                            ->where(function ($query) {
+                                $query->where('professionalType.descriptionGroup_int', '=', 7);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                        $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                            ->where(function ($query) {
+                                $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                            });
+                    })
+                    ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                    ->LeftJoin('tbl_description as titleTable', function ($join) {
+                        $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                            ->where(function ($query) {
+                                $query->where('titleTable.descriptionGroup_int', '=', 1);
+                            });
+                    })
+                    ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
+                    ->where('tbl_teacher.company_id', $company_id)
+                    ->where('tbl_teacher.isCurrent_status', '<>', 0);
+
+                if ($searchTeacherKey) {
+                    $search_input = str_replace(" ", "", $searchTeacherKey);
+                    $teacherQry->where(function ($query) use ($search_input) {
+                        $query->where('firstName_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('knownAs_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('surname_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('contactItem_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere(DB::raw("CONCAT(`knownAs_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere(DB::raw("CONCAT(`firstName_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere('middleNames_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere(DB::raw("CONCAT(`firstName_txt`, `middleNames_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere(DB::raw("CONCAT(`knownAs_txt`, `middleNames_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere(DB::raw("CONCAT(`middleNames_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%");
+                    });
+                }
+
+                $teacherList = $teacherQry->groupBy('tbl_teacher.teacher_id')->limit(10)->get();
+            }
+
+            $html = '';
+            if (count($teacherList) > 0) {
+                foreach ($teacherList as $key2 => $Items) {
+                    $name = '';
+                    if ($Items->knownAs_txt == null && $Items->knownAs_txt == '') {
+                        $name = $Items->firstName_txt . ' ' . $Items->surname_txt;
+                    } else {
+                        $name = $Items->firstName_txt . ' (' . $Items->knownAs_txt . ') ' . $Items->surname_txt;
+                    }
+                    $html .= "<tr class='table-data searchTeacherRow'
+                    id='searchTeacherRow$Items->teacher_id'  onclick='searchTeacherRowSelect($Items->teacher_id)'>
+                    <td>$name</td>
+                    <td>$Items->professionalType_txt</td>
+                    <td>$Items->appStatus_txt</td>
+                    <td>$Items->daysWorked_dec</td>
+                    <td>$Items->ageRangeSpecialism_txt</td>
+                </tr>";
+                }
+            } else {
+                $html .= '<tr>
+                <td colspan="5">
+                    No teacher found.
+                </td>
+            </tr>';
+            }
+
+            return response()->json(['html' => $html]);
+        } else {
+            return 'login';
+        }
+    }
+
+    public function schoolTeacherInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $school_id = $request->school_id;
+            $teacher_id = $request->searchTeacherId;
+
+            $validator = Validator::make($request->all(), [
+                'rejectOrPreferred_int' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+
+            DB::table('tbl_schoolTeacherList')
+                ->insert([
+                    'school_id' => $school_id,
+                    'teacher_id' => $teacher_id,
+                    'rejectOrPreferred_int' => $request->rejectOrPreferred_int,
+                    'notes_txt' => $request->notes_txt,
+                    'addedBy_id' => $user_id,
+                    'addedOn_dtm' => date('Y-m-d H:i:s'),
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teacher added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolTeacherEdit(Request $request)
+    {
+        $input = $request->all();
+        $schoolTeacherList_id = $input['editTeacherId'];
+        $school_id = $input['editSchoolId'];
+        $teacherList = array();
+
+        $Detail = DB::table('tbl_schoolTeacherList')
+            ->where('schoolTeacherList_id', "=", $schoolTeacherList_id)
+            ->first();
+        if ($Detail) {
+            $teacherList = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
+                ->where('tbl_teacher.teacher_id', $Detail->teacher_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->limit(1)
+                ->get();
+
+            $editSchoolDetail = DB::table('tbl_school')
+                ->select('tbl_school.*')
+                ->where('tbl_school.school_id', $school_id)
+                ->first();
+        }
+
+        $view = view("web.school.edit_school_teacher_view", ['Detail' => $Detail, 'teacherList' => $teacherList, 'editSchoolDetail' => $editSchoolDetail])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function editSearchTeacherList(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $searchTeacherKey = $input['searchTeacherKey'];
+            $teacherList = array();
+
+            if ($searchTeacherKey) {
+                $teacherQry = DB::table('tbl_teacher')
+                    ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                    ->leftJoin(
+                        DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                        function ($join) {
+                            $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                        }
+                    )
+                    ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                        $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                            ->where(function ($query) {
+                                $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as professionalType', function ($join) {
+                        $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                            ->where(function ($query) {
+                                $query->where('professionalType.descriptionGroup_int', '=', 7);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                        $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                            ->where(function ($query) {
+                                $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                            });
+                    })
+                    ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                    ->LeftJoin('tbl_description as titleTable', function ($join) {
+                        $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                            ->where(function ($query) {
+                                $query->where('titleTable.descriptionGroup_int', '=', 1);
+                            });
+                    })
+                    ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
+                    ->where('tbl_teacher.company_id', $company_id)
+                    ->where('tbl_teacher.isCurrent_status', '<>', 0);
+
+                if ($searchTeacherKey) {
+                    $search_input = str_replace(" ", "", $searchTeacherKey);
+                    $teacherQry->where(function ($query) use ($search_input) {
+                        $query->where('firstName_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('knownAs_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('surname_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere('contactItem_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere(DB::raw("CONCAT(`knownAs_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere(DB::raw("CONCAT(`firstName_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere('middleNames_txt', 'LIKE', '%' . $search_input . '%')
+                            ->orWhere(DB::raw("CONCAT(`firstName_txt`, `middleNames_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere(DB::raw("CONCAT(`knownAs_txt`, `middleNames_txt`)"), 'LIKE', "%" . $search_input . "%")
+                            ->orWhere(DB::raw("CONCAT(`middleNames_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%");
+                    });
+                }
+
+                $teacherList = $teacherQry->groupBy('tbl_teacher.teacher_id')->limit(10)->get();
+            }
+
+            $html = '';
+            if (count($teacherList) > 0) {
+                foreach ($teacherList as $key2 => $Items) {
+                    $name = '';
+                    if ($Items->knownAs_txt == null && $Items->knownAs_txt == '') {
+                        $name = $Items->firstName_txt . ' ' . $Items->surname_txt;
+                    } else {
+                        $name = $Items->firstName_txt . ' (' . $Items->knownAs_txt . ') ' . $Items->surname_txt;
+                    }
+                    $html .= "<tr class='table-data editSearchTeacherRow'
+                    id='editSearchTeacherRow$Items->teacher_id'  onclick='editSearchTeacherRowSelect($Items->teacher_id)'>
+                    <td>$name</td>
+                    <td>$Items->professionalType_txt</td>
+                    <td>$Items->appStatus_txt</td>
+                    <td>$Items->daysWorked_dec</td>
+                    <td>$Items->ageRangeSpecialism_txt</td>
+                </tr>";
+                }
+            } else {
+                $html .= '<tr>
+                <td colspan="5">
+                    No teacher found.
+                </td>
+            </tr>';
+            }
+
+            return response()->json(['html' => $html]);
+        } else {
+            return 'login';
+        }
+    }
+
+    public function schoolTeacherUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            // $school_id = $request->school_id;
+            $teacher_id = $request->editSearchTeacherId;
+            $schoolTeacherList_id = $request->editSchoolTeacherId;
+
+            $validator = Validator::make($request->all(), [
+                'rejectOrPreferred_int' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+
+            DB::table('tbl_schoolTeacherList')
+                ->where('schoolTeacherList_id', $schoolTeacherList_id)
+                ->update([
+                    'teacher_id' => $teacher_id,
+                    'rejectOrPreferred_int' => $request->rejectOrPreferred_int,
+                    'notes_txt' => $request->notes_txt,
+                    'addedBy_id' => $user_id,
+                    // 'addedOn_dtm' => date('Y-m-d H:i:s'),
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Teacher updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function schoolTeacherDelete(Request $request)
+    {
+        $schoolTeacherList_id = $request->editTeacherId;
+        DB::table('tbl_schoolTeacherList')
+            ->where('schoolTeacherList_id', '=', $schoolTeacherList_id)
+            ->delete();
+
+        return 1;
+    }
+
     public function schoolDocument(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -1424,8 +1883,8 @@ class SchoolController extends Controller
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('public/images/school', $name);
-                    $fPath = 'public/images/school/' . $name;
+                    $image->move('images/school', $name);
+                    $fPath = 'images/school/' . $name;
                     $fType = $extension;
                 } else {
                     return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
@@ -1489,8 +1948,8 @@ class SchoolController extends Controller
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('public/images/school', $name);
-                    $fPath = 'public/images/school/' . $name;
+                    $image->move('images/school', $name);
+                    $fPath = 'images/school/' . $name;
                     $fType = $extension;
                     if (file_exists($file_location)) {
                         unlink($file_location);

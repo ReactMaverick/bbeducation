@@ -17,7 +17,8 @@
 
     <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 50px; ">
         <tr style="padding: 15px;">
-            <th style="text-align:left; font-size: 50px; font-weight: bold; color: #fff; padding-left: 70px;">Invoice
+            <th style="text-align:left; font-size: 50px; font-weight: bold; color: #fff; padding-left: 70px;">
+                {{ $schoolInvoices->creditNote_status == '-1' ? 'Credit Note' : 'Invoice' }}
             </th>
             <th style="text-align:right;"><img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt=""
                     style="width: 35%;">
@@ -25,106 +26,226 @@
         </tr>
     </table>
 
-
     <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 50px;">
         <tr>
-            <td style="text-align:left; color: #333; font-size: 15px; font-weight: bold; width: 55%;">Accounts
-                Department</td>
-            <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 30%;">BumbleBee
-                Education
-                Limited</td>
-            <td style="width: 15%;"></td>
-        </tr>
-        <tr>
-            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400; width: 55%;">
-                {{ $schoolDetail->name_txt }}</td>
-            <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 30%;">Comer Business
-                Innovation Centre</td>
-            <td style="width: 15%;"></td>
-        </tr>
+            <td style="vertical-align: top; width: 50%;">
+                <table>
+                    <tr>
+                        <td style="text-align:left; color: #333; font-size: 15px; font-weight: bold;">
+                            Accounts Department
+                        </td>
+                    </tr>
 
-        <tr>
-            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400; width: 55%;">
-                @if ($schoolDetail->address1_txt)
-                    <p>{{ $schoolDetail->address1_txt }}</p>
-                @endif
-            </td>
-            <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 30%;">Building 3,
-                Room 472b
-                North London Business park</td>
-            <td style="width: 15%;"></td>
-        </tr>
+                    <tr>
+                        <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400;">
+                            {{ $schoolDetail->name_txt }}
+                        </td>
+                    </tr>
 
-        <tr>
-            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400; width: 55%;">
-                @if ($schoolDetail->address2_txt)
-                    <p>{{ $schoolDetail->address2_txt }}</p>
-                @endif
-            </td>
-            <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 30%;">Oakleigh Road
-                South,
-                N11 1GN</td>
-            <td style="width: 15%;"></td>
-        </tr>
+                    @if ($schoolDetail->address1_txt)
+                        <tr>
+                            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400;">
+                                {{ $schoolDetail->address1_txt }}
+                            </td>
+                        </tr>
+                    @endif
 
-        <tr>
-            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400; width: 55%;">
-                @if ($schoolDetail->address3_txt)
-                    <p>{{ $schoolDetail->address3_txt }}</p>
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400; width: 55%;">
-                @if ($schoolDetail->address4_txt)
-                    <p>{{ $schoolDetail->address4_txt }}</p>
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400; width: 55%;">
-                @if ($schoolDetail->postcode_txt)
-                    <p>{{ $schoolDetail->postcode_txt }}</p>
-                @endif
-            </td>
-        </tr>
-        <tr></tr>
-        <tr>
-            <td style="width: 55%;"></td>
-            <td style="text-align:left; color: #afabab; font-size: 13px; font-weight: bold; width: 30%;">Company Number:
-            </td>
-            <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 15%;">9066103</td>
-        </tr>
-        <tr>
-            <td style="width: 55%;"></td>
-            <td style="text-align:left; color: #afabab; font-size: 13px; font-weight: bold; width: 30%;">VAT
-                Registration
-                Number:</td>
-            <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 15%;">191132039</td>
-        </tr>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
-        <tr></tr>
-        <tr>
-            <td style="width: 55%;"></td>
-            <td style="text-align:left; color: #afabab; font-size: 13px; font-weight: bold; width: 30%;">Invoice Number:
-            </td>
-            <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 15%;">
-                {{ $schoolInvoices->invoice_id }}</td>
-        </tr>
+                    @if ($schoolDetail->address2_txt)
+                        <tr>
+                            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400;">
+                                {{ $schoolDetail->address2_txt }}
+                            </td>
+                        </tr>
+                    @endif
 
-        <tr>
-            <td style=" width: 55%;"></td>
-            <td style="text-align:left; color: #afabab; font-size: 13px; font-weight: bold; width: 30%;">Invoice Date:
+                    @if ($schoolDetail->address3_txt)
+                        <tr>
+                            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400;">
+                                {{ $schoolDetail->address3_txt }}
+                            </td>
+                        </tr>
+                    @endif
+
+                    @if ($schoolDetail->address4_txt)
+                        <tr>
+                            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400;">
+                                {{ $schoolDetail->address4_txt }}
+                            </td>
+                        </tr>
+                    @endif
+
+                    @if ($schoolDetail->postcode_txt)
+                        <tr>
+                            <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400;">
+                                {{ $schoolDetail->postcode_txt }}
+                            </td>
+                        </tr>
+                    @endif
+                </table>
             </td>
-            <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 15%;">
-                {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
+
+            <td>
+                <table>
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            BumbleBee Education Limited
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            Comer Business Innovation Centre
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            Building 3, Room 472b North London Business Park
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            Oakleigh Road South, N11 1GN
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            Company Number:
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            VAT Registration Number:
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            Invoice Number:
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            Invoice Date:
+                        </td>
+                    </tr>
+                </table>
+            </td>
+
+            <td style="vertical-align: bottom;">
+                <table>
+
+
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
+                            9066103
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
+                            191132039
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
+                            {{ $schoolInvoices->invoice_id }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
+                            {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
+
     <table style="margin: auto; width: 90%; border-collapse: collapse;">
         <tr style="border: 2px solid #000; background-color: #48A0DC; ">
             <th colspan="2"

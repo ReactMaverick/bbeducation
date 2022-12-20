@@ -21,7 +21,6 @@
                                 <h2>Document</h2>
                             </div>
                             <div class="school-teacher-list-heading">
-
                                 <div class="school-assignment-contact-icon-sec">
                                     <a style="cursor: pointer" class="disabled-link" id="deleteDocumentBttn">
                                         <i class="fa-solid fa-xmark"></i>
