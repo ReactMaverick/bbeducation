@@ -3640,3 +3640,193 @@ margin-top: 5px;
     margin-left: 10px;
     width: 50%;
 }
+
+/* ===============Teacher Receive Reference Edit Modal============== */
+
+.top-text span {
+    font-size: 14px;
+    color: #afabab;
+}
+
+.first-outer-sec {
+    border: 1px solid #afabab;
+    min-height: 140px;
+    max-height: 140px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
+.first-inner-sec {
+    display: flex;
+    align-items: center;
+}
+
+.first-inner-heading {
+    width: 30%;
+    margin-left: 10px;
+}
+
+.first-inner-heading2 {
+    width: 66%;
+    margin-left: 10px;
+}
+
+.first-inner-sec h2 {
+    font-size: 14px;
+    color: #afabab;
+    margin-bottom: 0;
+}
+
+.first-inner-sec2 {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.first-inner-input {
+    width: 30%;
+    margin-left: 10px;
+}
+
+.first-inner-input input {
+    font-size: 14px;
+    color: #afabab;
+    height: 28px;
+    border-radius: 0;
+}
+
+.first-inner-input2 {
+    width: 66%;
+    margin-left: 10px;
+}
+
+.first-inner-input2 input {
+    font-size: 14px;
+    color: #afabab;
+    height: 28px;
+    border-radius: 0;    
+}
+
+.second-inner-heading {
+    width: 30%;
+    margin-left: 10px;
+}
+
+.second-inner-heading h2 {
+    font-size: 14px;
+    color: #afabab;
+}
+
+.second-inner-heading2 {
+    width: 18%;
+    margin-left: 10px;
+}
+
+.second-inner-heading2 h2 {
+    font-size: 14px;
+    color: #afabab;
+    text-align: center;
+}
+
+.second-inner-heading3 {
+    width: 47%;
+    margin-left: 10px;
+}
+
+.second-inner-heading3 h2 {
+    font-size: 14px;
+    color: #afabab;
+}
+
+.second-inner-input {
+    width: 30%;
+    margin-left: 10px;
+}
+
+.second-inner-input input {
+    font-size: 14px;
+    color: #afabab;
+    height: 28px;
+    border-radius: 0; 
+}
+
+.second-inner-input2 {
+    display: flex;
+    justify-content: center;
+    width: 18%;
+    border: 1px solid #CED4DA;
+    padding: 6px 0;
+    margin-left: 10px;
+}
+
+.second-inner-input3 {
+    width: 47%;
+    margin-left: 10px;
+}
+
+.second-inner-input3 input {
+    font-size: 14px;
+    color: #afabab;
+    height: 28px;
+    border-radius: 0; 
+}
+
+.option-question-form-check {
+    margin-right: 5px;
+}
+
+.option-question-form-check:last-child {
+    margin-right: 0;
+}
+
+.third-inner-input2 {
+    display: flex;
+    justify-content: space-evenly;
+    width: 18%;
+    border: 1px solid #CED4DA;
+    padding: 6px 0;
+    margin-left: 10px;
+}
+
+.modal-bottom-sec {
+    display: flex;
+    align-items: center;
+}
+
+.reference-check-sec {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 25%;
+    padding-right: 50px;
+    padding-left: 0;
+}
+
+.reference-check-sec label {
+    font-size: 13px;
+    color: #3a3a3a;
+    margin-bottom: 0;
+}
+
+.select-feedback-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    margin-bottom: 0;
+}
+
+.select-feedback-field label {
+    font-size: 13px;
+    color: #3a3a3a;
+    margin-bottom: 0;
+}
+
+.select-feedback-field select {
+    font-size: 14px;
+    color: #afabab;
+    height: 28px;
+    border-radius: 0; 
+    padding: 0 10px;
+    width: 65%;
+}
