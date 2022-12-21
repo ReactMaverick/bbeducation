@@ -814,16 +814,16 @@
 
                     <!-- Modal Header -->
                     <div class="modal-header calendar-modal-header">
-                        <h4 class="modal-title">Add Teacher DBS</h4>
+                        <h4 class="modal-title">Edit Teacher DBS</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
                     <div class="calendar-heading-sec">
                         <i class="fa-solid fa-pencil school-edit-icon"></i>
-                        <h2>Add DBS</h2>
+                        <h2>Edit DBS</h2>
                     </div>
 
-                    <form action="{{ url('/newTeacherDbsInsert') }}" method="post" class="form-validate">
+                    <form action="{{ url('/teacherDbsUpdate') }}" method="post" class="form-validate-2">
                         @csrf
                         <div class="modal-input-field-section">
                             <h6>
@@ -838,60 +838,7 @@
                             <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
                             <input type="hidden" name="editDBSId" id="editDBSId" value="">
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group modal-input-field">
-                                        <label class="form-check-label">Certificate Number</label><span
-                                            style="color: red;">*</span>
-                                        <input type="text" class="form-control field-validate"
-                                            name="certificateNumber_txt" id="" value="">
-                                    </div>
-
-                                    <div class="form-group modal-input-field">
-                                        <label class="form-check-label">Certificate Date</label><span
-                                            style="color: red;">*</span>
-                                        <input type="date" class="form-control field-validate" name="DBSDate_dte"
-                                            id="" value="">
-                                    </div>
-
-                                    <div class="form-group modal-input-field">
-                                        <label class="form-check-label">Position Applied For</label>
-                                        <input type="text" class="form-control" name="positionAppliedFor_txt"
-                                            id="" value="">
-                                    </div>
-
-                                    <div class="form-group modal-input-field">
-                                        <label class="form-check-label">Employer Name</label>
-                                        <input type="text" class="form-control" name="employerName_txt"
-                                            id="" value="">
-                                    </div>
-
-                                    <div class="form-group modal-input-field">
-                                        <label class="form-check-label">Registered Body</label>
-                                        <input type="text" class="form-control" name="registeredBody_txt"
-                                            id="" value="">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="modal-side-field mb-2">
-                                        <input type="checkbox" class="" name="dbsWarning_status"
-                                            id="dbsWarning_status" value="1">
-                                        <label class="form-check-label" for="dbsWarning_status">Flag Warning</label>
-                                    </div>
-
-                                    <div class="form-group modal-input-field">
-                                        <label class="form-check-label">Warning Message</label>
-                                        <textarea name="dbsWarning_txt" id="dbsWarning_txt" cols="30" rows="3" class="form-control" disabled></textarea>
-                                    </div>
-
-                                    <div class="modal-side-field mb-2">
-                                        <input type="checkbox" class="" name="lastCheckedOn" id="lastCheckedOn"
-                                            value="1">
-                                        <label class="form-check-label" for="lastCheckedOn">Update 'Last Checked On' date
-                                            to today's date</label>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="row" id="editDbsAjax"></div>
 
                         </div>
 
@@ -907,6 +854,45 @@
             </div>
         </div>
         <!-- Teacher DBS Edit Modal -->
+
+        <!-- Teacher View Edit Modal -->
+        <div class="modal fade" id="dbsRecordViewModal">
+            <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+                <div class="modal-content calendar-modal-content" style="width:100%;">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header calendar-modal-header">
+                        <h4 class="modal-title">View Teacher DBS</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="calendar-heading-sec">
+                        <i class="fa-solid fa-pencil school-edit-icon"></i>
+                        <h2>View DBS</h2>
+                    </div>
+
+                    <div class="modal-input-field-section">
+                        <h6>
+                            @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
+                                {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                            @else
+                                {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                            @endif
+                        </h6>
+
+                        <div class="row" id="viewDbsAjax"></div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Teacher DBS View Modal -->
 
         <script>
             $("#dbsWarning_status").change(function() {
@@ -934,27 +920,80 @@
                 }
             }
 
-            // $(document).on('click', '#editDbsRecordBttn', function() {
-            //     var teacherReferenceId = $('#teacherReferenceId').val();
-            //     if (teacherReferenceId) {
-            //         $('#editTeacherReferenceId').val(teacherReferenceId);
-            //         $.ajax({
-            //             type: 'POST',
-            //             url: '{{ url('teacherReferenceEdit') }}',
-            //             data: {
-            //                 "_token": "{{ csrf_token() }}",
-            //                 teacherReferenceId: teacherReferenceId
-            //             },
-            //             success: function(data) {
-            //                 //console.log(data);
-            //                 $('#editReferenceAjax').html(data.html);
-            //             }
-            //         });
-            //         $('#editTeacherReferenceModal').modal("show");
-            //     } else {
-            //         swal("", "Please select one reference.");
-            //     }
-            // });
+            $(document).on('click', '#editDbsRecordBttn', function() {
+                var DBSId = $('#DBSId').val();
+                if (DBSId) {
+                    $('#editDBSId').val(DBSId);
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('teacherDbsRecordEdit') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            DBSId: DBSId
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            $('#editDbsAjax').html(data.html);
+                        }
+                    });
+                    $('#dbsRecordEditModal').modal("show");
+                } else {
+                    swal("", "Please select one record.");
+                }
+            });
+
+            $(document).on('click', '#viewDbsRecordBttn', function() {
+                var DBSId = $('#DBSId').val();
+                if (DBSId) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('teacherDbsRecordView') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            DBSId: DBSId
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            $('#viewDbsAjax').html(data.html);
+                        }
+                    });
+                    $('#dbsRecordViewModal').modal("show");
+                } else {
+                    swal("", "Please select one record.");
+                }
+            });
+
+            $(document).on('click', '#deleteDbsRecordBttn', function() {
+                var DBSId = $('#DBSId').val();
+                if (DBSId) {
+                    swal({
+                            title: "Alert",
+                            text: "Are you sure you wish to remove this record?",
+                            buttons: {
+                                cancel: "No",
+                                Yes: "Yes"
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "Yes":
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('teacherDbsRecordDelete') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            DBSId: DBSId
+                                        },
+                                        success: function(data) {
+                                            location.reload();
+                                        }
+                                    });
+                            }
+                        });
+                } else {
+                    swal("", "Please select one record.");
+                }
+            });
         </script>
 
     @endsection

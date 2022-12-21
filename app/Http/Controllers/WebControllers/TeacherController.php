@@ -1718,6 +1718,92 @@ class TeacherController extends Controller
         }
     }
 
+    public function teacherDbsRecordEdit(Request $request)
+    {
+        $input = $request->all();
+        $DBSId = $input['DBSId'];
+
+        $detail = DB::table('tbl_teacherdbs')
+            ->where('DBS_id', "=", $DBSId)
+            ->first();
+
+        $view = view("web.teacher.edit_dbs_view", ['detail' => $detail])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teacherDbsUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $editDBSId = $request->editDBSId;
+            $validator = Validator::make($request->all(), [
+                'certificateNumber_txt' => 'required',
+                'DBSDate_dte' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $DBSDate_dte = NULL;
+            if ($request->DBSDate_dte != '') {
+                $DBSDate_dte = date("Y-m-d", strtotime($request->DBSDate_dte));
+            }
+            $dbsWarning_status = 0;
+            if ($request->dbsWarning_status) {
+                $dbsWarning_status = -1;
+            }
+            $dbsWarning_txt = NULL;
+            if ($request->dbsWarning_txt) {
+                $dbsWarning_txt = $request->dbsWarning_txt;
+            }
+            $lastCheckedOn_dte = $request->lastCheckedOn_dte != null?$request->lastCheckedOn_dte:date("Y-m-d");
+            if ($request->lastCheckedOn) {
+                $lastCheckedOn_dte = date("Y-m-d");
+            }
+
+            DB::table('tbl_teacherdbs')
+                ->where('DBS_id', $editDBSId)
+                ->update([
+                    'certificateNumber_txt' => $request->certificateNumber_txt,
+                    'DBSDate_dte' => $DBSDate_dte,
+                    'positionAppliedFor_txt' => $request->positionAppliedFor_txt,
+                    'employerName_txt' => $request->employerName_txt,
+                    'registeredBody_txt' => $request->registeredBody_txt,
+                    'dbsWarning_status' => $dbsWarning_status,
+                    'dbsWarning_txt' => $dbsWarning_txt,
+                    'lastCheckedOn_dte' => $lastCheckedOn_dte
+                ]);
+
+            return redirect()->back()->with('success', "DBS record updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherDbsRecordView(Request $request)
+    {
+        $input = $request->all();
+        $DBSId = $input['DBSId'];
+
+        $detail = DB::table('tbl_teacherdbs')
+            ->where('DBS_id', "=", $DBSId)
+            ->first();
+
+        $view = view("web.teacher.record_dbs_view", ['detail' => $detail])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teacherDbsRecordDelete(Request $request)
+    {
+        $DBSId = $request->DBSId;
+        DB::table('tbl_teacherdbs')
+            ->where('DBS_id', "=", $DBSId)
+            ->delete();
+        return 1;
+    }
+
     public function teacherContactLog(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
