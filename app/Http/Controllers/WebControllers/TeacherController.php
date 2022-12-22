@@ -1483,7 +1483,25 @@ class TeacherController extends Controller
                 ->where('tbl_teacherdbs.teacher_id', $id)
                 ->get();
 
-            return view("web.teacher.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list]);
+            $documentList = DB::table('tbl_teacherDocument')
+                ->LeftJoin('tbl_description', function ($join) {
+                    $join->on('tbl_description.description_int', '=', 'tbl_teacherDocument.type_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_description.descriptionGroup_int', '=', 19);
+                        });
+                })
+                ->select('tbl_teacherDocument.*', 'tbl_description.description_txt as doc_type_txt')
+                ->where('tbl_teacherDocument.teacher_id', $id)
+                ->where('tbl_teacherDocument.uploadOn_dtm', '!=', NULL)
+                ->orderBy('tbl_teacherDocument.uploadOn_dtm', 'DESC')
+                ->get();
+
+            $typeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 19)
+                ->get();
+
+            return view("web.teacher.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list, 'documentList' => $documentList, 'typeList' => $typeList]);
         } else {
             return redirect()->intended('/');
         }
@@ -1758,7 +1776,7 @@ class TeacherController extends Controller
             if ($request->dbsWarning_txt) {
                 $dbsWarning_txt = $request->dbsWarning_txt;
             }
-            $lastCheckedOn_dte = $request->lastCheckedOn_dte != null?$request->lastCheckedOn_dte:date("Y-m-d");
+            $lastCheckedOn_dte = $request->lastCheckedOn_dte != null ? $request->lastCheckedOn_dte : date("Y-m-d");
             if ($request->lastCheckedOn) {
                 $lastCheckedOn_dte = date("Y-m-d");
             }
@@ -1801,6 +1819,137 @@ class TeacherController extends Controller
         DB::table('tbl_teacherdbs')
             ->where('DBS_id', "=", $DBSId)
             ->delete();
+        return 1;
+    }
+
+    public function teacherDocumentInsert(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+
+            $fPath = '';
+            $fType = '';
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            if ($image = $request->file('file')) {
+                $extension = $image->extension();
+                $file_name = $image->getClientOriginalName();
+                if (in_array(strtolower($extension), $allowed_types)) {
+                    $rand = mt_rand(100000, 999999);
+                    $name = time() . "_" . $rand . "_" . $file_name;
+                    $image->move('images/teacher', $name);
+                    $fPath = 'images/teacher/' . $name;
+                    $fType = $extension;
+                } else {
+                    return redirect()->back()->with('error', "Please upload valid file.");
+                }
+            } else {
+                return redirect()->back()->with('error', "Please upload valid file.");
+            }
+
+            DB::table('tbl_teacherDocument')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'file_location' => $fPath,
+                    'file_name' => $request->file_name,
+                    'type_int' => $request->type_int,
+                    'file_type' => $fType,
+                    'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                    'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                    'loggedBy_id' => $user_id,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Document added successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function getTeacherDocDetail(Request $request)
+    {
+        $input = $request->all();
+        $teacherDocument_id = $input['DocumentId'];
+
+        $docDetail = DB::table('tbl_teacherDocument')
+            ->where('teacherDocument_id', "=", $teacherDocument_id)
+            ->first();
+        $typeList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 19)
+            ->get();
+
+        $view = view("web.teacher.document_edit_view", ['docDetail' => $docDetail, 'typeList' => $typeList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teacherDocumentUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $editDocumentId = $request->editDocumentId;
+            $file_location = $request->file_location;
+
+            $fPath = '';
+            $fType = '';
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            if ($image = $request->file('file')) {
+                $extension = $image->extension();
+                $file_name = $image->getClientOriginalName();
+                if (in_array(strtolower($extension), $allowed_types)) {
+                    $rand = mt_rand(100000, 999999);
+                    $name = time() . "_" . $rand . "_" . $file_name;
+                    $image->move('images/teacher', $name);
+                    $fPath = 'images/teacher/' . $name;
+                    $fType = $extension;
+                    if (file_exists($file_location)) {
+                        unlink($file_location);
+                    }
+                } else {
+                    return redirect()->back()->with('error', "Please upload valid file.");
+                }
+            } else {
+                return redirect()->back()->with('error', "Please upload valid file.");
+            }
+
+            DB::table('tbl_teacherDocument')
+                ->where('teacherDocument_id', '=', $editDocumentId)
+                ->update([
+                    'file_location' => $fPath,
+                    'file_name' => $request->file_name,
+                    'type_int' => $request->type_int,
+                    'file_type' => $fType,
+                    'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                    'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                    'loggedBy_id' => $user_id
+                ]);
+
+            return redirect()->back()->with('success', "Document updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherDocumentDelete(Request $request)
+    {
+        $DocumentId = $request->DocumentId;
+        $docDetail = DB::table('tbl_teacherDocument')
+            ->where('teacherDocument_id', "=", $DocumentId)
+            ->first();
+        if ($docDetail) {
+            DB::table('tbl_teacherDocument')
+                ->where('teacherDocument_id', "=", $DocumentId)
+                ->delete();
+
+            if (file_exists($docDetail->file_location)) {
+                unlink($docDetail->file_location);
+            }
+        }
         return 1;
     }
 

@@ -204,7 +204,7 @@
         }
     });
 
-    $(document).on('keyup focusout', '.file-validate', function(e) {
+    $(document).on('change', '.file-validate', function(e) {
         if ($('.file-validate').get(0).files.length === 0) {
             $(this).closest(".form-group").addClass('has-error');
             error = "has error";
@@ -390,7 +390,7 @@
         }
     });
 
-    $(document).on('keyup focusout', '.file-validate-2', function(e) {
+    $(document).on('change', '.file-validate-2', function(e) {
         if ($('.file-validate-2').get(0).files.length === 0) {
             $(this).closest(".form-group").addClass('has-error');
             error = "has error";
@@ -485,6 +485,22 @@
             }
         });
 
+        //file validate
+        $(".file-validate-3").each(function() {
+            if ($('.file-validate-3').get(0).files.length === 0) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                var ext = $('.file-validate-3').val().split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
@@ -558,6 +574,21 @@
             $(this).closest(".form-group").addClass('has-error');
             //$(this).next(".error-content").removeClass('hidden');
             error = "has error";
+        }
+    });
+
+    $(document).on('change', '.file-validate-3', function(e) {
+        if ($('.file-validate-3').get(0).files.length === 0) {
+            $(this).closest(".form-group").addClass('has-error');
+            error = "has error";
+        } else {
+            var ext = $('.file-validate-3').val().split('.').pop().toLowerCase();
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
         }
     });
     /******* field validate 3 ********/
@@ -641,6 +672,22 @@
             }
         });
 
+        //file validate
+        $(".file-validate-4").each(function() {
+            if ($('.file-validate-4').get(0).files.length === 0) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                var ext = $('.file-validate-4').val().split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
@@ -714,6 +761,21 @@
             $(this).closest(".form-group").addClass('has-error');
             //$(this).next(".error-content").removeClass('hidden');
             error = "has error";
+        }
+    });
+
+    $(document).on('change', '.file-validate-4', function(e) {
+        if ($('.file-validate-4').get(0).files.length === 0) {
+            $(this).closest(".form-group").addClass('has-error');
+            error = "has error";
+        } else {
+            var ext = $('.file-validate-4').val().split('.').pop().toLowerCase();
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
         }
     });
     /******* field validate 4 ********/
