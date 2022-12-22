@@ -2278,4 +2278,5 @@ class TeacherController extends Controller
             return redirect()->intended('/');
         }
     }
+    
 }
