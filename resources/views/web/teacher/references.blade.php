@@ -356,7 +356,7 @@
                                     
                                     <div class="first-inner-sec2">
                                         <div class="first-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="first-inner-input2">
                                             <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
@@ -365,7 +365,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="first-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="first-inner-input2">
                                             <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
@@ -389,7 +389,7 @@
                                     
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="second-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -413,7 +413,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="second-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -437,7 +437,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="second-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -461,7 +461,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="second-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -485,7 +485,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="second-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -524,7 +524,7 @@
                                     
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="third-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -542,7 +542,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="third-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -560,7 +560,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="third-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -578,7 +578,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="third-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
@@ -596,7 +596,7 @@
 
                                     <div class="first-inner-sec2">
                                         <div class="second-inner-input">
-                                            <input type="text" class="form-control" name="employedUntil_dte" id="" value="">
+                                            <span>Lorem Ipsum ?</span>
                                         </div>
                                         <div class="third-inner-input2">
                                             <div class="form-check-inline option-question-form-check">
