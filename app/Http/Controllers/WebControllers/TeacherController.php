@@ -1390,6 +1390,37 @@ class TeacherController extends Controller
         }
     }
 
+    public function getTeacherReceiveReference(Request $request)
+    {
+        $input = $request->all();
+        $teacherReferenceId = $input['teacherReferenceId'];
+
+        $Detail = DB::table('tbl_teacherReference')
+            ->where('teacherReference_id', "=", $teacherReferenceId)
+            ->first();
+        $feedbackList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 38)
+            ->get();
+
+        $textQnList =  array();
+        if ($Detail && $Detail->referenceType_id) {
+            $textQnList = DB::table('tbl_referenceTypeQuestion')
+                ->join('tbl_referenceQuestion', function ($join) {
+                    $join->on('tbl_referenceTypeQuestion.question_id', '=', 'tbl_referenceQuestion.question_id')
+                        ->where(function ($query) {
+                            $query->where('tbl_referenceQuestion.questionType_int', '=', 1);
+                        });
+                })
+                ->select('tbl_referenceTypeQuestion.*', 'tbl_referenceQuestion.questionType_int', 'tbl_referenceQuestion.question_txt', 'tbl_referenceQuestion.isCurrent_status', 'tbl_referenceQuestion.referenceLookupGroup_id')
+                ->where('tbl_referenceTypeQuestion.referenceType_id', $Detail->referenceType_id)
+                ->get();
+        }
+
+        $view = view("web.teacher.edit_receive_reference_view", ['Detail' => $Detail, 'feedbackList' => $feedbackList, 'textQnList' => $textQnList])->render();
+        return response()->json(['html' => $view]);
+    }
+
     public function teacherDocuments(Request $request, $id)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -2278,5 +2309,4 @@ class TeacherController extends Controller
             return redirect()->intended('/');
         }
     }
-    
 }
