@@ -140,7 +140,7 @@
                     <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 modal-col">
                             <div class="form-group calendar-form-filter">
                                 <label for="">Reference Type</label><span style="color: red;">*</span>
                                 <select class="form-control field-validate" name="referenceType_id" style="width:100%;">
@@ -174,7 +174,7 @@
                                     value="">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 modal-col">
                             <div class="form-group modal-input-field">
                                 <label class="form-check-label">Referee Name</label><span style="color: red;">*</span>
                                 <input type="text" class="form-control field-validate" name="refereeName_txt" id=""
@@ -296,7 +296,7 @@
                     <input type="hidden" name="teacherReference_id" id="editTeacherReferenceId" value="">
 
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-3 modal-col">
                             <div class="form-group modal-input-field">
                                 <label class="form-check-label">Employer Name</label><span style="color: red;">*</span>
                                 <input type="text" class="form-control" name="employedUntil_dte" id=""
@@ -340,7 +340,7 @@
                             </div>
 
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-9 modal-col">
                             <div class="outer-sec pl-3">
                                 <span class="top-text">Text Questions</span>
 
