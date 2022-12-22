@@ -88,6 +88,10 @@ Route::post('/teacherDbsRecordEdit', [TeacherController::class, 'teacherDbsRecor
 Route::post('/teacherDbsUpdate', [TeacherController::class, 'teacherDbsUpdate']);
 Route::post('/teacherDbsRecordView', [TeacherController::class, 'teacherDbsRecordView']);
 Route::post('/teacherDbsRecordDelete', [TeacherController::class, 'teacherDbsRecordDelete']);
+Route::post('/teacherDocumentInsert', [TeacherController::class, 'teacherDocumentInsert']);
+Route::post('/getTeacherDocDetail', [TeacherController::class, 'getTeacherDocDetail']);
+Route::post('/teacherDocumentUpdate', [TeacherController::class, 'teacherDocumentUpdate']);
+Route::post('/teacherDocumentDelete', [TeacherController::class, 'teacherDocumentDelete']);
 Route::get('/teacher-contact-log/{id}', [TeacherController::class, 'teacherContactLog']);
 Route::post('/teacherContactLogInsert', [TeacherController::class, 'teacherContactLogInsert']);
 Route::post('/teacherContactLogEdit', [TeacherController::class, 'teacherContactLogEdit']);

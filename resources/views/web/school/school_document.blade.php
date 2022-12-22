@@ -265,7 +265,7 @@
                         }
                     });
             } else {
-                swal("", "Please select one contact.");
+                swal("", "Please select one document.");
             }
         });
 
