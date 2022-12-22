@@ -1551,7 +1551,7 @@ table td {
 .contact-icon-sec i {
     font-size: 20px;
     color: #48a0dc;
-    margin-left: 20px;
+    /* margin-left: 20px; */
 }
 
 .school-edit-icon {
@@ -1697,7 +1697,11 @@ table td {
 .school-assignment-contact-icon-sec i {
     font-size: 20px;
     color: #48a0dc;
-    margin-left: 20px;
+    /* margin-left: 20px; */
+}
+
+.school-assignment-contact-icon-sec a {
+    margin: 0 10px;
 }
 
 .assignment-detail-sidebar-sec {
@@ -2092,7 +2096,7 @@ table td {
 }
 
 .modal-side-field label {
-    width: 50%;
+    width: 90%;
     font-size: 13px;
     color: #3a3a3a;
     font-weight: 400;
@@ -2420,7 +2424,7 @@ table td {
 .assignment-finance-icon-section i {
     font-size: 20px;
     color: #48a0dc;
-    margin-left: 15px;
+    /* margin-left: 15px; */
 }
 
 /* ================TEACHER PENDING REFERENCE=============== */
@@ -2538,8 +2542,11 @@ table td {
 .assignment-finance-icon-section img {
     width: 24px;
     height: 20px;
-    object-fit: cover;
-    margin-left: 15px;
+    object-fit: cover;    
+}
+
+.assignment-finance-icon-section a {
+    margin: 0 8px;
 }
 
 /* ===============TEACHER PAYROLL============ */
@@ -2651,7 +2658,11 @@ table td {
     width: 24px;
     height: 20px;
     object-fit: cover;
-    margin-left: 20px;
+    /* margin-left: 20px; */
+}
+
+.contact-icon-sec a {
+    margin: 0 10px;
 }
 
 
@@ -2977,7 +2988,11 @@ margin-top: 5px;
 .finance-contact-icon-sec i {
     font-size: 20px;
     color: #48a0dc;
-    margin-left: 20px;
+    /* margin-left: 20px; */
+}
+
+.finance-contact-icon-sec a {
+    margin: 0 10px;
 }
 
 /* .finance-timesheet-section {
@@ -3117,14 +3132,18 @@ margin-top: 5px;
 .finance-invoice-icon-sec i {
     font-size: 20px;
     color: #48a0dc;
-    margin-left: 10px;
+    /* margin-left: 10px; */
 }
 
 .finance-invoice-icon-sec img {
     width: 24px;
     height: 20px;
     object-fit: cover;
-    margin-left: 10px;
+    /* margin-left: 10px; */
+}
+
+.finance-invoice-icon-sec a {
+    margin: 0 5px;
 }
 
 .invoice-top-second-section {
@@ -3312,7 +3331,11 @@ margin-top: 5px;
 .remittance-top-icon i {
     font-size: 25px;
     color: #40a0ed;
-    margin-left: 8px;
+    /* margin-left: 8px; */
+}
+
+.remittance-top-icon a {
+    margin: 0 0 0 8px;
 }
 
 .remittance-top-icon img {
