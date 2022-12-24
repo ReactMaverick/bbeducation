@@ -81,6 +81,7 @@ Route::post('/newTeacherReferenceInsert', [TeacherController::class, 'newTeacher
 Route::post('/teacherReferenceEdit', [TeacherController::class, 'teacherReferenceEdit']);
 Route::post('/newTeacherReferenceUpdate', [TeacherController::class, 'newTeacherReferenceUpdate']);
 Route::post('/getTeacherReceiveReference', [TeacherController::class, 'getTeacherReceiveReference']);
+Route::post('/receiveReferenceUpdate', [TeacherController::class, 'receiveReferenceUpdate']);
 Route::get('/teacher-documents/{id}', [TeacherController::class, 'teacherDocuments']);
 Route::post('/teacherDocumentListUpdate', [TeacherController::class, 'teacherDocumentListUpdate']);
 Route::post('/teacherVettingUpdate', [TeacherController::class, 'teacherVettingUpdate']);

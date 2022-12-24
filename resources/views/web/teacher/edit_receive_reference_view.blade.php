@@ -61,12 +61,15 @@
                         <span>{{ $textQn->question_txt }}</span>
                     </div>
                     <div class="first-inner-input2">
-                        <input type="text" class="form-control" name="" id=""
-                            value="{{ $textQn->question_txt }}">
-                            <input type="text" class="form-control" name="" id=""
-                            value="{{ $textQn->questionType_int }}">
-                        <input type="text" class="form-control" name="" id=""
-                            value="">
+                        <input type="hidden" class="form-control" name="textQn_qnId[]" id=""
+                            value="{{ $textQn->question_id }}">
+                        <input type="hidden" class="form-control" name="textQn_qnTxt_{{ $textQn->question_id }}"
+                            id="" value="{{ $textQn->question_txt }}">
+                        <input type="hidden" class="form-control" name="textQn_qnType_{{ $textQn->question_id }}"
+                            id="" value="{{ $textQn->questionType_int }}">
+
+                        <input type="text" class="form-control" name="textQn_answer_{{ $textQn->question_id }}"
+                            id="" value="{{ $textQn->det_answer_txt }}">
                     </div>
                 </div>
             @endforeach
@@ -86,150 +89,35 @@
                 </div>
             </div>
 
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="second-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1"
-                            checked>
+            @foreach ($optQnList as $key4 => $optQn)
+                <div class="first-inner-sec2">
+                    <div class="second-inner-input">
+                        <span>{{ $optQn->question_txt }}</span>
                     </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio"
-                            value="option2">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
 
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
+                    <input type="hidden" class="form-control" name="optQn_qnId[]" id=""
+                        value="{{ $optQn->question_id }}">
+                    <input type="hidden" class="form-control" name="optQn_qnTxt_{{ $optQn->question_id }}"
+                        id="" value="{{ $optQn->question_txt }}">
+                    <input type="hidden" class="form-control" name="optQn_qnType_{{ $optQn->question_id }}"
+                        id="" value="{{ $optQn->questionType_int }}">
 
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="second-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio"
-                            value="option1" checked>
+                    <div class="second-inner-input2">
+                        @foreach ($rateList as $key5 => $rate)
+                            <div class="form-check-inline option-question-form-check">
+                                <input type="radio" class="form-check-input" id=""
+                                    name="optQn_rateVal_{{ $optQn->question_id }}" value="{{ $rate->value_int }}"
+                                    {{ $optQn->det_answer_int == $rate->value_int ? 'checked' : '' }}>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio"
-                            value="option2">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
 
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
-
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="second-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio"
-                            value="option1" checked>
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio"
-                            value="option2">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
+                    <div class="second-inner-input3">
+                        <input type="text" class="form-control" name="optQn_answer_{{ $optQn->question_id }}"
+                            id="" value="{{ $optQn->det_answer_txt }}">
                     </div>
                 </div>
-
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
-
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="second-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio"
-                            value="option1" checked>
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio"
-                            value="option2">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
-
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
-
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="second-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio1" name="optradio"
-                            value="option1" checked>
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio2" name="optradio"
-                            value="option2">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
-
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
+            @endforeach
         </div>
 
         <span class="top-text">Yes/No Questions</span>
@@ -246,127 +134,63 @@
                 </div>
             </div>
 
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="third-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
+            @foreach ($yesNoQnList as $key6 => $yesNoQn)
+                <div class="first-inner-sec2">
+                    <div class="second-inner-input">
+                        <span>{{ $yesNoQn->question_txt }}</span>
                     </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
 
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
+                    <input type="hidden" class="form-control" name="yesNoQn_qnId[]" id=""
+                        value="{{ $yesNoQn->question_id }}">
+                    <input type="hidden" class="form-control" name="yesNoQn_qnTxt_{{ $yesNoQn->question_id }}"
+                        id="" value="{{ $yesNoQn->question_txt }}">
+                    <input type="hidden" class="form-control" name="yesNoQn_qnType_{{ $yesNoQn->question_id }}"
+                        id="" value="{{ $yesNoQn->questionType_int }}">
 
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="third-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
+                    <div class="third-inner-input2">
+                        <div class="form-check-inline option-question-form-check">
+                            <input type="radio" class="form-check-input" id=""
+                                name="yesNoQn_yesno_{{ $yesNoQn->question_id }}" value="1"
+                                {{ $yesNoQn->det_answer_ysn == 1 ? 'checked' : '' }}>
+                        </div>
+                        <div class="form-check-inline option-question-form-check">
+                            <input type="radio" class="form-check-input" id=""
+                                name="yesNoQn_yesno_{{ $yesNoQn->question_id }}" value="2"
+                                {{ $yesNoQn->det_answer_ysn == '0' ? 'checked' : '' }}>
+                        </div>
                     </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
 
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
-
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="third-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
+                    <div class="second-inner-input3">
+                        <input type="text" class="form-control" name="yesNoQn_answer_{{ $yesNoQn->question_id }}"
+                            id="" value="{{ $yesNoQn->det_answer_txt }}">
                     </div>
                 </div>
-
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
-
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="third-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
-
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
-
-            <div class="first-inner-sec2">
-                <div class="second-inner-input">
-                    <span>Lorem Ipsum ?</span>
-                </div>
-                <div class="third-inner-input2">
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio3" name="optradio"
-                            value="option3">
-                    </div>
-                    <div class="form-check-inline option-question-form-check">
-                        <input type="radio" class="form-check-input" id="radio4" name="optradio"
-                            value="option4">
-                    </div>
-                </div>
-
-                <div class="second-inner-input3">
-                    <input type="text" class="form-control" name="employedUntil_dte" id=""
-                        value="">
-                </div>
-            </div>
+            @endforeach
         </div>
 
         <div class="modal-bottom-sec">
-            <div class="form-check reference-check-sec">
-                <label for="vehicle1">Reference is Valid</label>
-                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+            <div class="form-group form-check reference-check-sec">
+                <label for="isValid_statusId">Reference is Valid</label>
+                <input type="checkbox" class="" id="isValid_statusId" name="isValid_status" value="1"
+                    {{ $Detail->isValid_status == '-1' ? 'checked' : '' }}>
             </div>
+
+            <input type="hidden" name="prev_isValid_status" id="" value="{{ $Detail->isValid_status }}">
+            <input type="hidden" name="prev_receivedOn_dtm" id="" value="{{ $Detail->receivedOn_dtm }}">
+
             <div class="form-check reference-check-sec">
-                <label for="vehicle1">Verbal Reference</label>
-                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                <label for="verbalReference_statusId">Verbal Reference</label>
+                <input type="checkbox" id="verbalReference_statusId" name="verbalReference_status" value="1"
+                    {{ $Detail->verbalReference_status == '-1' ? 'checked' : '' }}>
             </div>
 
             <div class="form-group select-feedback-field">
                 <label for="">Feedback Quality</label>
-                <select id="" class="form-control">
+                <select id="" class="form-control" name="feedbackQuality_int">
+                    <option value="">Choose one</option>
                     @foreach ($feedbackList as $key2 => $feedback)
-                        <option value="{{ $feedback->description_int }}">
+                        <option value="{{ $feedback->description_int }}"
+                            {{ $Detail->feedbackQuality_int == $feedback->description_int ? 'selected' : '' }}>
                             {{ $feedback->description_txt }}
                         </option>
                     @endforeach

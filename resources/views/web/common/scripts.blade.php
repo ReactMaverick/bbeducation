@@ -501,6 +501,15 @@
             }
         });
 
+        $(".checkbox-validate-3").each(function() {
+            if ($('.checkbox-validate-3').is(':checked')) {
+                $('.checkbox-validate-3').closest(".form-group").removeClass('has-error');
+            } else {
+                $('.checkbox-validate-3').closest(".form-group").addClass('has-error');
+                error = "has error";
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
@@ -589,6 +598,15 @@
             } else {
                 $(this).closest(".form-group").removeClass('has-error');
             }
+        }
+    });
+
+    $(document).on('change', '.checkbox-validate-3', function(e) {
+        if ($('.checkbox-validate-3').is(':checked')) {
+            $('.checkbox-validate-3').closest(".form-group").removeClass('has-error');
+        } else {
+            $('.checkbox-validate-3').closest(".form-group").addClass('has-error');
+            error = "has error";
         }
     });
     /******* field validate 3 ********/

@@ -56,10 +56,11 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
+                                    <?php $pendingReference = 0; ?>
                                     @foreach ($referenceList as $key => $reference)
                                         <tr class="school-detail-table-data editReferenceRow"
                                             id="editReferenceRow{{ $reference->teacherReference_id }}"
-                                            onclick="editReferenceRowSelect({{ $reference->teacherReference_id }})">
+                                            onclick="editReferenceRowSelect({{ $reference->teacherReference_id }}, '<?php echo $reference->receivedOn_dtm; ?>')">
                                             <td>{{ $reference->employer_txt }}</td>
                                             <td>{{ $reference->employedFrom_dte != null ? date('d-m-Y', strtotime($reference->employedFrom_dte)) : '' }}
                                             </td>
@@ -72,6 +73,7 @@
                                             </td>
                                             <td>
                                                 @if ($reference->receivedOn_dtm != null)
+                                                    <?php $pendingReference += 1; ?>
                                                     @if ($reference->isValid_status == 0)
                                                         {{ 'N' }}
                                                     @else
@@ -88,6 +90,7 @@
                     </div>
 
                     <input type="hidden" name="teacherReferenceId" id="teacherReferenceId" value="">
+                    <input type="hidden" name="referenceReceiveDate" id="referenceReceiveDate" value="">
 
                     <div class="assignment-first-sec">
                         <div class="assignment-left-sidebar-section">
@@ -101,7 +104,7 @@
                             </div>
                             <div class="references-bottom-sec">
                                 <div class="assignment-sidebar-data2">
-                                    <h2>0</h2>
+                                    <h2>{{ count($referenceList) - $pendingReference }}</h2>
                                 </div>
                                 <div class="sidebar-sec-text">
                                     <span>Pending</span>
@@ -315,8 +318,7 @@
                     <div class="modal-footer calendar-modal-footer">
                         <button type="submit" class="btn btn-secondary">Complete</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Save For
-                            Later</button>
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>
 
@@ -330,9 +332,10 @@
             $('#myTable').DataTable();
         });
 
-        function editReferenceRowSelect(teacherReference_id) {
+        function editReferenceRowSelect(teacherReference_id, receivedOn_dtm) {
             if ($('#editReferenceRow' + teacherReference_id).hasClass('tableRowActive')) {
                 $('#teacherReferenceId').val('');
+                $('#referenceReceiveDate').val('');
                 $('#editReferenceRow' + teacherReference_id).removeClass('tableRowActive');
                 $('#receiveReferenceBttn').addClass('disabled-link');
                 $('#previewReferenceBttn').addClass('disabled-link');
@@ -340,6 +343,7 @@
                 $('#editReferenceBttn').addClass('disabled-link');
             } else {
                 $('#teacherReferenceId').val(teacherReference_id);
+                $('#referenceReceiveDate').val(receivedOn_dtm);
                 $('.editReferenceRow').removeClass('tableRowActive');
                 $('#editReferenceRow' + teacherReference_id).addClass('tableRowActive');
                 $('#receiveReferenceBttn').removeClass('disabled-link');
@@ -351,21 +355,29 @@
 
         $(document).on('click', '#editReferenceBttn', function() {
             var teacherReferenceId = $('#teacherReferenceId').val();
+            var referenceReceiveDate = $('#referenceReceiveDate').val();
             if (teacherReferenceId) {
-                $('#editTeacherReferenceId').val(teacherReferenceId);
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ url('teacherReferenceEdit') }}',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        teacherReferenceId: teacherReferenceId
-                    },
-                    success: function(data) {
-                        //console.log(data);
-                        $('#editReferenceAjax').html(data.html);
-                    }
-                });
-                $('#editTeacherReferenceModal').modal("show");
+                if (referenceReceiveDate) {
+                    swal("",
+                        "You cannot edit the core details for this reference as it has been received and logged."
+                    );
+                } else {
+                    $('#editTeacherReferenceId').val(teacherReferenceId);
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('teacherReferenceEdit') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            teacherReferenceId: teacherReferenceId
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            $('#editReferenceAjax').html(data.html);
+                        }
+                    });
+                    $('#editTeacherReferenceModal').modal("show");
+
+                }
             } else {
                 swal("", "Please select one reference.");
             }
@@ -373,21 +385,52 @@
 
         $(document).on('click', '#receiveReferenceBttn', function() {
             var teacherReferenceId = $('#teacherReferenceId').val();
+            var referenceReceiveDate = $('#referenceReceiveDate').val();
             if (teacherReferenceId) {
-                $('#receiveTeacherReferenceId').val(teacherReferenceId);
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ url('getTeacherReceiveReference') }}',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        teacherReferenceId: teacherReferenceId
-                    },
-                    success: function(data) {
-                        //console.log(data);
-                        $('#receiveReferenceAjax').html(data.html);
-                    }
-                });
-                $('#receiveTeacherReferenceModal').modal("show");
+                if (referenceReceiveDate) {
+                    swal({
+                            title: "Alert",
+                            text: "This reference has already been logged as received. Are you sure you wish to go in and change any details?",
+                            buttons: {
+                                cancel: "No",
+                                Yes: "Yes"
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "Yes":
+                                    $('#receiveTeacherReferenceId').val(teacherReferenceId);
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('getTeacherReceiveReference') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            teacherReferenceId: teacherReferenceId
+                                        },
+                                        success: function(data) {
+                                            //console.log(data);
+                                            $('#receiveReferenceAjax').html(data.html);
+                                        }
+                                    });
+                                    $('#receiveTeacherReferenceModal').modal("show");
+                            }
+                        });
+                } else {
+                    $('#receiveTeacherReferenceId').val(teacherReferenceId);
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('getTeacherReceiveReference') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            teacherReferenceId: teacherReferenceId
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            $('#receiveReferenceAjax').html(data.html);
+                        }
+                    });
+                    $('#receiveTeacherReferenceModal').modal("show");
+                }
             } else {
                 swal("", "Please select one reference.");
             }

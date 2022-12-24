@@ -1402,6 +1402,11 @@ class TeacherController extends Controller
             ->select('tbl_description.*')
             ->where('tbl_description.descriptionGroup_int', 38)
             ->get();
+        $rateList = DB::table('tbl_referenceLookupValue')
+            ->select('tbl_referenceLookupValue.*')
+            ->where('tbl_referenceLookupValue.valueGroup_id', 2)
+            ->orderBy('tbl_referenceLookupValue.value_int', 'DESC')
+            ->get();
 
         $textQnList =  array();
         if ($Detail && $Detail->referenceType_id) {
@@ -1412,13 +1417,244 @@ class TeacherController extends Controller
                             $query->where('tbl_referenceQuestion.questionType_int', '=', 1);
                         });
                 })
-                ->select('tbl_referenceTypeQuestion.*', 'tbl_referenceQuestion.questionType_int', 'tbl_referenceQuestion.question_txt', 'tbl_referenceQuestion.isCurrent_status', 'tbl_referenceQuestion.referenceLookupGroup_id')
+                ->leftJoin('tbl_teacherReferenceQuestion', function ($join) use ($teacherReferenceId) {
+                    $join->on('tbl_teacherReferenceQuestion.question_id', '=', 'tbl_referenceQuestion.question_id')
+                        ->where(function ($query) use ($teacherReferenceId) {
+                            $query->where('tbl_teacherReferenceQuestion.teacherReference_id', '=', $teacherReferenceId);
+                        });
+                })
+                ->select('tbl_referenceTypeQuestion.*', 'tbl_referenceQuestion.questionType_int', 'tbl_referenceQuestion.question_txt', 'tbl_referenceQuestion.isCurrent_status', 'tbl_referenceQuestion.referenceLookupGroup_id', 'tbl_teacherReferenceQuestion.answer_txt as det_answer_txt', 'tbl_teacherReferenceQuestion.answer_int as det_answer_int', 'tbl_teacherReferenceQuestion.answer_ysn as det_answer_ysn')
                 ->where('tbl_referenceTypeQuestion.referenceType_id', $Detail->referenceType_id)
                 ->get();
         }
 
-        $view = view("web.teacher.edit_receive_reference_view", ['Detail' => $Detail, 'feedbackList' => $feedbackList, 'textQnList' => $textQnList])->render();
+        $optQnList =  array();
+        if ($Detail && $Detail->referenceType_id) {
+            $optQnList = DB::table('tbl_referenceTypeQuestion')
+                ->join('tbl_referenceQuestion', function ($join) {
+                    $join->on('tbl_referenceTypeQuestion.question_id', '=', 'tbl_referenceQuestion.question_id')
+                        ->where(function ($query) {
+                            $query->where('tbl_referenceQuestion.questionType_int', '=', 2);
+                        });
+                })
+                ->leftJoin('tbl_teacherReferenceQuestion', function ($join) use ($teacherReferenceId) {
+                    $join->on('tbl_teacherReferenceQuestion.question_id', '=', 'tbl_referenceQuestion.question_id')
+                        ->where(function ($query) use ($teacherReferenceId) {
+                            $query->where('tbl_teacherReferenceQuestion.teacherReference_id', '=', $teacherReferenceId);
+                        });
+                })
+                ->select('tbl_referenceTypeQuestion.*', 'tbl_referenceQuestion.questionType_int', 'tbl_referenceQuestion.question_txt', 'tbl_referenceQuestion.isCurrent_status', 'tbl_referenceQuestion.referenceLookupGroup_id', 'tbl_teacherReferenceQuestion.answer_txt as det_answer_txt', 'tbl_teacherReferenceQuestion.answer_int as det_answer_int', 'tbl_teacherReferenceQuestion.answer_ysn as det_answer_ysn')
+                ->where('tbl_referenceTypeQuestion.referenceType_id', $Detail->referenceType_id)
+                ->get();
+        }
+
+        $yesNoQnList =  array();
+        if ($Detail && $Detail->referenceType_id) {
+            $yesNoQnList = DB::table('tbl_referenceTypeQuestion')
+                ->join('tbl_referenceQuestion', function ($join) {
+                    $join->on('tbl_referenceTypeQuestion.question_id', '=', 'tbl_referenceQuestion.question_id')
+                        ->where(function ($query) {
+                            $query->where('tbl_referenceQuestion.questionType_int', '=', 3);
+                        });
+                })
+                ->leftJoin('tbl_teacherReferenceQuestion', function ($join) use ($teacherReferenceId) {
+                    $join->on('tbl_teacherReferenceQuestion.question_id', '=', 'tbl_referenceQuestion.question_id')
+                        ->where(function ($query) use ($teacherReferenceId) {
+                            $query->where('tbl_teacherReferenceQuestion.teacherReference_id', '=', $teacherReferenceId);
+                        });
+                })
+                ->select('tbl_referenceTypeQuestion.*', 'tbl_referenceQuestion.questionType_int', 'tbl_referenceQuestion.question_txt', 'tbl_referenceQuestion.isCurrent_status', 'tbl_referenceQuestion.referenceLookupGroup_id', 'tbl_teacherReferenceQuestion.answer_txt as det_answer_txt', 'tbl_teacherReferenceQuestion.answer_int as det_answer_int', 'tbl_teacherReferenceQuestion.answer_ysn as det_answer_ysn')
+                ->where('tbl_referenceTypeQuestion.referenceType_id', $Detail->referenceType_id)
+                ->get();
+        }
+
+        $view = view("web.teacher.edit_receive_reference_view", ['Detail' => $Detail, 'feedbackList' => $feedbackList, 'rateList' => $rateList, 'textQnList' => $textQnList, 'optQnList' => $optQnList, 'yesNoQnList' => $yesNoQnList])->render();
         return response()->json(['html' => $view]);
+    }
+
+    public function receiveReferenceUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $teacher_id = $request->teacher_id;
+            $teacherReference_id = $request->teacherReference_id;
+            $validator = Validator::make($request->all(), [
+                'employer_txt' => 'required',
+                'postcode_txt' => 'required',
+                'refereeName_txt' => 'required',
+                'refereeEmail_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+            $employedFrom_dte = NULL;
+            if ($request->employedFrom_dte != '') {
+                $employedFrom_dte = date("Y-m-d", strtotime($request->employedFrom_dte));
+            }
+            $employedUntil_dte = NULL;
+            if ($request->employedUntil_dte != '') {
+                $employedUntil_dte = date("Y-m-d", strtotime($request->employedUntil_dte));
+            }
+            $isValid_status = 0;
+            if ($request->prev_receivedOn_dtm == NULL || $request->prev_receivedOn_dtm == '') {
+                $receivedOn_dtm = date("Y-m-d H:i:s");
+            } else {
+                $receivedOn_dtm = $request->prev_receivedOn_dtm;
+            }
+            if ($request->isValid_status) {
+                $isValid_status = -1;
+                if ($request->prev_receivedOn_dtm == NULL || $request->prev_receivedOn_dtm == '') {
+                    $receivedOn_dtm = date("Y-m-d H:i:s");
+                }
+            }
+            $verbalReference_status = 0;
+            if ($request->verbalReference_status) {
+                $verbalReference_status = -1;
+            }
+
+            DB::table('tbl_teacherReference')
+                ->where('teacherReference_id', $teacherReference_id)
+                ->update([
+                    'employer_txt' => $request->employer_txt,
+                    'address1_txt' => $request->address1_txt,
+                    'address2_txt' => $request->address2_txt,
+                    'address3_txt' => $request->address3_txt,
+                    'addrress4_txt' => $request->addrress4_txt,
+                    'postcode_txt' => $request->postcode_txt,
+                    'refereeName_txt' => $request->refereeName_txt,
+                    'refereeEmail_txt' => $request->refereeEmail_txt,
+                    'employedFrom_dte' => $employedFrom_dte,
+                    'employedUntil_dte' => $employedUntil_dte,
+                    'isValid_status' => $isValid_status,
+                    'verbalReference_status' => $verbalReference_status,
+                    'feedbackQuality_int' => $request->feedbackQuality_int,
+                    'receivedOn_dtm' => $receivedOn_dtm,
+                    'receivedBy_int' => $user_id,
+                    // 'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            if (count($request->textQn_qnId)) {
+                foreach ($request->textQn_qnId as $key => $textQn_qnId) {
+                    $name_qnTxt = 'textQn_qnTxt_'.$textQn_qnId;
+                    $name_qnType = 'textQn_qnType_'.$textQn_qnId;
+                    $name_answer = 'textQn_answer_'.$textQn_qnId;
+                    $qnExist = DB::table('tbl_teacherReferenceQuestion')
+                        ->where('teacherReference_id', "=", $teacherReference_id)
+                        ->where('question_id', "=", $textQn_qnId)
+                        ->first();
+                    if ($qnExist) {
+                        DB::table('tbl_teacherReferenceQuestion')
+                            ->where('teacherReferenceQuestion_id', $qnExist->teacherReferenceQuestion_id)
+                            ->update([
+                                'question_txt' => $request->$name_qnTxt,
+                                'type_int' => $request->$name_qnType,
+                                'answer_txt' => $request->$name_answer,
+                                'answer_dte' => date('Y-m-d H:i:s')
+                            ]);
+                    } else {
+                        DB::table('tbl_teacherReferenceQuestion')
+                            ->insert([
+                                'teacherReference_id' => $teacherReference_id,
+                                'question_id' => $textQn_qnId,
+                                'question_txt' => $request->$name_qnTxt,
+                                'type_int' => $request->$name_qnType,
+                                'answer_txt' => $request->$name_answer,
+                                'answer_dte' => date('Y-m-d H:i:s'),
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+                    }
+                }
+            }
+
+            if (count($request->optQn_qnId)) {
+                foreach ($request->optQn_qnId as $key1 => $optQn_qnId) {
+                    $name_qnTxt = 'optQn_qnTxt_'.$optQn_qnId;
+                    $name_qnType = 'optQn_qnType_'.$optQn_qnId;
+                    $name_answer = 'optQn_answer_'.$optQn_qnId;
+                    $name_rateVal = 'optQn_rateVal_'.$optQn_qnId;
+                    $answer_int = NULL;
+                    if ($request->$name_rateVal) {
+                        $answer_int = $request->$name_rateVal;
+                    }
+                    $qnExist = DB::table('tbl_teacherReferenceQuestion')
+                        ->where('teacherReference_id', "=", $teacherReference_id)
+                        ->where('question_id', "=", $optQn_qnId)
+                        ->first();
+                    if ($qnExist) {
+                        DB::table('tbl_teacherReferenceQuestion')
+                            ->where('teacherReferenceQuestion_id', $qnExist->teacherReferenceQuestion_id)
+                            ->update([
+                                'question_txt' => $request->$name_qnTxt,
+                                'type_int' => $request->$name_qnType,
+                                'answer_int' => $answer_int,
+                                'answer_txt' => $request->$name_answer,
+                                'answer_dte' => date('Y-m-d H:i:s')
+                            ]);
+                    } else {
+                        DB::table('tbl_teacherReferenceQuestion')
+                            ->insert([
+                                'teacherReference_id' => $teacherReference_id,
+                                'question_id' => $optQn_qnId,
+                                'question_txt' => $request->$name_qnTxt,
+                                'type_int' => $request->$name_qnType,
+                                'answer_int' => $answer_int,
+                                'answer_txt' => $request->$name_answer,
+                                'answer_dte' => date('Y-m-d H:i:s'),
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+                    }
+                }
+            }
+
+            if (count($request->yesNoQn_qnId)) {
+                foreach ($request->yesNoQn_qnId as $key2 => $yesNoQn_qnId) {
+                    $name_qnTxt = 'yesNoQn_qnTxt_'.$yesNoQn_qnId;
+                    $name_qnType = 'yesNoQn_qnType_'.$yesNoQn_qnId;
+                    $name_answer = 'yesNoQn_answer_'.$yesNoQn_qnId;
+                    $name_yesNo = 'yesNoQn_yesno_'.$yesNoQn_qnId;
+                    $answer_ysn = NULL;
+                    if ($request->$name_yesNo && $request->$name_yesNo==1) {
+                        $answer_ysn = '1';
+                    }
+                    if ($request->$name_yesNo && $request->$name_yesNo==2) {
+                        $answer_ysn = '0';
+                    }
+                    $qnExist = DB::table('tbl_teacherReferenceQuestion')
+                        ->where('teacherReference_id', "=", $teacherReference_id)
+                        ->where('question_id', "=", $yesNoQn_qnId)
+                        ->first();
+                    if ($qnExist) {
+                        DB::table('tbl_teacherReferenceQuestion')
+                            ->where('teacherReferenceQuestion_id', $qnExist->teacherReferenceQuestion_id)
+                            ->update([
+                                'question_txt' => $request->$name_qnTxt,
+                                'type_int' => $request->$name_qnType,
+                                'answer_ysn' => $answer_ysn,
+                                'answer_txt' => $request->$name_answer,
+                                'answer_dte' => date('Y-m-d H:i:s')
+                            ]);
+                    } else {
+                        DB::table('tbl_teacherReferenceQuestion')
+                            ->insert([
+                                'teacherReference_id' => $teacherReference_id,
+                                'question_id' => $yesNoQn_qnId,
+                                'question_txt' => $request->$name_qnTxt,
+                                'type_int' => $request->$name_qnType,
+                                'answer_ysn' => $answer_ysn,
+                                'answer_txt' => $request->$name_answer,
+                                'answer_dte' => date('Y-m-d H:i:s'),
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', "Teacher reference updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function teacherDocuments(Request $request, $id)
