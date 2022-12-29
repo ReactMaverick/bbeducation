@@ -877,6 +877,12 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_asn.teacher_id')
                 ->LeftJoin('tbl_student', 'tbl_student.student_id', '=', 'tbl_asn.student_id')
                 ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_asn.school_id')
+                ->leftJoin(
+                    DB::raw('(SELECT asn_id, MIN(asnDate_dte) AS asnStartDate_dte FROM tbl_asnItem GROUP BY tbl_asnItem.asn_id) AS t_asnItems'),
+                    function ($join) {
+                        $join->on('tbl_asn.asn_id', '=', 't_asnItems.asn_id');
+                    }
+                )
                 ->LeftJoin('tbl_description as yearGroupType', function ($join) {
                     $join->on('yearGroupType.description_int', '=', 'tbl_asn.yearGroup_int')
                         ->where(function ($query) {
@@ -913,7 +919,7 @@ class SchoolController extends Controller
                             $query->where('teacherProff.descriptionGroup_int', '=', 7);
                         });
                 })
-                ->select('tbl_asn.*', 'yearGroupType.description_txt as yearGroupTxt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'assType.description_txt as assignmentType', 'subjectType.description_txt as subjectTxt', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), 'teacherProff.description_txt as teacherProfession', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', DB::raw('MIN(asnDate_dte) AS firstDate_dte'), 'tbl_student.firstName_txt as studentfirstName', 'tbl_student.surname_txt as studentsurname_txt')
+                ->select('tbl_asn.*', 'yearGroupType.description_txt as yearGroupTxt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'assType.description_txt as assignmentType', 'subjectType.description_txt as subjectTxt', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), 'teacherProff.description_txt as teacherProfession', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', DB::raw('MIN(asnDate_dte) AS firstDate_dte'), 'tbl_student.firstName_txt as studentfirstName', 'tbl_student.surname_txt as studentsurname_txt', DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'))
                 ->where('tbl_asn.school_id', $id);
             if ($request->include != 1 && $request->status) {
                 $assignment->where('tbl_asn.status_int', $request->status);

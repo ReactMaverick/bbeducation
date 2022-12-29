@@ -3,6 +3,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- font-awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     {{-- <link rel="stylesheet" href="{{ asset('web/css/all.min.css') }}"> --}}
@@ -32,5 +33,10 @@
 
     <!-- Select2 -->
     <link rel="stylesheet" href="{!! asset('plugins/select2/select2.min.css') !!} ">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
 
 </head>

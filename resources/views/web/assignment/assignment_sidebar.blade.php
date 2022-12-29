@@ -1,8 +1,10 @@
 <div class="col-md-2 sidebar-col">
     <div class="assignment-detail-sidebar-sec">
         <div class="sidebar-top-text">
-            <h2>Hendon Preparatory School</h2>
-            <span>100960</span>
+            <a href="{{ URL::to('/school-detail/' . $assignmentDetail->school_id) }}" class="" target="_blank">
+                <h2>{{ $assignmentDetail->schooleName }}</h2>
+                <span>{{ $assignmentDetail->school_id }}</span>
+            </a>
             <i class="fa-solid fa-square-check"></i>
         </div>
 
@@ -61,7 +63,7 @@
         </div>
 
         <div class="teacher-name">
-            <span>Dalila Kesri</span>
+            <span>{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}</span>
         </div>
         <div class="assignment-detail-user-img-sec">
             <div class="user-img-sec">
@@ -71,7 +73,7 @@
 
 
         <div class="sidebar-user-number">
-            <span>11297</span>
+            <span>{{ $assignmentDetail->teacher_id }}</span>
         </div>
 
         <div class="sidebar-check-icon">
@@ -79,7 +81,7 @@
         </div>
         <div class="assignment-id-text-sec">
             <span>Assignment ID :</span>
-            <span>3294</span>
+            <span>{{ $assignmentDetail->asn_id }}</span>
         </div>
 
     </div>

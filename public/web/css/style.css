@@ -619,6 +619,10 @@ i {
     align-items: center;
 }
 
+.checkbox-field label {
+    font-size: 16px !important;
+}
+
 .assignment-page-sec label {
     font-size: 12px;
     font-weight: 400;

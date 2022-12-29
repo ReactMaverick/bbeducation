@@ -32,7 +32,7 @@
             </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Assignments') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/assignments') }}">
+            <a class="nav-link" href="{{ URL::to('/assignments?include=') }}">
                 <i class="fa-solid fa-id-card">
                 <span class="tab-section-text">Assignments</span>
                 </i>

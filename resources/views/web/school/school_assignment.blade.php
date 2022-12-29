@@ -45,7 +45,6 @@
                                 </div>
                             </div>
 
-
                             <div class="school-assignment-contact-icon-sec">
                                 <a href="javascript:void(0)"><i class="fa-solid fa-xmark"></i></a>
                                 <a href="javascript:void(0)"><i class="fa-solid fa-plus"></i></a>
@@ -92,7 +91,7 @@
                                     }
                                     
                                     ?>
-                                    <tr class="table-data" onclick="assignmentDetail()">
+                                    <tr class="table-data" onclick="assignmentDetail({{ $Assignment->asn_id }})">
                                         <td>
                                             @if ($yDescription == null || $yDescription == '')
                                                 {{ $Assignment->yearGroup }}
@@ -111,17 +110,13 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($Assignment->firstDate_dte)
-                                                {{ date('d-m-Y', strtotime($Assignment->firstDate_dte)) }}
-                                            @else
-                                                {{ date('d-m-Y', strtotime($Assignment->timestamp_ts)) }}
+                                            @if ($Assignment->asnStartDate_dte)
+                                                {{ date('d-m-Y', strtotime($Assignment->asnStartDate_dte)) }}
                                             @endif
                                         </td>
                                         <td>
-                                            @if ($Assignment->firstDate_dte)
-                                                {{ date('l', strtotime($Assignment->firstDate_dte)) }}
-                                            @else
-                                                {{ date('l', strtotime($Assignment->timestamp_ts)) }}
+                                            @if ($Assignment->asnStartDate_dte)
+                                                {{ date('l', strtotime($Assignment->asnStartDate_dte)) }}
                                             @endif
                                         </td>
                                     </tr>
@@ -162,8 +157,8 @@
             $('#myTable').DataTable();
         });
 
-        function assignmentDetail() {
-            window.location.href = "{{ URL::to('/assignment-details') }}";
+        function assignmentDetail(asn_id) {
+            window.location.href = "{{ URL::to('/assignment-details') }}" + '/' + asn_id;
         }
 
         $(document).on('change', '#includeAll', function() {
