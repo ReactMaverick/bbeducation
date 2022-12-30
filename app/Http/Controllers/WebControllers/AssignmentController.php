@@ -164,7 +164,23 @@ class AssignmentController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 33)
                 ->get();
 
-            return view("web.assignment.assignment_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'assignmentDetail' => $assignmentDetail, 'ageRangeList' => $ageRangeList, 'subjectList' => $subjectList, 'yearGrList' => $yearGrList, 'assLengthList' => $assLengthList, 'profTypeList' => $profTypeList, 'studentList' => $studentList, 'assignmentStatusList' => $assignmentStatusList]);
+            if ($request->ajax()) {
+                $eventItem = [
+                    [
+                        'id' => 999,
+                        'title' => 'Repeating Event',
+                        'start' => '2022-12-25'
+                    ],
+                    [
+                        'id' => 999,
+                        'title' => 'Repeating Event',
+                        'start' => '2022-12-23'
+                    ]
+                ];
+                return response()->json($eventItem);
+            }
+
+            return view("web.assignment.assignment_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'asn_id' => $id, 'assignmentDetail' => $assignmentDetail, 'ageRangeList' => $ageRangeList, 'subjectList' => $subjectList, 'yearGrList' => $yearGrList, 'assLengthList' => $assLengthList, 'profTypeList' => $profTypeList, 'studentList' => $studentList, 'assignmentStatusList' => $assignmentStatusList]);
         } else {
             return redirect()->intended('/');
         }

@@ -269,9 +269,9 @@
 
 
                 <!-- Modal body
-                                    <div class="modal-body">
-                                        Modal body..
-                                    </div> -->
+                                                    <div class="modal-body">
+                                                        Modal body..
+                                                    </div> -->
 
                 <!-- Modal footer -->
                 <div class="modal-footer calendar-modal-footer">
@@ -286,6 +286,7 @@
     <script>
         $(document).ready(function() {
             var SITEURL = "{{ url('/') }}";
+            var asn_id = "{{ $asn_id }}";
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -302,43 +303,60 @@
                 // weekends: [ 0, 6 ],
                 fixedWeekCount: false,
                 showNonCurrentDates: false,
-                events: SITEURL + "/assignment-details",
+                fullDay: false,
+                events: SITEURL + "/assignment-details/" + asn_id,
                 displayEventTime: true,
+                // eventColor: '#cdb71e',
+                eventTextColor: '#cdb71e',
+                eventBackgroundColor: '#db5e5e',
                 eventRender: function(event, element, view) {
-                    if (event.allDay === 'true') {
-                        event.allDay = true;
-                    } else {
-                        event.allDay = false;
-                    }
+                    // if (event.allDay === 'true') {
+                    //     event.allDay = true;
+                    // } else {
+                    //     event.allDay = false;
+                    // }
+                    element.find('span.fc-title').addClass('customClass');
                 },
                 selectable: true,
                 selectHelper: true,
+                dragScroll: false,
+                unselectAuto: false,
                 select: function(event_start, event_end, allDay) {
-                    var event_name = prompt('Event Name:');
-                    if (event_name) {
-                        var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD HH:mm:ss");
-                        var event_end = $.fullCalendar.formatDate(event_end, "Y-MM-DD HH:mm:ss");
-                        $.ajax({
-                            url: SITEURL + "/calendar-crud-ajax",
-                            data: {
-                                event_name: event_name,
-                                event_start: event_start,
-                                event_end: event_end,
-                                type: 'create'
-                            },
-                            type: "POST",
-                            success: function(data) {
-                                displayMessage("Event created.");
-                                calendar.fullCalendar('renderEvent', {
-                                    id: data.id,
-                                    title: event_name,
-                                    start: event_start,
-                                    end: event_end,
-                                    allDay: allDay
-                                }, true);
-                                calendar.fullCalendar('unselect');
-                            }
-                        });
+                    // console.log('event_start ==>', event_start)
+                    // console.log('event_end ==>', event_end)
+
+                    // console.log('event_start date ==>', event_start._d.getDate())
+                    // console.log('event_end date ==>', event_end._d.getDate() - 1)
+                    if ((event_end._d.getDate() - 1) != event_start._d.getDate()) {
+                        calendar.fullCalendar('unselect');
+                    } else {
+                        var event_name = prompt('Event Name:');
+                        if (event_name) {
+                            var event_start = $.fullCalendar.formatDate(event_start,
+                                "Y-MM-DD HH:mm:ss");
+                            var event_end = $.fullCalendar.formatDate(event_end, "Y-MM-DD HH:mm:ss");
+                            $.ajax({
+                                url: SITEURL + "/calendar-crud-ajax",
+                                data: {
+                                    event_name: event_name,
+                                    event_start: event_start,
+                                    event_end: event_end,
+                                    type: 'create'
+                                },
+                                type: "POST",
+                                success: function(data) {
+                                    displayMessage("Event created.");
+                                    calendar.fullCalendar('renderEvent', {
+                                        id: data.id,
+                                        title: event_name,
+                                        start: event_start,
+                                        end: event_end,
+                                        allDay: allDay
+                                    }, true);
+                                    calendar.fullCalendar('unselect');
+                                }
+                            });
+                        }
                     }
                 },
                 eventDrop: function(event, delta) {
