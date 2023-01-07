@@ -1331,53 +1331,66 @@ class SchoolController extends Controller
 
     public function schoolInvoicePdf(Request $request, $id, $invoice_id)
     {
-        $schoolDetail = DB::table('tbl_school')
-            ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
-            ->LeftJoin('tbl_schoolContactLog', function ($join) {
-                $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
-            })
-            ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
-            ->LeftJoin('tbl_description as AgeRange', function ($join) {
-                $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
-                    ->where(function ($query) {
-                        $query->where('AgeRange.descriptionGroup_int', '=', 28);
-                    });
-            })
-            ->LeftJoin('tbl_description as religion', function ($join) {
-                $join->on('religion.description_int', '=', 'tbl_school.religion_int')
-                    ->where(function ($query) {
-                        $query->where('religion.descriptionGroup_int', '=', 29);
-                    });
-            })
-            ->LeftJoin('tbl_description as SchoolType', function ($join) {
-                $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
-                    ->where(function ($query) {
-                        $query->where('SchoolType.descriptionGroup_int', '=', 30);
-                    });
-            })
-            ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
-            ->where('tbl_school.school_id', $id)
-            ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
-            ->first();
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
 
-        $schoolInvoices = DB::table('tbl_invoice')
-            ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-            ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+            $schoolDetail = DB::table('tbl_school')
+                ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                })
+                ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                    $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                        ->where(function ($query) {
+                            $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                        });
+                })
+                ->LeftJoin('tbl_description as religion', function ($join) {
+                    $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                        ->where(function ($query) {
+                            $query->where('religion.descriptionGroup_int', '=', 29);
+                        });
+                })
+                ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                    $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                        ->where(function ($query) {
+                            $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                        });
+                })
+                ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                ->where('tbl_school.school_id', $id)
+                ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ->first();
+
+            $schoolInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
-            ->where('tbl_invoice.invoice_id', $invoice_id)
-            ->groupBy('tbl_invoice.invoice_id')
-            ->first();
-        $invoiceItemList = DB::table('tbl_invoiceItem')
-            ->select('tbl_invoiceItem.*')
-            ->where('tbl_invoiceItem.invoice_id', $invoice_id)
-            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
-            ->get();
+                ->where('tbl_invoice.invoice_id', $invoice_id)
+                ->groupBy('tbl_invoice.invoice_id')
+                ->first();
+            $invoiceItemList = DB::table('tbl_invoiceItem')
+                ->select('tbl_invoiceItem.*')
+                ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+                ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+                ->get();
 
-        $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList]);
-        $pdfName = 'invoice-' . $id . '.pdf';
-        // return $pdf->download('test.pdf');
-        return $pdf->stream($pdfName);
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
+            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+            $pdfName = 'invoice-' . $id . '.pdf';
+            // return $pdf->download('test.pdf');
+            return $pdf->stream($pdfName);
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function schoolInvoiceRemit(Request $request)
@@ -1488,11 +1501,12 @@ class SchoolController extends Controller
             $user_id = $webUserLoginData->user_id;
             $input = $request->all();
             $searchTeacherKey = $input['searchTeacherKey'];
+            $school_id = $input['school_id'];
             $teacherList = array();
 
             if ($searchTeacherKey) {
                 $teacherQry = DB::table('tbl_teacher')
-                    ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                    ->leftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
                     ->leftJoin(
                         DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
                         function ($join) {
@@ -1526,7 +1540,14 @@ class SchoolController extends Controller
                     })
                     ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
                     ->where('tbl_teacher.company_id', $company_id)
-                    ->where('tbl_teacher.isCurrent_status', '<>', 0);
+                    ->where('tbl_teacher.isCurrent_status', '<>', 0)
+                    ->whereNotIn('tbl_teacher.teacher_id', function ($query) use ($school_id) {
+                        $query->select('teacher_id')
+                            ->from('tbl_schoolTeacherList')
+                            ->where('tbl_schoolTeacherList.school_id', $school_id)
+                            ->where('tbl_schoolTeacherList.rejectOrPreferred_int', 2)
+                            ->get();
+                    });
 
                 if ($searchTeacherKey) {
                     $search_input = str_replace(" ", "", $searchTeacherKey);

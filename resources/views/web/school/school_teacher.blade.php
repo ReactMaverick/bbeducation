@@ -254,6 +254,7 @@
 
         $(document).on('keyup', '#searchTeacherKey', function() {
             var searchTeacherKey = $(this).val();
+            var school_id = '<?php echo $schoolDetail->school_id; ?>';
             if (searchTeacherKey.length > 3) {
                 $('#searchTeacherId').val('');
                 $.ajax({
@@ -261,7 +262,8 @@
                     url: '{{ url('searchTeacherList') }}',
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        searchTeacherKey: searchTeacherKey
+                        searchTeacherKey: searchTeacherKey,
+                        school_id: school_id
                     },
                     success: function(data) {
                         // console.log(data);

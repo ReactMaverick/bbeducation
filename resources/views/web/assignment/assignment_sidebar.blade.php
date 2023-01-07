@@ -8,8 +8,8 @@
             <i class="fa-solid fa-square-check"></i>
         </div>
 
-        <div class="sidebar-pages-section sidebar-active">
-            <a href="{{ URL::to('/assignment-details') }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Detail') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-details/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person-chalkboard"></i>
                 </div>
@@ -19,8 +19,8 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/assignment-contact') }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Contact') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-contact/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-comment"></i>
                 </div>
@@ -30,8 +30,8 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/assignment-candidate') }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Candidate') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-candidate/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-clipboard-list"></i>
                 </div>
@@ -41,8 +41,8 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/assignment-school') }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments School Detail') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-school/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-school"></i>
                 </div>
@@ -51,8 +51,8 @@
                 </div>
             </a>
         </div>
-        <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/assignment-finance') }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Finance') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-finance/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-money-bills"></i>
                 </div>

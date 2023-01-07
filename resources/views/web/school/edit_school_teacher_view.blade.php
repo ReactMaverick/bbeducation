@@ -2,8 +2,8 @@
     <div class="school-search-section add-school-search-section">
         <div class="school-search-field add-school-search-field">
             <span>Teacher</span>
-            <label for="">Search For</label>
-            <input type="text" class="form-control" id="searchTeacherKey" name="searchTeacherKey" value="">
+            {{-- <label for="">Search For</label>
+            <input type="text" class="form-control" id="searchTeacherKey" name="searchTeacherKey" value=""> --}}
         </div>
     </div>
     <table class="table assignment-page-table add-school-teacher-page-table">

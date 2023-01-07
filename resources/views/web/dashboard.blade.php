@@ -68,7 +68,7 @@
                         </thead>
                         <tbody class="table-body-sec">
                             @foreach ($latestAssignment as $key => $Assignment)
-                                <tr class="table-data" onclick="assignmentDetail()">
+                                <tr class="table-data" onclick="assignmentDetail({{ $Assignment->asn_id }})">
                                     <td>{{ $Assignment->schooleName }}</td>
                                     <td>
                                         {{ $Assignment->assignmentStatus }}
@@ -99,8 +99,8 @@
             });
         });
 
-        function assignmentDetail(){
-            window.location.href = "{{ URL::to('/assignment-details') }}";
+        function assignmentDetail(asn_id) {
+            window.location.href = "{{ URL::to('/assignment-details') }}" + '/' + asn_id;
         }
     </script>
 @endsection

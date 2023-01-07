@@ -3857,3 +3857,29 @@ margin-top: 5px;
     padding: 0 10px;
     width: 65%;
 }
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number{
+    float: left !important;    
+}
+
+.fc-basic-view .fc-day-number, .fc-basic-view .fc-week-number{
+    padding: 0 0 0 2px !important;
+}
+
+td.fc-day-top {
+    background-color: #000 !important;
+    color: #fff !important;
+    pointer-events: none !important;
+}
+
+.fc-content {
+    min-height: 60px !important;
+}
+
+.fc-day-grid-event .fc-content {
+    white-space: inherit !important;
+}
+
+.customClass {
+    font-size: 11px !important;
+}

@@ -6,11 +6,15 @@
             @include('web.assignment.assignment_sidebar')
 
             <div class="col-md-10 topbar-sec">
-                <form action="">
-                    <div class="topbar-Section">
-                        <i class="fa-solid fa-crown"></i>
-                        <a href="#"> <i class="fa-solid fa-trash trash-icon"></i></a>
-                    </div>
+                <div class="topbar-Section">
+                    <i class="fa-solid fa-crown"></i>
+                    <a href="#"> <i class="fa-solid fa-trash trash-icon"></i></a>
+                </div>
+
+                <form action="{{ url('/assignmentDetailUpdate') }}" method="post">
+                    @csrf
+
+                    <input type="hidden" name="assignmentId" id="" value="{{ $asn_id }}">
 
                     <div class="assignment-detail-right-sec">
                         <div class="filter-section">
@@ -100,13 +104,15 @@
                                 <div class="form-group filter-input-sec-group col-md-6">
                                     <label for="">Daily Charge</label>
                                     <input type="text" class="form-control assignment-detail-form-control" id=""
-                                        placeholder="&#163 130" value="{{ $assignmentDetail->charge_dec }}">
+                                        name="charge_dec" placeholder=""
+                                        value="{{ $assignmentDetail->charge_dec }}">
                                 </div>
 
                                 <div class="form-group filter-input-sec-group2 col-md-6">
                                     <label for="">Daily Pay</label>
                                     <input type="text" class="form-control assignment-detail-form-control" id=""
-                                        placeholder="&#163 80.00" value="{{ $assignmentDetail->cost_dec }}">
+                                        name="cost_dec" placeholder=""
+                                        value="{{ $assignmentDetail->cost_dec }}">
                                 </div>
                             </div>
                         </div>
@@ -114,33 +120,33 @@
                         <div class="assignment-time-table-section">
                             <div class="total-days-section">
                                 <div class="days-slider-sec">
-                                    <i class="fa-regular fa-calendar-days"></i>
+                                    <a style="cursor: pointer" id=""
+                                        onclick="goFirstAsnDate('<?php echo $assignmentDetail->asnStartDate_dte; ?>')" title="">
+                                        <i class="fa-regular fa-calendar-days"></i>
+                                    </a>
                                 </div>
 
                                 <div class="date-section">
                                     <div class="total-days-slider-sec">
                                         <div class="total-days-text">
                                             <div class="assignment-date">
-                                                <span>1.41</span>
+                                                <span id="prevDaySpan">
+                                                    @if ($prevDays && $prevDays->previousDays > 0)
+                                                        {{ $prevDays->previousDays }}
+                                                    @endif
+                                                </span>
                                             </div>
                                             <div class="assignment-date-text">
-                                                <span>Total Days: 2.41</span>
+                                                <span>Total Days: {{ $assignmentDetail->daysThisWeek }}</span>
                                             </div>
                                             <div class="assignment-date2">
-                                                <span>1</span>
+                                                <span id="nextDaySpan">
+                                                    @if ($nextDays && $nextDays->nDays > 0)
+                                                        {{ $nextDays->nDays }}
+                                                    @endif
+                                                </span>
                                             </div>
                                         </div>
-                                        {{-- <div class="total-days-text">
-                                            <div class="assignment-date">
-                                                <i class="fa-solid fa-caret-left"></i>
-                                            </div>
-                                            <div class="assignment-date-text">
-                                                <span>10 October 2022</span>
-                                            </div>
-                                            <div class="assignment-date2">
-                                                <i class="fa-solid fa-caret-right"></i>
-                                            </div>
-                                        </div> --}}
                                     </div>
 
                                     <div id='full_calendar_events'></div>
@@ -162,7 +168,7 @@
 
                                         <div class="form-group col-md-6 second-filter-sec">
                                             <label for="">First Date</label>
-                                            <input type="date" class="form-control" id="">
+                                            <input type="text" class="form-control" id="" name="firstDate_dte" value="{{ $assignmentDetail->firstDate_dte?$assignmentDetail->firstDate_dte:'' }}" readonly>
                                         </div>
                                     </div>
 
@@ -173,18 +179,17 @@
                             <div class="mode-text-sec">
                                 <p>Mode</p>
                                 <div class="form-check mode-check">
-                                    <label for="html"><a href="#"><i class="fa-solid fa-plus"></i></a></label>
-                                    <input type="radio" id="html" name="fav_language" value="HTML">
+                                    <label for="addMode"><i class="fa-solid fa-plus"></i></label>
+                                    <input type="radio" id="addMode" name="assignment_mode" value="add" checked>
                                 </div>
                                 <div class="form-check mode-check">
-                                    <label for="html"><a href="#"><i
-                                                class="fa-solid fa-pencil"></i></a></label>
-                                    <input type="radio" id="html" name="fav_language" value="HTML">
+                                    <label for="editMode"><i class="fa-solid fa-pencil"></i></label>
+                                    <input type="radio" id="editMode" name="assignment_mode" value="edit">
                                 </div>
                                 <div class="form-check mode-check">
-                                    <label for="html"><a href="#"><i
-                                                class="fa-solid fa-right-long next-arrow-icon"></i></a></label>
-                                    <input type="radio" id="html" name="fav_language" value="HTML">
+                                    <label for="enterMode" id="unblockLabel"> <i
+                                            class="fa-solid fa-right-long next-arrow-icon"></i></label>
+                                    <input type="radio" id="enterMode" name="assignment_mode" value="unblock">
                                 </div>
                             </div>
                         </div>
@@ -192,33 +197,155 @@
 
                     <div class="row assignment-notes-sec">
                         <div class="form-group col-md-6 label-heading">
-                            <label for="comment">Last Contact re. Assignment</label>
-                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                            <label for="">Last Contact re. Assignment</label>
+                            <textarea class="form-control" rows="5" id="" name=""></textarea>
                         </div>
                         <div class="form-group col-md-6 label-heading">
-                            <label for="comment">Assignment Notes</label>
-                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                            <label for="">Assignment Notes</label>
+                            <textarea class="form-control" rows="5" id="" name="notes_txt">{{ $assignmentDetail->notes_txt }}</textarea>
                         </div>
                     </div>
 
                     <div class="button-section">
                         <button class="button-1">Candidate Vetting</button>
-                        <!-- <button class="button-2">Block Booking -->
 
-                        <button type="button" class="btn btn-primary button-2" data-toggle="modal"
-                            data-target="#myModal">
+                        <button type="button" class="btn btn-primary button-2" id="blockBookingBtnId">
                             Block Booking
                         </button>
 
-                        <button type="button" class="btn btn-primary button-3">Submit</button>
+                        <button type="submit" class="btn btn-primary button-3">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- The Modal -->
-    <div class="modal fade" id="myModal">
+    <!-- Block Booking Modal -->
+    <div class="modal fade" id="blockBookingModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Block Date Booking</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Create a block of dates for an assignment</h2>
+                </div>
+
+                <form action="{{ url('/addBlockBooking') }}" method="post" class="form-validate-2"
+                    id="addBlockBookingForm">
+                    @csrf
+                    <input type="hidden" name="assignmentId" id="" value="{{ $asn_id }}">
+
+                    <div class="modal-input-field-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Start Date</label>
+                                    <input type="date" class="form-control field-validate-2" name="blockStartDate"
+                                        id="blockStartDate" value="">
+                                </div>
+
+                                <div class="form-group calendar-form-filter">
+                                    <label for="">Part Of Day</label>
+                                    <select class="form-control field-validate-2" name="blockDayPart" id="blockDayPart">
+                                        <option value="">Choose one</option>
+                                        @foreach ($dayPartList as $key1 => $dayPart)
+                                            <option value="{{ $dayPart->description_int }}">
+                                                {{ $dayPart->description_txt }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 modal-form-right-sec">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">End Date</label>
+                                    <input type="date" class="form-control field-validate-2" name="blockEndDate"
+                                        id="blockEndDate" value="">
+                                </div>
+
+                                <div class="form-group modal-input-field" id="blockHourDiv" style="display: none;">
+                                    <label class="form-check-label">Hours</label>
+                                    <input type="text" class="form-control" name="blockHour" id="blockHour"
+                                        value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="addBlockBookingBtn">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Block Booking Modal -->
+
+    <!-- Unblock Booking Modal -->
+    <div class="modal fade" id="unblockBookingModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width:65%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">UnBlock Date Booking</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Enter unblock dates</h2>
+                </div>
+
+                <form action="{{ url('/unBlockBooking') }}" method="post" class="form-validate-3"
+                    id="unblockBookingBtnForm">
+                    @csrf
+                    <input type="hidden" name="assignmentId" id="" value="{{ $asn_id }}">
+
+                    <div class="modal-input-field-section">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Start Date</label>
+                                    <input type="date" class="form-control field-validate-3" name="unblockStartDate"
+                                        id="unblockStartDate" value="">
+                                </div>
+
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">End Date</label>
+                                    <input type="date" class="form-control field-validate-3" name="unblockEndDate"
+                                        id="unblockEndDate" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="unblockBookingBtn">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Unblock Booking Modal -->
+
+    <!-- Event Edit Modal -->
+    <div class="modal fade" id="eventEditModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
@@ -233,55 +360,27 @@
                     <h2>Edit Assignment Day</h2>
                 </div>
 
-                <div class="modal-input-field-section">
-                    <div class="modal-input-field">
-                        <label class="form-check-label">Date</label>
-                        <input type="date" class="form-control" name="booked_day" id="booked_day" value="">
+                <form action="{{ url('/ajaxAssignmentEventUpdate') }}" method="post" class="form-validate"
+                    id="ajaxAssignmentEventForm">
+                    @csrf
+                    <input type="hidden" name="editEventId" id="editEventId" value="">
+
+                    <div class="modal-input-field-section">
+                        <div id="AjaxEventEdit"></div>
                     </div>
 
-                    <div class="form-group calendar-form-filter">
-                        <label for="inputState">Part of Day</label>
-                        <select id="inputState" class="form-control">
-                            <option selected>Choose...</option>
-                            <option>...</option>
-                        </select>
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="ajaxAssignmentEventBtn">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
-
-                    <div class="modal-input-field">
-                        <label class="form-check-label">Percentage of a day</label>
-                        <input type="number" class="form-control" name="booked_day" id="booked_day" value="">
-                    </div>
-
-                    <div class="modal-input-field">
-                        <label class="form-check-label">Hours</label>
-                        <input type="time" class="form-control" name="booked_day" id="booked_day" value="">
-                    </div>
-
-                    <div class="modal-side-field">
-                        <label class="form-check-label">Charge</label>
-                        <input type="text" class="form-control" name="booked_day" id="booked_day" value="">
-                    </div>
-                    <div class="modal-side-field second">
-                        <label class="form-check-label">Pay</label>
-                        <input type="text" class="form-control" name="booked_day" id="booked_day" value="">
-                    </div>
-                </div>
-
-
-                <!-- Modal body
-                                                    <div class="modal-body">
-                                                        Modal body..
-                                                    </div> -->
-
-                <!-- Modal footer -->
-                <div class="modal-footer calendar-modal-footer">
-                    <button type="submit" class="btn btn-secondary" data-dismiss="modal">Submit</button>
-                </div>
+                </form>
 
             </div>
         </div>
     </div>
-    <!-- </button> -->
+    <!-- Event Edit Modal -->
 
     <script>
         $(document).ready(function() {
@@ -293,7 +392,7 @@
                 }
             });
             var calendar = $('#full_calendar_events').fullCalendar({
-                editable: true,
+                editable: false,
                 firstDay: 1,
                 header: {
                     left: 'prev',
@@ -305,22 +404,25 @@
                 showNonCurrentDates: false,
                 fullDay: false,
                 events: SITEURL + "/assignment-details/" + asn_id,
-                displayEventTime: true,
+                displayEventTime: false,
                 // eventColor: '#cdb71e',
-                eventTextColor: '#cdb71e',
-                eventBackgroundColor: '#db5e5e',
+                eventTextColor: '#fff',
+                eventBackgroundColor: '#48A0DC',
                 eventRender: function(event, element, view) {
                     // if (event.allDay === 'true') {
                     //     event.allDay = true;
                     // } else {
                     //     event.allDay = false;
                     // }
+                    event.editable = true;
                     element.find('span.fc-title').addClass('customClass');
                 },
                 selectable: true,
                 selectHelper: true,
                 dragScroll: false,
                 unselectAuto: false,
+                droppable: false,
+                allDayDefault: false,
                 select: function(event_start, event_end, allDay) {
                     // console.log('event_start ==>', event_start)
                     // console.log('event_end ==>', event_end)
@@ -330,66 +432,142 @@
                     if ((event_end._d.getDate() - 1) != event_start._d.getDate()) {
                         calendar.fullCalendar('unselect');
                     } else {
-                        var event_name = prompt('Event Name:');
-                        if (event_name) {
-                            var event_start = $.fullCalendar.formatDate(event_start,
-                                "Y-MM-DD HH:mm:ss");
-                            var event_end = $.fullCalendar.formatDate(event_end, "Y-MM-DD HH:mm:ss");
+                        // var event_name = prompt('Event Name:');
+                        // var event_end = $.fullCalendar.formatDate(event_end, "Y-MM-DD HH:mm:ss");
+                        var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD");
+                        var assignment_mode = $('input[name="assignment_mode"]:checked').val();
+                        if (assignment_mode == 'add') {
                             $.ajax({
-                                url: SITEURL + "/calendar-crud-ajax",
+                                url: SITEURL + "/insertAssignmentEvent/" + asn_id,
                                 data: {
-                                    event_name: event_name,
-                                    event_start: event_start,
-                                    event_end: event_end,
-                                    type: 'create'
+                                    event_start: event_start
                                 },
                                 type: "POST",
+                                dataType: "json",
                                 success: function(data) {
-                                    displayMessage("Event created.");
-                                    calendar.fullCalendar('renderEvent', {
-                                        id: data.id,
-                                        title: event_name,
-                                        start: event_start,
-                                        end: event_end,
-                                        allDay: allDay
-                                    }, true);
+                                    if (data) {
+                                        if (data.type == 'Delete') {
+                                            calendar.fullCalendar('removeEvents', data
+                                                .eventId);
+                                        } else if (data.type == 'Add') {
+                                            calendar.fullCalendar('renderEvent', {
+                                                id: data.eventItem.id,
+                                                title: data.eventItem.title,
+                                                start: data.eventItem.start,
+                                                editable: false
+                                            }, true);
+                                        } else if (data.type == 'Update') {
+                                            calendar.fullCalendar('removeEvents', data
+                                                .eventItem.id);
+                                            calendar.fullCalendar('renderEvent', {
+                                                id: data.eventItem.id,
+                                                title: data.eventItem.title,
+                                                start: data.eventItem.start,
+                                                editable: false
+                                            }, true);
+                                        }
+                                    }
+                                    calendar.fullCalendar('unselect');
+                                }
+                            });
+                        }
+
+                        if (assignment_mode == 'edit') {
+                            $.ajax({
+                                url: SITEURL + "/checkAssignmentEvent/" + asn_id,
+                                data: {
+                                    event_start: event_start
+                                },
+                                type: "POST",
+                                dataType: "json",
+                                success: function(data) {
+                                    if (data) {
+                                        if (data.exist == 'No') {
+                                            swal("",
+                                                "You cannot use the edit day mode on an empty date in the calendar."
+                                            );
+                                        } else {
+                                            $('#editEventId').val(data.eventId)
+                                            $('#AjaxEventEdit').html(data.html);
+                                            $('#eventEditModal').modal("show");
+                                        }
+                                    }
                                     calendar.fullCalendar('unselect');
                                 }
                             });
                         }
                     }
                 },
-                eventDrop: function(event, delta) {
-                    var event_start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
-                    var event_end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
-                    $.ajax({
-                        url: SITEURL + '/calendar-crud-ajax',
-                        data: {
-                            title: event.event_name,
-                            start: event_start,
-                            end: event_end,
-                            id: event.id,
-                            type: 'edit'
-                        },
-                        type: "POST",
-                        success: function(response) {
-                            displayMessage("Event updated");
-                        }
-                    });
-                },
+                // eventDrop: function(event, delta) {
+                //     var event_start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
+                //     var event_end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
+                //     $.ajax({
+                //         url: SITEURL + '/calendar-crud-ajax',
+                //         data: {
+                //             title: event.event_name,
+                //             start: event_start,
+                //             end: event_end,
+                //             id: event.id,
+                //             type: 'edit'
+                //         },
+                //         type: "POST",
+                //         success: function(response) {
+
+                //         }
+                //     });
+                // },
                 eventClick: function(event) {
-                    var eventDelete = confirm("Are you sure?");
-                    if (eventDelete) {
+                    // var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD");
+                    var assignment_mode = $('input[name="assignment_mode"]:checked').val();
+                    if (assignment_mode == 'add') {
                         $.ajax({
                             type: "POST",
-                            url: SITEURL + '/calendar-crud-ajax',
+                            url: SITEURL + "/updateAssignmentEvent/" + asn_id,
                             data: {
-                                id: event.id,
-                                type: 'delete'
+                                id: event.id
                             },
-                            success: function(response) {
-                                calendar.fullCalendar('removeEvents', event.id);
-                                displayMessage("Event removed");
+                            dataType: "json",
+                            success: function(data) {
+                                if (data) {
+                                    if (data.type == 'Delete') {
+                                        calendar.fullCalendar('removeEvents', data
+                                            .eventId);
+                                    } else if (data.type == 'Update') {
+                                        calendar.fullCalendar('removeEvents', data
+                                            .eventItem.id);
+                                        calendar.fullCalendar('renderEvent', {
+                                            id: data.eventItem.id,
+                                            title: data.eventItem.title,
+                                            start: data.eventItem.start,
+                                            editable: false
+                                        }, true);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if (assignment_mode == 'edit') {
+                        $.ajax({
+                            url: SITEURL + "/checkAssignmentEvent2/" + asn_id,
+                            data: {
+                                id: event.id
+                            },
+                            type: "POST",
+                            dataType: "json",
+                            success: function(data) {
+                                if (data) {
+                                    if (data.exist == 'No') {
+                                        swal("",
+                                            "You cannot use the edit day mode on an empty date in the calendar."
+                                        );
+                                    } else {
+                                        $('#editEventId').val(data.eventId)
+                                        $('#AjaxEventEdit').html(data.html);
+                                        $('#eventEditModal').modal("show");
+                                    }
+                                }
+                                calendar.fullCalendar('unselect');
                             }
                         });
                     }
@@ -397,8 +575,254 @@
             });
         });
 
-        function displayMessage(message) {
-            toastr.success(message, 'Event');
+        $(document).on('click', '#ajaxAssignmentEventBtn', function() {
+            var error = "";
+            $(".field-validate").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            $(".number-validate").each(function() {
+                if (this.value == '' || isNaN(this.value)) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            if (error == "has error") {
+                return false;
+            } else {
+                var form = $("#ajaxAssignmentEventForm");
+                var actionUrl = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data) {
+                            if (data.status == 'success') {
+                                $("#full_calendar_events").fullCalendar('removeEvents', data
+                                    .eventId);
+                                $("#full_calendar_events").fullCalendar('renderEvent', {
+                                    id: data.eventItem.id,
+                                    title: data.eventItem.title,
+                                    start: data.eventItem.start,
+                                    editable: false
+                                }, true);
+                                date = moment(data.eventItem.start, "YYYY-MM-DD");
+                                $("#full_calendar_events").fullCalendar('gotoDate', date);
+
+                                $('#eventEditModal').modal("hide");
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        function goFirstAsnDate(asnStartDate_dte) {
+            if (asnStartDate_dte) {
+                date = moment(asnStartDate_dte, "YYYY-MM-DD");
+                $("#full_calendar_events").fullCalendar('gotoDate', date);
+
+                var SITEURL = "{{ url('/') }}";
+                var asn_id = "{{ $asn_id }}";
+                $.ajax({
+                    type: "POST",
+                    url: SITEURL + "/prevNextEvent/" + asn_id,
+                    data: {
+                        Date: asnStartDate_dte
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data) {
+                            $('#prevDaySpan').html('');
+                            $('#nextDaySpan').html('');
+                            if (data.prevDays) {
+                                $('#prevDaySpan').html(data.prevDays.previousDays);
+                            }
+                            if (data.nextDays) {
+                                $('#nextDaySpan').html(data.nextDays.nDays);
+                            }
+                        }
+                    }
+                });
+            }
         }
+
+        $(document).on('change', '#blockDayPart', function() {
+            var blockDayPart = this.value;
+            if (blockDayPart == 4) {
+                $('#blockHour').addClass('number-validate-2');
+                $('#blockHourDiv').show();
+            } else {
+                $('#blockHour').removeClass('number-validate-2');
+                $('#blockHour').closest(".form-group").removeClass('has-error');
+                $('#blockHourDiv').hide();
+            }
+        });
+
+        $(document).on('click', '#blockBookingBtnId', function() {
+            var CurrentDateObj = new Date();
+            date = moment(CurrentDateObj, "YYYY-MM-DD");
+            $("#full_calendar_events").fullCalendar('gotoDate', date);
+            $('#blockBookingModal').modal('show');
+        });
+
+        $(document).on('click', '#addBlockBookingBtn', function() {
+            var error = "";
+            $(".field-validate-2").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            $(".number-validate-2").each(function() {
+                if (this.value == '' || isNaN(this.value)) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            if (error == "has error") {
+                return false;
+            } else {
+                var form = $("#addBlockBookingForm");
+                var actionUrl = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        if (data) {
+                            if (data.status == 'success') {
+                                // location.reload();
+                                $.each(data.IdArray, function(val1, text1) {
+                                    $("#full_calendar_events").fullCalendar('removeEvents',
+                                        text1);
+                                });
+                                var DateObj = new Date(data.firstDate);
+                                var months = DateObj.getMonth();
+                                var CurrentDateObj = new Date();
+                                var CurrentMonths = CurrentDateObj.getMonth();
+                                if (months == CurrentMonths) {
+                                    $.each(data.eventItemArr, function(val, text) {
+                                        $("#full_calendar_events").fullCalendar('renderEvent', {
+                                            id: text.id,
+                                            title: text.title,
+                                            start: text.start,
+                                            editable: false
+                                        }, true);
+                                    });
+                                }
+
+                                if (data.firstDate) {
+                                    date = moment(data.firstDate, "YYYY-MM-DD");
+                                    $("#full_calendar_events").fullCalendar('gotoDate', date);
+                                }
+
+                                $('#blockBookingModal').modal('hide');
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        $('input[type=radio][name=assignment_mode]').change(function() {
+            if (this.value == 'unblock') {
+                var CurrentDateObj = new Date();
+                date = moment(CurrentDateObj, "YYYY-MM-DD");
+                $("#full_calendar_events").fullCalendar('gotoDate', date);
+                $('#unblockBookingModal').modal('show');
+            }
+        });
+
+        $(document).on('click', '#unblockLabel', function() {
+            var CurrentDateObj = new Date();
+            date = moment(CurrentDateObj, "YYYY-MM-DD");
+            $("#full_calendar_events").fullCalendar('gotoDate', date);
+            $('#unblockBookingModal').modal('show');
+        });
+
+        $(document).on('click', '#unblockBookingBtn', function() {
+            var error = "";
+            $(".field-validate-3").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            if (error == "has error") {
+                return false;
+            } else {
+                var form = $("#unblockBookingBtnForm");
+                var actionUrl = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        if (data) {
+                            if (data.status == 'success') {
+                                // location.reload();
+                                $.each(data.IdArray, function(val1, text1) {
+                                    $("#full_calendar_events").fullCalendar('removeEvents',
+                                        text1);
+                                });
+
+                                if (data.firstDate) {
+                                    date = moment(data.firstDate, "YYYY-MM-DD");
+                                    $("#full_calendar_events").fullCalendar('gotoDate', date);
+                                }
+
+                                $('#unblockBookingModal').modal('hide');
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '.fc-prev-button, .fc-next-button', function() {
+            var getDate = $('#full_calendar_events').fullCalendar('getDate');
+            var Date = getDate.format();
+            var SITEURL = "{{ url('/') }}";
+            var asn_id = "{{ $asn_id }}";
+            $.ajax({
+                type: "POST",
+                url: SITEURL + "/prevNextEvent/" + asn_id,
+                data: {
+                    Date: Date
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data) {
+                        $('#prevDaySpan').html('');
+                        $('#nextDaySpan').html('');
+                        if (data.prevDays) {
+                            $('#prevDaySpan').html(data.prevDays.previousDays);
+                        }
+                        if (data.nextDays) {
+                            $('#nextDaySpan').html(data.nextDays.nDays);
+                        }
+                    }
+                }
+            });
+        });
     </script>
 @endsection

@@ -17,18 +17,18 @@
 
     <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 50px; ">
         <tr style="padding: 15px;">
-            <th style="text-align:left; font-size: 50px; font-weight: bold; color: #fff; padding-left: 70px;">
+            <th style="text-align:left; font-size: 50px; font-weight: bold; color: #fff; padding-left: 30px;">
                 {{ $schoolInvoices->creditNote_status == '-1' ? 'Credit Note' : 'Invoice' }}
             </th>
-            <th style="text-align:right;"><img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt=""
-                    style="width: 35%;">
+            <th style="text-align:right;"><img src="{{ asset($companyDetail->company_logo) }}" alt=""
+                    style="width: 20%;">
             </th>
         </tr>
     </table>
 
-    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 50px;">
+    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 30px;">
         <tr>
-            <td style="vertical-align: top; width: 50%;">
+            <td style="vertical-align: top; width: 45%;">
                 <table>
                     <tr>
                         <td style="text-align:left; color: #333; font-size: 15px; font-weight: bold;">
@@ -84,164 +84,94 @@
                 </table>
             </td>
 
-            <td>
+            <td style="vertical-align: top; width: 55%;">
+
                 <table>
                     <tr>
                         <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
-                            BumbleBee Education Limited
+                            {{ $companyDetail->company_name }}
                         </td>
                     </tr>
 
+                    @if ($companyDetail->address1_txt)
                     <tr>
                         <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
-                            Comer Business Innovation Centre
+                            {{ $companyDetail->address1_txt }}
                         </td>
                     </tr>
+                    @endif
 
+                    @if ($companyDetail->address2_txt)
                     <tr>
                         <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
-                            Building 3, Room 472b North London Business Park
+                            {{ $companyDetail->address2_txt }}
                         </td>
                     </tr>
+                    @endif
 
+                    @if ($companyDetail->address3_txt)
                     <tr>
                         <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
-                            Oakleigh Road South, N11 1GN
+                            {{ $companyDetail->address3_txt }}
                         </td>
                     </tr>
+                    @endif
 
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
+                    @if ($companyDetail->address4_txt)
                     <tr>
                         <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            {{ $companyDetail->address4_txt }}
+                        </td>
+                    </tr>
+                    @endif
+
+                    @if ($companyDetail->address5_txt)
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            {{ $companyDetail->address5_txt }}
+                        </td>
+                    </tr>
+                    @endif
+
+                    @if ($companyDetail->postcode_txt)
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                            {{ $companyDetail->postcode_txt }}
+                        </td>
+                    </tr>
+                    @endif
+                    <br>
+                    <tr>
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 60%;">
                             Company Number:
                         </td>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 40%;">{{ $companyDetail->company_phone }}</td>
                     </tr>
 
                     <tr>
-                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 60%;">
                             VAT Registration Number:
                         </td>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 40%;">{{ $companyDetail->vat_registration }}</td>
                     </tr>
+                    <br>
 
                     <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 60%;">
                             Invoice Number:
                         </td>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 40%;">{{ $schoolInvoices->invoice_id }}</td>
                     </tr>
 
                     <tr>
-                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold;">
+                        <td style="text-align:left; color: #afabab; font-size: 15px; font-weight: bold; width: 60%;">
                             Invoice Date:
                         </td>
+                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold; width: 40%;">{{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}</td>
                     </tr>
+                    
                 </table>
-            </td>
 
-            <td style="vertical-align: bottom;">
-                <table>
-
-
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
-                            9066103
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
-                            191132039
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
-                            {{ $schoolInvoices->invoice_id }}
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="text-align:right; color: #afabab; font-size: 13px; font-weight: bold;">
-                            {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
-                        </td>
-                    </tr>
-                </table>
             </td>
         </tr>
     </table>
@@ -299,7 +229,7 @@
         </tr>
     </table>
 
-    <table style="margin-top: 180px; margin-left: 40px;">
+    <table style="margin-top: 100px; margin-left: 40px;">
         <tr>
             <th style="text-align:left; color: #afabab; font-size: 12px; font-weight: 400;">By paying this invoice I
                 certify

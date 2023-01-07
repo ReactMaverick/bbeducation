@@ -34,12 +34,12 @@
                             </a>
                         </div>
 
-                        <div class="about-teacher">
+                        {{-- <div class="about-teacher">
                             <a href="#"> <i class="fa-solid fa-file-lines"></i>
                                 <p>Pending</p>
                                 <p>Documents</p>
                             </a>
-                        </div>
+                        </div> --}}
 
                         <div class="about-teacher">
                             <a href="{{ URL::to('/teacher-pending-reference') }}"> <i class="fa-regular fa-file-lines"></i>

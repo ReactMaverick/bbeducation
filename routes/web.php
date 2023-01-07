@@ -43,11 +43,22 @@ Route::get('/dashboard', [HomeController::class, 'dashboard']);
 
 // Assignment
 Route::get('/assignments', [AssignmentController::class, 'assignments']);
+Route::post('/createNewAssignment', [AssignmentController::class, 'createNewAssignment']);
 Route::get('/assignment-details/{id}', [AssignmentController::class, 'assignmentDetails']);
-Route::get('/assignment-contact', [AssignmentController::class, 'assignmentContact']);
-Route::get('/assignment-candidate', [AssignmentController::class, 'assignmentCandidate']);
-Route::get('/assignment-school', [AssignmentController::class, 'assignmentSchool']);
-Route::get('/assignment-finance', [AssignmentController::class, 'assignmentFinance']);
+Route::post('/insertAssignmentEvent/{id}', [AssignmentController::class, 'insertAssignmentEvent']);
+Route::post('/updateAssignmentEvent/{id}', [AssignmentController::class, 'updateAssignmentEvent']);
+Route::post('/checkAssignmentEvent/{id}', [AssignmentController::class, 'checkAssignmentEvent']);
+Route::post('/checkAssignmentEvent2/{id}', [AssignmentController::class, 'checkAssignmentEvent2']);
+Route::post('/ajaxAssignmentEventUpdate', [AssignmentController::class, 'ajaxAssignmentEventUpdate']);
+Route::post('/addBlockBooking', [AssignmentController::class, 'addBlockBooking']);
+Route::post('/unBlockBooking', [AssignmentController::class, 'unBlockBooking']);
+Route::post('/prevNextEvent/{id}', [AssignmentController::class, 'prevNextEvent']);
+Route::post('/assignmentDetailUpdate', [AssignmentController::class, 'assignmentDetailUpdate']);
+Route::get('/assignment-contact/{id}', [AssignmentController::class, 'assignmentContact']);
+Route::post('/assignmentContactLogInsert', [AssignmentController::class, 'assignmentContactLogInsert']);
+Route::get('/assignment-candidate/{id}', [AssignmentController::class, 'assignmentCandidate']);
+Route::get('/assignment-school/{id}', [AssignmentController::class, 'assignmentSchool']);
+Route::get('/assignment-finance/{id}', [AssignmentController::class, 'assignmentFinance']);
 // Assignment
 
 // Teacher

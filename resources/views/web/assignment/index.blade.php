@@ -35,7 +35,7 @@
                                 <td>{{ $Assignment->assignmentStatus }}</td>
                                 <td>{{ $Assignment->teacherProfession }}</td>
                                 <td>{{ $Assignment->assignmentType }}</td>
-                                <td>{{ $Assignment->dayPercent_dec }} {{ $Assignment->type_txt }}</td>
+                                <td>{{ $Assignment->daysThisWeek }} Days</td>
                                 <td>
                                     @if ($Assignment->techerFirstname || $Assignment->techerSurname)
                                         {{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}

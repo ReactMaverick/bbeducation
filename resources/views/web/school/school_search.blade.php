@@ -18,9 +18,7 @@
                                 <button type="submit" class="btn btn-primary school-search-btn"
                                     id="normalSearchBtn">Search</button>
                                 <a href="{{ URL::to('/school-search') }}"><i class="fa-solid fa-arrows-rotate"></i></a>
-                                <a href="javascript:void(0)"><i class="fa-solid fa-plus"></i></a>
                             </div>
-
                         </div>
                         <table class="table assignment-page-table" id="myTable">
                             <thead>
@@ -31,20 +29,25 @@
                                     <th>LA/Borough</th>
                                     <th>Days</th>
                                     <th>Last Contact</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody class="table-body-sec">
                                 @foreach ($schoolList as $key => $school)
-                                    <tr class="table-data" onclick="schoolDetail({{ $school->school_id }})">
-                                        <td>{{ $school->name_txt }}</td>
-                                        <td>{{ $school->ageRange_txt }}</td>
-                                        <td>{{ $school->type_txt }}</td>
-                                        <td>{{ $school->laName_txt }}</td>
-                                        <td>{{ $school->days_dec }}</td>
-                                        <td>
+                                    <tr class="table-data">
+                                        <td onclick="schoolDetail({{ $school->school_id }})">{{ $school->name_txt }}</td>
+                                        <td onclick="schoolDetail({{ $school->school_id }})">{{ $school->ageRange_txt }}
+                                        </td>
+                                        <td onclick="schoolDetail({{ $school->school_id }})">{{ $school->type_txt }}</td>
+                                        <td onclick="schoolDetail({{ $school->school_id }})">{{ $school->laName_txt }}</td>
+                                        <td onclick="schoolDetail({{ $school->school_id }})">{{ $school->days_dec }}</td>
+                                        <td onclick="schoolDetail({{ $school->school_id }})">
                                             @if ($school->lastContact_dte != 0)
                                                 {{ date('d-m-Y', strtotime($school->lastContact_dte)) }}
                                             @endif
+                                        </td>
+                                        <td onclick="addAssignment({{ $school->school_id }})" title="Add New Assignment">
+                                            <a style="cursor: pointer"><i class="fa-solid fa-plus"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -200,8 +203,8 @@
             // $('#advanceSearchDiv').css('display', 'none');
         });
 
-        function schoolDetail(school_id){
-            window.location.href = "{{ URL::to('/school-detail') }}"+'/'+school_id;
+        function schoolDetail(school_id) {
+            window.location.href = "{{ URL::to('/school-detail') }}" + '/' + school_id;
         }
 
         $(document).on('click', '#advanceSearch', function() {
@@ -241,5 +244,42 @@
                 $("#advanceSearchForm").submit();
             }
         });
+
+        function addAssignment(school_id) {
+            if (school_id) {
+                swal({
+                        title: "",
+                        text: "This will create an assignment tied to the select school.",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('createNewAssignment') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        school_id: school_id
+                                    },
+                                    success: function(data) {
+                                        if (data) {
+                                            if (data.login == 'yes') {
+                                                if (data.asn_id) {
+                                                    window.location.href = "{{ URL::to('/assignment-details') }}" + '/' + data.asn_id;
+                                                }
+                                            } else {
+                                                window.location.href = "{{ URL::to('/') }}";
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                    });
+            }
+        }
     </script>
 @endsection

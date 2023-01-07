@@ -1,5 +1,10 @@
 @extends('web.layout')
 @section('content')
+    <style>
+        .disabled-link {
+            pointer-events: none;
+        }
+    </style>
     <div class="assignment-detail-page-section">
         <div class="row assignment-detail-row">
 
@@ -46,9 +51,16 @@
                             </div>
 
                             <div class="school-assignment-contact-icon-sec">
-                                <a href="javascript:void(0)"><i class="fa-solid fa-xmark"></i></a>
-                                <a href="javascript:void(0)"><i class="fa-solid fa-plus"></i></a>
-                                <a href="javascript:void(0)"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
+                                <a style="cursor: pointer;" class="disabled-link" id="deleteAssignmentBttn">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                                <a style="cursor: pointer;" onclick="addAssignment({{ $school_id }})"
+                                    title="Add New Assignment">
+                                    <i class="fa-solid fa-plus"></i>
+                                </a>
+                                <a style="cursor: pointer;" class="disabled-link" id="editAssignmentBttn">
+                                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                                </a>
                             </div>
                         </div>
 
@@ -91,7 +103,9 @@
                                     }
                                     
                                     ?>
-                                    <tr class="table-data" onclick="assignmentDetail({{ $Assignment->asn_id }})">
+                                    <tr class="table-data editAssignmentRow"
+                                        onclick="assignmentRowSelect({{ $Assignment->asn_id }})"
+                                        id="editAssignmentRow{{ $Assignment->asn_id }}">
                                         <td>
                                             @if ($yDescription == null || $yDescription == '')
                                                 {{ $Assignment->yearGroup }}
@@ -124,8 +138,10 @@
                             </tbody>
                         </table>
 
-
                     </div>
+
+                    <input type="hidden" name="assignmentId" id="assignmentId" value="{{ $schoolDetail->school_id }}">
+
                     <div class="assignment-first-sec">
                         <div class="assignment-left-sidebar-section">
                             <div class="school-assignment-sidebar-sec">
@@ -157,8 +173,19 @@
             $('#myTable').DataTable();
         });
 
-        function assignmentDetail(asn_id) {
-            window.location.href = "{{ URL::to('/assignment-details') }}" + '/' + asn_id;
+        function assignmentRowSelect(asn_id) {
+            if ($('#editAssignmentRow' + asn_id).hasClass('tableRowActive')) {
+                $('#assignmentId').val('');
+                $('#editAssignmentRow' + asn_id).removeClass('tableRowActive');
+                $('#deleteAssignmentBttn').addClass('disabled-link');
+                $('#editAssignmentBttn').addClass('disabled-link');
+            } else {
+                $('#assignmentId').val(asn_id);
+                $('.editAssignmentRow').removeClass('tableRowActive');
+                $('#editAssignmentRow' + asn_id).addClass('tableRowActive');
+                $('#deleteAssignmentBttn').removeClass('disabled-link');
+                $('#editAssignmentBttn').removeClass('disabled-link');
+            }
         }
 
         $(document).on('change', '#includeAll', function() {
@@ -208,5 +235,54 @@
             //alert("My favourite sports are: " + joinUrl);
             window.location.assign(joinUrl);
         }
+
+        function addAssignment(school_id) {
+            if (school_id) {
+                swal({
+                        title: "",
+                        text: "This will create an assignment tied to the select school.",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('createNewAssignment') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        school_id: school_id
+                                    },
+                                    success: function(data) {
+                                        if (data) {
+                                            if (data.login == 'yes') {
+                                                if (data.asn_id) {
+                                                    window.location.href =
+                                                        "{{ URL::to('/assignment-details') }}" + '/' + data
+                                                        .asn_id;
+                                                }
+                                            } else {
+                                                window.location.href = "{{ URL::to('/') }}";
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                    });
+            }
+        }
+
+        $(document).on('click', '#editAssignmentBttn', function() {
+            var assignmentId = $('#assignmentId').val();
+            if (assignmentId) {
+                window.location.href =
+                    "{{ URL::to('/assignment-details') }}" + '/' + assignmentId;
+            } else {
+                swal("", "Please select one assignment.");
+            }
+        });
     </script>
 @endsection

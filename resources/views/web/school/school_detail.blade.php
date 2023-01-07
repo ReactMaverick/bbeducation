@@ -796,7 +796,7 @@
                 });
                 $('#ContactItemEditModal').modal("show");
             } else {
-                swal("BumbleBee Education", "Please select one contact item.");
+                swal("", "Please select one contact item.");
             }
         });
 

@@ -33,6 +33,10 @@
         $(".select2").select2();
     });
 
+    $(document).on('keyup', '.onlynumber', function(e) {
+        this.value = this.value.replace(/[^0-9\.]/g, '');
+    });
+
     /******* field validate 1 ********/
     $(document).on('submit', '.form-validate', function(e) {
         var error = "";
