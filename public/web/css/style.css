@@ -2153,18 +2153,22 @@ table td {
 
 .calendar-modal-footer .cancel-btn {
     background-color: #ff3737;
+    border-color: #ff3737;
 }
 
 .calendar-modal-footer .cancel-btn:hover {
     background-color: #ff3737;
+    border-color: #ff3737;
 }
 
 .calendar-modal-footer .cancel-btn:active {
     background-color: #ff3737 !important;
+    border-color: #ff3737 !important;
 }
 
 .calendar-modal-footer .cancel-btn:focus {
     background-color: #ff3737 !important;
+    border-color: #ff3737 !important;
 }
 
 .modal-grid-reference-text {
@@ -3894,4 +3898,141 @@ td.fc-day-top {
 .disableCandVetting {
     background-color: #ffc20e8f;
     color: #afabab;
+}
+
+.cand-vetting-modal-section {
+    max-width: 90% !important;
+}
+
+.cand-vetting-modal-section i {
+    font-size: 16px;
+    color: #40A0ED;
+}
+
+.cand-vetting-modal-section a {
+    margin-right: 13px;
+}
+
+.cand-vetting-modal-section a:last-child {
+    margin-right: 0;
+}
+
+.cand-vetting-modal-input-field label {
+    font-size: 13px;
+    color: #afabab;
+}
+
+.cand-vetting-modal-input-field input {
+    font-size: 13px;
+    border-radius: 0;
+    height: 28px;
+}
+
+.cand-vetting-modal-left {
+    margin: 20px 0;
+}
+
+.cand-vetting-modal-input-field select {
+    font-size: 13px;
+    border-radius: 0;
+    height: 28px;
+    padding: 0 10px;
+}
+
+.cand-vetting-modal-input-field p {
+    font-size: 13px;
+    color: #afabab;
+    margin: 5px 0;
+    font-weight: 300;
+}
+
+.cand-vetting-modal-input-field span {
+    font-size: 13px;
+    color: #3a3a3a;
+}
+
+.cand-vetting-modal-heading-sec p {
+    font-size: 13px;
+    font-weight: bold;
+    color: #504f4f;
+    margin: 15px 0;
+}
+
+.cand-vetting-modal-field {
+    border: 1px solid #ff0000;
+    border-radius: 0;
+    height: 28px;
+}
+
+.cand-vetting-modal-input-field {
+    margin-bottom: 8px;
+}
+
+.cand-vetting-modal-user-img {
+    width: 146px;
+    border: 1px solid #dddddd;
+    padding: 22px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.cand-vetting-modal-user-img img {
+    width: 165px;
+    height: 165px;
+    object-fit: cover;
+}
+
+.cand-vetting-modal-btn {
+    justify-content: space-between;
+}
+
+.cand-vetting-modal-btn button {
+    width: 15%;
+}
+
+.cand-vetting-modal-btn .btn-warning {
+    background-color: #ffc20e;
+    border-color: #ffc20e;
+    color: #fff;
+}
+
+.cand-vetting-modal-btn .btn-warning:hover {
+    background-color: #ffc20e;
+    border-color: #ffc20e;
+}
+
+.cand-vetting-modal-btn .btn-warning:active {
+    background-color: #ffc20e !important;
+    border-color: #ffc20e !important;
+    color: #fff !important;
+}
+
+.cand-vetting-modal-btn .btn-warning:focus {
+    background-color: #ffc20e !important;
+    border-color: #ffc20e !important;
+    color: #fff !important;
+}
+
+.cand-vetting-approve-disable-btn {
+    background-color: #ffc20e7d !important;
+    border-color: #ffc20e7d !important;
+    color: #8b8989 !important;
+}
+
+.cand-vetting-approve-disable-btn:hover {
+    background-color: #ffc20e7d !important;
+    border-color: #ffc20e7d !important;
+    color: #8b8989 !important;
+}
+
+.cand-vetting-approve-disable-btn:active {
+    background-color: #ffc20e7d !important;
+    border-color: #ffc20e7d !important;
+    color: #8b8989 !important;
+}
+
+.cand-vetting-approve-disable-btn:focus {
+    background-color: #ffc20e7d !important;
+    border-color: #ffc20e7d !important;
+    color: #8b8989 !important;
 }
