@@ -1,39 +1,7 @@
 <div class="col-md-6">
     <div class="form-group calendar-form-filter">
-        <label for="">Spoke to (specific contact)</label>
-        <select class="form-control field-validate-2 editSpokeToId" name="spokeTo_id" id="editSpokeToId"
-            onchange="selectSpokeToEdit(this.value, this.options[this.selectedIndex].getAttribute('sName'))">
-            <option value="">Choose one</option>
-            @foreach ($schoolContacts as $key1 => $Contacts)
-                {{ $name = '' }}
-                @if ($Contacts->firstName_txt != '' && $Contacts->surname_txt != '')
-                    {{ $name = $Contacts->firstName_txt . ' ' . $Contacts->surname_txt }}
-                @elseif ($Contacts->firstName_txt != '' && $Contacts->surname_txt == '')
-                    {{ $name = $Contacts->firstName_txt }}
-                @elseif ($Contacts->title_int != '' && $Contacts->surname_txt != '')
-                    {{ $name = $Contacts->title_txt . ' ' . $Contacts->surname_txt }}
-                @elseif ($Contacts->jobRole_int != '')
-                    {{ $name = $Contacts->jobRole_txt . ' (name unknown)' }}
-                @else
-                    {{ $name = 'Name unknown' }}
-                @endif
-                <option sName="{{ $name }}" value="{{ $Contacts->contact_id }}"
-                    {{ $contactDetail->spokeTo_id == $Contacts->contact_id ? 'selected' : '' }}>
-                    {{ $name }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="modal-input-field">
-        <label class="form-check-label">Spoke to</label>
-        <input type="text" class="form-control" name="spokeTo_txt" id="sopkeToTextEdit"
-            value="{{ $contactDetail->spokeTo_txt }}">
-    </div>
-
-    <div class="form-group calendar-form-filter">
         <label for="">Contact Method</label>
-        <select class="form-control field-validate-2" name="method_int">
+        <select class="form-control field-validate-3" name="method_int">
             <option value="">Choose one</option>
             @foreach ($methodList as $key2 => $method)
                 <option value="{{ $method->description_int }}"
@@ -44,38 +12,12 @@
         </select>
     </div>
 
-    <div class="form-group calendar-form-filter">
-        <label for="">Contact Reason</label>
-        <select class="form-control" name="contactAbout_int">
-            <option value="">Choose one</option>
-            @foreach ($reasonList as $key4 => $reason)
-                <option value="{{ $reason->description_int }}"
-                    {{ $contactDetail->contactAbout_int == $reason->description_int ? 'selected' : '' }}>
-                    {{ $reason->description_txt }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="form-group calendar-form-filter">
-        <label for="">Call Outcome</label>
-        <select class="form-control" name="outcome_int">
-            <option value="">Choose one</option>
-            @foreach ($outcomeList as $key5 => $outcome)
-                <option value="{{ $outcome->description_int }}"
-                    {{ $contactDetail->outcome_int == $outcome->description_int ? 'selected' : '' }}>
-                    {{ $outcome->description_txt }}
-                </option>
-            @endforeach
-        </select>
+    <div class="form-group modal-input-field">
+        <label class="form-check-label">Notes</label>
+        <textarea name="notes_txt" id="" cols="30" rows="5" class="form-control field-validate-3">{{ $contactDetail->notes_txt }}</textarea>
     </div>
 </div>
 <div class="col-md-6 modal-form-right-sec">
-    <div class="form-group modal-input-field">
-        <label class="form-check-label">Notes</label>
-        <textarea name="notes_txt" id="" cols="30" rows="5" class="form-control field-validate-2">{{ $contactDetail->notes_txt }}</textarea>
-    </div>
-
     <div class="modal-side-field">
         <label class="form-check-label" for="callBackIdEdit">Callback</label>
         <input type="checkbox" class="" name="callBackCheck" id="callBackIdEdit" value="1"
@@ -87,7 +29,8 @@
         <div class="form-group calendar-form-filter col-md-12">
             <label for="">Quick Setting</label>
             <select class="form-control" name="quick_setting"
-                onchange="editQuickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))" id="editquickSettingId">
+                onchange="editQuickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))"
+                id="quickSettingIdEdit">
                 <option value="">Choose one</option>
                 @foreach ($quickSettingList as $key3 => $quickSetting)
                     <option settingTxt="{{ $quickSetting->description_txt }}"
@@ -100,31 +43,23 @@
 
         <div class="modal-input-field col-md-6">
             <label class="form-check-label">Date</label>
-            <input type="date" class="form-control" name="quick_setting_date" id="editDateId"
+            <input type="date" class="form-control" name="quick_setting_date" id="DateIdEdit"
                 value="{{ $contactDetail->callbackOn_dtm != null ? date('Y-m-d', strtotime($contactDetail->callbackOn_dtm)) : '' }}">
         </div>
 
         <div class="modal-input-field col-md-6">
             <label class="form-check-label">Time</label>
-            <input type="time" class="form-control" name="quick_setting_time" id="editTimeId"
+            <input type="time" class="form-control" name="quick_setting_time" id="timeIdEdit"
                 value="{{ $contactDetail->callbackOn_dtm != null ? date('H:i', strtotime($contactDetail->callbackOn_dtm)) : '' }}">
         </div>
     </div>
 </div>
 
 <script>
-    function selectSpokeToEdit(contact_id, contact_name) {
-        if (contact_id) {
-            $('#sopkeToTextEdit').val(contact_name);
-        } else {
-            $('#sopkeToTextEdit').val('');
-        }
-    }
-
     $(document).on('change', '#callBackIdEdit', function() {
-        $('#editquickSettingId').val('');
-        $('#editDateId').val('');
-        $('#editTimeId').val('');
+        $('#quickSettingIdEdit').val('');
+        $('#DateIdEdit').val('');
+        $('#timeIdEdit').val('');
         if ($(this).is(":checked")) {
             $('#quickSettingDivEdit').show();
         } else {
@@ -179,11 +114,11 @@
             }
             var DateValue = fdate.getFullYear() + '-' + monthString + '-' + dateString;
             var TimeValue = hourString + ':' + minuteString;
-            $('#editDateId').val(DateValue);
-            $('#editTimeId').val(TimeValue);
+            $('#DateIdEdit').val(DateValue);
+            $('#timeIdEdit').val(TimeValue);
         } else {
-            $('#editDateId').val('');
-            $('#editTimeId').val('');
+            $('#DateIdEdit').val('');
+            $('#timeIdEdit').val('');
         }
     }
 </script>

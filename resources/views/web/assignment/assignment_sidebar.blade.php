@@ -5,11 +5,11 @@
                 <h2>{{ $assignmentDetail->schooleName }}</h2>
                 <span>{{ $assignmentDetail->school_id }}</span>
             </a>
-            <i class="fa-solid fa-square-check"></i>
+            <i class="fa-solid fa-square-check {{ $assignmentDetail->status_int==3?'assignmentComplete':'assignmentInComplete' }}"></i>
         </div>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Detail') sidebar-active @endif">
-            <a href="{{ URL::to('/assignment-details/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Assignments Detail') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-details/' . $assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person-chalkboard"></i>
                 </div>
@@ -19,8 +19,8 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Contact') sidebar-active @endif">
-            <a href="{{ URL::to('/assignment-contact/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Assignments Contact') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-contact/' . $assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-comment"></i>
                 </div>
@@ -30,8 +30,9 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Candidate') sidebar-active @endif">
-            <a href="{{ URL::to('/assignment-candidate/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Assignments Candidate') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-candidate/' . $assignmentDetail->asn_id . '?showall=') }}"
+                class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-clipboard-list"></i>
                 </div>
@@ -41,8 +42,8 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments School Detail') sidebar-active @endif">
-            <a href="{{ URL::to('/assignment-school/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
+        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Assignments School Detail') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-school/' . $assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-school"></i>
                 </div>
@@ -51,8 +52,8 @@
                 </div>
             </a>
         </div>
-        <div class="sidebar-pages-section @if ($title['pageTitle']=='Assignments Finance') sidebar-active @endif">
-            <a href="{{ URL::to('/assignment-finance/'.$assignmentDetail->asn_id) }}" class="sidebar-pages">
+        {{-- <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Assignments Finance') sidebar-active @endif">
+            <a href="{{ URL::to('/assignment-finance/' . $assignmentDetail->asn_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-money-bills"></i>
                 </div>
@@ -60,10 +61,14 @@
                     <span>Finance</span>
                 </div>
             </a>
-        </div>
+        </div> --}}
 
         <div class="teacher-name">
-            <span>{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}</span>
+            @if($assignmentDetail->teacher_id)
+            <a href="{{ URL::to('/teacher-detail/' . $assignmentDetail->teacher_id) }}" class="" target="_blank">
+                <span>{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}</span>
+            </a>
+            @endif
         </div>
         <div class="assignment-detail-user-img-sec">
             <div class="user-img-sec">
@@ -77,7 +82,7 @@
         </div>
 
         <div class="sidebar-check-icon">
-            <i class="fa-solid fa-square-check"></i>
+            <i class="fa-solid fa-square-check {{ $assignmentDetail->teacher_id?'assignmentComplete':'assignmentInComplete' }}"></i>
         </div>
         <div class="assignment-id-text-sec">
             <span>Assignment ID :</span>

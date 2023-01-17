@@ -2,7 +2,7 @@
     <div class="form-group calendar-form-filter">
         <label for="">Spoke to (specific contact)</label>
         <select class="form-control field-validate-2 editSpokeToId" name="spokeTo_id" id="editSpokeToId"
-            onchange="selectSpokeToEdit(this.value, this.options[this.selectedIndex].getAttribute('sName'))">
+            onchange="selectSchSpokeToEdit(this.value, this.options[this.selectedIndex].getAttribute('sName'))">
             <option value="">Choose one</option>
             @foreach ($schoolContacts as $key1 => $Contacts)
                 {{ $name = '' }}
@@ -27,7 +27,7 @@
 
     <div class="modal-input-field">
         <label class="form-check-label">Spoke to</label>
-        <input type="text" class="form-control" name="spokeTo_txt" id="sopkeToTextEdit"
+        <input type="text" class="form-control" name="spokeTo_txt" id="sopkeToTextEditSch"
             value="{{ $contactDetail->spokeTo_txt }}">
     </div>
 
@@ -77,17 +77,17 @@
     </div>
 
     <div class="modal-side-field">
-        <label class="form-check-label" for="callBackIdEdit">Callback</label>
-        <input type="checkbox" class="" name="callBackCheck" id="callBackIdEdit" value="1"
+        <label class="form-check-label" for="callBackIdEditSch">Callback</label>
+        <input type="checkbox" class="" name="callBackCheck" id="callBackIdEditSch" value="1"
             {{ $contactDetail->callbackOn_dtm != null ? 'checked' : '' }}>
     </div>
 
-    <div class="row" id="quickSettingDivEdit"
+    <div class="row" id="quickSettingDivEditSch"
         style="display: {{ $contactDetail->callbackOn_dtm != null ? '' : 'none' }};">
         <div class="form-group calendar-form-filter col-md-12">
             <label for="">Quick Setting</label>
             <select class="form-control" name="quick_setting"
-                onchange="editQuickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))" id="editquickSettingId">
+                onchange="editQuickSettingChangeSch(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))" id="editSchquickSettingId">
                 <option value="">Choose one</option>
                 @foreach ($quickSettingList as $key3 => $quickSetting)
                     <option settingTxt="{{ $quickSetting->description_txt }}"
@@ -100,39 +100,39 @@
 
         <div class="modal-input-field col-md-6">
             <label class="form-check-label">Date</label>
-            <input type="date" class="form-control" name="quick_setting_date" id="editDateId"
+            <input type="date" class="form-control" name="quick_setting_date" id="editSchDateId"
                 value="{{ $contactDetail->callbackOn_dtm != null ? date('Y-m-d', strtotime($contactDetail->callbackOn_dtm)) : '' }}">
         </div>
 
         <div class="modal-input-field col-md-6">
             <label class="form-check-label">Time</label>
-            <input type="time" class="form-control" name="quick_setting_time" id="editTimeId"
+            <input type="time" class="form-control" name="quick_setting_time" id="editSchTimeId"
                 value="{{ $contactDetail->callbackOn_dtm != null ? date('H:i', strtotime($contactDetail->callbackOn_dtm)) : '' }}">
         </div>
     </div>
 </div>
 
 <script>
-    function selectSpokeToEdit(contact_id, contact_name) {
+    function selectSchSpokeToEdit(contact_id, contact_name) {
         if (contact_id) {
-            $('#sopkeToTextEdit').val(contact_name);
+            $('#sopkeToTextEditSch').val(contact_name);
         } else {
-            $('#sopkeToTextEdit').val('');
+            $('#sopkeToTextEditSch').val('');
         }
     }
 
-    $(document).on('change', '#callBackIdEdit', function() {
-        $('#editquickSettingId').val('');
-        $('#editDateId').val('');
-        $('#editTimeId').val('');
+    $(document).on('change', '#callBackIdEditSch', function() {
+        $('#editSchquickSettingId').val('');
+        $('#editSchDateId').val('');
+        $('#editSchTimeId').val('');
         if ($(this).is(":checked")) {
-            $('#quickSettingDivEdit').show();
+            $('#quickSettingDivEditSch').show();
         } else {
-            $('#quickSettingDivEdit').hide();
+            $('#quickSettingDivEditSch').hide();
         }
     });
 
-    function editQuickSettingChange(setting_id, setting_text) {
+    function editQuickSettingChangeSch(setting_id, setting_text) {
         if (setting_id && setting_text) {
             var arr = setting_text.split(" ");
             var today = new Date();
@@ -179,11 +179,11 @@
             }
             var DateValue = fdate.getFullYear() + '-' + monthString + '-' + dateString;
             var TimeValue = hourString + ':' + minuteString;
-            $('#editDateId').val(DateValue);
-            $('#editTimeId').val(TimeValue);
+            $('#editSchDateId').val(DateValue);
+            $('#editSchTimeId').val(TimeValue);
         } else {
-            $('#editDateId').val('');
-            $('#editTimeId').val('');
+            $('#editSchDateId').val('');
+            $('#editSchTimeId').val('');
         }
     }
 </script>

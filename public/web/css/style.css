@@ -832,7 +832,6 @@ table td {
 
 .sidebar-top-text i {
     font-size: 30px;
-    color: #3e3e3e;
     margin-bottom: 5px;
 }
 
@@ -913,8 +912,14 @@ table td {
 
 .sidebar-check-icon i {
     font-size: 30px;
-    color: #00e86a;
     margin-bottom: 5px;
+}
+
+.assignmentComplete {
+    color: #00e86a;
+}
+.assignmentInComplete {
+    color: #3e3e3e;
 }
 
 .assignment-id-text-sec {
@@ -3882,4 +3887,11 @@ td.fc-day-top {
 
 .customClass {
     font-size: 11px !important;
+}
+
+
+
+.disableCandVetting {
+    background-color: #ffc20e8f;
+    color: #afabab;
 }

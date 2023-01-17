@@ -104,15 +104,13 @@
                                 <div class="form-group filter-input-sec-group col-md-6">
                                     <label for="">Daily Charge</label>
                                     <input type="text" class="form-control assignment-detail-form-control" id=""
-                                        name="charge_dec" placeholder=""
-                                        value="{{ $assignmentDetail->charge_dec }}">
+                                        name="charge_dec" placeholder="" value="{{ $assignmentDetail->charge_dec }}">
                                 </div>
 
                                 <div class="form-group filter-input-sec-group2 col-md-6">
                                     <label for="">Daily Pay</label>
                                     <input type="text" class="form-control assignment-detail-form-control" id=""
-                                        name="cost_dec" placeholder=""
-                                        value="{{ $assignmentDetail->cost_dec }}">
+                                        name="cost_dec" placeholder="" value="{{ $assignmentDetail->cost_dec }}">
                                 </div>
                             </div>
                         </div>
@@ -168,7 +166,10 @@
 
                                         <div class="form-group col-md-6 second-filter-sec">
                                             <label for="">First Date</label>
-                                            <input type="text" class="form-control" id="" name="firstDate_dte" value="{{ $assignmentDetail->firstDate_dte?$assignmentDetail->firstDate_dte:'' }}" readonly>
+                                            <input type="text" class="form-control" id=""
+                                                name="firstDate_dte"
+                                                value="{{ $assignmentDetail->firstDate_dte ? $assignmentDetail->firstDate_dte : '' }}"
+                                                readonly>
                                         </div>
                                     </div>
 
@@ -196,10 +197,10 @@
                     </div>
 
                     <div class="row assignment-notes-sec">
-                        <div class="form-group col-md-6 label-heading">
+                        {{-- <div class="form-group col-md-6 label-heading">
                             <label for="">Last Contact re. Assignment</label>
                             <textarea class="form-control" rows="5" id="" name=""></textarea>
-                        </div>
+                        </div> --}}
                         <div class="form-group col-md-6 label-heading">
                             <label for="">Assignment Notes</label>
                             <textarea class="form-control" rows="5" id="" name="notes_txt">{{ $assignmentDetail->notes_txt }}</textarea>
@@ -207,7 +208,11 @@
                     </div>
 
                     <div class="button-section">
-                        <button class="button-1">Candidate Vetting</button>
+                        <button type="button"
+                            class="button-1 {{ $assignmentDetail->teacher_id ? '' : 'disableCandVetting' }}"
+                            {{ $assignmentDetail->teacher_id ? '' : 'disabled' }}
+                            onclick="candidateVetting({{ $asn_id }}, '{{ $candVetting ? $candVetting->vetting_id : '' }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">Candidate
+                            Vetting</button>
 
                         <button type="button" class="btn btn-primary button-2" id="blockBookingBtnId">
                             Block Booking
@@ -824,5 +829,86 @@
                 }
             });
         });
+
+        function candidateVetting(asn_id, vetting_id, candidateName) {
+            if (asn_id) {
+                if (vetting_id) {
+                    swal({
+                            title: "",
+                            text: "A vetting already exists for this teacher and assignment would you like to open it? Clicking No will create a new vetting",
+                            buttons: {
+                                Yes: "Yes",
+                                No: "No",
+                                cancel: "Cancel"
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "Yes":
+                                    alert('yes');
+                                    // $.ajax({
+                                    //     type: 'POST',
+                                    //     url: '{{ url('createCandidateVetting') }}',
+                                    //     data: {
+                                    //         "_token": "{{ csrf_token() }}",
+                                    //         asn_id: asn_id,
+                                    //         vetting_id: vetting_id,
+                                    //         newVetting: "Yes"
+                                    //     },
+                                    //     success: function(data) {
+                                    //         // location.reload();
+                                    //     }
+                                    // });
+                                    break;
+                                case "No":
+                                    alert('No');
+                                    // $.ajax({
+                                    //     type: 'POST',
+                                    //     url: '{{ url('createCandidateVetting') }}',
+                                    //     data: {
+                                    //         "_token": "{{ csrf_token() }}",
+                                    //         asn_id: asn_id,
+                                    //         vetting_id: vetting_id,
+                                    //         newVetting: "Yes"
+                                    //     },
+                                    //     success: function(data) {
+                                    //         // location.reload();
+                                    //     }
+                                    // });
+                                    break;
+                            }
+                        });
+                } else {
+                    swal({
+                            title: "",
+                            text: "This will manually create a vetting request for the candidate " + candidateName +
+                                " (automatically done on school confirmation) continue anyway?",
+                            buttons: {
+                                cancel: "No",
+                                Yes: "Yes"
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "Yes":
+                                    alert('yes')
+                                    // $.ajax({
+                                    //     type: 'POST',
+                                    //     url: '{{ url('createCandidateVetting') }}',
+                                    //     data: {
+                                    //         "_token": "{{ csrf_token() }}",
+                                    //         asn_id: asn_id,
+                                    //         vetting_id: vetting_id,
+                                    //         newVetting: "Yes"
+                                    //     },
+                                    //     success: function(data) {
+                                    //         // location.reload();
+                                    //     }
+                                    // });
+                            }
+                        });
+                }
+            }
+        }
     </script>
 @endsection

@@ -225,22 +225,24 @@
                                 <tbody class="table-body-sec" id="contactItemAjxView">
                                     @if (count($contactItems) > 0)
                                         @foreach ($contactItems as $key2 => $Items)
-                                            {{ $pName = '' }}
-                                            @if ($Items->schoolContact_id == '')
-                                                {{ $pName = 'School Main' }}
-                                            @else
-                                                @if ($Items->firstName_txt != '' && $Items->surname_txt != '')
-                                                    {{ $pName = $Items->firstName_txt . ' ' . $Items->surname_txt }}
-                                                @elseif ($Items->firstName_txt != '' && $Items->surname_txt == '')
-                                                    {{ $pName = $Items->firstName_txt }}
-                                                @elseif ($Items->title_int != '' && $Items->surname_txt != '')
-                                                    {{ $pName = $Items->title_txt . ' ' . $Items->surname_txt }}
-                                                @elseif ($Items->jobRole_int != '')
-                                                    {{ $pName = $Items->jobRole_txt . ' (name unknown)' }}
-                                                @else
-                                                    {{ $pName = 'Name unknown' }}
-                                                @endif
-                                            @endif
+                                            <?php
+                                            $pName = '';
+                                            if ($Items->schoolContact_id == '') {
+                                                $pName = 'School Main';
+                                            } else {
+                                                if ($Items->firstName_txt != '' && $Items->surname_txt != '') {
+                                                    $pName = $Items->firstName_txt . ' ' . $Items->surname_txt;
+                                                } elseif ($Items->firstName_txt != '' && $Items->surname_txt == '') {
+                                                    $pName = $Items->firstName_txt;
+                                                } elseif ($Items->title_int != '' && $Items->surname_txt != '') {
+                                                    $pName = $Items->title_txt . ' ' . $Items->surname_txt;
+                                                } elseif ($Items->jobRole_int != '') {
+                                                    $pName = $Items->jobRole_txt . ' (name unknown)';
+                                                } else {
+                                                    $pName = 'Name unknown';
+                                                }
+                                            }
+                                            ?>
 
                                             <tr class="school-detail-table-data editContactItemRow"
                                                 id="editContactItemRow{{ $Items->contactItemSch_id }}"

@@ -56,7 +56,13 @@ Route::post('/prevNextEvent/{id}', [AssignmentController::class, 'prevNextEvent'
 Route::post('/assignmentDetailUpdate', [AssignmentController::class, 'assignmentDetailUpdate']);
 Route::get('/assignment-contact/{id}', [AssignmentController::class, 'assignmentContact']);
 Route::post('/assignmentContactLogInsert', [AssignmentController::class, 'assignmentContactLogInsert']);
+Route::post('/asnContactHistoryEdit', [AssignmentController::class, 'asnContactHistoryEdit']);
+Route::post('/asnContactLogEdit', [AssignmentController::class, 'asnContactLogEdit']);
+Route::post('/asnSchoolContactLogUpdate', [AssignmentController::class, 'asnSchoolContactLogUpdate']);
+Route::post('/asnTeacherContactLogUpdate', [AssignmentController::class, 'asnTeacherContactLogUpdate']);
 Route::get('/assignment-candidate/{id}', [AssignmentController::class, 'assignmentCandidate']);
+Route::post('/addAsnPreferredTeacher', [AssignmentController::class, 'addAsnPreferredTeacher']);
+Route::post('/updateAssignmentTeacher', [AssignmentController::class, 'updateAssignmentTeacher']);
 Route::get('/assignment-school/{id}', [AssignmentController::class, 'assignmentSchool']);
 Route::get('/assignment-finance/{id}', [AssignmentController::class, 'assignmentFinance']);
 // Assignment
