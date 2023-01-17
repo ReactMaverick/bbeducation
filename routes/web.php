@@ -54,6 +54,7 @@ Route::post('/addBlockBooking', [AssignmentController::class, 'addBlockBooking']
 Route::post('/unBlockBooking', [AssignmentController::class, 'unBlockBooking']);
 Route::post('/prevNextEvent/{id}', [AssignmentController::class, 'prevNextEvent']);
 Route::post('/assignmentDetailUpdate', [AssignmentController::class, 'assignmentDetailUpdate']);
+Route::post('/createCandidateVetting', [AssignmentController::class, 'createCandidateVetting']);
 Route::get('/assignment-contact/{id}', [AssignmentController::class, 'assignmentContact']);
 Route::post('/assignmentContactLogInsert', [AssignmentController::class, 'assignmentContactLogInsert']);
 Route::post('/asnContactHistoryEdit', [AssignmentController::class, 'asnContactHistoryEdit']);

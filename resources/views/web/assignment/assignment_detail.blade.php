@@ -845,36 +845,36 @@
                         .then((value) => {
                             switch (value) {
                                 case "Yes":
-                                    alert('yes');
-                                    // $.ajax({
-                                    //     type: 'POST',
-                                    //     url: '{{ url('createCandidateVetting') }}',
-                                    //     data: {
-                                    //         "_token": "{{ csrf_token() }}",
-                                    //         asn_id: asn_id,
-                                    //         vetting_id: vetting_id,
-                                    //         newVetting: "Yes"
-                                    //     },
-                                    //     success: function(data) {
-                                    //         // location.reload();
-                                    //     }
-                                    // });
+                                    // alert('yes');
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('createCandidateVetting') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            asn_id: asn_id,
+                                            vetting_id: vetting_id,
+                                            newVetting: "No"
+                                        },
+                                        success: function(data) {
+                                            // location.reload();
+                                        }
+                                    });
                                     break;
                                 case "No":
-                                    alert('No');
-                                    // $.ajax({
-                                    //     type: 'POST',
-                                    //     url: '{{ url('createCandidateVetting') }}',
-                                    //     data: {
-                                    //         "_token": "{{ csrf_token() }}",
-                                    //         asn_id: asn_id,
-                                    //         vetting_id: vetting_id,
-                                    //         newVetting: "Yes"
-                                    //     },
-                                    //     success: function(data) {
-                                    //         // location.reload();
-                                    //     }
-                                    // });
+                                    // alert('No');
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('createCandidateVetting') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            asn_id: asn_id,
+                                            vetting_id: vetting_id,
+                                            newVetting: "Yes"
+                                        },
+                                        success: function(data) {
+                                            // location.reload();
+                                        }
+                                    });
                                     break;
                             }
                         });
@@ -891,20 +891,20 @@
                         .then((value) => {
                             switch (value) {
                                 case "Yes":
-                                    alert('yes')
-                                    // $.ajax({
-                                    //     type: 'POST',
-                                    //     url: '{{ url('createCandidateVetting') }}',
-                                    //     data: {
-                                    //         "_token": "{{ csrf_token() }}",
-                                    //         asn_id: asn_id,
-                                    //         vetting_id: vetting_id,
-                                    //         newVetting: "Yes"
-                                    //     },
-                                    //     success: function(data) {
-                                    //         // location.reload();
-                                    //     }
-                                    // });
+                                    // alert('yes')
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('createCandidateVetting') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            asn_id: asn_id,
+                                            vetting_id: vetting_id,
+                                            newVetting: "Yes"
+                                        },
+                                        success: function(data) {
+                                            // location.reload();
+                                        }
+                                    });
                             }
                         });
                 }

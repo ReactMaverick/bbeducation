@@ -247,6 +247,7 @@ class AssignmentController extends Controller
             $candVetting = DB::table('tbl_asnVetting')
                 ->select('tbl_asnVetting.vetting_id')
                 ->where('tbl_asnVetting.asn_id', $id)
+                ->where('tbl_asnVetting.teacher_id', $assignmentDetail->teacher_id)
                 ->orderBy('tbl_asnVetting.vetting_id', 'DESC')
                 ->first();
 
@@ -725,7 +726,148 @@ class AssignmentController extends Controller
         }
     }
 
+    public function createCandidateVetting(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $asn_id = $request->asn_id;
+            $vettingId = $request->vetting_id;
+            $newVetting = $request->newVetting;
 
+            $asnDetail = DB::table('tbl_asn')
+                ->select('tbl_asn.*')
+                ->where('tbl_asn.asn_id', $asn_id)
+                ->first();
+            $teacherId = $asnDetail->teacher_id;
+            if ($newVetting == 'Yes') {
+                $vetting_id = DB::table('tbl_asnVetting')
+                    ->insertGetId([
+                        'asn_id' => $asn_id,
+                        'teacher_id' => $teacherId,
+                        'requestedOn_dtm' => date('Y-m-d H:i:s'),
+                        'requestedBy_id' => $user_id
+                    ]);
+
+                if ($asnDetail->takenFrom_id != NULL || $asnDetail->takenFrom_id != '') {
+                    DB::table('tbl_asnVetting')
+                        ->where('vetting_id', '=', $vetting_id)
+                        ->update([
+                            'faoEmail_txt' => DB::raw('SELECT MAX(contactItem_txt) FROM tbl_contactItemSch WHERE type_int = 1 AND schoolContact_id = ' . $asnDetail->takenFrom_id)
+                        ]);
+                }
+
+                $editVettingId = $vetting_id;
+            } else {
+                $checkVetting = DB::table('tbl_asnVetting')
+                    ->select('tbl_asnVetting.*')
+                    ->where('tbl_asnVetting.vetting_id', $vettingId)
+                    ->where('tbl_asnVetting.asn_id', $asn_id)
+                    ->first();
+                if ($checkVetting) {
+                    $editVettingId = $vettingId;
+                }
+            }
+
+            if ($editVettingId) {
+                $onlineRefCount = DB::table('tbl_teacherReference')
+                    ->select('teacherReference_id')
+                    ->where('teacher_id', $teacherId)
+                    ->where('receivedOn_dtm', '!=', NULL)
+                    ->where('isValid_status', '=', '-1')
+                    ->count();
+                $docRefCount = DB::table('tbl_teacherDocument')
+                    ->select('teacherDocument_id')
+                    ->where('teacher_id', $teacherId)
+                    ->where('type_int', 7)
+                    ->where('isCurrent_status', '=', '-1')
+                    ->count();
+                $totalRefCount = $onlineRefCount + $docRefCount;
+                if ($onlineRefCount > 0) {
+                    $v_seenDate = DB::table('tbl_teacherReference')
+                        ->select(DB::raw('MIN(receivedOn_dtm)'))
+                        ->where('teacher_id', $teacherId)
+                        ->where('receivedOn_dtm', '!=', NULL)
+                        ->where('isValid_status', '=', '-1')
+                        ->first();
+                } else {
+                    $v_seenDate = DB::table('tbl_teacherDocument')
+                        ->select(DB::raw('MIN(timestamp_ts)'))
+                        ->where('teacher_id', $teacherId)
+                        ->where('type_int', 7)
+                        ->where('isCurrent_status', '=', '-1')
+                        ->first();
+                }
+
+                DB::table('tbl_asnVetting')
+                    ->join('tbl_teacher', 'tbl_asnVetting.teacher_id', '=', 'tbl_teacher.teacher_id')
+                    ->leftJoin(
+                        DB::raw('(SELECT teacher_id, certificateNumber_txt AS DBSNumber_txt, lastCheckedOn_dte AS DBSSeen_dte, DBSDate_dte FROM tbl_teacherDBS WHERE teacher_id = ' . $teacherId . ' AND DBSDate_dte = (SELECT MAX(DBSDate_dte) FROM tbl_teacherDBS WHERE teacher_id = ' . $teacherId . ') GROUP BY teacher_id) AS t_DBS'),
+                        function ($join) {
+                            $join->on('tbl_asnVetting.teacher_id', '=', 't_DBS.teacher_id');
+                        }
+                    )
+                    ->leftJoin(
+                        DB::raw('(SELECT teacher_id, "Excellent" AS refFeedback_txt FROM tbl_teacherReference WHERE teacher_id = ' . $teacherId . ' GROUP BY teacher_id) AS t_refs'),
+                        function ($join) {
+                            $join->on('tbl_asnVetting.teacher_id', '=', 't_refs.teacher_id');
+                        }
+                    )
+                    ->where('vetting_id', '=', $editVettingId)
+                    ->update([
+                        'tbl_asnVetting.teacher_id' => $teacherId,
+                        'candidateName_txt' => DB::raw('SELECT IF(knownAs_txt IS NULL OR knownAs_txt = "", CONCAT(firstName_txt, " ",  IFNULL(surname_txt, "")), CONCAT(firstName_txt, " (", knownAs_txt, ") ",  IFNULL(surname_txt, ""))) FROM tbl_teacher WHERE teacher_id = ' . $teacherId . ''),
+                        'dateOfBirth_dte' => DB::raw('DOB_dte'),
+                        'tbl_asnVetting.NINumber_txt' => DB::raw('tbl_teacher.NINumber_txt'),
+                        'emergencyNameNumber_txt' => DB::raw('IF(emergencyContactName_txt IS NULL, 
+                        emergencyContactNum1_txt, IF(emergencyContactNum1_txt IS NULL, 
+                        emergencyContactName_txt, CONCAT(emergencyContactName_txt, ": ", emergencyContactNum1_txt)))'),
+                        'interviewDate_dte' => DB::raw('CAST(interviewCompletedOn_dtm AS DATE)'),
+                        'referencesReceived_int' => $totalRefCount,
+                        'referencesSeen_dte' => $v_seenDate,
+                        'referenceFeedback_txt' => 'Excellent',
+                        'employmentHistory_txt' => DB::raw('IF('.$totalRefCount.' >= 1, "Seen and verified", "Pending confirmation")'),
+                        'employmentHistory_dte' => $v_seenDate,
+                        'list99CheckResult_txt' => DB::raw('IF(vetList99Checked_dte IS NULL, "", "Clear")'),
+                        'list99Seen_dte' => DB::raw('vetList99Checked_dte'),
+                        'NCTLCheck_txt' => DB::raw('IF(vetNCTLChecked_dte IS NULL, "", "Clear")'),
+                        'NCTLSeen_dte' => DB::raw('vetNCTLChecked_dte'),
+                        'disqualAssociation_txt' => DB::raw('IF(vetDisqualAssociation_dte IS NULL, "", "Completed & Clear")'),
+                        'disqualAssociation_dte' => DB::raw('vetDisqualAssociation_dte'),
+                        'tbl_asnVetting.safeguardingInduction_txt' => DB::raw('IF(tbl_teacher.safeguardingInduction_dte IS NULL, "", "Completed")'),
+                        'tbl_asnVetting.safeguardingInduction_dte' => DB::raw('tbl_teacher.safeguardingInduction_dte'),
+                        's128MgmtCheck_txt' => DB::raw('IF(vets128_dte IS NULL, "", "Clear")'),
+                        's128MgmtCheck_dte' => DB::raw('vets128_dte'),
+                        'EEARestrictCheck_txt' => DB::raw('IF(vetEEARestriction_dte IS NULL, "", "Clear")'),
+                        'EEARestrictCheck_dte' => DB::raw('vetEEARestriction_dte'),
+                        'TRN_txt' => DB::raw('profTRN_txt'),
+                        'vetRadical_txt' => DB::raw('IF(tbl_teacher.vetRadical_dte IS NULL, "", "Clear")'),
+                        'tbl_asnVetting.vetRadical_dte' => DB::raw('tbl_teacher.vetRadical_dte'),
+                        'tbl_asnVetting.dbsNumber_txt' => DB::raw('t_DBS.DBSNumber_txt'),
+                        'tbl_asnVetting.dbsSeen_dte' => DB::raw('t_DBS.DBSSeen_dte'),
+                        'tbl_asnVetting.dbsDate_dte' => DB::raw('t_DBS.DBSDate_dte'),
+                        'updateService_txt' => DB::raw('IF(vetUpdateService_status <> 0, "Yes", "No")'),
+                        'updateServiceSeen_dte' => DB::raw('IF(vetUpdateService_status <> 0, tbl_teacher.vetUpdateServiceChecked_dte, CURDATE())'),
+                        'healthDeclaration_txt' => DB::raw('IF(docHealthDec_status <> 0, "Signed and Received", "")'),
+                        'healthDeclarationSeen_dte' => DB::raw('tbl_teacher.healthDeclaration_dte'),
+                        'tbl_asnVetting.occupationalHealth_txt' => DB::raw('IF(tbl_teacher.occupationalHealth_txt IS NULL, "No assessment needed", tbl_teacher.occupationalHealth_txt)'),
+                        'tbl_asnVetting.healthIssues_txt' => DB::raw('IF(tbl_teacher.healthIssues_txt IS NULL, "No assessment needed", tbl_teacher.healthIssues_txt)'),
+                        'tbl_asnVetting.rightToWork_txt' => DB::raw('IF(rightToWork_int IS NULL, "", SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 39 AND description_int = rightToWork_int)'),
+                        // 'EEARestrictCheck_dte' => DB::raw('vetEEARestriction_dte'),
+                        // 'EEARestrictCheck_dte' => DB::raw('vetEEARestriction_dte'),
+                        // 'EEARestrictCheck_dte' => DB::raw('vetEEARestriction_dte'),
+                    ]);
+
+                // $view = view("web.school.invoice_split_view", ['invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList])->render();
+                // return response()->json(['html' => $view]);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     public function assignmentContact(Request $request, $id)
     {
