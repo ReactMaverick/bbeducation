@@ -30,7 +30,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle']=='School Assignment') sidebar-active @endif">
-            <a href="{{ URL::to('/school-assignment/'.$school_id.'?include=&status=3') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-assignment/'.$school_id.'?include=&status=2') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person-chalkboard"></i>
                 </div>

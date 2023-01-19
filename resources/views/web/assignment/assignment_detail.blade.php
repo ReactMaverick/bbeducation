@@ -211,7 +211,7 @@
                         <button type="button"
                             class="button-1 {{ $assignmentDetail->teacher_id ? '' : 'disableCandVetting' }}"
                             {{ $assignmentDetail->teacher_id ? '' : 'disabled' }}
-                            onclick="candidateVetting({{ $asn_id }}, '{{ $candVetting ? $candVetting->vetting_id : '' }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">Candidate
+                            onclick="candidateVetting({{ $asn_id }}, '{{ $assignmentDetail->teacher_id }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">Candidate
                             Vetting</button>
 
                         <button type="button" class="btn btn-primary button-2" id="blockBookingBtnId">
@@ -386,6 +386,24 @@
         </div>
     </div>
     <!-- Event Edit Modal -->
+
+    <!-- Candidate Vetting Modal -->
+    <div class="modal fade" id="candidateVettingModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section cand-vetting-modal-section">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Candidate Vetting</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div id="candidateVetAjax"></div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Candidate Vetting Modal -->
 
     <script>
         $(document).ready(function() {
@@ -830,8 +848,26 @@
             });
         });
 
-        function candidateVetting(asn_id, vetting_id, candidateName) {
-            if (asn_id) {
+        function candidateVetting(asn_id, teacher_id, candidateName) {
+            if (asn_id && teacher_id) {
+                var vetting_id = '';
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('checkVettingExist') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        asn_id: asn_id,
+                        teacher_id: teacher_id
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        if (data.exist == "Yes" && data.vetting_id) {
+                            vetting_id = data.vetting_id;
+                        }
+                    }
+                });
+
                 if (vetting_id) {
                     swal({
                             title: "",
@@ -856,7 +892,10 @@
                                             newVetting: "No"
                                         },
                                         success: function(data) {
-                                            // location.reload();
+                                            if (data) {
+                                                $('#candidateVetAjax').html(data.html);
+                                                $('#candidateVettingModal').modal("show");
+                                            }
                                         }
                                     });
                                     break;
@@ -872,7 +911,10 @@
                                             newVetting: "Yes"
                                         },
                                         success: function(data) {
-                                            // location.reload();
+                                            if (data) {
+                                                $('#candidateVetAjax').html(data.html);
+                                                $('#candidateVettingModal').modal("show");
+                                            }
                                         }
                                     });
                                     break;
@@ -902,7 +944,10 @@
                                             newVetting: "Yes"
                                         },
                                         success: function(data) {
-                                            // location.reload();
+                                            if (data) {
+                                                $('#candidateVetAjax').html(data.html);
+                                                $('#candidateVettingModal').modal("show");
+                                            }
                                         }
                                     });
                             }
@@ -910,5 +955,35 @@
                 }
             }
         }
+
+        $(document).on('click', '#candVettingEditBtn', function() {
+            var error = "";
+            $(".vetting-field-validate").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            if (error == "has error") {
+                return false;
+            } else {
+                var form = $("#candVettingEditForm");
+                var actionUrl = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        if (data) {
+                            $('#candidateVetAjax').html(data.html);
+                        }
+                    }
+                });
+            }
+        });
     </script>
 @endsection

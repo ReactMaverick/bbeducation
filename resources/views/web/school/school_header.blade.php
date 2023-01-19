@@ -12,7 +12,10 @@
         <span class="topbar-text">{{ $schoolDetail->religion_txt }}</span>
     </i>
     <i class="fa-solid fa-star topbar-star-icon"></i>
-    <i class="fa-regular fa-calendar-days">
-        <span class="topbar-text">calendar</span>
-    </i>
+
+    <a href="{{ URL::to('/school-calendar/' . $school_id) }}">
+        <i class="fa-regular fa-calendar-days">
+            <span class="topbar-text">calendar</span>
+        </i>
+    </a>
 </div>

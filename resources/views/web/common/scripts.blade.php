@@ -957,4 +957,13 @@
         }
     });
     /******* field validate 5 ********/
+    $(document).on('keyup change', '.vetting-field-validate', function(e) {
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+    });
 </script>

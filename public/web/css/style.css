@@ -4017,22 +4017,33 @@ td.fc-day-top {
     background-color: #ffc20e7d !important;
     border-color: #ffc20e7d !important;
     color: #8b8989 !important;
+    pointer-events: none;
 }
 
-.cand-vetting-approve-disable-btn:hover {
-    background-color: #ffc20e7d !important;
-    border-color: #ffc20e7d !important;
-    color: #8b8989 !important;
+
+.school-calendar-sidebar-section {
+    width: 100%;
 }
 
-.cand-vetting-approve-disable-btn:active {
-    background-color: #ffc20e7d !important;
-    border-color: #ffc20e7d !important;
-    color: #8b8989 !important;
+.school-calendar-total-days-text {
+    width: 12%;
+    margin-right: 4px;
 }
 
-.cand-vetting-approve-disable-btn:focus {
-    background-color: #ffc20e7d !important;
-    border-color: #ffc20e7d !important;
-    color: #8b8989 !important;
+.school-calendar-days-text {
+    width: 12%;
+    margin-right: 4px;
+}
+
+.date-left-school-calendar {
+    width: 12%;
+    margin-right: 4px;
+}
+
+.school-calendar-section {
+    justify-content: flex-start;
+}
+
+.school-calendar-days-sec {
+    justify-content: flex-start;
 }

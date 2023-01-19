@@ -54,7 +54,9 @@ Route::post('/addBlockBooking', [AssignmentController::class, 'addBlockBooking']
 Route::post('/unBlockBooking', [AssignmentController::class, 'unBlockBooking']);
 Route::post('/prevNextEvent/{id}', [AssignmentController::class, 'prevNextEvent']);
 Route::post('/assignmentDetailUpdate', [AssignmentController::class, 'assignmentDetailUpdate']);
+Route::post('/checkVettingExist', [AssignmentController::class, 'checkVettingExist']);
 Route::post('/createCandidateVetting', [AssignmentController::class, 'createCandidateVetting']);
+Route::post('/updateCandidateVetting', [AssignmentController::class, 'updateCandidateVetting']);
 Route::get('/assignment-contact/{id}', [AssignmentController::class, 'assignmentContact']);
 Route::post('/assignmentContactLogInsert', [AssignmentController::class, 'assignmentContactLogInsert']);
 Route::post('/asnContactHistoryEdit', [AssignmentController::class, 'asnContactHistoryEdit']);
@@ -169,6 +171,7 @@ Route::post('/getSchoolDocDetail', [SchoolController::class, 'getSchoolDocDetail
 Route::post('/schoolDocumentUpdate', [SchoolController::class, 'schoolDocumentUpdate']);
 Route::post('/schoolDocumentDelete', [SchoolController::class, 'schoolDocumentDelete']);
 Route::post('/schoolBillingAddressUpdate', [SchoolController::class, 'schoolBillingAddressUpdate']);
+Route::get('/school-calendar/{id}', [SchoolController::class, 'schoolCalendar']);
 // School
 
 // Finance
