@@ -747,6 +747,11 @@ class AssignmentController extends Controller
             $asn_id = $request->asn_id;
             $vettingId = $request->vetting_id;
             $newVetting = $request->newVetting;
+            if ($request->sidebar) {
+                $sidebar = 'Yes';
+            } else {
+                $sidebar = '';
+            }            
 
             $asnDetail = DB::table('tbl_asn')
                 ->select('tbl_asn.*')
@@ -970,7 +975,7 @@ class AssignmentController extends Controller
                         ->where('tbl_contactItemSch.type_int', '=', 1)
                         ->where('tbl_schoolContact.receiveVetting_status', '=', '-1')
                         ->get();
-                    $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id])->render();
+                    $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id, 'sidebar' => $sidebar])->render();
                     return response()->json(['html' => $view]);
                 } else {
                     return false;
@@ -993,6 +998,11 @@ class AssignmentController extends Controller
             $schoolId = $request->schoolId;
             $teacherId = $request->teacherId;
             $asn_id = $request->asn_id;
+            if ($request->sidebar) {
+                $sidebar = 'Yes';
+            } else {
+                $sidebar = '';
+            } 
 
             DB::table('tbl_asnVetting')
                 ->where('vetting_id', $editVettingId)
@@ -1025,11 +1035,33 @@ class AssignmentController extends Controller
                     ->where('tbl_contactItemSch.type_int', '=', 1)
                     ->where('tbl_schoolContact.receiveVetting_status', '=', '-1')
                     ->get();
-                $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id])->render();
+                $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id, 'sidebar' => $sidebar])->render();
                 return response()->json(['html' => $view]);
             } else {
                 return false;
             }
+        } else {
+            return false;
+        }
+    }
+
+    public function assignmentStatusEdit(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $asn_id = $request->asn_id;
+            $status = $request->status;
+
+            DB::table('tbl_asn')
+                ->where('asn_id', $asn_id)
+                ->update([
+                    'status_int' => $status,
+                    'statusBy_id' => $user_id,
+                    'statusOn_dtm' => date('Y-m-d H:i:s')
+                ]);
+            return true;
         } else {
             return false;
         }

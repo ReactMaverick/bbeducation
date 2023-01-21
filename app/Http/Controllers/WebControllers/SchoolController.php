@@ -2113,7 +2113,7 @@ class SchoolController extends Controller
                     $join->on('tbl_teacherDocument.teacher_id', '=', 'tbl_teacher.teacher_id')
                         ->where(function ($query) {
                             $query->where('tbl_teacherDocument.type_int', '=', 1)
-                            ->where('tbl_teacherDocument.isCurrent_status', '<>', 0);
+                                ->where('tbl_teacherDocument.isCurrent_status', '<>', 0);
                         });
                 })
                 ->leftJoin(
@@ -2158,7 +2158,7 @@ class SchoolController extends Controller
                         $join->on('tbl_teacher.teacher_id', '=', 't_day7.teacher_id');
                     }
                 )
-                ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherDocument.file_location', 'day1Avail_txt', 'day1Link_id', 'day1LinkType_int', 'day1School_id','day2Avail_txt', 'day2Link_id', 'day2LinkType_int', 'day2School_id', 'day3Avail_txt', 'day3Link_id', 'day3LinkType_int', 'day3School_id', 'day4Avail_txt', 'day4Link_id', 'day4LinkType_int', 'day4School_id', 'day5Avail_txt', 'day5Link_id', 'day5LinkType_int', 'day5School_id', 'day6Avail_txt', 'day6Link_id', 'day6LinkType_int', 'day6School_id', 'day7Avail_txt', 'day7Link_id', 'day7LinkType_int', 'day7School_id', DB::raw("CAST((IFNULL(day1Amount_dec, 0) + IFNULL(day2Amount_dec, 0) + IFNULL(day3Amount_dec, 0) + IFNULL(day4Amount_dec, 0) + IFNULL(day5Amount_dec, 0) + IFNULL(day6Amount_dec, 0) + IFNULL(day7Amount_dec, 0)) AS DECIMAL(3, 1)) AS totalDays"))
+                ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherDocument.file_location', 'day1Avail_txt', 'day1Link_id', 'day1LinkType_int', 'day1School_id', 'day2Avail_txt', 'day2Link_id', 'day2LinkType_int', 'day2School_id', 'day3Avail_txt', 'day3Link_id', 'day3LinkType_int', 'day3School_id', 'day4Avail_txt', 'day4Link_id', 'day4LinkType_int', 'day4School_id', 'day5Avail_txt', 'day5Link_id', 'day5LinkType_int', 'day5School_id', 'day6Avail_txt', 'day6Link_id', 'day6LinkType_int', 'day6School_id', 'day7Avail_txt', 'day7Link_id', 'day7LinkType_int', 'day7School_id', DB::raw("CAST((IFNULL(day1Amount_dec, 0) + IFNULL(day2Amount_dec, 0) + IFNULL(day3Amount_dec, 0) + IFNULL(day4Amount_dec, 0) + IFNULL(day5Amount_dec, 0) + IFNULL(day6Amount_dec, 0) + IFNULL(day7Amount_dec, 0)) AS DECIMAL(3, 1)) AS totalDays"))
                 ->whereRaw("(t_day1.teacher_id IS NOT NULL OR t_day2.teacher_id IS NOT NULL OR t_day3.teacher_id IS NOT NULL OR t_day4.teacher_id IS NOT NULL OR t_day5.teacher_id IS NOT NULL OR t_day6.teacher_id IS NOT NULL OR t_day7.teacher_id IS NOT NULL) AND (day1School_id = '$id' OR day2School_id = '$id' OR day3School_id = '$id' OR day4School_id = '$id' OR day5School_id = '$id' OR day6School_id = '$id' OR day7School_id = '$id')")
                 ->groupBy('tbl_teacher.teacher_id')
                 ->orderBy(DB::raw("(day1Amount_dec + day2Amount_dec + day3Amount_dec + day4Amount_dec + day5Amount_dec + day6Amount_dec + day7Amount_dec)"), 'DESC')
@@ -2166,8 +2166,25 @@ class SchoolController extends Controller
             // echo "<pre>";
             // print_r($calenderList);
             // exit;
+            // $tId = '10925';
+            // $startDate = '2022-11-01';
+            // $endDate = '2023-01-31';
+            // $calEventItem = DB::table('tbl_teacherCalendar')
+            //     ->leftJoin(
+            //         DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$tId') AS t_tchAsn"),
+            //         function ($join) {
+            //             $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
+            //         }
+            //     )
+            //     ->select('calendarItem_id as id', 'tbl_teacherCalendar.date_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'start_tm', 'end_tm')
+            //     ->where('tbl_teacherCalendar.teacher_id', $tId)
+            //     ->whereBetween('tbl_teacherCalendar.date_dte', [$startDate, $endDate])
+            //     ->groupBy('tbl_teacherCalendar.date_dte')
+            //     ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
+            //     ->get();
+            // dd($calEventItem);
 
-            return view("web.school.school_calendar", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'school_id' => $id]);
+            return view("web.school.school_calendar", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'school_id' => $id, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList]);
         } else {
             return redirect()->intended('/');
         }

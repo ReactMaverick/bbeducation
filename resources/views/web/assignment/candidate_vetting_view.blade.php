@@ -44,9 +44,9 @@
                                         {{ $contact->contactItem_txt }}
                                     </option>
                                     <?php
-                                        if($emailExist == 'No' && $vettingDetail->faoEmail_txt == $contact->contactItem_txt){
-                                            $emailExist = 'Yes';
-                                        }
+                                    if ($emailExist == 'No' && $vettingDetail->faoEmail_txt == $contact->contactItem_txt) {
+                                        $emailExist = 'Yes';
+                                    }
                                     ?>
                                 @endforeach
                             </select>
@@ -562,11 +562,18 @@
         </div>
     </div>
 
+    <input type="hidden" name="sidebar" value="{{ $sidebar }}">
+
     <!-- Modal footer -->
     <div class="modal-footer calendar-modal-footer cand-vetting-modal-btn">
-        <button type="button" class="btn btn-secondary" id="candVettingEditBtn">Update</button>
+        @if ($sidebar)
+            <button type="button" class="btn btn-secondary" id="candVettingEditBtnSidebar">Update</button>
+        @else
+            <button type="button" class="btn btn-secondary" id="candVettingEditBtn">Update</button>
+        @endif
 
-        <button type="button" class="btn btn-warning {{ $emailExist=='Yes'?'':'cand-vetting-approve-disable-btn' }}">Approve and
+        <button type="button"
+            class="btn btn-warning {{ $emailExist == 'Yes' ? '' : 'cand-vetting-approve-disable-btn' }}">Approve and
             Send</button>
 
         <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>

@@ -57,6 +57,7 @@ Route::post('/assignmentDetailUpdate', [AssignmentController::class, 'assignment
 Route::post('/checkVettingExist', [AssignmentController::class, 'checkVettingExist']);
 Route::post('/createCandidateVetting', [AssignmentController::class, 'createCandidateVetting']);
 Route::post('/updateCandidateVetting', [AssignmentController::class, 'updateCandidateVetting']);
+Route::post('/assignmentStatusEdit', [AssignmentController::class, 'assignmentStatusEdit']);
 Route::get('/assignment-contact/{id}', [AssignmentController::class, 'assignmentContact']);
 Route::post('/assignmentContactLogInsert', [AssignmentController::class, 'assignmentContactLogInsert']);
 Route::post('/asnContactHistoryEdit', [AssignmentController::class, 'asnContactHistoryEdit']);
