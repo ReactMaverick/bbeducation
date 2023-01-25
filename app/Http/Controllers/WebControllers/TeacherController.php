@@ -385,23 +385,49 @@ class TeacherController extends Controller
         if ($request->ajax()) {
             $startDate = $request->start;
             $endDate = $request->end;
-            $calEventItem = DB::table('tbl_asn')
+            $calEventItem1 = DB::table('tbl_asn')
                 ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
                 ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
                 ->leftJoin(
-                    DB::raw("(SELECT tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
+                    DB::raw("(SELECT tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
                     function ($join) {
                         $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
                     }
                 )
-                ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm')
+                ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(tc_notes_txt IS NULL, IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)), tc_notes_txt) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm')
                 ->where('tbl_asn.teacher_id', $id)
                 ->where('tbl_asn.status_int', 3)
-                ->where('tbl_asnItem.asnDate_dte', '>=', $startDate)
-                ->where('tbl_asnItem.asnDate_dte', '<=', $endDate)
+                ->whereDate('tbl_asnItem.asnDate_dte', '>=', $startDate)
+                ->whereDate('tbl_asnItem.asnDate_dte', '<=', $endDate)
                 ->groupBy('tbl_asnItem.asnDate_dte')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
-                ->get();
+                ->get()
+                ->toArray();
+
+            $calEventItem2 = DB::table('tbl_teacherCalendar')
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
+                    function ($join) {
+                        $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
+                    }
+                )
+                ->select('tbl_teacherCalendar.calendarItem_id as id', 'date_dte as start', 'reason_int', DB::raw('IF(tbl_teacherCalendar.notes_txt IS NULL, IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)), tbl_teacherCalendar.notes_txt) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt')
+                ->where('tbl_teacherCalendar.teacher_id', $id)
+                ->whereBetween('tbl_teacherCalendar.date_dte', [$startDate, $endDate])
+                ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
+                    $query->select('asnDate_dte')
+                        ->from('tbl_asn')
+                        ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                        ->where('status_int', 3)
+                        ->where('teacher_id', $id)
+                        ->get();
+                })
+                ->groupBy('tbl_teacherCalendar.date_dte')
+                ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
+                ->get()
+                ->toArray();
+            $calEventItem = array_merge($calEventItem1, $calEventItem2);
+
             return response()->json($calEventItem);
         }
     }
@@ -422,16 +448,42 @@ class TeacherController extends Controller
             ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm')
             ->where('tbl_asn.teacher_id', $id)
             ->where('tbl_asn.status_int', 3)
-            ->where('tbl_asnItem.asnDate_dte', '=', $startDate)
+            ->whereDate('tbl_asnItem.asnDate_dte', '=', $startDate)
             ->groupBy('tbl_asnItem.asnDate_dte')
             ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
             ->first();
         $result['status'] = false;
-        $result['date'] = date("d-m-Y",strtotime($startDate));
+        $result['date'] = date("D d M Y", strtotime($startDate));
         if ($calEventItem) {
             $result['status'] = true;
             $result['calEventItem'] = $calEventItem;
-        }        
+        } else {
+            $calEventItem2 = DB::table('tbl_teacherCalendar')
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
+                    function ($join) {
+                        $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
+                    }
+                )
+                ->select('tbl_teacherCalendar.calendarItem_id as id', 'date_dte as start', 'reason_int', DB::raw('IF(tbl_teacherCalendar.notes_txt IS NULL, IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)), tbl_teacherCalendar.notes_txt) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt')
+                ->where('tbl_teacherCalendar.teacher_id', $id)
+                ->whereDate('tbl_teacherCalendar.date_dte', $startDate)
+                ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
+                    $query->select('asnDate_dte')
+                        ->from('tbl_asn')
+                        ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                        ->where('status_int', 3)
+                        ->where('teacher_id', $id)
+                        ->get();
+                })
+                ->groupBy('tbl_teacherCalendar.date_dte')
+                ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
+                ->first();
+            if ($calEventItem2) {
+                $result['status'] = true;
+                $result['calEventItem'] = $calEventItem2;
+            }
+        }
         return response()->json($result);
     }
 

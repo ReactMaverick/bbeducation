@@ -39,7 +39,7 @@
         </div>
         <div>
             <label>Quick Set</label>
-            <select class="form-control" name="" id="">
+            <select class="form-control" name="" id="calQuickSet">
                 <option value="">Default - (Cycle)</option>
                 @foreach ($quickList as $key1 => $quick)
                     <option value="{{ $quick->description_int }}">
@@ -97,22 +97,40 @@
                     calendar.fullCalendar('unselect');
                 } else {
                     var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD");
-                    var calendar_mode1 = $('input[name="calendar_mode1"]:checked').val();
-                    if (calendar_mode1 == 'view') {
-                        $.ajax({
-                            url: SITEURL + "/teacherEventExist",
-                            data: {
-                                teacher_id: teacher_id,
-                                event_start: event_start
-                            },
-                            type: "POST",
-                            dataType: "json",
-                            success: function(data) {
-                                if (data) {
-                                    
+                    var viewDate = '';
+                    var viewNote = '';
+                    var viewEventId = '';
+                    $.ajax({
+                        url: SITEURL + "/teacherEventExist",
+                        data: {
+                            teacher_id: teacher_id,
+                            event_start: event_start
+                        },
+                        type: "POST",
+                        dataType: "json",
+                        async: false,
+                        success: function(data) {
+                            if (data) {
+                                viewDate = data.date;
+                                if (data.status == true) {
+                                    viewNote = data.calEventItem.title;
+                                    viewEventId = data.calEventItem.link_id;
                                 }
                             }
-                        });
+                        }
+                    });
+
+                    var calendar_mode1 = $('input[name="calendar_mode1"]:checked').val();
+                    if (calendar_mode1 == 'view') {
+                        $('#calItemFor').html('');
+                        $('#calNotes').html('');
+                        $('#calItemFor').html(viewDate);
+                        $('#calNotes').html(viewNote.split(':')[1]?viewNote.split(':')[1]:viewNote);
+                    }
+
+                    if (calendar_mode1 == 'asnEdit' && viewEventId) {
+                        var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + viewEventId;
+                        window.open(rUrl2, '_blank');
                     }
 
                     // if (calendar_mode1 == 'edit') {
@@ -145,6 +163,18 @@
                 // var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD");
                 console.log(event);
                 var calendar_mode1 = $('input[name="calendar_mode1"]:checked').val();
+                if (calendar_mode1 == 'view') {
+                    var eDate = event.start.format();
+                    $('#calItemFor').html('');
+                    $('#calNotes').html('');
+                    $('#calItemFor').html(moment(eDate).format("ddd DD MMM YYYY"));
+                    $('#calNotes').html(event.title.split(':')[1]?event.title.split(':')[1]:event.title);
+                }
+
+                if (calendar_mode1 == 'asnEdit' && event.link_id) {
+                    var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + event.link_id;
+                    window.open(rUrl3, '_blank');
+                }
                 // if (calendar_mode1 == 'add') {
                 //     $.ajax({
                 //         type: "POST",
