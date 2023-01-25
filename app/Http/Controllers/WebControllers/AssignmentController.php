@@ -218,6 +218,8 @@ class AssignmentController extends Controller
                 ->get();
 
             if ($request->ajax()) {
+                $startDate = $request->start;
+                $endDate = $request->end;
                 $eventItem = DB::table('tbl_asnItem')
                     ->LeftJoin('tbl_description', function ($join) {
                         $join->on('tbl_description.description_int', '=', 'tbl_asnItem.dayPart_int')
@@ -227,20 +229,11 @@ class AssignmentController extends Controller
                     })
                     ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt) AS title'))
                     ->where('tbl_asnItem.asn_id', $id)
+                    ->where('tbl_asnItem.asnDate_dte', '>=', $startDate)
+                    ->where('tbl_asnItem.asnDate_dte', '<=', $endDate)
                     ->groupBy('tbl_asnItem.asnItem_id')
                     ->get();
-                // $eventItem = [
-                //     [
-                //         'id' => 999,
-                //         'title' => 'Repeating Event',
-                //         'start' => '2022-12-25'
-                //     ],
-                //     [
-                //         'id' => 999,
-                //         'title' => 'Repeating Event',
-                //         'start' => '2022-12-23'
-                //     ]
-                // ];
+
                 return response()->json($eventItem);
             }
 
@@ -751,7 +744,7 @@ class AssignmentController extends Controller
                 $sidebar = 'Yes';
             } else {
                 $sidebar = '';
-            }            
+            }
 
             $asnDetail = DB::table('tbl_asn')
                 ->select('tbl_asn.*')
@@ -1002,7 +995,7 @@ class AssignmentController extends Controller
                 $sidebar = 'Yes';
             } else {
                 $sidebar = '';
-            } 
+            }
 
             DB::table('tbl_asnVetting')
                 ->where('vetting_id', $editVettingId)

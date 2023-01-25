@@ -77,6 +77,9 @@ Route::post('/newTeacherInsert', [TeacherController::class, 'newTeacherInsert'])
 Route::get('/teacher-search', [TeacherController::class, 'teacherSearch']);
 Route::get('/teacher-pending-reference', [TeacherController::class, 'teacherPendingReference']);
 Route::get('/teacher-calendar', [TeacherController::class, 'teacherCalendar']);
+Route::POST('/teacherCalendarList', [TeacherController::class, 'teacherCalendarList']);
+Route::get('/calendarListByTeacher/{id}', [TeacherController::class, 'calendarListByTeacher']);
+Route::POST('/teacherEventExist', [TeacherController::class, 'teacherEventExist']);
 Route::get('/teacher-detail/{id}', [TeacherController::class, 'teacherDetail']);
 Route::post('/teacherDetailUpdate', [TeacherController::class, 'teacherDetailUpdate']);
 Route::post('/teacherAddressUpdate', [TeacherController::class, 'teacherAddressUpdate']);

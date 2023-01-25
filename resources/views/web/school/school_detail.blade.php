@@ -684,7 +684,7 @@
                 });
                 $('#ContactEditModal').modal("show");
             } else {
-                swal("BumbleBee Education", "Please select one contact.");
+                swal("", "Please select one contact.");
             }
         });
 
@@ -692,7 +692,7 @@
             var contact_id = $('#editContactId').val();
             if (contact_id) {
                 swal({
-                        title: "BumbleBee Education",
+                        title: "",
                         text: "Are you sure you wish to remove this member of staff?",
                         buttons: {
                             cancel: "No",
@@ -716,7 +716,7 @@
                         }
                     });
             } else {
-                swal("BumbleBee Education", "Please select one contact.");
+                swal("", "Please select one contact.");
             }
         });
 
@@ -832,7 +832,7 @@
             var editContactItemName = $('#editContactItemName').val();
             if (editContactItemId) {
                 swal({
-                        title: "BumbleBee Education",
+                        title: "",
                         text: "Are you sure you wish to delete this contact item for " + editContactItemName +
                             "?",
                         buttons: {
@@ -858,7 +858,7 @@
                         }
                     });
             } else {
-                swal("BumbleBee Education", "Please select one contact item.");
+                swal("", "Please select one contact item.");
             }
         });
     </script>

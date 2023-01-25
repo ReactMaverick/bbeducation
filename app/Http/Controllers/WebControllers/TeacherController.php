@@ -299,10 +299,140 @@ class TeacherController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.teacher.teacher_calendar", ['title' => $title, 'headerTitle' => $headerTitle]);
+            if ($request->date) {
+                $weekStartDate = $request->date;
+            } else {
+                $now = Carbon::now();
+                $weekStartDate = $now->startOfWeek()->format('Y-m-d');
+            }
+            $plusFiveDate = date('Y-m-d', strtotime($weekStartDate . ' +4 days'));
+            $weekStartDate2 = date('Y-m-d', strtotime($weekStartDate . ' +1 days'));
+            $weekStartDate3 = date('Y-m-d', strtotime($weekStartDate . ' +2 days'));
+            $weekStartDate4 = date('Y-m-d', strtotime($weekStartDate . ' +3 days'));
+            $weekStartDate5 = date('Y-m-d', strtotime($weekStartDate . ' +4 days'));
+
+            $calenderList = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_teacherDocument', function ($join) {
+                    $join->on('tbl_teacherDocument.teacher_id', '=', 'tbl_teacher.teacher_id')
+                        ->where(function ($query) {
+                            $query->where('tbl_teacherDocument.type_int', '=', 1)
+                                ->where('tbl_teacherDocument.isCurrent_status', '<>', 0);
+                        });
+                })
+                ->leftJoin(
+                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day1Avail_txt, tbl_asn.asn_id AS day1Link_id, dayPart_int AS day1LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day1Amount_dec, tbl_asn.school_id AS day1School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate' AND status_int = 3 GROUP BY teacher_id) AS t_day1"),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_day1.teacher_id');
+                    }
+                )
+                ->leftJoin(
+                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day2Avail_txt, tbl_asn.asn_id AS day2Link_id, dayPart_int AS day2LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day2Amount_dec, tbl_asn.school_id AS day2School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate2' AND status_int = 3 GROUP BY teacher_id) AS t_day2"),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_day2.teacher_id');
+                    }
+                )
+                ->leftJoin(
+                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day3Avail_txt, tbl_asn.asn_id AS day3Link_id, dayPart_int AS day3LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day3Amount_dec, tbl_asn.school_id AS day3School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate3' AND status_int = 3 GROUP BY teacher_id) AS t_day3"),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_day3.teacher_id');
+                    }
+                )
+                ->leftJoin(
+                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day4Avail_txt, tbl_asn.asn_id AS day4Link_id, dayPart_int AS day4LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day4Amount_dec, tbl_asn.school_id AS day4School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate4' AND status_int = 3 GROUP BY teacher_id) AS t_day4"),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_day4.teacher_id');
+                    }
+                )
+                ->leftJoin(
+                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day5Avail_txt, tbl_asn.asn_id AS day5Link_id, dayPart_int AS day5LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day5Amount_dec, tbl_asn.school_id AS day5School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate5' AND status_int = 3 GROUP BY teacher_id) AS t_day5"),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_day5.teacher_id');
+                    }
+                )
+                ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherDocument.file_location', 'day1Avail_txt', 'day1Link_id', 'day1LinkType_int', 'day1School_id', 'day1Amount_dec', 'day2Avail_txt', 'day2Link_id', 'day2LinkType_int', 'day2School_id', 'day2Amount_dec', 'day3Avail_txt', 'day3Link_id', 'day3LinkType_int', 'day3School_id', 'day3Amount_dec', 'day4Avail_txt', 'day4Link_id', 'day4LinkType_int', 'day4School_id', 'day4Amount_dec', 'day5Avail_txt', 'day5Link_id', 'day5LinkType_int', 'day5School_id', 'day5Amount_dec', DB::raw("CAST((IFNULL(day1Amount_dec, 0) + IFNULL(day2Amount_dec, 0) + IFNULL(day3Amount_dec, 0) + IFNULL(day4Amount_dec, 0) + IFNULL(day5Amount_dec, 0)) AS DECIMAL(3, 1)) AS totalDays"))
+                ->whereRaw("(t_day1.teacher_id IS NOT NULL OR t_day2.teacher_id IS NOT NULL OR t_day3.teacher_id IS NOT NULL OR t_day4.teacher_id IS NOT NULL OR t_day5.teacher_id IS NOT NULL)")
+                ->where('tbl_teacher.company_id', $company_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->orderBy(DB::raw("IF(knownAs_txt IS NULL OR knownAs_txt = '', CONCAT(firstName_txt, ' ',  IFNULL(surname_txt, '')), CONCAT(firstName_txt, ' (', knownAs_txt, ') ',  IFNULL(surname_txt, '')))"), 'ASC')
+                ->orderBy(DB::raw("(day1Amount_dec + day2Amount_dec + day3Amount_dec + day4Amount_dec + day5Amount_dec)"), 'DESC')
+                ->get();
+
+            // echo "<pre>";
+            // print_r($calenderList);
+            // exit;
+            return view("web.teacher.teacher_calendar", ['title' => $title, 'headerTitle' => $headerTitle, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function teacherCalendarList(Request $request)
+    {
+        $tId = $request->teacher_id;
+
+        $quickList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 4)
+            ->orderBy('tbl_description.description_txt', 'ASC')
+            ->get();
+
+        $view = view("web.teacher.view_teacher_calendar", ['teacher_id' => $tId, 'quickList' => $quickList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function calendarListByTeacher(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $startDate = $request->start;
+            $endDate = $request->end;
+            $calEventItem = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
+                    function ($join) {
+                        $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
+                    }
+                )
+                ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm')
+                ->where('tbl_asn.teacher_id', $id)
+                ->where('tbl_asn.status_int', 3)
+                ->where('tbl_asnItem.asnDate_dte', '>=', $startDate)
+                ->where('tbl_asnItem.asnDate_dte', '<=', $endDate)
+                ->groupBy('tbl_asnItem.asnDate_dte')
+                ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                ->get();
+            return response()->json($calEventItem);
+        }
+    }
+
+    public function teacherEventExist(Request $request)
+    {
+        $startDate = $request->event_start;
+        $id = $request->teacher_id;
+        $calEventItem = DB::table('tbl_asn')
+            ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+            ->leftJoin(
+                DB::raw("(SELECT tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
+                function ($join) {
+                    $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
+                }
+            )
+            ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm')
+            ->where('tbl_asn.teacher_id', $id)
+            ->where('tbl_asn.status_int', 3)
+            ->where('tbl_asnItem.asnDate_dte', '=', $startDate)
+            ->groupBy('tbl_asnItem.asnDate_dte')
+            ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+            ->first();
+        $result['status'] = false;
+        $result['date'] = date("d-m-Y",strtotime($startDate));
+        if ($calEventItem) {
+            $result['status'] = true;
+            $result['calEventItem'] = $calEventItem;
+        }        
+        return response()->json($result);
     }
 
     public function teacherDetail(Request $request, $id)
@@ -1537,9 +1667,9 @@ class TeacherController extends Controller
 
             if (count($request->textQn_qnId)) {
                 foreach ($request->textQn_qnId as $key => $textQn_qnId) {
-                    $name_qnTxt = 'textQn_qnTxt_'.$textQn_qnId;
-                    $name_qnType = 'textQn_qnType_'.$textQn_qnId;
-                    $name_answer = 'textQn_answer_'.$textQn_qnId;
+                    $name_qnTxt = 'textQn_qnTxt_' . $textQn_qnId;
+                    $name_qnType = 'textQn_qnType_' . $textQn_qnId;
+                    $name_answer = 'textQn_answer_' . $textQn_qnId;
                     $qnExist = DB::table('tbl_teacherReferenceQuestion')
                         ->where('teacherReference_id', "=", $teacherReference_id)
                         ->where('question_id', "=", $textQn_qnId)
@@ -1570,10 +1700,10 @@ class TeacherController extends Controller
 
             if (count($request->optQn_qnId)) {
                 foreach ($request->optQn_qnId as $key1 => $optQn_qnId) {
-                    $name_qnTxt = 'optQn_qnTxt_'.$optQn_qnId;
-                    $name_qnType = 'optQn_qnType_'.$optQn_qnId;
-                    $name_answer = 'optQn_answer_'.$optQn_qnId;
-                    $name_rateVal = 'optQn_rateVal_'.$optQn_qnId;
+                    $name_qnTxt = 'optQn_qnTxt_' . $optQn_qnId;
+                    $name_qnType = 'optQn_qnType_' . $optQn_qnId;
+                    $name_answer = 'optQn_answer_' . $optQn_qnId;
+                    $name_rateVal = 'optQn_rateVal_' . $optQn_qnId;
                     $answer_int = NULL;
                     if ($request->$name_rateVal) {
                         $answer_int = $request->$name_rateVal;
@@ -1610,15 +1740,15 @@ class TeacherController extends Controller
 
             if (count($request->yesNoQn_qnId)) {
                 foreach ($request->yesNoQn_qnId as $key2 => $yesNoQn_qnId) {
-                    $name_qnTxt = 'yesNoQn_qnTxt_'.$yesNoQn_qnId;
-                    $name_qnType = 'yesNoQn_qnType_'.$yesNoQn_qnId;
-                    $name_answer = 'yesNoQn_answer_'.$yesNoQn_qnId;
-                    $name_yesNo = 'yesNoQn_yesno_'.$yesNoQn_qnId;
+                    $name_qnTxt = 'yesNoQn_qnTxt_' . $yesNoQn_qnId;
+                    $name_qnType = 'yesNoQn_qnType_' . $yesNoQn_qnId;
+                    $name_answer = 'yesNoQn_answer_' . $yesNoQn_qnId;
+                    $name_yesNo = 'yesNoQn_yesno_' . $yesNoQn_qnId;
                     $answer_ysn = NULL;
-                    if ($request->$name_yesNo && $request->$name_yesNo==1) {
+                    if ($request->$name_yesNo && $request->$name_yesNo == 1) {
                         $answer_ysn = '1';
                     }
-                    if ($request->$name_yesNo && $request->$name_yesNo==2) {
+                    if ($request->$name_yesNo && $request->$name_yesNo == 2) {
                         $answer_ysn = '0';
                     }
                     $qnExist = DB::table('tbl_teacherReferenceQuestion')
