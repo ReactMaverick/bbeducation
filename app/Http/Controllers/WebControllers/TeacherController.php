@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Carbon\CarbonPeriod;
 
 class TeacherController extends Controller
 {
@@ -283,8 +284,24 @@ class TeacherController extends Controller
             $headerTitle = "Teachers";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
+            $v_overdueDays = 7;
 
-            return view("web.teacher.teacher_pending_reference", ['title' => $title, 'headerTitle' => $headerTitle]);
+            $pendingRefList = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_teacherReference', 'tbl_teacher.teacher_id', '=', 'tbl_teacherReference.teacher_id')
+                ->leftJoin(
+                    DB::raw("(SELECT teacherReference_id, DATE(MAX(sentOn_dtm)) AS lastSent_dte, COUNT(referenceSend_id) AS totalSent_int FROM tbl_teacherReferenceRequest GROUP BY teacherReference_id) AS t_sent"),
+                    function ($join) {
+                        $join->on('tbl_teacherReference.teacherReference_id', '=', 't_sent.teacherReference_id');
+                    }
+                )
+                ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherReference.teacherReference_id', DB::raw("IF(tbl_teacherReference.teacherReference_id IS NULL, 'No References Listed', employer_txt) AS employer_txt"), 'tbl_teacherReference.employedFrom_dte', 'tbl_teacherReference.employedUntil_dte', DB::raw("IF(lastSent_dte IS NULL, 'Not Sent', lastSent_dte) AS lastSent_txt"), DB::raw("IF(totalSent_int IS NULL, 0, totalSent_int) AS totalSent_int"), DB::raw("IF(lastSent_dte IS NULL, '', IF(DATEDIFF(CURDATE(), lastSent_dte) < '$v_overdueDays', '', DATEDIFF(CURDATE(), lastSent_dte) -'$v_overdueDays')) AS overDueDays_int"))
+                ->whereIn('applicationStatus_int', array(1, 2, 7))
+                ->where('receivedOn_dtm', NULL)
+                ->groupBy('tbl_teacherReference.teacherReference_id')
+                ->orderBy('lastSent_dte', 'ASC')
+                ->get();
+
+            return view("web.teacher.teacher_pending_reference", ['title' => $title, 'headerTitle' => $headerTitle, 'pendingRefList' => $pendingRefList]);
         } else {
             return redirect()->intended('/');
         }
@@ -373,7 +390,8 @@ class TeacherController extends Controller
         $quickList = DB::table('tbl_description')
             ->select('tbl_description.*')
             ->where('tbl_description.descriptionGroup_int', 4)
-            ->orderBy('tbl_description.description_txt', 'ASC')
+            ->where('tbl_description.description_int', '!=', 6)
+            ->orderBy('tbl_description.description_int', 'ASC')
             ->get();
 
         $view = view("web.teacher.view_teacher_calendar", ['teacher_id' => $tId, 'quickList' => $quickList])->render();
@@ -389,12 +407,12 @@ class TeacherController extends Controller
                 ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
                 ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
                 ->leftJoin(
-                    DB::raw("(SELECT tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
+                    DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
                     function ($join) {
                         $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
                     }
                 )
-                ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(tc_notes_txt IS NULL, IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)), tc_notes_txt) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm')
+                ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
                 ->where('tbl_asn.teacher_id', $id)
                 ->where('tbl_asn.status_int', 3)
                 ->whereDate('tbl_asnItem.asnDate_dte', '>=', $startDate)
@@ -406,12 +424,12 @@ class TeacherController extends Controller
 
             $calEventItem2 = DB::table('tbl_teacherCalendar')
                 ->leftJoin(
-                    DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
+                    DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
                     function ($join) {
                         $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
                     }
                 )
-                ->select('tbl_teacherCalendar.calendarItem_id as id', 'date_dte as start', 'reason_int', DB::raw('IF(tbl_teacherCalendar.notes_txt IS NULL, IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)), tbl_teacherCalendar.notes_txt) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt')
+                ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
                 ->where('tbl_teacherCalendar.teacher_id', $id)
                 ->whereBetween('tbl_teacherCalendar.date_dte', [$startDate, $endDate])
                 ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
@@ -440,12 +458,12 @@ class TeacherController extends Controller
             ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
             ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
             ->leftJoin(
-                DB::raw("(SELECT tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
+                DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
                 function ($join) {
                     $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
                 }
             )
-            ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm')
+            ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
             ->where('tbl_asn.teacher_id', $id)
             ->where('tbl_asn.status_int', 3)
             ->whereDate('tbl_asnItem.asnDate_dte', '=', $startDate)
@@ -460,12 +478,12 @@ class TeacherController extends Controller
         } else {
             $calEventItem2 = DB::table('tbl_teacherCalendar')
                 ->leftJoin(
-                    DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
+                    DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
                     function ($join) {
                         $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
                     }
                 )
-                ->select('tbl_teacherCalendar.calendarItem_id as id', 'date_dte as start', 'reason_int', DB::raw('IF(tbl_teacherCalendar.notes_txt IS NULL, IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)), tbl_teacherCalendar.notes_txt) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt')
+                ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
                 ->where('tbl_teacherCalendar.teacher_id', $id)
                 ->whereDate('tbl_teacherCalendar.date_dte', $startDate)
                 ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
@@ -485,6 +503,307 @@ class TeacherController extends Controller
             }
         }
         return response()->json($result);
+    }
+
+    public function teacherCalEventAdd(Request $request)
+    {
+        $startDate = $request->event_start;
+        $id = $request->teacher_id;
+        $asnItem_id = $request->asnItem_id;
+        $calendarItem_id = $request->calendarItem_id;
+
+        if ($calendarItem_id) {
+            $calDetails = DB::table('tbl_teacherCalendar')
+                ->where('tbl_teacherCalendar.calendarItem_id', $calendarItem_id)
+                ->first();
+            if ($request->calQuickSet) {
+                DB::table('tbl_teacherCalendar')
+                    ->where('calendarItem_id', '=', $calendarItem_id)
+                    ->delete();
+            } else {
+                $quickList = DB::table('tbl_description')
+                    ->select('tbl_description.*')
+                    ->where('tbl_description.descriptionGroup_int', 4)
+                    ->where('tbl_description.description_int', '!=', 6)
+                    ->orderBy('tbl_description.description_int', 'ASC')
+                    ->get();
+                $keyNo = 0;
+                foreach ($quickList as $key => $value) {
+                    if ($calDetails->reason_int == $value->description_int) {
+                        $keyNo = $key;
+                    }
+                }
+                $keyInc = $keyNo + 1;
+                if (isset($quickList[$keyInc])) {
+                    DB::table('tbl_teacherCalendar')
+                        ->where('calendarItem_id', '=', $calendarItem_id)
+                        ->update([
+                            'reason_int' => $quickList[$keyInc]->description_int
+                        ]);
+                } else {
+                    DB::table('tbl_teacherCalendar')
+                        ->where('calendarItem_id', '=', $calendarItem_id)
+                        ->delete();
+                }
+            }
+        } else {
+            $reason_int = 1;
+            if ($request->calQuickSet) {
+                $reason_int = $request->calQuickSet;
+            }
+            DB::table('tbl_teacherCalendar')
+                ->insertGetId([
+                    'teacher_id' => $id,
+                    'date_dte' => $startDate,
+                    'part_int' => 1,
+                    'reason_int' => $reason_int,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+        }
+
+        return 1;
+    }
+
+    public function teacherEventEdit(Request $request)
+    {
+        $calendarItem_id = $request->calendarItem_id;
+
+        $eventCalDetails = DB::table('tbl_teacherCalendar')
+            ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_teacherCalendar.teacher_id')
+            ->select('tbl_teacherCalendar.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+            ->where('tbl_teacherCalendar.calendarItem_id', $calendarItem_id)
+            ->first();
+        $reasonList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 4)
+            ->orderBy('tbl_description.description_int', 'ASC')
+            ->get();
+
+        $dayPartList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 20)
+            ->get();
+
+        $view = view("web.teacher.edit_teacher_event_view", ['eventCalDetails' => $eventCalDetails, 'reasonList' => $reasonList, 'dayPartList' => $dayPartList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teacherEventUpdate(Request $request)
+    {
+        $calendarItem_id = $request->calendarItem_id;
+        $date_dte = $request->date_dte;
+        $teacher_id = $request->teacher_id;
+        $start_tm = NULL;
+        if ($request->start_tm) {
+            $start_tm = $request->start_tm;
+        }
+        $end_tm = NULL;
+        if ($request->end_tm) {
+            $end_tm = $request->end_tm;
+        }
+
+        DB::table('tbl_teacherCalendar')
+            ->where('calendarItem_id', '=', $calendarItem_id)
+            ->update([
+                'part_int' => $request->part_int,
+                'start_tm' => $start_tm,
+                'end_tm' => $end_tm,
+                'reason_int' => $request->reason_int,
+                'notes_txt' => $request->notes_txt
+            ]);
+
+        if ($request->block_booking && $request->block_booking_dte) {
+            $wkArr = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+            if ($request->exclude_weekend) {
+                $wkArr = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri');
+            }
+            $blockStartDate = date("Y-m-d", strtotime($date_dte . ' +1 days'));
+            $blockEndDate = date("Y-m-d", strtotime($request->block_booking_dte));
+
+            $period = CarbonPeriod::create($blockStartDate, $blockEndDate);
+            foreach ($period as $date) {
+                $day = date('D', strtotime($date->format('Y-m-d')));
+                if (in_array($day, $wkArr)) {
+                    $eventExist = DB::table('tbl_teacherCalendar')
+                        ->where('teacher_id', $teacher_id)
+                        ->whereDate('date_dte', $date->format('Y-m-d'))
+                        ->first();
+
+                    if (!$eventExist) {
+                        DB::table('tbl_teacherCalendar')
+                            ->insertGetId([
+                                'teacher_id' => $teacher_id,
+                                'date_dte' => $date->format('Y-m-d'),
+                                'part_int' => $request->part_int,
+                                'start_tm' => $start_tm,
+                                'end_tm' => $end_tm,
+                                'reason_int' => $request->reason_int,
+                                'notes_txt' => $request->notes_txt,
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public function teacherEventDelete(Request $request)
+    {
+        $calendarItem_id = $request->calendarItem_id;
+        if ($calendarItem_id) {
+            DB::table('tbl_teacherCalendar')
+                ->where('calendarItem_id', '=', $calendarItem_id)
+                ->delete();
+        }
+
+        return true;
+    }
+
+    public function teacherCalendarById(Request $request, $id)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Teacher Calendar List");
+            $headerTitle = "Teachers";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt')
+                ->where('tbl_teacher.teacher_id', $id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            if ($request->ajax()) {
+                $startDate = $request->start;
+                $endDate = $request->end;
+                $calEventItem1 = DB::table('tbl_asn')
+                    ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->leftJoin(
+                        DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
+                        function ($join) {
+                            $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
+                        }
+                    )
+                    ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
+                    ->where('tbl_asn.teacher_id', $id)
+                    ->where('tbl_asn.status_int', 3)
+                    ->whereDate('tbl_asnItem.asnDate_dte', '>=', $startDate)
+                    ->whereDate('tbl_asnItem.asnDate_dte', '<=', $endDate)
+                    ->groupBy('tbl_asnItem.asnDate_dte')
+                    ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                    ->get()
+                    ->toArray();
+
+                $calEventItem2 = DB::table('tbl_teacherCalendar')
+                    ->leftJoin(
+                        DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
+                        function ($join) {
+                            $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
+                        }
+                    )
+                    ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
+                    ->where('tbl_teacherCalendar.teacher_id', $id)
+                    ->whereBetween('tbl_teacherCalendar.date_dte', [$startDate, $endDate])
+                    ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
+                        $query->select('asnDate_dte')
+                            ->from('tbl_asn')
+                            ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                            ->where('status_int', 3)
+                            ->where('teacher_id', $id)
+                            ->get();
+                    })
+                    ->groupBy('tbl_teacherCalendar.date_dte')
+                    ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
+                    ->get()
+                    ->toArray();
+                $calEventItem = array_merge($calEventItem1, $calEventItem2);
+
+                return response()->json($calEventItem);
+            }
+
+            $quickList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 4)
+                ->where('tbl_description.description_int', '!=', 6)
+                ->orderBy('tbl_description.description_int', 'ASC')
+                ->get();
+
+            return view("web.teacher.calendar_by_id", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'quickList' => $quickList, 'teacher_id' => $id]);
+        } else {
+            return redirect()->intended('/');
+        }
     }
 
     public function teacherDetail(Request $request, $id)

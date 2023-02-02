@@ -17,7 +17,8 @@
         </div>
         @if ($webUserLoginData)
             <div class="user-name-sec">
-                <i class="fa-solid fa-user"></i><span>{{ $webUserLoginData->firstName_txt }} {{ $webUserLoginData->surname_txt }}</span>
+                <i class="fa-solid fa-user"></i><span>{{ $webUserLoginData->firstName_txt }}
+                    {{ $webUserLoginData->surname_txt }}</span>
             </div>
         @endif
     </div>
@@ -34,7 +35,7 @@
         <li class="nav-item @if ($headerTitle == 'Assignments') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/assignments?include=') }}">
                 <i class="fa-solid fa-id-card">
-                <span class="tab-section-text">Assignments</span>
+                    <span class="tab-section-text">Assignments</span>
                 </i>
             </a>
         </li>
@@ -48,21 +49,21 @@
         <li class="nav-item @if ($headerTitle == 'Schools') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/schools') }}">
                 <i class="fa-solid fa-school">
-                <span class="tab-section-text">Schools</span>
+                    <span class="tab-section-text">Schools</span>
                 </i>
             </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Finance') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/finance') }}">
                 <i class="fa-solid fa-money-bills">
-                <span class="tab-section-text">Finance</span>
+                    <span class="tab-section-text">Finance</span>
                 </i>
             </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Management') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/management') }}">
                 <i class="fa-solid fa-person">
-                <span class="tab-section-text">Management</span>
+                    <span class="tab-section-text">Management</span>
                 </i>
             </a>
         </li>
@@ -70,7 +71,7 @@
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
                 aria-haspopup="true" aria-expanded="false">
                 <i class="fa-solid fa-gear">
-                <span class="tab-section-text">Settings</span>
+                    <span class="tab-section-text">Settings</span>
                 </i>
             </a>
             <div class="dropdown-menu">
@@ -81,15 +82,12 @@
         </li>
         <li class="nav-item @if ($headerTitle == 'Logout') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/logout') }}">
-                <i
-                    class="fa-solid fa-arrow-right-from-bracket">
+                <i class="fa-solid fa-arrow-right-from-bracket">
                     <span class="tab-section-text">Logout</span>
-                    </i>
-                </a>
+                </i>
+            </a>
         </li>
     </ul>
 
     <!-- </div> -->
 </div>
-
-

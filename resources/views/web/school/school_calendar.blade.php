@@ -168,6 +168,46 @@
 
     </div>
 
+    <!-- Teacher Calendar Modal -->
+    <div class="modal fade" id="TeacherCalendarModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 90%;">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Teacher Calendar</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div id="AjaxTeacherCalendar"></div>
+
+                <div class="modal-footer calendar-modal-footer">
+                    <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Teacher Calendar Modal -->
+
+    <!-- Teacher Calendar Event Edit Modal -->
+    <div class="modal fade" id="TeacherCalEventEditModal" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 50%;">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Edit Teacher Calendar Item</h4>
+                    <button type="button" class="close" id="EventEditModalClose">&times;</button>
+                </div>
+
+                <div id="AjaxTeacherCalEvent"></div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Teacher Calendar Event Edit Modal -->
+
     <script>
         function calDateClick(type, teacher_id, asn_id) {
             // alert('type->'+type+', teacher->'+teacher_id+', asn->'+asn_id)
@@ -178,22 +218,105 @@
                         "You cannot open a school or assignment using this control. Either change the mode on the working list form or click on a specific day."
                     );
                 }
-                if (type == 'date') {
+                if (type == 'date' && asn_id) {
                     var rUrl = '<?php echo url('/assignment-details/'); ?>' + '/' + asn_id;
                     window.open(rUrl, '_blank');
                 }
             }
 
-            if (calendar_mode == 'view') {
-
+            if (calendar_mode == 'view' && teacher_id) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('teacherCalendarList') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        teacher_id: teacher_id
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        $('#AjaxTeacherCalendar').html(data.html);
+                        $('#TeacherCalendarModal').modal("show");
+                    }
+                });
             }
 
             if (calendar_mode == 'teacher') {
-                if (type == 'teacher') {
-                    var rUrl1 = '<?php echo url('/teacher-detail/'); ?>' + '/' + teacher_id;
-                    window.open(rUrl1, '_blank');
-                }
+                // if (type == 'teacher') {
+                //     var rUrl1 = '<?php echo url('/teacher-detail/'); ?>' + '/' + teacher_id;
+                //     window.open(rUrl1, '_blank');
+                // }
+                var rUrl1 = '<?php echo url('/teacher-detail/'); ?>' + '/' + teacher_id;
+                window.open(rUrl1, '_blank');
             }
         }
+
+        $(document).on('click', '#EventEditModalClose', function() {
+            $('#TeacherCalEventEditModal').modal("hide");
+            $('body').addClass('modal-open');
+        });
+
+        $(document).on('change', '#part_int_id', function() {
+            var part_int_id = $('#part_int_id').val();
+            if (part_int_id == 4) {
+                $("#start_tm_id").prop('disabled', false);
+                $("#end_tm_id").prop('disabled', false);
+            } else {
+                $("#start_tm_id").val('');
+                $("#end_tm_id").val('');
+                $("#start_tm_id").prop('disabled', true);
+                $("#end_tm_id").prop('disabled', true);
+            }
+        });
+
+        $(document).on('click', '#TeacherCalEventSaveBtn', function() {
+            var form = $("#TeacherCalEventEditForm");
+            var actionUrl = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: actionUrl,
+                data: form.serialize(),
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    $('#full_calendar_events').fullCalendar('refetchEvents');
+                    $('#full_calendar_events').fullCalendar('unselect');
+                    $('#TeacherCalEventEditModal').modal("hide");
+                    $('body').addClass('modal-open');
+                }
+            });
+        });
+
+        $(document).on('click', '#TeacherCalEventDeleteBtn', function() {
+            var form = $("#TeacherCalEventEditForm");
+            var SITEURL = "{{ url('/') }}";
+            var actionUrl = SITEURL + "/teacherEventDelete";
+            swal({
+                    title: "",
+                    text: "This will DELETE this calendar item. Please click YES if you are certain you wish to remove it.",
+                    buttons: {
+                        cancel: "No",
+                        Yes: "Yes"
+                    },
+                })
+                .then((value) => {
+                    switch (value) {
+                        case "Yes":
+                            $.ajax({
+                                type: "POST",
+                                url: actionUrl,
+                                data: form.serialize(),
+                                dataType: "json",
+                                async: false,
+                                success: function(data) {
+                                    $('#full_calendar_events').fullCalendar('refetchEvents');
+                                    $('#full_calendar_events').fullCalendar('unselect');
+                                    $('#TeacherCalEventEditModal').modal("hide");
+                                    $('body').addClass('modal-open');
+                                }
+                            });
+                    }
+                });
+        });
     </script>
 @endsection

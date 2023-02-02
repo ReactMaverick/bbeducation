@@ -4047,3 +4047,13 @@ td.fc-day-top {
 .school-calendar-days-sec {
     justify-content: flex-start;
 }
+
+
+/* .modal:nth-of-type(even) {
+    z-index: 1052 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1051 !important;
+} */
+
+.modal { overflow: auto !important; }

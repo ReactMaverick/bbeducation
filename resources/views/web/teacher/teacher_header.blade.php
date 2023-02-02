@@ -10,9 +10,11 @@
     </i>
     <i class="fa-solid fa-star topbar-star-icon"></i>
 
-    <i class="fa-regular fa-calendar-days">
-        <span class="topbar-text">Calendar</span>
-    </i>
+    <a href="{{ URL::to('/teacher-calendar-list/' . $teacherDetail->teacher_id) }}">
+        <i class="fa-regular fa-calendar-days">
+            <span class="topbar-text">Calendar</span>
+        </i>
+    </a>
 
     <a href="#">
         <i class="fa-solid fa-trash trash-icon"></i>

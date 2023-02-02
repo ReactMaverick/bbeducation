@@ -60,6 +60,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+        var defAsnId = '';
         var calendar = $('#full_calendar_events').fullCalendar({
             editable: false,
             firstDay: 1,
@@ -78,11 +79,18 @@
             eventTextColor: '#fff',
             eventBackgroundColor: '#ffa601',
             eventRender: function(event, element, view) {
-                // if (event.allDay === 'true') {
-                //     event.allDay = true;
-                // } else {
-                //     event.allDay = false;
-                // }
+                if (event.reason_int == 2 || event.reason_int == 3) {
+                    element.css('background-color', '#37a6ff');
+                } else if (event.reason_int == 4) {
+                    element.css('background-color', '#304556');
+                } else if (event.reason_int == 5) {
+                    element.css('background-color', '#9ca1a5');
+                } else {
+                    element.css('background-color', '#ffa601');
+                }
+                if (event.link_id) {
+                    defAsnId = event.link_id;
+                }
                 event.editable = true;
                 element.find('span.fc-title').addClass('customClass');
             },
@@ -100,6 +108,8 @@
                     var viewDate = '';
                     var viewNote = '';
                     var viewEventId = '';
+                    var asnItem_id = '';
+                    var calendarItem_id = '';
                     $.ajax({
                         url: SITEURL + "/teacherEventExist",
                         data: {
@@ -110,11 +120,18 @@
                         dataType: "json",
                         async: false,
                         success: function(data) {
+                            // console.log(data);
                             if (data) {
                                 viewDate = data.date;
                                 if (data.status == true) {
-                                    viewNote = data.calEventItem.title;
+                                    if (data.calEventItem.calendarItem_id) {
+                                        viewNote = data.calEventItem.tc_notes_txt;
+                                    } else {
+                                        viewNote = data.calEventItem.title;
+                                    }
                                     viewEventId = data.calEventItem.link_id;
+                                    asnItem_id = data.calEventItem.asnItem_id;
+                                    calendarItem_id = data.calEventItem.calendarItem_id;
                                 }
                             }
                         }
@@ -125,108 +142,136 @@
                         $('#calItemFor').html('');
                         $('#calNotes').html('');
                         $('#calItemFor').html(viewDate);
-                        $('#calNotes').html(viewNote.split(':')[1]?viewNote.split(':')[1]:viewNote);
+                        if (viewNote) {
+                            $('#calNotes').html(viewNote.split(':')[1] ? viewNote.split(':')[1] :
+                                viewNote);
+                        } else {
+                            $('#calNotes').html(viewNote);
+                        }
                     }
 
-                    if (calendar_mode1 == 'asnEdit' && viewEventId) {
-                        var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + viewEventId;
-                        window.open(rUrl2, '_blank');
+                    if (calendar_mode1 == 'add') {
+                        var calQuickSet = $('#calQuickSet').val();
+                        $.ajax({
+                            url: SITEURL + "/teacherCalEventAdd",
+                            data: {
+                                teacher_id: teacher_id,
+                                event_start: event_start,
+                                asnItem_id: asnItem_id,
+                                calendarItem_id: calendarItem_id,
+                                calQuickSet: calQuickSet
+                            },
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+                            success: function(data) {
+                                calendar.fullCalendar('refetchEvents');
+                                calendar.fullCalendar('unselect');
+                            }
+                        });
                     }
 
-                    // if (calendar_mode1 == 'edit') {
-                    //     $.ajax({
-                    //         url: SITEURL + "/checkAssignmentEvent/" + asn_id,
-                    //         data: {
-                    //             event_start: event_start
-                    //         },
-                    //         type: "POST",
-                    //         dataType: "json",
-                    //         success: function(data) {
-                    //             if (data) {
-                    //                 if (data.exist == 'No') {
-                    //                     swal("",
-                    //                         "You cannot use the edit day mode on an empty date in the calendar."
-                    //                     );
-                    //                 } else {
-                    //                     $('#editEventId').val(data.eventId)
-                    //                     $('#AjaxEventEdit').html(data.html);
-                    //                     $('#eventEditModal').modal("show");
-                    //                 }
-                    //             }
-                    //             calendar.fullCalendar('unselect');
-                    //         }
-                    //     });
-                    // }
+                    if (calendar_mode1 == 'asnEdit') {
+                        if (viewEventId) {
+                            var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + viewEventId;
+                            window.open(rUrl2, '_blank');
+                        } else if (defAsnId) {
+                            var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + defAsnId;
+                            window.open(rUrl2, '_blank');
+                        }
+                    }
+
+                    if (calendar_mode1 == 'edit' && calendarItem_id) {
+                        $.ajax({
+                            url: SITEURL + "/teacherEventEdit",
+                            data: {
+                                calendarItem_id: calendarItem_id
+                            },
+                            type: "POST",
+                            dataType: "json",
+                            async: false,
+                            success: function(data) {
+                                if (data) {
+                                    $('#AjaxTeacherCalEvent').html(data.html);
+                                    $('#TeacherCalEventEditModal').modal("show");
+                                }
+                            }
+                        });
+                    }
                 }
             },
             eventClick: function(event) {
                 // var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD");
-                console.log(event);
+                // console.log(event);
                 var calendar_mode1 = $('input[name="calendar_mode1"]:checked').val();
                 if (calendar_mode1 == 'view') {
                     var eDate = event.start.format();
                     $('#calItemFor').html('');
                     $('#calNotes').html('');
                     $('#calItemFor').html(moment(eDate).format("ddd DD MMM YYYY"));
-                    $('#calNotes').html(event.title.split(':')[1]?event.title.split(':')[1]:event.title);
+                    var viewNote = '';
+                    if (event.calendarItem_id) {
+                        viewNote = event.tc_notes_txt;
+                    } else {
+                        viewNote = event.title;
+                    }
+                    if (viewNote) {
+                        $('#calNotes').html(viewNote.split(':')[1] ? viewNote.split(':')[1] :
+                            viewNote);
+                    } else {
+                        $('#calNotes').html(viewNote);
+                    }
                 }
 
-                if (calendar_mode1 == 'asnEdit' && event.link_id) {
-                    var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + event.link_id;
-                    window.open(rUrl3, '_blank');
+                if (calendar_mode1 == 'asnEdit') {
+                    if (event.link_id) {
+                        var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + event.link_id;
+                        window.open(rUrl3, '_blank');
+                    } else if (defAsnId) {
+                        var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + defAsnId;
+                        window.open(rUrl3, '_blank');
+                    }
                 }
-                // if (calendar_mode1 == 'add') {
-                //     $.ajax({
-                //         type: "POST",
-                //         url: SITEURL + "/updateAssignmentEvent/" + asn_id,
-                //         data: {
-                //             id: event.id
-                //         },
-                //         dataType: "json",
-                //         success: function(data) {
-                //             if (data) {
-                //                 if (data.type == 'Delete') {
-                //                     calendar.fullCalendar('removeEvents', data
-                //                         .eventId);
-                //                 } else if (data.type == 'Update') {
-                //                     calendar.fullCalendar('removeEvents', data
-                //                         .eventItem.id);
-                //                     calendar.fullCalendar('renderEvent', {
-                //                         id: data.eventItem.id,
-                //                         title: data.eventItem.title,
-                //                         start: data.eventItem.start,
-                //                         editable: false
-                //                     }, true);
-                //                 }
-                //             }
-                //         }
-                //     });
-                // }
 
-                // if (calendar_mode1 == 'edit') {
-                //     $.ajax({
-                //         url: SITEURL + "/checkAssignmentEvent2/" + asn_id,
-                //         data: {
-                //             id: event.id
-                //         },
-                //         type: "POST",
-                //         dataType: "json",
-                //         success: function(data) {
-                //             if (data) {
-                //                 if (data.exist == 'No') {
-                //                     swal("",
-                //                         "You cannot use the edit day mode on an empty date in the calendar."
-                //                     );
-                //                 } else {
-                //                     $('#editEventId').val(data.eventId)
-                //                     $('#AjaxEventEdit').html(data.html);
-                //                     $('#eventEditModal').modal("show");
-                //                 }
-                //             }
-                //             calendar.fullCalendar('unselect');
-                //         }
-                //     });
-                // }
+                if (calendar_mode1 == 'add') {
+                    var calQuickSet = $('#calQuickSet').val();
+                    var eDate = event.start.format();
+                    $.ajax({
+                        url: SITEURL + "/teacherCalEventAdd",
+                        data: {
+                            teacher_id: teacher_id,
+                            event_start: eDate,
+                            asnItem_id: event.asnItem_id,
+                            calendarItem_id: event.calendarItem_id,
+                            calQuickSet: calQuickSet
+                        },
+                        type: "POST",
+                        dataType: "json",
+                        async: false,
+                        success: function(data) {
+                            calendar.fullCalendar('refetchEvents');
+                            calendar.fullCalendar('unselect');
+                        }
+                    });
+                }
+
+                if (calendar_mode1 == 'edit' && event.calendarItem_id) {
+                    $.ajax({
+                        url: SITEURL + "/teacherEventEdit",
+                        data: {
+                            calendarItem_id: event.calendarItem_id
+                        },
+                        type: "POST",
+                        dataType: "json",
+                        async: false,
+                        success: function(data) {
+                            if (data) {
+                                $('#AjaxTeacherCalEvent').html(data.html);
+                                $('#TeacherCalEventEditModal').modal("show");
+                            }
+                        }
+                    });
+                }
             }
         });
     });
