@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="about-finance">
-                    <a href="{{ URL::to('/finance-remittance') }}"> <i class="fa-regular fa-file-lines"></i>
+                    <a href="{{ URL::to('/finance-remittance?include=&method=') }}"> <i class="fa-regular fa-file-lines"></i>
                         <p>Remit Invoice</p>
                     </a>
                 </div>

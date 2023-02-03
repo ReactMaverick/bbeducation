@@ -1,275 +1,260 @@
 @extends('web.layout')
 @section('content')
-<div class="assignment-detail-page-section">
-    <div class="row assignment-detail-row">
-        <div class="col-md-12 topbar-sec">
+    <style>
+        .disabled-link {
+            pointer-events: none;
+        }
+    </style>
+    <div class="assignment-detail-page-section">
+        <div class="row assignment-detail-row">
+            <div class="col-md-12 topbar-sec">
 
-            <div class="finance-topbar-Section">
-            <div class="finance-topbar">
-                    <div class="topbar-finance-list-page topbar-active">
-                        <a href="#">
-                            <i class="fa-solid fa-address-book">
-                                <span class="finance-topbar-text">Timesheets</span>
-                            </i>
-                        </a>
-                    </div>
+                @include('web.finance.finance_header')
 
-                    <div class="topbar-finance-list-page">
+                <div class="finance-invoice-right-sec">
 
-                        <a href="#">
-                            <i class="fa-solid fa-money-bills">
-                                <span class="finance-topbar-text">Invoices</span>
-                            </i>
-                        </a>
-                    </div>
-
-                    <div class="topbar-finance-list-page">
-                        <a href="#">
-                            <i class="fa-solid fa-user">
-                                <span class="finance-topbar-text">Payroll</span>
-                            </i>
-                        </a>
-
-                    </div>
-
-                    <div class="topbar-finance-list-page">
-                        <a href="#">
-                            <i class="fa-solid fa-piggy-bank">
-                                <span class="finance-topbar-text">Remittance</span>
-                            </i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="bills-icon-section">
-                    <a href="#">
-                    <img src="{{ asset('web/company_logo/money.png') }}" alt="">
-                    </a>
-                </div>
-
-            </div>
-
-            <div class="finance-invoice-right-sec">
-
-                <div class="finance-remittance-contact-first-sec">
-                    <div class="invoice-top-section">
-                        <div class="form-group finance-remittance-payment-method">
-                            <label for="inputState">Payment Method</label>
-                            <select id="inputState" class="form-control">
-                                <option selected>BACS</option>
-                                <option>...</option>
-                            </select>
-                        </div>
-                        <div class="finance-remittance-top-sec">
-                            <div class="invoice-checkbox-top-section">
-                                <div class="invoice-checkbox-sec">
-                                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                    <div class="finance-remittance-contact-first-sec">
+                        <div class="invoice-top-section">
+                            <div class="form-group finance-remittance-payment-method">
+                                <label>Payment Method</label>
+                                <select id="paymentMethod" name="method" class="form-control">
+                                    <option value="">Choose One</option>
+                                    @foreach ($paymentMethodList as $key1 => $paymentMethod)
+                                        <option value="{{ $paymentMethod->description_int }}"
+                                            {{ app('request')->input('method') == $paymentMethod->description_int ? 'selected' : '' }}>
+                                            {{ $paymentMethod->description_txt }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="finance-remittance-top-sec">
+                                <div class="invoice-checkbox-top-section">
+                                    <div class="invoice-checkbox-sec">
+                                        <input type="checkbox" id="includePaid" name="include" value="1"
+                                            {{ app('request')->input('include') == 1 ? 'checked' : '' }}>
+                                    </div>
+                                    <div class="invoice-checkbox-sec">
+                                        <label for="includePaid">Include Paid</label>
+                                    </div>
                                 </div>
-                                <div class="invoice-checkbox-sec">
-                                    <label for="vehicle1">Include Paid</label>
+                                <div class="remittance-top-icon">
+                                    <a style="cursor: pointer" class="disabled-link" id="remitInvoiceBtn"
+                                        title="Remit Invoice">
+                                        <i class="fa-solid fa-square-check"></i>
+                                    </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="previewInvoiceBtn"
+                                        title="Preview Invoice">
+                                        <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
+                                    </a>
                                 </div>
                             </div>
-                            <div class="remittance-top-icon">
-                                <a href="#"><i class="fa-solid fa-square-check"></i></a>
-                                <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
+
+                        </div>
+
+                        <input type="hidden" name="" id="editInvoiceId" value="">
+                        <input type="hidden" name="" id="editInvoiceIncludeId"
+                            value="{{ app('request')->input('include') }}">
+                        <input type="hidden" name="" id="editInvoiceMethodId"
+                            value="{{ app('request')->input('method') }}">
+
+                        <div class="finance-invoice-table-section">
+                            <table class="table finance-timesheet-page-table" id="myTable">
+                                <thead>
+                                    <tr class="school-detail-table-heading">
+                                        <th>Invoice ID</th>
+                                        <th>Invoice Date</th>
+                                        <th>School</th>
+                                        <th>Paid On</th>
+                                        <th>Remitted By</th>
+                                        <th>Sent On</th>
+                                        <th>Sent By</th>
+                                        <th>Net</th>
+                                        <th>VAT</th>
+                                        <th>Gross</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body-sec">
+                                    @foreach ($remitInvoices as $key => $Invoices)
+                                        <tr class="school-detail-table-data editInvoiceRow"
+                                            onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
+                                            id="editInvoiceRow{{ $Invoices->invoice_id }}">
+                                            <td>{{ $Invoices->invoice_id }}</td>
+                                            <td>{{ $Invoices->invoice_dte ? date('d-m-Y', strtotime($Invoices->invoice_dte)) : '' }}
+                                            </td>
+                                            <td>{{ $Invoices->school_txt }}</td>
+                                            <td>{{ $Invoices->paid_dte ? date('d-m-Y', strtotime($Invoices->paid_dte)) : '' }}
+                                            </td>
+                                            <td>{{ $Invoices->remittee_txt }}</td>
+                                            <td>{{ $Invoices->sent_dte ? date('d-m-Y', strtotime($Invoices->sent_dte)) : '' }}
+                                            </td>
+                                            <td>{{ $Invoices->sender_txt }}</td>
+                                            <td>{{ $Invoices->net_dec }}</td>
+                                            <td>{{ $Invoices->vat_dec }}</td>
+                                            <td>{{ $Invoices->gross_dec }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="finance-remittance-contact-second-sec">
+
+                        <div class="amount-owed-heading-sec">
+                            <h2>Amount Owed</h2>
+                            <div class="amount-owed-price-sec">
+                                <span>Net</span>
+                                <p>&#8377 82,888.86</p>
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Vat</span>
+                                <p>&#8377 16,557.77</p>
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Gross</span>
+                                <p>&#8377 99,466.63</p>
                             </div>
                         </div>
 
+                        <div class="amount-owed-heading-sec">
+                            <h2>Amount Overdue</h2>
+                            <div class="amount-owed-price-sec">
+                                <span>Net</span>
+                                <p>&#8377 82,888.86</p>
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Vat</span>
+                                <p>&#8377 16,557.77</p>
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Gross</span>
+                                <p>&#8377 99,466.63</p>
+                            </div>
+
+                            {{-- <div class="Amount-owed-icon-sec">
+                                <a href="#"><i class="fa-solid fa-arrows-rotate"></i></a>
+                            </div> --}}
+
+                        </div>
+
                     </div>
-                    <div class="finance-invoice-table-section">
-                        <table class="table finance-timesheet-page-table" id="myTable">
-                            <thead>
-                                <tr class="school-detail-table-heading">
-                                    <th>Invoice ID</th>
-                                    <th>Invoice Date</th>
-                                    <th>School</th>
-                                    <th>Paid On</th>
-                                    <th>Remitted By</th>
-                                    <th>Sent On</th>
-                                    <th>Sent By</th>
-                                    <th>Net</th>
-                                    <th>VAT</th>
-                                    <th>Gross</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body-sec">
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>Acland Burghley School</td>
-                                    <td>Vivian Amoako</td>
-                                    <td>19-09-2022</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                </tr>
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>Acland Burghley School</td>
-                                    <td>Vivian Amoako</td>
-                                    <td>19-09-2022</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                    <td>19-09-2022</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
                 </div>
-
-
-                <div class="finance-remittance-contact-second-sec">
-
-                    <div class="amount-owed-heading-sec">
-                        <h2>Amount Owed</h2>
-                        <div class="amount-owed-price-sec">
-                            <span>Net</span>
-                            <p>&#8377 82,888.86</p>
-                        </div>
-                        <div class="amount-owed-price-sec">
-                            <span>Vat</span>
-                            <p>&#8377 16,557.77</p>
-                        </div>
-                        <div class="amount-owed-price-sec">
-                            <span>Gross</span>
-                            <p>&#8377 99,466.63</p>
-                        </div>
-                    </div>
-
-                    <div class="amount-owed-heading-sec">
-                        <h2>Amount Overdue</h2>
-                        <div class="amount-owed-price-sec">
-                            <span>Net</span>
-                            <p>&#8377 82,888.86</p>
-                        </div>
-                        <div class="amount-owed-price-sec">
-                            <span>Vat</span>
-                            <p>&#8377 16,557.77</p>
-                        </div>
-                        <div class="amount-owed-price-sec">
-                            <span>Gross</span>
-                            <p>&#8377 99,466.63</p>
-                        </div>
-
-                        <div class="Amount-owed-icon-sec">
-                            <a href="#"><i class="fa-solid fa-arrows-rotate"></i></a>
-                        </div>
-
-                    </div>
-
-                    <!-- <div class="invoice-top-second-section">
-                        <div class="form-group invoice-top-first-input-sec">
-                            <label for="staticEmail" class="col-form-label">Invoice From</label>
-                            <input type="date" id="staticEmail" placeholder="25-11-2022" value="">
-                        </div>
-                        <div class="form-group invoice-top-second-input-sec">
-                            <label for="staticEmail" class="col-form-label">to</label>
-                            <input type="date" id="staticEmail" placeholder="25-11-2022" value="">
-                        </div>
-                        <div class="finance-invoice-icon-sec">
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-arrows-rotate"></i>
-                            </a>
-                        </div>
-                        <div class="invoice-checkbox-top-section">
-                            <div class="invoice-checkbox-sec">
-                                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                            </div>
-                            <div class="invoice-checkbox-sec">
-                                <label for="vehicle1">Show Sent</label>
-                            </div>
-                        </div>
-
-                        <div class="finance-invoice-icon-sec">
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-file-lines"></i>
-                            </a>
-                        </div>
-
-                        <div class="finance-invoice-icon-sec">
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                            </a>
-                        </div>
-
-                        <div class="finance-invoice-icon-sec">
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </a>
-                        </div>
-
-                        <div class="finance-invoice-icon-sec">
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-envelope"></i>
-                                <div class="finance-invoice-second-icon-sec">
-                                    <i class="fa-solid fa-plus"></i>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="finance-invoice-icon-sec">
-                            <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-envelope"></i>
-                            </a>
-                        </div>
-                        <div class="invoice-second-edit-icon">
-                            <a data-toggle="modal" data-target="#DetailModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-pencil"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="finance-invoice-table-section">
-                        <table class="table finance-timesheet-page-table" id="myTable">
-                            <thead>
-                                <tr class="school-detail-table-heading">
-                                    <th>Invoice ID</th>
-                                    <th>Date</th>
-                                    <th>School</th>
-                                    <th>Gross</th>
-                                    <th>Net</th>
-                                    <th>Days</th>
-                                    <th>Tch</th>
-                                    <th>Email</th>
-                                    <th>Factor</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body-sec">
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>Acland Burghley School</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                </tr>
-                                <tr class="school-detail-table-data editContactRow">
-                                    <td>Acland Burghley School</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                    <td>432</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div> -->
-                </div>
-
             </div>
         </div>
     </div>
-</div>
 
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
 
+        $(document).on('change', '#includePaid', function() {
+            var method = "<?php echo app('request')->input('method'); ?>";
+            if ($(this).is(":checked")) {
+                $('#paymentMethod').val(method);
+                filtering(1, method);
+            } else {
+                $('#paymentMethod').val(method);
+                filtering('', method);
+            }
+        });
+
+        $(document).on('change', '#paymentMethod', function() {
+            var paymentMethod = $(this).val();
+            var include = "<?php echo app('request')->input('include'); ?>";
+            if (paymentMethod != '') {
+                // $('#includePaid').prop('checked', false);
+                filtering(include, paymentMethod);
+            } else {
+                // $('#includePaid').prop('checked', true);
+                filtering(include, '');
+            }
+        });
+
+        function filtering(include, method) {
+            //alert(sort_val);
+            var qUrl = ""
+            var current_url = window.location.href;
+            var base_url = current_url.split("?")[0];
+            var hashes = current_url.split("?")[1];
+            var hash = hashes.split('&');
+            for (var i = 0; i < hash.length; i++) {
+                params = hash[i].split("=");
+                if (params[0] == 'include') {
+                    params[1] = include;
+                }
+                if (params[0] == 'method') {
+                    params[1] = method;
+                }
+                paramJoin = params.join("=");
+                qUrl = "" + qUrl + paramJoin + "&";
+            }
+            if (qUrl != '') {
+                qUrl = qUrl.substr(0, qUrl.length - 1);
+            }
+
+            var joinUrl = base_url + "?" + qUrl
+            //alert("My favourite sports are: " + joinUrl);
+            window.location.assign(joinUrl);
+        }
+
+        function editInvoiceRowSelect(invoice_id) {
+            if ($('#editInvoiceRow' + invoice_id).hasClass('tableRowActive')) {
+                $('#editInvoiceId').val('');
+                $('#editInvoiceRow' + invoice_id).removeClass('tableRowActive');
+                $('#remitInvoiceBtn').addClass('disabled-link');
+                $('#previewInvoiceBtn').addClass('disabled-link');
+            } else {
+                $('#editInvoiceId').val(invoice_id);
+                $('.editInvoiceRow').removeClass('tableRowActive');
+                $('#editInvoiceRow' + invoice_id).addClass('tableRowActive');
+                $('#remitInvoiceBtn').removeClass('disabled-link');
+                $('#previewInvoiceBtn').removeClass('disabled-link');
+            }
+        }
+
+        $(document).on('click', '#remitInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                swal({
+                        title: "",
+                        text: "You currently have an invoice selected. Do you want to remit that invoice?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('schoolInvoiceRemit') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        editInvoiceId: editInvoiceId
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#previewInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                var rUrl = '<?php echo url('/finance-invoice-pdf/'); ?>' + '/' + editInvoiceId;
+                window.open(rUrl, '_blank');
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+    </script>
 @endsection

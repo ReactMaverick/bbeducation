@@ -189,6 +189,7 @@ Route::get('/finance-timesheets', [FinanceController::class, 'financeTimesheets'
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
+Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
 // Finance
 
 // Management

@@ -1395,12 +1395,18 @@ class SchoolController extends Controller
 
     public function schoolInvoiceRemit(Request $request)
     {
-        $invoice_id = $request->editInvoiceId;
-        DB::table('tbl_invoice')
-            ->where('invoice_id', $invoice_id)
-            ->update([
-                'paidOn_dte' => date("Y-m-d")
-            ]);
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $invoice_id = $request->editInvoiceId;
+            DB::table('tbl_invoice')
+                ->where('invoice_id', $invoice_id)
+                ->update([
+                    'paidOn_dte' => date("Y-m-d"),
+                    'paymentLoggedBy_id' => $user_id
+                ]);
+        }
         return 1;
     }
 

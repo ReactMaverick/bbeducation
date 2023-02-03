@@ -333,8 +333,7 @@
             if (paymentMethod != '') {
                 // $('#includePaid').prop('checked', false);
                 filtering(include, paymentMethod);
-            }
-            else {
+            } else {
                 // $('#includePaid').prop('checked', true);
                 filtering(include, '');
             }
