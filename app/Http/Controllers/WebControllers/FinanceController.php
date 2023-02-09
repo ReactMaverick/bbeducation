@@ -34,11 +34,162 @@ class FinanceController extends Controller
             $headerTitle = "Finance";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
+            $p_maxDate = date('Y-m-d');
+            if ($request->date) {
+                $p_maxDate = date('Y-m-d', strtotime($request->date));
+            }
 
-            return view("web.finance.finance_timesheet", ['title' => $title, 'headerTitle' => $headerTitle]);
+            $timesheetSchoolList = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                ->select('tbl_asn.school_id', 'tbl_school.name_txt As schoolName_txt', DB::raw("COUNT(asnItem_id) AS timesheetDatesRequired_int"))
+                ->where('timesheet_id', NULL)
+                ->where('status_int', 3)
+                ->whereDate('asnDate_dte', '<=', $p_maxDate)
+                ->groupBy('school_id')
+                ->orderByRaw('COUNT(asnItem_id) DESC')
+                ->get();
+
+            return view("web.finance.finance_timesheet", ['title' => $title, 'headerTitle' => $headerTitle, 'timesheetSchoolList' => $timesheetSchoolList, 'p_maxDate' => $p_maxDate]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function fetchTeacherById(Request $request)
+    {
+        $input = $request->all();
+        $max_date = $input['max_date'];
+        $school_id = $input['school_id'];
+
+        $teacherList = DB::table('tbl_asn')
+            ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+            ->LeftJoin('tbl_student', 'tbl_asn.student_id', '=', 'tbl_student.student_id')
+            ->select('asnItem_id', 'tbl_asn.teacher_id', 'tbl_asn.asn_id', 'tbl_asn.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), DB::raw("IF(tbl_asn.student_id IS NOT NULL, CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt), '') AS studentName_txt"))
+            ->where('timesheet_id', NULL)
+            ->where('status_int', 3)
+            ->whereDate('asnDate_dte', '<=', $max_date)
+            ->where('school_id', $school_id)
+            ->groupBy('tbl_asn.teacher_id', 'asnItem_id', 'asnDate_dte')
+            ->orderBy('tbl_asn.teacher_id', 'ASC')
+            ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+            ->get();
+
+        $html = '';
+        if (count($teacherList) > 0) {
+            foreach ($teacherList as $key => $teacher) {
+                $name = '';
+                if ($teacher->knownAs_txt == null && $teacher->knownAs_txt == '') {
+                    $name = $teacher->firstName_txt . ' ' . $teacher->surname_txt;
+                } else {
+                    $name = $teacher->knownAs_txt . ' ' . $teacher->surname_txt;
+                }
+                $html .= "<tr class='school-detail-table-data selectTeacherRow' id='selectTeacherRow$teacher->asnItem_id' teacher-id='$teacher->teacher_id' asn-id='$teacher->asn_id' asnitem-id='$teacher->asnItem_id' school-id='$teacher->school_id'>
+                    <td>$name</td>
+                    <td>$teacher->asnDate_dte</td>
+                    <td>$teacher->datePart_txt</td>
+                    <td>$teacher->studentName_txt</td>
+                </tr>";
+            }
+        }
+
+        return response()->json(['html' => $html]);
+    }
+
+    public function timesheetAsnItemDelete(Request $request)
+    {
+        $asnItemIds = $request->asnItemIds;
+        $idsArr = explode(",", $asnItemIds);
+
+        foreach ($idsArr as $key => $id) {
+            DB::table('tbl_asnItem')
+                ->where('asnItem_id', $id)
+                ->delete();
+        }
+        return true;
+    }
+
+    public function timesheetEditEvent(Request $request)
+    {
+        $result['exist'] = "No";
+        $asnItem_id = $request->id;
+        $eventItemDetail = DB::table('tbl_asnItem')
+            ->where('tbl_asnItem.asnItem_id', $asnItem_id)
+            ->first();
+
+        if ($eventItemDetail) {
+            $dayPartList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 20)
+                ->get();
+
+            $view = view("web.finance.event_edit_view", ['eventItemDetail' => $eventItemDetail, 'dayPartList' => $dayPartList])->render();
+            $result['exist'] = "Yes";
+            $result['eventId'] = $eventItemDetail->asnItem_id;
+            $result['html'] = $view;
+            return response()->json($result);
+        } else {
+            $result['exist'] = "No";
+            return response()->json($result);
+        }
+        return response()->json($result);
+    }
+
+    public function timesheetEventUpdate(Request $request)
+    {
+        $editEventId = $request->editEventId;
+
+        DB::table('tbl_asnItem')
+            ->where('asnItem_id', $editEventId)
+            ->update([
+                'dayPart_int' => $request->dayPart_int,
+                'asnDate_dte' => date("Y-m-d", strtotime($request->asnDate_dte)),
+                'charge_dec' => $request->charge_dec,
+                'dayPercent_dec' => $request->dayPercent_dec,
+                'hours_dec' => $request->hours_dec,
+                'cost_dec' => $request->cost_dec
+            ]);
+
+        $max_date = $request->max_date;
+        $school_id = $request->school_id;
+
+        $teacherList = DB::table('tbl_asn')
+            ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+            ->LeftJoin('tbl_student', 'tbl_asn.student_id', '=', 'tbl_student.student_id')
+            ->select('asnItem_id', 'tbl_asn.teacher_id', 'tbl_asn.asn_id', 'tbl_asn.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), DB::raw("IF(tbl_asn.student_id IS NOT NULL, CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt), '') AS studentName_txt"))
+            ->where('timesheet_id', NULL)
+            ->where('status_int', 3)
+            ->whereDate('asnDate_dte', '<=', $max_date)
+            ->where('school_id', $school_id)
+            ->groupBy('tbl_asn.teacher_id', 'asnItem_id', 'asnDate_dte')
+            ->orderBy('tbl_asn.teacher_id', 'ASC')
+            ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+            ->get();
+
+        $html = '';
+        if (count($teacherList) > 0) {
+            foreach ($teacherList as $key => $teacher) {
+                $name = '';
+                if ($teacher->knownAs_txt == null && $teacher->knownAs_txt == '') {
+                    $name = $teacher->firstName_txt . ' ' . $teacher->surname_txt;
+                } else {
+                    $name = $teacher->knownAs_txt . ' ' . $teacher->surname_txt;
+                }
+                $html .= "<tr class='school-detail-table-data selectTeacherRow' id='selectTeacherRow$teacher->asnItem_id' teacher-id='$teacher->teacher_id' asn-id='$teacher->asn_id' asnitem-id='$teacher->asnItem_id' school-id='$teacher->school_id'>
+                            <td>$name</td>
+                            <td>$teacher->asnDate_dte</td>
+                            <td>$teacher->datePart_txt</td>
+                            <td>$teacher->studentName_txt</td>
+                        </tr>";
+            }
+        }
+
+        $result['status'] = "success";
+        $result['eventId'] = $editEventId;
+        $result['html'] = $html;
+        return response()->json($result);
     }
 
     public function financeInvoices(Request $request)

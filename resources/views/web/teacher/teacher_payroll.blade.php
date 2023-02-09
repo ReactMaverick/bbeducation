@@ -65,7 +65,7 @@
                             </div>
                             <div class="school-name-section">
                                 <div class="teacher-profession-heading-text">
-                                    <h2>RACS Number</h2>
+                                    <h2>Payroll Number</h2>
                                 </div>
                                 <div class="teacher-profession-name-text">
                                     <p>{{ $teacherDetail->RACSnumber_txt }}</p>
@@ -152,7 +152,7 @@
                                 </div>
 
                                 <div class="form-group modal-input-field">
-                                    <label class="form-check-label">RACS Number</label>
+                                    <label class="form-check-label">Payroll Number</label>
                                     <input type="text" class="form-control" name="RACSnumber_txt" id=""
                                         value="{{ $teacherDetail->RACSnumber_txt }}">
                                 </div>

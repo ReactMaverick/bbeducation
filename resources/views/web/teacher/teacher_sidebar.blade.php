@@ -96,7 +96,7 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section ">
+        {{-- <div class="sidebar-pages-section ">
             <a href="#" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person-chalkboard"></i>
@@ -105,7 +105,7 @@
                     <span>Work</span>
                 </div>
             </a>
-        </div>
+        </div> --}}
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Payroll') sidebar-active @endif">
             <a href="{{ URL::to('/teacher-payroll/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">

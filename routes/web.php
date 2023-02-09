@@ -186,6 +186,10 @@ Route::get('/school-calendar/{id}', [SchoolController::class, 'schoolCalendar'])
 // Finance
 Route::get('/finance', [FinanceController::class, 'finance']);
 Route::get('/finance-timesheets', [FinanceController::class, 'financeTimesheets']);
+Route::post('/fetchTeacherById', [FinanceController::class, 'fetchTeacherById']);
+Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnItemDelete']);
+Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEvent']);
+Route::post('/timesheetEventUpdate', [FinanceController::class, 'timesheetEventUpdate']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
@@ -197,3 +201,9 @@ Route::get('/management', [ManagementController::class, 'management']);
 Route::get('/management-user', [ManagementController::class, 'managementUser']);
 Route::get('/management-mailshot', [ManagementController::class, 'managementMailshot']);
 // Management
+
+
+// Teacher Portal
+Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function () {
+    Route::get('/set-password/{id}', [TeacherController::class, 'teacherSetPassword']);
+});

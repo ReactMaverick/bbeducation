@@ -2900,7 +2900,7 @@ table td {
 
 .timesheet-top-input-sec {
     display: flex;
-    width: 40%;
+    width: 56%;
     margin-bottom: 0;
 }
 
@@ -2915,7 +2915,7 @@ table td {
     margin-left: 10px;
     height: 28px;
     text-align: center;
-    width: 43%;
+    width: 30%;
     border: 2px solid #afabab;
     border-radius: 3px;
 }
@@ -2943,13 +2943,18 @@ table td {
 
 .finance-list-text-section {
     border: 1px solid #afabab;
-    max-height: 200px;
-    min-height: 200px;
+    max-height: 250px;
+    min-height: 250px;
     overflow-y: scroll;
 }
 
 .finance-timesheet-table-section {
-    margin-top: 40px;
+    margin-top: 38px;
+    max-height: 250px;
+    min-height: 250px;
+    overflow-y: scroll;
+    border: 1px solid #afabab;
+
 }
 
 .finance-list-text ul li {
@@ -2977,13 +2982,17 @@ table td {
 
 .finance-timesheet-page-table {
     width: 100%;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     margin-bottom: 0;
 }
 
 .finance-timesheet-second-table-section {
     margin-top: 20px;
     width: 85%;
+    max-height: 250px;
+    min-height: 250px;
+    overflow-y: scroll;
+    outline: 1px solid #afabab;
 }
 
 .table-assignment-bottom-text-sec {
@@ -2991,6 +3000,7 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 margin-top: 5px;
+width: 85%;
 }
 
 .finance-contact-icon-sec {
@@ -4057,3 +4067,14 @@ td.fc-day-top {
 } */
 
 .modal { overflow: auto !important; }
+
+.timesheet-top-input-sec .timesheet-search-btn {
+    background-color: #70ad47;
+    border: none;
+    color: #fff;
+    padding: 0px 5px;
+    height: 28px;
+    border-radius: 5px;
+    margin-left: 10px;
+    font-size: 12px;
+}

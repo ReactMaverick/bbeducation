@@ -3046,4 +3046,11 @@ class TeacherController extends Controller
             return redirect()->intended('/');
         }
     }
+
+    /********* Teacher Portal *********/
+    public function teacherSetPassword(Request $request, $id)
+    {
+        return view("web.teacherPortal.set_password");
+    }
+    /********* Teacher Portal *********/
 }
