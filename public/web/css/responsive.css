@@ -1447,6 +1447,12 @@
         .select-feedback-field {
             width: 100%;
         }
+
+        /* ===========RESET PASSWORD============= */
+
+        .reset-password-form-outer {
+            width: 350px;
+        }
 }
 
 @media (max-width: 375px) {
@@ -1468,5 +1474,11 @@
 
     .profile-form {
         width: 100%;
+    }
+
+    /* ===========RESET PASSWORD============ */
+
+    .reset-password-form-outer {
+        width: 330px;
     }
 }
