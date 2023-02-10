@@ -103,7 +103,7 @@
                     <h2>Add New Teacher</h2>
                 </div>
 
-                <form action="{{ url('/newTeacherInsert') }}" method="post" class="form-validate">
+                <form action="{{ url('/newTeacherInsert') }}" method="post" class="form-validate" id="addNewTeacherForm">
                     @csrf
                     <div class="modal-input-field-section">
 
@@ -111,7 +111,7 @@
                             <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Title</label>
-                                    <select class="form-control" name="title_int"  style="width:100%;">
+                                    <select class="form-control" name="title_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($titleList as $key1 => $title)
                                             <option value="{{ $title->description_int }}">
@@ -123,14 +123,14 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">First Name</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control field-validate" name="firstName_txt" id=""
-                                        value="">
+                                    <input type="text" class="form-control field-validate" name="firstName_txt"
+                                        id="" value="">
                                 </div>
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Surname</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control field-validate" name="surname_txt" id=""
-                                        value="">
+                                    <input type="text" class="form-control field-validate" name="surname_txt"
+                                        id="" value="">
                                 </div>
 
                                 <div class="form-group modal-input-field">
@@ -149,6 +149,12 @@
                                     <label class="form-check-label">Middle Name</label>
                                     <input type="text" class="form-control" name="middleNames_txt" id=""
                                         value="">
+                                </div>
+
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Email-id</label><span style="color: red;">*</span>
+                                    <input type="text" class="form-control email-validate" name="login_mail"
+                                        id="loginMailId" value="">
                                 </div>
 
                                 <div class="modal-input-field">
@@ -182,7 +188,8 @@
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Nationality</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate select2" name="nationality_int"  style="width:100%;">
+                                    <select class="form-control field-validate select2" name="nationality_int"
+                                        style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($nationalityList as $key2 => $nationality)
                                             <option value="{{ $nationality->description_int }}">
@@ -193,14 +200,16 @@
                                 </div>
 
                                 <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Date of Birth</label><span style="color: red;">*</span>
+                                    <label class="form-check-label">Date of Birth</label><span
+                                        style="color: red;">*</span>
                                     <input type="date" class="form-control field-validate" name="DOB_dte"
                                         id="" value="">
                                 </div>
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Candidate Type</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate select2" name="professionalType_int" style="width:100%;">
+                                    <select class="form-control field-validate select2" name="professionalType_int"
+                                        style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($candidateList as $key4 => $candidate)
                                             <option value="{{ $candidate->description_int }}">
@@ -212,7 +221,8 @@
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Age Range Specialism</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate select2" name="ageRangeSpecialism_int" style="width:100%;">
+                                    <select class="form-control field-validate select2" name="ageRangeSpecialism_int"
+                                        style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($specialismList as $key5 => $specialism)
                                             <option value="{{ $specialism->description_int }}">
@@ -233,6 +243,20 @@
                                     <input type="date" class="form-control" name="NQTCompleted_dte" id=""
                                         value="">
                                 </div>
+
+                                <div class="form-group calendar-form-filter">
+                                    <label for="">Status</label><span style="color: red;">*</span>
+                                    <select class="form-control field-validate" name="activeStatus" style="width:100%;">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="modal-side-field mb-2">
+                                    <input type="checkbox" class="" name="passwordReset" id="passwordReset"
+                                        value="1">
+                                    <label class="form-check-label" for="passwordReset">Send password reset link</label>
+                                </div>
                             </div>
                         </div>
 
@@ -240,7 +264,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <button type="button" class="btn btn-secondary" id="addNewTeacherBtn">Submit</button>
 
                         <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
@@ -275,6 +299,29 @@
                             $('#addNewTeacherModal').modal("show");
                     }
                 });
+        });
+
+        $(document).on('click', '#addNewTeacherBtn', function() {
+            var loginMailId = $('#loginMailId').val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('checkTeacherMailExist') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    loginMail: loginMailId
+                },
+                async: false,
+                success: function(data) {
+                    if (data == 'Yes') {
+                        swal(
+                            'Failed!',
+                            'Email-id already exist.'
+                        );
+                    } else {
+                        $('#addNewTeacherForm').submit();
+                    }
+                }
+            });
         });
     </script>
 @endsection

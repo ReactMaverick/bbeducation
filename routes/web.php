@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Artisan;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/cache-clear', function () {
     Artisan::call('config:cache');
     Artisan::call('config:clear');
@@ -73,6 +74,7 @@ Route::get('/assignment-finance/{id}', [AssignmentController::class, 'assignment
 
 // Teacher
 Route::get('/teachers', [TeacherController::class, 'teachers']);
+Route::post('/checkTeacherMailExist', [TeacherController::class, 'checkTeacherMailExist']);
 Route::post('/newTeacherInsert', [TeacherController::class, 'newTeacherInsert']);
 Route::get('/teacher-search', [TeacherController::class, 'teacherSearch']);
 Route::get('/teacher-pending-reference', [TeacherController::class, 'teacherPendingReference']);
@@ -206,4 +208,5 @@ Route::get('/management-mailshot', [ManagementController::class, 'managementMail
 // Teacher Portal
 Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function () {
     Route::get('/set-password/{id}', [TeacherController::class, 'teacherSetPassword']);
+    Route::get('/testMail', [TeacherController::class, 'testMail']);
 });

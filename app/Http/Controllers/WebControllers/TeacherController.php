@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Carbon\CarbonPeriod;
+use App\Http\Controllers\WebControllers\AlertController;
 
 class TeacherController extends Controller
 {
@@ -67,6 +68,20 @@ class TeacherController extends Controller
         }
     }
 
+    public function checkTeacherMailExist(Request $request)
+    {
+        $loginMail = $request->loginMail;
+        $teacherDet = DB::table('tbl_teacher')
+            ->select('tbl_teacher.*')
+            ->where('login_mail', $loginMail)
+            ->get();
+        if (count($teacherDet) > 0) {
+            return "Yes";
+        } else {
+            return "No";
+        }
+    }
+
     public function newTeacherInsert(Request $request)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -90,9 +105,13 @@ class TeacherController extends Controller
             if ($request->NQTCompleted_dte != '') {
                 $NQTCompleted_dte = date("Y-m-d", strtotime($request->NQTCompleted_dte));
             }
+            $activeStatus = 0;
+            if ($request->activeStatus) {
+                $activeStatus = 1;
+            }
 
-            DB::table('tbl_teacher')
-                ->insert([
+            $teacher_id = DB::table('tbl_teacher')
+                ->insertGetId([
                     'company_id' => $company_id,
                     'title_int' => $request->title_int,
                     'firstName_txt' => $request->firstName_txt,
@@ -100,6 +119,7 @@ class TeacherController extends Controller
                     'knownAs_txt' => $request->knownAs_txt,
                     'maidenPreviousNames_txt' => $request->maidenPreviousNames_txt,
                     'middleNames_txt' => $request->middleNames_txt,
+                    'login_mail' => $request->login_mail,
                     'address1_txt' => $request->address1_txt,
                     'address2_txt' => $request->address2_txt,
                     'address3_txt' => $request->address3_txt,
@@ -113,8 +133,20 @@ class TeacherController extends Controller
                     'NQTCompleted_dte' => $NQTCompleted_dte,
                     'lat_txt' => $lat_txt,
                     'lon_txt' => $lon_txt,
+                    'activeStatus' => $activeStatus,
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
+
+            if ($request->passwordReset && $request->login_mail) {
+                // $mail = 'sudip.websadroit@gmail.com';
+                $uID = base64_encode($teacher_id);
+                $mailData['firstName_txt'] = $request->firstName_txt;
+                $mailData['surname_txt'] = $request->surname_txt;
+                $mailData['mail'] = $request->login_mail;
+                $mailData['rUrl'] = url('/teacher/set-password/') . $uID;
+                $myVar = new AlertController();
+                $myVar->reset_password($mailData);
+            }
 
             return redirect()->back()->with('success', "Teacher added successfully.");
         } else {
@@ -3053,4 +3085,11 @@ class TeacherController extends Controller
         return view("web.teacherPortal.set_password");
     }
     /********* Teacher Portal *********/
+
+    public function testMail(Request $request)
+    {
+        $mail = 'sudip.websadroit@gmail.com';
+        $myVar = new AlertController();
+        $alertSetting = $myVar->test_mail($mail);
+    }
 }
