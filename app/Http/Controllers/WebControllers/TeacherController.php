@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Carbon\CarbonPeriod;
 use App\Http\Controllers\WebControllers\AlertController;
+use Hash;
 
 class TeacherController extends Controller
 {
@@ -143,7 +144,7 @@ class TeacherController extends Controller
                 $mailData['firstName_txt'] = $request->firstName_txt;
                 $mailData['surname_txt'] = $request->surname_txt;
                 $mailData['mail'] = $request->login_mail;
-                $mailData['rUrl'] = url('/teacher/set-password/') . $uID;
+                $mailData['rUrl'] = url('/teacher/set-password') . '/' . $uID;
                 $myVar = new AlertController();
                 $myVar->reset_password($mailData);
             }
@@ -3082,7 +3083,35 @@ class TeacherController extends Controller
     /********* Teacher Portal *********/
     public function teacherSetPassword(Request $request, $id)
     {
-        return view("web.teacherPortal.set_password");
+        $teacher_id = base64_decode($id);
+        $teacherDetail = DB::table('tbl_teacher')
+            ->select('tbl_teacher.*')
+            ->where('teacher_id', $teacher_id)
+            ->first();
+        $companyDetail = array();
+        if ($teacherDetail) {
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $teacherDetail->company_id)
+                ->get();
+        }
+
+        return view("web.teacherPortal.set_password", ['teacher_id' => $teacher_id, 'teacherDetail' => $teacherDetail, 'companyDetail' => $companyDetail]);
+    }
+
+    public function teacherPasswordUpdate(Request $request)
+    {
+        if ($request->password != $request->confirm_password) {
+            return redirect()->back()->with('error', "Password and confirm password not match.");
+        } else {
+            $teacher_id = $request->teacher_id;
+            DB::table('tbl_teacher')
+                ->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'password' => Hash::make($request->password)
+                ]);
+            return redirect()->intended('/teacher');
+        }
     }
     /********* Teacher Portal *********/
 

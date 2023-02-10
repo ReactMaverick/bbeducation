@@ -208,5 +208,7 @@ Route::get('/management-mailshot', [ManagementController::class, 'managementMail
 // Teacher Portal
 Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function () {
     Route::get('/set-password/{id}', [TeacherController::class, 'teacherSetPassword']);
+    Route::post('/teacherPasswordUpdate', [TeacherController::class, 'teacherPasswordUpdate']);
+    Route::get('/', [TeacherController::class, 'teacherLogin']);
     Route::get('/testMail', [TeacherController::class, 'testMail']);
 });
