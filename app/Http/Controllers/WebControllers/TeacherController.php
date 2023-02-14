@@ -2640,9 +2640,10 @@ class TeacherController extends Controller
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('images/teacher', $name);
-                    $fPath = 'images/teacher/' . $name;
-                    $fType = $extension;
+                    if ($image->move('images/teacher', $name)) {
+                        $fPath = 'images/teacher/' . $name;
+                        $fType = $extension;
+                    }
                 } else {
                     return redirect()->back()->with('error', "Please upload valid file.");
                 }
@@ -2650,18 +2651,84 @@ class TeacherController extends Controller
                 return redirect()->back()->with('error', "Please upload valid file.");
             }
 
-            DB::table('tbl_teacherDocument')
-                ->insert([
-                    'teacher_id' => $teacher_id,
-                    'file_location' => $fPath,
-                    'file_name' => $request->file_name,
-                    'type_int' => $request->type_int,
-                    'file_type' => $fType,
-                    'uploadOn_dtm' => date('Y-m-d H:i:s'),
-                    'loggedOn_dtm' => date('Y-m-d H:i:s'),
-                    'loggedBy_id' => $user_id,
-                    'timestamp_ts' => date('Y-m-d H:i:s')
-                ]);
+            $profilePicExist = DB::table('tbl_teacherDocument')
+                ->select('tbl_teacherDocument.*')
+                ->where('teacher_id', $teacher_id)
+                ->where('type_int', 1)
+                ->first();
+
+            if ($request->type_int == 1 && $profilePicExist) {
+                DB::table('tbl_teacherDocument')
+                    ->where('teacherDocument_id', '=', $profilePicExist->teacherDocument_id)
+                    ->update([
+                        'file_location' => $fPath,
+                        'file_name' => $request->file_name,
+                        'file_type' => $fType,
+                        'uploadOn_dtm' => date('Y-m-d H:i:s')
+                    ]);
+            } else {
+                DB::table('tbl_teacherDocument')
+                    ->insert([
+                        'teacher_id' => $teacher_id,
+                        'file_location' => $fPath,
+                        'file_name' => $request->file_name,
+                        'type_int' => $request->type_int,
+                        'file_type' => $fType,
+                        'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                        'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                        'loggedBy_id' => $user_id,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+            }
+
+            if ($fPath) {
+                $eData = array();
+                if ($request->type_int == 3) {
+                    $eData['docPassport_status'] = -1;
+                }
+                if ($request->type_int == 4) {
+                    $eData['docDriversLicence_status'] = -1;
+                }
+                if ($request->type_int == 5) {
+                    $eData['docBankStatement_status'] = -1;
+                }
+                if ($request->type_int == 6) {
+                    $eData['docDBS_status'] = -1;
+                }
+                if ($request->type_int == 8) {
+                    $eData['docDisqualForm_status'] = -1;
+                }
+                if ($request->type_int == 9) {
+                    $eData['docHealthDec_status'] = -1;
+                }
+                if ($request->type_int == 10) {
+                    $eData['docEUCard_status'] = -1;
+                }
+                if ($request->type_int == 11) {
+                    $eData['docUtilityBill_status'] = -1;
+                }
+                if ($request->type_int == 12) {
+                    $eData['docTelephoneBill_status'] = -1;
+                }
+                if ($request->type_int == 13) {
+                    $eData['docBenefitStatement_status'] = -1;
+                }
+                if ($request->type_int == 14) {
+                    $eData['docCreditCardBill_status'] = -1;
+                }
+                if ($request->type_int == 15 || $request->type_int == 17) {
+                    $eData['docP45P60_status'] = -1;
+                }
+                if ($request->type_int == 16) {
+                    $eData['docCouncilTax_status'] = -1;
+                }
+
+                if ($eData) {
+                    DB::table('tbl_teacher')
+                        ->where('teacher_id', '=', $teacher_id)
+                        ->update($eData);
+                }
+            }
 
             return redirect()->back()->with('success', "Document added successfully.");
         } else {
@@ -2705,11 +2772,12 @@ class TeacherController extends Controller
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('images/teacher', $name);
-                    $fPath = 'images/teacher/' . $name;
-                    $fType = $extension;
-                    if (file_exists($file_location)) {
-                        unlink($file_location);
+                    if ($image->move('images/teacher', $name)) {
+                        $fPath = 'images/teacher/' . $name;
+                        $fType = $extension;
+                        if (file_exists($file_location)) {
+                            unlink($file_location);
+                        }
                     }
                 } else {
                     return redirect()->back()->with('error', "Please upload valid file.");
@@ -2730,6 +2798,55 @@ class TeacherController extends Controller
                     'loggedBy_id' => $user_id
                 ]);
 
+            if ($fPath) {
+                $eData = array();
+                if ($request->type_int == 3) {
+                    $eData['docPassport_status'] = -1;
+                }
+                if ($request->type_int == 4) {
+                    $eData['docDriversLicence_status'] = -1;
+                }
+                if ($request->type_int == 5) {
+                    $eData['docBankStatement_status'] = -1;
+                }
+                if ($request->type_int == 6) {
+                    $eData['docDBS_status'] = -1;
+                }
+                if ($request->type_int == 8) {
+                    $eData['docDisqualForm_status'] = -1;
+                }
+                if ($request->type_int == 9) {
+                    $eData['docHealthDec_status'] = -1;
+                }
+                if ($request->type_int == 10) {
+                    $eData['docEUCard_status'] = -1;
+                }
+                if ($request->type_int == 11) {
+                    $eData['docUtilityBill_status'] = -1;
+                }
+                if ($request->type_int == 12) {
+                    $eData['docTelephoneBill_status'] = -1;
+                }
+                if ($request->type_int == 13) {
+                    $eData['docBenefitStatement_status'] = -1;
+                }
+                if ($request->type_int == 14) {
+                    $eData['docCreditCardBill_status'] = -1;
+                }
+                if ($request->type_int == 15 || $request->type_int == 17) {
+                    $eData['docP45P60_status'] = -1;
+                }
+                if ($request->type_int == 16) {
+                    $eData['docCouncilTax_status'] = -1;
+                }
+
+                if ($eData) {
+                    DB::table('tbl_teacher')
+                        ->where('teacher_id', '=', $teacher_id)
+                        ->update($eData);
+                }
+            }
+
             return redirect()->back()->with('success', "Document updated successfully.");
         } else {
             return redirect()->intended('/');
@@ -2749,6 +2866,53 @@ class TeacherController extends Controller
 
             if (file_exists($docDetail->file_location)) {
                 unlink($docDetail->file_location);
+            }
+
+            $eData = array();
+            if ($docDetail->type_int == 3) {
+                $eData['docPassport_status'] = 0;
+            }
+            if ($docDetail->type_int == 4) {
+                $eData['docDriversLicence_status'] = 0;
+            }
+            if ($docDetail->type_int == 5) {
+                $eData['docBankStatement_status'] = 0;
+            }
+            if ($docDetail->type_int == 6) {
+                $eData['docDBS_status'] = 0;
+            }
+            if ($docDetail->type_int == 8) {
+                $eData['docDisqualForm_status'] = 0;
+            }
+            if ($docDetail->type_int == 9) {
+                $eData['docHealthDec_status'] = 0;
+            }
+            if ($docDetail->type_int == 10) {
+                $eData['docEUCard_status'] = 0;
+            }
+            if ($docDetail->type_int == 11) {
+                $eData['docUtilityBill_status'] = 0;
+            }
+            if ($docDetail->type_int == 12) {
+                $eData['docTelephoneBill_status'] = 0;
+            }
+            if ($docDetail->type_int == 13) {
+                $eData['docBenefitStatement_status'] = 0;
+            }
+            if ($docDetail->type_int == 14) {
+                $eData['docCreditCardBill_status'] = 0;
+            }
+            if ($docDetail->type_int == 15 || $docDetail->type_int == 17) {
+                $eData['docP45P60_status'] = 0;
+            }
+            if ($docDetail->type_int == 16) {
+                $eData['docCouncilTax_status'] = 0;
+            }
+
+            if ($eData) {
+                DB::table('tbl_teacher')
+                    ->where('teacher_id', '=', $docDetail->teacher_id)
+                    ->update($eData);
             }
         }
         return 1;
@@ -3110,6 +3274,1158 @@ class TeacherController extends Controller
                 ->update([
                     'password' => Hash::make($request->password)
                 ]);
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function teacherLogin(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            return redirect()->intended('/teacher/detail');
+        } else {
+            $title = array('pageTitle' => "Teacher Login");
+            return view("web.teacherPortal.teacher_login", ['title' => $title]);
+        }
+    }
+
+    public function teacherProcessLogin(Request $request)
+    {
+        $validator = Validator::make(
+            array(
+                'user_name'    => $request->user_name,
+                'password' => $request->password
+            ),
+            array(
+                'user_name'    => 'required',
+                'password' => 'required',
+            )
+        );
+        //check validation
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+            $user_exist = DB::table('tbl_teacher')
+                ->LeftJoin('company', 'company.company_id', '=', 'tbl_teacher.company_id')
+                ->select('tbl_teacher.*', 'company.company_name', 'company.company_logo')
+                ->where('tbl_teacher.login_mail', $request->user_name)
+                ->get();
+            if (count($user_exist) > 0) {
+                if (!Hash::check($request->password, $user_exist[0]->password)) {
+                    return redirect()->back()->withInput()->with('loginError', "Wrong password.");
+                } else {
+                    if ($user_exist[0]->activeStatus != 1) {
+                        return redirect()->back()->withInput()->with('loginError', "You are not an active user.");
+                    } else {
+                        Session::put('teacherLoginData', $user_exist[0]);
+                        return redirect()->intended('/teacher/detail');
+                    }
+                }
+            } else {
+                return redirect()->back()->withInput()->with('loginError', "Wrong user name.");
+            }
+        }
+    }
+
+    public function teacherLogout()
+    {
+        Session::forget('teacherLoginData');
+        return redirect('/teacher');
+    }
+
+    public function logTeacherDetail(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $title = array('pageTitle' => "Teacher Detail");
+            $headerTitle = "Teachers";
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            $contactItemList = DB::table('tbl_contactItemTch')
+                ->LeftJoin('tbl_description', function ($join) {
+                    $join->on('tbl_description.description_int', '=', 'tbl_contactItemTch.type_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_description.descriptionGroup_int', '=', 9);
+                        });
+                })
+                ->select('tbl_contactItemTch.*', 'tbl_description.description_txt as type_txt')
+                ->where('tbl_contactItemTch.teacher_id', $teacher_id)
+                ->orderBy('tbl_contactItemTch.type_int')
+                ->get();
+
+            $titleList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 1)
+                ->get();
+
+            $nationalityList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 8)
+                ->orderBy('tbl_description.description_txt', 'ASC')
+                ->get();
+
+            $ralationshipList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 10)
+                ->get();
+
+            $contactTypeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 9)
+                ->get();
+
+            return view("web.teacherPortal.teacher_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'contactItemList' => $contactItemList, 'titleList' => $titleList, 'nationalityList' => $nationalityList, 'ralationshipList' => $ralationshipList, 'contactTypeList' => $contactTypeList]);
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherDetailUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $validator = Validator::make($request->all(), [
+                'firstName_txt' => 'required',
+                'surname_txt' => 'required',
+                'DOB_dte' => 'required',
+                'nationality_int' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'title_int' => $request->title_int,
+                    'firstName_txt' => $request->firstName_txt,
+                    'surname_txt' => $request->surname_txt,
+                    'knownAs_txt' => $request->knownAs_txt,
+                    'maidenPreviousNames_txt' => $request->maidenPreviousNames_txt,
+                    'middleNames_txt' => $request->middleNames_txt,
+                    'nationality_int' => $request->nationality_int,
+                    'DOB_dte' => date("Y-m-d", strtotime($request->DOB_dte))
+                ]);
+
+            return redirect()->back()->with('success', "Details updated successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherAddressUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $validator = Validator::make($request->all(), [
+                'postcode_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'address1_txt' => $request->address1_txt,
+                    'address2_txt' => $request->address2_txt,
+                    'address3_txt' => $request->address3_txt,
+                    'address4_txt' => $request->address4_txt,
+                    'postcode_txt' => $request->postcode_txt
+                ]);
+
+            return redirect()->back()->with('success', "Address updated successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherContactItemInsert(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $validator = Validator::make($request->all(), [
+                'type_int' => 'required',
+                'contactItem_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+
+            DB::table('tbl_contactItemTch')
+                ->insert([
+                    'teacher_id' => $teacher_id,
+                    'type_int' => $request->type_int,
+                    'contactItem_txt' => $request->contactItem_txt,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            return redirect()->back()->with('success', "Contact item added successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherContactItemUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+            $contactItemTch_id = $request->contactItemTch_id;
+
+            $validator = Validator::make($request->all(), [
+                'type_int' => 'required',
+                'contactItem_txt' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->with('error', "Please fill all mandatory fields.");
+            }
+
+            DB::table('tbl_contactItemTch')
+                ->where('contactItemTch_id', $contactItemTch_id)
+                ->update([
+                    'type_int' => $request->type_int,
+                    'contactItem_txt' => $request->contactItem_txt
+                ]);
+
+            return redirect()->back()->with('success', "Contact item updated successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherEmerContactUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'emergencyContactName_txt' => $request->emergencyContactName_txt,
+                    'emergencyContactNum1_txt' => $request->emergencyContactNum1_txt,
+                    'emergencyContactNum2_txt' => $request->emergencyContactNum2_txt,
+                    'emergencyContactRelation_int' => $request->emergencyContactRelation_int
+                ]);
+
+            return redirect()->back()->with('success', "Emergency contact updated successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherProfession(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $title = array('pageTitle' => "Teacher Profession");
+            $headerTitle = "Teachers";
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->LeftJoin('tbl_user as interviewer', 'interviewer.user_id', '=', 'tbl_teacher.interviewBy_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'interviewer.firstName_txt as int_firstName_txt', 'interviewer.surname_txt as int_surname_txt')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            $teacherSubjects = DB::table('tbl_teacherSubject')
+                ->LeftJoin('tbl_description as subject', function ($join) {
+                    $join->on('subject.description_int', '=', 'tbl_teacherSubject.subject_id')
+                        ->where(function ($query) {
+                            $query->where('subject.descriptionGroup_int', '=', 6);
+                        });
+                })
+                ->select('tbl_teacherSubject.*', 'subject.description_txt as subject_txt')
+                ->where('tbl_teacherSubject.teacher_id', $teacher_id)
+                ->orderBy('tbl_teacherSubject.isMain_status', 'ASC')
+                ->orderBy('subject_txt', 'ASC')
+                ->get();
+
+            $teacherQualifications = DB::table('tbl_teacherQualification')
+                ->LeftJoin('tbl_description as subjectType', function ($join) {
+                    $join->on('subjectType.description_int', '=', 'tbl_teacherQualification.subType_int')
+                        ->where(function ($query) {
+                            $query->where('subjectType.descriptionGroup_int', '=', 15);
+                        });
+                })
+                ->select('tbl_teacherQualification.*', 'subjectType.description_txt as subType_txt')
+                ->where('tbl_teacherQualification.teacher_id', $teacher_id)
+                ->orderBy('tbl_teacherQualification.givesQTS_status', 'ASC')
+                ->orderBy('tbl_teacherQualification.type_int', 'ASC')
+                ->orderBy('tbl_teacherQualification.qualified_dte', 'ASC')
+                ->get();
+
+            $candidateList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 7)
+                ->get();
+
+            $agerangeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 5)
+                ->get();
+
+            $interviewQualityList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 22)
+                ->get();
+
+            $languageSkillList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 23)
+                ->get();
+
+            $subjectList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 6)
+                ->get();
+
+            $typeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 14)
+                ->get();
+
+            $subTypeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 15)
+                ->get();
+
+            return view("web.teacherPortal.teacher_profession", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications, 'candidateList' => $candidateList, 'agerangeList' => $agerangeList, 'interviewQualityList' => $interviewQualityList, 'languageSkillList' => $languageSkillList, 'subjectList' => $subjectList, 'typeList' => $typeList, 'subTypeList' => $subTypeList]);
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherHealth(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $title = array('pageTitle' => "Teacher Health");
+            $headerTitle = "Teachers";
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            return view("web.teacherPortal.teacher_health", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail]);
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherPrefUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+            $prefDrive_status = 0;
+            if ($request->prefDrive_status) {
+                $prefDrive_status = -1;
+            }
+            $prefDailySupply_status = 0;
+            if ($request->prefDailySupply_status) {
+                $prefDailySupply_status = -1;
+            }
+            $prefLongTerm_status = 0;
+            if ($request->prefLongTerm_status) {
+                $prefLongTerm_status = -1;
+            }
+            $prefEarlyMorningCall_status = 0;
+            if ($request->prefEarlyMorningCall_status) {
+                $prefEarlyMorningCall_status = -1;
+            }
+            $prefSEN_status = 0;
+            if ($request->prefSEN_status) {
+                $prefSEN_status = -1;
+            }
+            $prefSENExperience_status = 0;
+            if ($request->prefSENExperience_status) {
+                $prefSENExperience_status = -1;
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'prefDrive_status' => $prefDrive_status,
+                    'prefDailySupply_status' => $prefDailySupply_status,
+                    'prefLongTerm_status' => $prefLongTerm_status,
+                    'prefEarlyMorningCall_status' => $prefEarlyMorningCall_status,
+                    'prefSEN_status' => $prefSEN_status,
+                    'prefSENExperience_status' => $prefSENExperience_status,
+                    'prefDistance_int' => $request->prefDistance_int,
+                    'prefYearGroup_int' => $request->prefYearGroup_int,
+                    'prefIdealJob_txt' => $request->prefIdealJob_txt,
+                    'otherAgencies_txt' => $request->otherAgencies_txt,
+                    'currentRate_dec' => $request->currentRate_dec,
+                    'previousSchools_txt' => $request->previousSchools_txt
+                ]);
+
+            return redirect()->back()->with('success', "Preference updated successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherHealthUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+            $healthDeclaration_dte = NULL;
+            if ($request->healthDeclaration_dte != '') {
+                $healthDeclaration_dte = date("Y-m-d", strtotime($request->healthDeclaration_dte));
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'healthDeclaration_dte' => $healthDeclaration_dte,
+                    'occupationalHealth_txt' => $request->occupationalHealth_txt,
+                    'healthIssues_txt' => $request->healthIssues_txt
+                ]);
+
+            return redirect()->back()->with('success', "Health updated successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherDocuments(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $title = array('pageTitle' => "Teacher Documents");
+            $headerTitle = "Teachers";
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            $RTW_list = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 39)
+                ->get();
+
+            $DBS_list = DB::table('tbl_teacherdbs')
+                ->select('tbl_teacherdbs.*')
+                ->where('tbl_teacherdbs.teacher_id', $teacher_id)
+                ->get();
+
+            $documentList = DB::table('tbl_teacherDocument')
+                ->LeftJoin('tbl_description', function ($join) {
+                    $join->on('tbl_description.description_int', '=', 'tbl_teacherDocument.type_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_description.descriptionGroup_int', '=', 19);
+                        });
+                })
+                ->select('tbl_teacherDocument.*', 'tbl_description.description_txt as doc_type_txt')
+                ->where('tbl_teacherDocument.teacher_id', $teacher_id)
+                ->where('tbl_teacherDocument.uploadOn_dtm', '!=', NULL)
+                ->orderBy('tbl_teacherDocument.uploadOn_dtm', 'DESC')
+                ->get();
+
+            $typeList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 19)
+                ->get();
+
+            return view("web.teacherPortal.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list, 'documentList' => $documentList, 'typeList' => $typeList]);
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherDocInsert(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $fPath = '';
+            $fType = '';
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            if ($image = $request->file('file')) {
+                $extension = $image->extension();
+                $file_name = $image->getClientOriginalName();
+                if (in_array(strtolower($extension), $allowed_types)) {
+                    $rand = mt_rand(100000, 999999);
+                    $name = time() . "_" . $rand . "_" . $file_name;
+                    if ($image->move('images/teacher', $name)) {
+                        $fPath = 'images/teacher/' . $name;
+                        $fType = $extension;
+                    }
+                } else {
+                    return redirect()->back()->with('error', "Please upload valid file.");
+                }
+            } else {
+                return redirect()->back()->with('error', "Please upload valid file.");
+            }
+
+            $profilePicExist = DB::table('tbl_teacherDocument')
+                ->select('tbl_teacherDocument.*')
+                ->where('teacher_id', $teacher_id)
+                ->where('type_int', 1)
+                ->first();
+
+            if ($request->type_int == 1 && $profilePicExist) {
+                DB::table('tbl_teacherDocument')
+                    ->where('teacherDocument_id', '=', $profilePicExist->teacherDocument_id)
+                    ->update([
+                        'file_location' => $fPath,
+                        'file_name' => $request->file_name,
+                        'file_type' => $fType,
+                        'uploadOn_dtm' => date('Y-m-d H:i:s')
+                    ]);
+            } else {
+                DB::table('tbl_teacherDocument')
+                    ->insert([
+                        'teacher_id' => $teacher_id,
+                        'file_location' => $fPath,
+                        'file_name' => $request->file_name,
+                        'type_int' => $request->type_int,
+                        'file_type' => $fType,
+                        'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                        'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                        // 'loggedBy_id' => $user_id,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+            }
+
+            if ($fPath) {
+                $eData = array();
+                if ($request->type_int == 3) {
+                    $eData['docPassport_status'] = -1;
+                }
+                if ($request->type_int == 4) {
+                    $eData['docDriversLicence_status'] = -1;
+                }
+                if ($request->type_int == 5) {
+                    $eData['docBankStatement_status'] = -1;
+                }
+                if ($request->type_int == 6) {
+                    $eData['docDBS_status'] = -1;
+                }
+                if ($request->type_int == 8) {
+                    $eData['docDisqualForm_status'] = -1;
+                }
+                if ($request->type_int == 9) {
+                    $eData['docHealthDec_status'] = -1;
+                }
+                if ($request->type_int == 10) {
+                    $eData['docEUCard_status'] = -1;
+                }
+                if ($request->type_int == 11) {
+                    $eData['docUtilityBill_status'] = -1;
+                }
+                if ($request->type_int == 12) {
+                    $eData['docTelephoneBill_status'] = -1;
+                }
+                if ($request->type_int == 13) {
+                    $eData['docBenefitStatement_status'] = -1;
+                }
+                if ($request->type_int == 14) {
+                    $eData['docCreditCardBill_status'] = -1;
+                }
+                if ($request->type_int == 15 || $request->type_int == 17) {
+                    $eData['docP45P60_status'] = -1;
+                }
+                if ($request->type_int == 16) {
+                    $eData['docCouncilTax_status'] = -1;
+                }
+
+                if ($eData) {
+                    DB::table('tbl_teacher')
+                        ->where('teacher_id', '=', $teacher_id)
+                        ->update($eData);
+                }
+            }
+
+            return redirect()->back()->with('success', "Document added successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherDocUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+            $editDocumentId = $request->editDocumentId;
+            $file_location = $request->file_location;
+
+            $fPath = '';
+            $fType = '';
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            if ($image = $request->file('file')) {
+                $extension = $image->extension();
+                $file_name = $image->getClientOriginalName();
+                if (in_array(strtolower($extension), $allowed_types)) {
+                    $rand = mt_rand(100000, 999999);
+                    $name = time() . "_" . $rand . "_" . $file_name;
+                    if ($image->move('images/teacher', $name)) {
+                        $fPath = 'images/teacher/' . $name;
+                        $fType = $extension;
+                        if (file_exists($file_location)) {
+                            unlink($file_location);
+                        }
+                    }
+                } else {
+                    return redirect()->back()->with('error', "Please upload valid file.");
+                }
+            } else {
+                return redirect()->back()->with('error', "Please upload valid file.");
+            }
+
+            DB::table('tbl_teacherDocument')
+                ->where('teacherDocument_id', '=', $editDocumentId)
+                ->update([
+                    'file_location' => $fPath,
+                    'file_name' => $request->file_name,
+                    'type_int' => $request->type_int,
+                    'file_type' => $fType,
+                    'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                    'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                    // 'loggedBy_id' => $user_id
+                ]);
+
+            if ($fPath) {
+                $eData = array();
+                if ($request->type_int == 3) {
+                    $eData['docPassport_status'] = -1;
+                }
+                if ($request->type_int == 4) {
+                    $eData['docDriversLicence_status'] = -1;
+                }
+                if ($request->type_int == 5) {
+                    $eData['docBankStatement_status'] = -1;
+                }
+                if ($request->type_int == 6) {
+                    $eData['docDBS_status'] = -1;
+                }
+                if ($request->type_int == 8) {
+                    $eData['docDisqualForm_status'] = -1;
+                }
+                if ($request->type_int == 9) {
+                    $eData['docHealthDec_status'] = -1;
+                }
+                if ($request->type_int == 10) {
+                    $eData['docEUCard_status'] = -1;
+                }
+                if ($request->type_int == 11) {
+                    $eData['docUtilityBill_status'] = -1;
+                }
+                if ($request->type_int == 12) {
+                    $eData['docTelephoneBill_status'] = -1;
+                }
+                if ($request->type_int == 13) {
+                    $eData['docBenefitStatement_status'] = -1;
+                }
+                if ($request->type_int == 14) {
+                    $eData['docCreditCardBill_status'] = -1;
+                }
+                if ($request->type_int == 15 || $request->type_int == 17) {
+                    $eData['docP45P60_status'] = -1;
+                }
+                if ($request->type_int == 16) {
+                    $eData['docCouncilTax_status'] = -1;
+                }
+
+                if ($eData) {
+                    DB::table('tbl_teacher')
+                        ->where('teacher_id', '=', $teacher_id)
+                        ->update($eData);
+                }
+            }
+
+            return redirect()->back()->with('success', "Document updated successfully.");
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherDocDelete(Request $request)
+    {
+        $DocumentId = $request->DocumentId;
+        $docDetail = DB::table('tbl_teacherDocument')
+            ->where('teacherDocument_id', "=", $DocumentId)
+            ->first();
+        if ($docDetail) {
+            DB::table('tbl_teacherDocument')
+                ->where('teacherDocument_id', "=", $DocumentId)
+                ->delete();
+
+            if (file_exists($docDetail->file_location)) {
+                unlink($docDetail->file_location);
+            }
+
+            $eData = array();
+            if ($docDetail->type_int == 3) {
+                $eData['docPassport_status'] = 0;
+            }
+            if ($docDetail->type_int == 4) {
+                $eData['docDriversLicence_status'] = 0;
+            }
+            if ($docDetail->type_int == 5) {
+                $eData['docBankStatement_status'] = 0;
+            }
+            if ($docDetail->type_int == 6) {
+                $eData['docDBS_status'] = 0;
+            }
+            if ($docDetail->type_int == 8) {
+                $eData['docDisqualForm_status'] = 0;
+            }
+            if ($docDetail->type_int == 9) {
+                $eData['docHealthDec_status'] = 0;
+            }
+            if ($docDetail->type_int == 10) {
+                $eData['docEUCard_status'] = 0;
+            }
+            if ($docDetail->type_int == 11) {
+                $eData['docUtilityBill_status'] = 0;
+            }
+            if ($docDetail->type_int == 12) {
+                $eData['docTelephoneBill_status'] = 0;
+            }
+            if ($docDetail->type_int == 13) {
+                $eData['docBenefitStatement_status'] = 0;
+            }
+            if ($docDetail->type_int == 14) {
+                $eData['docCreditCardBill_status'] = 0;
+            }
+            if ($docDetail->type_int == 15 || $docDetail->type_int == 17) {
+                $eData['docP45P60_status'] = 0;
+            }
+            if ($docDetail->type_int == 16) {
+                $eData['docCouncilTax_status'] = 0;
+            }
+
+            if ($eData) {
+                DB::table('tbl_teacher')
+                    ->where('teacher_id', '=', $docDetail->teacher_id)
+                    ->update($eData);
+            }
+        }
+        return 1;
+    }
+
+    public function logTeacherPayroll(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $title = array('pageTitle' => "Teacher Payroll");
+            $headerTitle = "Teachers";
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            $bankList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 36)
+                ->get();
+
+            return view("web.teacherPortal.teacher_payroll", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'bankList' => $bankList]);
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
+
+    public function logTeacherPayrollUpdate(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+            $basePayRate_dec = 0;
+            if ($request->basePayRate_dec != '') {
+                $basePayRate_dec = $request->basePayRate_dec;
+            }
+
+            DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
+                ->update([
+                    'NINumber_txt' => $request->NINumber_txt,
+                    'bank_int' => $request->bank_int,
+                    'sortCode_int' => $request->sortCode_int,
+                    'accountNumber_txt' => $request->accountNumber_txt,
+                    'basePayRate_dec' => $basePayRate_dec,
+                    // 'RACSnumber_txt' => $request->RACSnumber_txt
+                ]);
+
+            return redirect()->back()->with('success', "Bank/Payroll updated successfully.");
+        } else {
             return redirect()->intended('/teacher');
         }
     }

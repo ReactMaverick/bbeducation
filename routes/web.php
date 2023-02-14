@@ -210,5 +210,24 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function 
     Route::get('/set-password/{id}', [TeacherController::class, 'teacherSetPassword']);
     Route::post('/teacherPasswordUpdate', [TeacherController::class, 'teacherPasswordUpdate']);
     Route::get('/', [TeacherController::class, 'teacherLogin']);
+    Route::post('/processLogin', [TeacherController::class, 'teacherProcessLogin']);
+    Route::get('/logout', [TeacherController::class, 'teacherLogout']);
+    Route::get('/detail', [TeacherController::class, 'logTeacherDetail']);
+    Route::post('/logTeacherDetailUpdate', [TeacherController::class, 'logTeacherDetailUpdate']);
+    Route::post('/logTeacherAddressUpdate', [TeacherController::class, 'logTeacherAddressUpdate']);
+    Route::post('/logTeacherContactItemInsert', [TeacherController::class, 'logTeacherContactItemInsert']);
+    Route::post('/logTeacherContactItemUpdate', [TeacherController::class, 'logTeacherContactItemUpdate']);
+    Route::post('/logTeacherEmerContactUpdate', [TeacherController::class, 'logTeacherEmerContactUpdate']);
+    Route::get('/profession-qualification', [TeacherController::class, 'logTeacherProfession']);
+    Route::get('/preference-health', [TeacherController::class, 'logTeacherHealth']);
+    Route::post('/logTeacherPrefUpdate', [TeacherController::class, 'logTeacherPrefUpdate']);
+    Route::post('/logTeacherHealthUpdate', [TeacherController::class, 'logTeacherHealthUpdate']);
+    Route::get('/all-documents', [TeacherController::class, 'logTeacherDocuments']);
+    Route::post('/logTeacherDocInsert', [TeacherController::class, 'logTeacherDocInsert']);
+    Route::post('/logTeacherDocUpdate', [TeacherController::class, 'logTeacherDocUpdate']);
+    Route::post('/logTeacherDocDelete', [TeacherController::class, 'logTeacherDocDelete']);
+    Route::get('/payroll', [TeacherController::class, 'logTeacherPayroll']);
+    Route::post('/logTeacherPayrollUpdate', [TeacherController::class, 'logTeacherPayrollUpdate']);
+
     Route::get('/testMail', [TeacherController::class, 'testMail']);
 });
