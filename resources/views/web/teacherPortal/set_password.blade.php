@@ -12,8 +12,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <script src="{{ asset('web/js/jquery.min.js') }}"></script>
 </head>
 
@@ -23,24 +22,25 @@
             <img src="{{ count($companyDetail) > 0 ? asset($companyDetail[0]->company_logo) : '' }}" alt="">
             <h1>{{ count($companyDetail) > 0 ? $companyDetail[0]->company_name : '' }}</h1>
             <span>Reset Your Password?</span>
-            <form action="{{ url('/teacher/teacherPasswordUpdate') }}" method="post"
-                class="reset-password-form-sec form-validate">
+            <form action="{{ url('/teacher/teacherPasswordUpdate') }}" method="post" class="reset-password-form-sec form-validate">
                 @csrf
                 <input type="hidden" name="teacher_id" value="{{ $teacher_id }}">
-                <div class="form-group">
+                <div class="form-group reset-password-form-group">
                     <!-- <label for="pwd">Password:</label> -->
-                    <input type="password" class="form-control field-validate" name="password" placeholder="Password">
+                    <input type="password" class="form-control field-validate" name="password" placeholder="Password" id="password-input-sec">
+                    <i class="fa-regular fa-eye" id="password-sec-icon"></i>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group reset-password-form-group">
                     <!-- <label for="pwd">Confirm Password:</label> -->
-                    <input type="password" class="form-control field-validate" name="confirm_password"
-                        placeholder="Confirm Password">
+                    <input type="password" class="form-control field-validate" name="confirm_password" placeholder="Confirm Password" id="confirm-password-input-sec">
+                    <i class="fa-regular fa-eye" id="confirm-password-sec-icon"></i>
+
                 </div>
                 @if ($teacherDetail)
-                    <input type="submit" value="Submit">
+                <input type="submit" value="Submit">
                 @else
-                    <input type="button" value="Submit">
+                <input type="button" value="Submit">
                 @endif
             </form>
         </div>
@@ -50,15 +50,15 @@
     </div>
 
     <script src="{!! asset('plugins/sweetalert/sweetalert.min.js') !!}"></script>
-    <?php if (Session::has('error')){ ?>
-    <script>
-        $(document).ready(function() {
-            swal(
-                'Failed!',
-                '<?php echo session('error'); ?>'
-            );
-        });
-    </script>
+    <?php if (Session::has('error')) { ?>
+        <script>
+            $(document).ready(function() {
+                swal(
+                    'Failed!',
+                    '<?php echo session('error'); ?>'
+                );
+            });
+        </script>
     <?php } ?>
     <script>
         /******* field validate 1 ********/
@@ -97,6 +97,31 @@
 
         });
         /******* field validate 1 ********/
+    </script>
+
+    <script>
+        $("body").on('click', '#password-sec-icon', function() {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $("#password-input-sec");
+            if (input.attr("type") === "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+
+        });
+    </script>
+    <script>
+        $("body").on('click', '#confirm-password-sec-icon', function() {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $("#confirm-password-input-sec");
+            if (input.attr("type") === "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+
+        });
     </script>
 
 </body>

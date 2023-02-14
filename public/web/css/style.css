@@ -4139,11 +4139,39 @@ td.fc-day-top {
     color: #3a3a3a;
     margin-bottom: 10px;
 }
+.reset-password-form-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+}
+.reset-password-form-group .form-control {
+    border: none ;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0 10px 0 0;;
+    height: 28px;
+}
+.reset-password-form-group i {
+    font-size: 15px;
+    color: #40A0ED;
+}
 .reset-password-form-sec {
     width: 100%;
     margin-top: 10px;
 }
 .reset-password-form-sec input[type=submit] {
+    background-color: #40A0ED;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    padding: 5px 25px;
+    color: #fff;
+    font-size: 15px;
+    float: right;
+}
+.reset-password-form-sec input[type=button] {
     background-color: #40A0ED;
     border: 2px solid #fff;
     border-radius: 5px;
