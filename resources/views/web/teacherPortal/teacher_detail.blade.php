@@ -18,8 +18,6 @@
                     <div class="school-details-first-sec">
                         <div class="details-heading">
                             <h2>Details</h2>
-                            <a data-toggle="modal" data-target="#editDetailModal" style="cursor: pointer;"><i
-                                    class="fa-solid fa-pencil"></i></a>
                         </div>
 
                         <div class="about-school-section">
@@ -102,8 +100,6 @@
                         <div>
                             <div class="details-heading">
                                 <h2>Address</h2>
-                                <a data-toggle="modal" data-target="#editAddressModal" style="cursor: pointer;"><i
-                                        class="fa-solid fa-pencil"></i></a>
                             </div>
 
                             <!-- <div class="about-school-section"> -->
