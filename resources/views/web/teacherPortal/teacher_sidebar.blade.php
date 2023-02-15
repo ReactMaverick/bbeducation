@@ -3,14 +3,17 @@
         <div class="sidebar-top-text">
             <h2>
                 @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
-                    {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
                 @else
-                    {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
                 @endif
             </h2>
             <div class="teacher-detail-user-img-sec">
                 <div class="user-img-sec">
                     <img src="{{ asset('web/images/user-img.png') }}" alt="">
+                    <div class="sidebar-user-edit-sec">
+                       <a href="#"> <i class="fa-solid fa-pen"></i></a>
+                    </div>
                 </div>
             </div>
             <div class="sidebar-top-text">
@@ -23,9 +26,9 @@
                 ?>
                 <p>Age:
                     @if ($teacherDetail->DOB_dte == null || $teacherDetail->DOB_dte == '')
-                        {{ 'Missing DOB' }}
+                    {{ 'Missing DOB' }}
                     @else
-                        {{ $dobYears }}
+                    {{ $dobYears }}
                     @endif
                 </p>
             </div>

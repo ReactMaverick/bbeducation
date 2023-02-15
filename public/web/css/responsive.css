@@ -258,7 +258,7 @@
         margin-left: 0;
     }
 
-    
+
     .assignment-candidate-check-icon {
         justify-content: flex-start;
     }
@@ -356,6 +356,12 @@
         align-items: flex-start;
     }
 
+    .sidebar-user-edit-sec a {
+        bottom: 6px;
+        right: 6px;
+        padding: 8px;
+    }
+
     /* ================TEACHER DOCUMENTS=============== */
 
     .teacher-document-table-sec {
@@ -396,6 +402,7 @@
         width: 100%;
         padding: 0;
     }
+
     .finance-timesheet-top-total-section {
         flex-direction: column;
     }
@@ -403,7 +410,7 @@
     .finance-timesheet-total-section {
         width: 100%;
     }
-    
+
     .finance-timesheet-right-inner-section {
         margin-left: 0;
     }
@@ -1339,120 +1346,127 @@
         justify-content: center;
     }
 
-        /* ===============MANAGEMENT MAILSHOT=============== */
+    /* ===============MANAGEMENT MAILSHOT=============== */
 
-        .management-mailshot-heading-section {
-            width: 100%;
-        }
-    
-        .management-mailshot-all-section {
-            flex-direction: column;
-        }
-    
-        .management-mailshot-left-sec {
-            width: 100%;
-        }
-    
-        .management-mailshot-right-sec {
-            width: 100%;
-            padding-left: 0;
-            margin-top: 20px;
-        }
-    
-        .management-mailshot-table-section {
-            margin-top: 10px;
-        }
-        
-        .management-mailshot-input-section {
-            flex-direction: column;
-        }
+    .management-mailshot-heading-section {
+        width: 100%;
+    }
 
-        .management-mailshot-input-sec {
-            width: 76%;
-        }
+    .management-mailshot-all-section {
+        flex-direction: column;
+    }
 
-        .management-mailshot-section {
-            padding-right: 0;
-        }
+    .management-mailshot-left-sec {
+        width: 100%;
+    }
 
-        .management-mailshot-btn-section {
-            flex-direction: column;
-        }
+    .management-mailshot-right-sec {
+        width: 100%;
+        padding-left: 0;
+        margin-top: 20px;
+    }
 
-        .management-mailshot-btn {
-            margin-top: 10px;
-        }
+    .management-mailshot-table-section {
+        margin-top: 10px;
+    }
 
-        /* ==============TEACHER REFERENCE MODAL============ */
+    .management-mailshot-input-section {
+        flex-direction: column;
+    }
 
-        .calendar-modal-section {
-            max-width: 100% !important;
-        }
+    .management-mailshot-input-sec {
+        width: 76%;
+    }
 
-        .modal-input-field-section {
-            padding: 0 0 0 20px;
-        }
+    .management-mailshot-section {
+        padding-right: 0;
+    }
 
-        .modal-col {
-            padding-right: 0;
-        }
+    .management-mailshot-btn-section {
+        flex-direction: column;
+    }
 
-        .outer-sec {
-            padding-left: 0 !important;
-        }
-        
-        .second-inner-heading2 {
-            width: 27%;
-        }
+    .management-mailshot-btn {
+        margin-top: 10px;
+    }
 
-        .second-inner-input2 {
-            width: 27%;
-        }
+    /* ==============TEACHER REFERENCE MODAL============ */
 
-        .second-inner-heading3 {
-            width: 32%;
-        }
+    .calendar-modal-section {
+        max-width: 100% !important;
+    }
 
-        .second-inner-input3 {
-            width: 32%;
-        }
+    .modal-input-field-section {
+        padding: 0 0 0 20px;
+    }
 
-        .second-inner-heading2 {
-            width: 27%;
-        }
+    .modal-col {
+        padding-right: 0;
+    }
 
-        .third-inner-input2 {
-            width: 27%;
-        }
+    .outer-sec {
+        padding-left: 0 !important;
+    }
 
-        .first-inner-heading2 {
-            width: 62%;
-        }
+    .second-inner-heading2 {
+        width: 27%;
+    }
 
-        .first-inner-input2 {
-            width: 62%;
-        }
+    .second-inner-input2 {
+        width: 27%;
+    }
 
-        .modal-bottom-sec {
-            flex-direction: column;
-            margin-bottom: 15px;
-        }
+    .second-inner-heading3 {
+        width: 32%;
+    }
 
-        .reference-check-sec {
-            width: 100%;
-            padding-right: 0;
-            margin-bottom: 15px;
-        }
+    .second-inner-input3 {
+        width: 32%;
+    }
 
-        .select-feedback-field {
-            width: 100%;
-        }
+    .second-inner-heading2 {
+        width: 27%;
+    }
 
-        /* ===========RESET PASSWORD============= */
+    .third-inner-input2 {
+        width: 27%;
+    }
 
-        .reset-password-form-outer {
-            width: 350px;
-        }
+    .first-inner-heading2 {
+        width: 62%;
+    }
+
+    .first-inner-input2 {
+        width: 62%;
+    }
+
+    .modal-bottom-sec {
+        flex-direction: column;
+        margin-bottom: 15px;
+    }
+
+    .reference-check-sec {
+        width: 100%;
+        padding-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .select-feedback-field {
+        width: 100%;
+    }
+
+    /* ===========RESET PASSWORD============= */
+
+    .reset-password-form-outer {
+        width: 350px;
+    }
+
+
+    /* ============TEACHER SIDEBAR============ */
+
+    .sidebar-user-edit-sec a {
+        padding: 8px;
+    }
 }
 
 @media (max-width: 375px) {
