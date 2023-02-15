@@ -885,12 +885,36 @@ table td {
     border: 1px solid #fff;
     margin: 15px 5px 0 5px;
     padding: 20px;
+    position: relative;
 }
 
 .user-img-sec img {
     width: 120px;
     height: 120px;
     object-fit: cover;
+}
+
+.sidebar-user-edit-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+
+}
+
+.sidebar-user-edit-sec a {
+    background-color: #fff;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border-radius: 100%;
+    padding: 10px;
+}
+
+.sidebar-user-edit-sec i {
+    font-size: 14px;
+    color: #40a0ed;
+    margin: 0;
 }
 
 .sidebar-user-number {
