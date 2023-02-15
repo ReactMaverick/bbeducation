@@ -10,7 +10,11 @@
             </h2>
             <div class="teacher-detail-user-img-sec">
                 <div class="user-img-sec">
-                    <img src="{{ asset('web/images/user-img.png') }}" alt="">
+                    @if ($teacherDetail->file_location != null || $teacherDetail->file_location != '')
+                        <img src="{{ asset($teacherDetail->file_location) }}" alt="">
+                    @else
+                        <img src="{{ asset('web/images/user-img.png') }}" alt="">
+                    @endif
                 </div>
             </div>
             <div class="sidebar-top-text">
@@ -21,7 +25,7 @@
                 $dobDiff = abs(strtotime($tDy) - strtotime($dob));
                 $dobYears = floor($dobDiff / (365 * 60 * 60 * 24));
                 ?>
-                <p>Age: 
+                <p>Age:
                     @if ($teacherDetail->DOB_dte == null || $teacherDetail->DOB_dte == '')
                         {{ 'Missing DOB' }}
                     @else

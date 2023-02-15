@@ -228,6 +228,7 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function 
     Route::post('/logTeacherDocDelete', [TeacherController::class, 'logTeacherDocDelete']);
     Route::get('/payroll', [TeacherController::class, 'logTeacherPayroll']);
     Route::post('/logTeacherPayrollUpdate', [TeacherController::class, 'logTeacherPayrollUpdate']);
+    Route::post('/logTeacherProfilePicAdd', [TeacherController::class, 'logTeacherProfilePicAdd']);
 
     Route::get('/testMail', [TeacherController::class, 'testMail']);
 });

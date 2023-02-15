@@ -1037,6 +1037,22 @@
             }
         });
 
+        //file validate
+        $(".file-validate-6").each(function() {
+            if ($('.file-validate-6').get(0).files.length === 0) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                var ext = $('.file-validate-6').val().split('.').pop().toLowerCase();
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg']) == -1) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
@@ -1110,6 +1126,21 @@
             $(this).closest(".form-group").addClass('has-error');
             //$(this).next(".error-content").removeClass('hidden');
             error = "has error";
+        }
+    });
+
+    $(document).on('change', '.file-validate-6', function(e) {
+        if ($('.file-validate-6').get(0).files.length === 0) {
+            $(this).closest(".form-group").addClass('has-error');
+            error = "has error";
+        } else {
+            var ext = $('.file-validate-6').val().split('.').pop().toLowerCase();
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg']) == -1) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
         }
     });
     /******* field validate 6 ********/
