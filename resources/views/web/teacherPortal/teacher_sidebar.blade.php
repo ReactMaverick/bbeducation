@@ -51,6 +51,17 @@
             </a>
         </div>
 
+        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Timesheet') sidebar-active @endif">
+            <a href="{{ URL::to('/teacher/timesheet') }}" class="sidebar-pages">
+                <div class="page-icon-sec">
+                    <i class="fa-solid fa-address-book"></i>
+                </div>
+                <div class="page-name-sec">
+                    <span>Timesheet</span>
+                </div>
+            </a>
+        </div>
+
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Profession') sidebar-active @endif">
             <a href="{{ URL::to('/teacher/profession-qualification') }}" class="sidebar-pages">
                 <div class="page-icon-sec">

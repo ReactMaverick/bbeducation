@@ -4583,6 +4583,182 @@ class TeacherController extends Controller
             return redirect()->intended('/teacher');
         }
     }
+
+    public function logTeacherTimesheet(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        if ($teacherLoginData) {
+            $title = array('pageTitle' => "Teacher Timesheet");
+            $headerTitle = "Teachers";
+            $company_id = $teacherLoginData->company_id;
+            $teacher_id = $teacherLoginData->teacher_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->leftJoin(
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            if ($request->date) {
+                $weekStartDate = $request->date;
+            } else {
+                $now = Carbon::now();
+                $weekStartDate = $now->startOfWeek()->format('Y-m-d');
+            }
+            // $weekStartDate = '2023-02-06';
+            $plusFiveDate = date('Y-m-d', strtotime($weekStartDate . ' +4 days'));
+            $weekStartDate2 = date('Y-m-d', strtotime($weekStartDate . ' +1 days'));
+            $weekStartDate3 = date('Y-m-d', strtotime($weekStartDate . ' +2 days'));
+            $weekStartDate4 = date('Y-m-d', strtotime($weekStartDate . ' +3 days'));
+            $weekStartDate5 = date('Y-m-d', strtotime($weekStartDate . ' +4 days'));
+
+            $calenderList = DB::table('tbl_school')
+                ->LeftJoin('tbl_asn', function ($join) use ($teacher_id) {
+                    $join->on('tbl_asn.school_id', '=', 'tbl_school.school_id')
+                        ->where(function ($query) use ($teacher_id) {
+                            $query->where('tbl_asn.teacher_id', '=', $teacher_id)
+                                ->where('tbl_asn.status_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_asnItem as tbl_asnItem1', function ($join) use ($weekStartDate) {
+                    $join->on('tbl_asnItem1.asn_id', '=', 'tbl_asn.asn_id')
+                        ->where(function ($query) use ($weekStartDate) {
+                            $query->where('tbl_asnItem1.timesheet_id', NULL)
+                                ->where('tbl_asnItem1.asnDate_dte', '=', $weekStartDate);
+                        });
+                })
+                ->LeftJoin('tbl_asnItem as tbl_asnItem2', function ($join) use ($weekStartDate2) {
+                    $join->on('tbl_asnItem2.asn_id', '=', 'tbl_asn.asn_id')
+                        ->where(function ($query) use ($weekStartDate2) {
+                            $query->where('tbl_asnItem2.timesheet_id', NULL)
+                                ->where('tbl_asnItem2.asnDate_dte', '=', $weekStartDate2);
+                        });
+                })
+                ->LeftJoin('tbl_asnItem as tbl_asnItem3', function ($join) use ($weekStartDate3) {
+                    $join->on('tbl_asnItem3.asn_id', '=', 'tbl_asn.asn_id')
+                        ->where(function ($query) use ($weekStartDate3) {
+                            $query->where('tbl_asnItem3.timesheet_id', NULL)
+                                ->where('tbl_asnItem3.asnDate_dte', '=', $weekStartDate3);
+                        });
+                })
+                ->LeftJoin('tbl_asnItem as tbl_asnItem4', function ($join) use ($weekStartDate4) {
+                    $join->on('tbl_asnItem4.asn_id', '=', 'tbl_asn.asn_id')
+                        ->where(function ($query) use ($weekStartDate4) {
+                            $query->where('tbl_asnItem4.timesheet_id', NULL)
+                                ->where('tbl_asnItem4.asnDate_dte', '=', $weekStartDate4);
+                        });
+                })
+                ->LeftJoin('tbl_asnItem as tbl_asnItem5', function ($join) use ($weekStartDate5) {
+                    $join->on('tbl_asnItem5.asn_id', '=', 'tbl_asn.asn_id')
+                        ->where(function ($query) use ($weekStartDate5) {
+                            $query->where('tbl_asnItem5.timesheet_id', NULL)
+                                ->where('tbl_asnItem5.asnDate_dte', '=', $weekStartDate5);
+                        });
+                })
+                ->select('tbl_school.school_id', 'tbl_school.name_txt', 'teacher_id', 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"))
+                // ->where('tbl_school.company_id', $company_id)
+                // ->where('tbl_asn.teacher_id', $teacher_id)
+                // ->where('tbl_asn.status_int', 3)
+                // ->where('tbl_asnItem.timesheet_id', NULL)
+                ->whereIn('tbl_school.school_id', function ($query) use ($weekStartDate, $plusFiveDate, $teacher_id) {
+                    $query->select('school_id')
+                        ->from('tbl_asn')
+                        ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                        ->where('timesheet_id', NULL)
+                        ->where('status_int', 3)
+                        ->where('teacher_id', '=', $teacher_id)
+                        ->whereDate('asnDate_dte', '>=', $weekStartDate)
+                        ->whereDate('asnDate_dte', '<=', $plusFiveDate)
+                        ->groupBy('school_id')
+                        ->get();
+                })
+                ->groupBy('tbl_school.school_id')
+                ->orderBy('tbl_school.name_txt', 'ASC')
+                ->get();
+
+            // echo "<pre>";
+            // print_r($calenderList);
+            // exit;
+
+            return view("web.teacherPortal.teacher_timesheet", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList]);
+        } else {
+            return redirect()->intended('/teacher');
+        }
+    }
     /********* Teacher Portal *********/
 
     public function testMail(Request $request)

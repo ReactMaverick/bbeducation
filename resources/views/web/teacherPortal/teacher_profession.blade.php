@@ -34,8 +34,8 @@
                                     <h2>SubType</h2>
                                 </div>
                                 <!-- <div class="teacher-profession-name-text">
-                                                    <p>Mr</p>
-                                                </div> -->
+                                                        <p>Mr</p>
+                                                    </div> -->
                             </div>
                             <div class="school-name-section">
                                 <div class="teacher-profession-heading-text">
@@ -82,13 +82,13 @@
                                     <h2>Imported Title</h2>
                                 </div>
                                 <!-- <div class="teacher-profession-name-text">
-                                                    <p>Spanish</p>
-                                                </div> -->
+                                                        <p>Spanish</p>
+                                                    </div> -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="school-details-second-sec">
+                    {{-- <div class="school-details-second-sec">
                         <div>
                             <div class="details-heading">
                                 <h2>Interview</h2>
@@ -127,10 +127,7 @@
                                     <h2>Interview Details</h2>
                                 </div>
                                 <div class="teacher-profession-name-text">
-                                    @if (
-                                        $teacherDetail->int_firstName_txt &&
-                                            $teacherDetail->int_surname_txt &&
-                                            $teacherDetail->interviewCompletedOn_dtm != null)
+                                    @if ($teacherDetail->int_firstName_txt && $teacherDetail->int_surname_txt && $teacherDetail->interviewCompletedOn_dtm != null)
                                         <p>Interviewed by
                                             {{ $teacherDetail->int_firstName_txt . ' ' . $teacherDetail->int_surname_txt }}
                                             on
@@ -141,7 +138,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="school-detail-right-sec">
