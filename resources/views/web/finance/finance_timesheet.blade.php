@@ -37,23 +37,55 @@
                                             <h2>Select a file</h2>
                                         </div>
                                         <div class="contact-icon-sec">
-                                            <a data-toggle="modal" data-target="#ContactItemAddModal"
-                                                style="cursor: pointer;">
+                                            <a id="reloadBtn" style="cursor: pointer;">
                                                 <i class="fa-solid fa-arrows-rotate"></i>
                                             </a>
-                                            <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
+                                            {{-- <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
                                                 <i class="fa-solid fa-folder-open"></i>
-                                            </a>
+                                            </a> --}}
                                         </div>
                                     </div>
                                     <div class="finance-list-section">
-
                                         <div class="finance-list-text-section">
                                             <div class="finance-list-text">
                                                 {{-- <ul>
                                                     <li class="timesheet-list-active">New Text Document.txt</li>
                                                 </ul> --}}
+                                                <table class="table finance-timesheet-page-table" id="">
+                                                    <thead>
+                                                        <tr class="school-detail-table-heading">
+                                                            <th>Teacher</th>
+                                                            <th>School</th>
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="table-body-sec">
+                                                        @foreach ($documentList as $key => $document)
+                                                            <tr class="school-detail-table-data selectDocumentRow"
+                                                                id="selectDocumentRow{{ $document->school_id }}{{ $document->teacher_id }}"
+                                                                onclick="selectDocumentRowSelect({{ $document->school_id }}, {{ $document->teacher_id }})">
+                                                                <td>
+                                                                    @if ($document->knownAs_txt == null && $document->knownAs_txt == '')
+                                                                        {{ $document->firstName_txt . ' ' . $document->surname_txt }}
+                                                                    @else
+                                                                        {{ $document->knownAs_txt . ' ' . $document->surname_txt }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{ $document->name_txt }}</td>
+                                                                <td>({{ date('d/m/Y', strtotime($weekStartDate)) . '-' . date('d/m/Y', strtotime($weekEndDate)) }})
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
                                             </div>
+
+                                            <input type="hidden" name="docSchoolId" id="docSchoolId" value="">
+                                            <input type="hidden" name="docTeacherId" id="docTeacherId" value="">
+                                            <input type="hidden" name="docStartDate" id="docStartDate"
+                                                value="{{ $weekStartDate }}">
+                                            <input type="hidden" name="docEndDate" id="docEndDate"
+                                                value="{{ $weekEndDate }}">
                                         </div>
                                     </div>
                                 </div>
@@ -86,44 +118,69 @@
                                 <input type="hidden" name="" id="selectedSchoolId" value="">
                             </div>
 
-                            <div class="finance-timesheet-second-table-section">
-                                <table class="table finance-timesheet-page-table" id="myTable">
-                                    <thead>
-                                        <tr class="school-detail-table-heading">
-                                            <th>Teacher</th>
-                                            <th>Date</th>
-                                            <th>Part</th>
-                                            <th>Student</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-body-sec" id="teacherListDiv">
-                                    </tbody>
-                                </table>
-                            </div>
+                            <div class="finance-timesheet-left-sec">
 
-                            <input type="hidden" name="" id="asnItemIds" value="">
+                                <div class="finance-timesheet-contact-first-sec">
+                                    <div class="finance-timesheet-table-section" style="margin-top: 30px;">
+                                        <table class="table finance-timesheet-page-table" id="myTable">
+                                            <thead>
+                                                <tr class="school-detail-table-heading">
+                                                    <th>Teacher</th>
+                                                    <th>Date</th>
+                                                    <th>Part</th>
+                                                    <th>Student</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-body-sec" id="teacherListDiv">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="table-assignment-bottom-text-sec">
+                                        <div class="table-bottom-text">
+                                            <span>Double-click to open the assignment</span>
+                                        </div>
 
-                            <div class="table-assignment-bottom-text-sec">
-                                <div class="table-bottom-text">
-                                    <span>Double-click to open the assignment</span>
+                                        <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link" id="deleteDaysBttn"
+                                                title="Remove days from assignment">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </a>
+                                            <a style="cursor: pointer;" class="disabled-link" id="editDaysBttn"
+                                                title="Edit days from assignment">
+                                                <i class="fa-solid fa-pencil"></i>
+                                            </a>
+                                            <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtn"
+                                                title="Log timesheets">
+                                                <i class="fa-solid fa-square-check"></i>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="finance-contact-icon-sec">
-                                    <a style="cursor: pointer" class="disabled-link" id="deleteDaysBttn"
-                                        title="Remove days from assignment">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </a>
-                                    <a style="cursor: pointer;" class="disabled-link" id="editDaysBttn"
-                                        title="Edit days from assignment">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtn"
-                                        title="Log timesheets">
-                                        <i class="fa-solid fa-square-check"></i>
-                                    </a>
+                                <input type="hidden" name="" id="asnItemIds" value="">
+
+                                <div class="finance-timesheet-contact-second-sec" style="display: none"
+                                    id="teacherTimesheetDiv">
+                                    <div class="finance-timesheet-table-section" style="margin-top: 30px;">
+                                        <table class="table finance-timesheet-page-table" id="">
+                                            <thead>
+                                                <tr class="school-detail-table-heading">
+                                                    <th>Teacher</th>
+                                                    <th>Date</th>
+                                                    <th>Part</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-body-sec" id="teacherTimesheetTbody">
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+
+
                         </div>
+
+
                     </div>
 
                     {{-- <div class="finance-timesheet-right-sec">
@@ -446,5 +503,49 @@
                 });
             }
         });
+
+        $(document).on('click', '#reloadBtn', function() {
+            location.reload();
+        });
+
+        function selectDocumentRowSelect(school_id, teacher_id) {
+            if ($('#selectDocumentRow' + school_id + teacher_id).hasClass('tableRowActive')) {
+                $('#docSchoolId').val('');
+                $('#docTeacherId').val('');
+                $('#selectDocumentRow' + school_id + teacher_id).removeClass('tableRowActive');
+                // $('#deleteContactHistoryBttn').addClass('disabled-link');
+
+                $('#teacherTimesheetTbody').html('');
+                $('#teacherTimesheetDiv').css('display', 'none');
+            } else {
+                $('#docSchoolId').val(school_id);
+                $('#docTeacherId').val(teacher_id);
+                $('.selectDocumentRow').removeClass('tableRowActive');
+                $('#selectDocumentRow' + school_id + teacher_id).addClass('tableRowActive');
+                // $('#deleteContactHistoryBttn').removeClass('disabled-link');
+
+                var weekStartDate = "{{ $weekStartDate }}";
+                var weekEndDate = "{{ $weekEndDate }}";
+                if (school_id && teacher_id && weekStartDate && weekEndDate) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('fetchTeacherSheetById') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            school_id: school_id,
+                            teacher_id: teacher_id,
+                            weekStartDate: weekStartDate,
+                            weekEndDate: weekEndDate
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            $('#teacherTimesheetTbody').html('');
+                            $('#teacherTimesheetTbody').html(data.html);
+                            $('#teacherTimesheetDiv').css('display', 'block');
+                        }
+                    });
+                }
+            }
+        }
     </script>
 @endsection

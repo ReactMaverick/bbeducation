@@ -192,6 +192,7 @@ Route::post('/fetchTeacherById', [FinanceController::class, 'fetchTeacherById'])
 Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnItemDelete']);
 Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEvent']);
 Route::post('/timesheetEventUpdate', [FinanceController::class, 'timesheetEventUpdate']);
+Route::post('/fetchTeacherSheetById', [FinanceController::class, 'fetchTeacherSheetById']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
@@ -229,7 +230,13 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function 
     Route::get('/payroll', [TeacherController::class, 'logTeacherPayroll']);
     Route::post('/logTeacherPayrollUpdate', [TeacherController::class, 'logTeacherPayrollUpdate']);
     Route::post('/logTeacherProfilePicAdd', [TeacherController::class, 'logTeacherProfilePicAdd']);
+    Route::post('/logTeacherProfilePicDelete', [TeacherController::class, 'logTeacherProfilePicDelete']);
     Route::get('/timesheet', [TeacherController::class, 'logTeacherTimesheet']);
+    Route::post('/logTeacherTimesheetAdd', [TeacherController::class, 'logTeacherTimesheetAdd']);
+    Route::post('/logTeacherTimesheetAddAjax', [TeacherController::class, 'logTeacherTimesheetAddAjax']);
+    Route::post('/teacherTimesheetEdit', [TeacherController::class, 'teacherTimesheetEdit']);
+    Route::post('/teacherTimesheetUpdate', [TeacherController::class, 'teacherTimesheetUpdate']);
+    Route::post('/teacherTimesheetDelete', [TeacherController::class, 'teacherTimesheetDelete']);
 
     Route::get('/testMail', [TeacherController::class, 'testMail']);
 });

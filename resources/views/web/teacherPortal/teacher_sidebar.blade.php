@@ -15,6 +15,12 @@
                     @else
                         <img src="{{ asset('web/images/user-img.png') }}" alt="">
                     @endif
+
+                    <div class="sidebar-user-delete-sec">
+                        <a id="profilePicDeleteBtn" style="cursor: pointer;">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
                     <div class="sidebar-user-edit-sec">
                         <a data-toggle="modal" data-target="#profilePicAddModal" style="cursor: pointer;">
                             <i class="fa-solid fa-pen"></i>
@@ -175,3 +181,35 @@
     </div>
 </div>
 <!-- Profile Pic Add Modal -->
+
+<script>
+    $(document).on('click', '#profilePicDeleteBtn', function() {
+        var teacherDocument_id = "{{ $teacherDetail->teacherDocument_id }}";
+        if (teacherDocument_id) {
+            swal({
+                    title: "Alert",
+                    text: "Are you sure you wish to remove this profile image?",
+                    buttons: {
+                        cancel: "No",
+                        Yes: "Yes"
+                    },
+                })
+                .then((value) => {
+                    switch (value) {
+                        case "Yes":
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url('/teacher/logTeacherProfilePicDelete') }}',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    teacherDocument_id: teacherDocument_id
+                                },
+                                success: function(data) {
+                                    location.reload();
+                                }
+                            });
+                    }
+                });
+        }
+    });
+</script>

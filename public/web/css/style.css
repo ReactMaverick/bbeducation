@@ -917,6 +917,29 @@ table td {
     margin: 0;
 }
 
+.sidebar-user-delete-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+
+}
+
+.sidebar-user-delete-sec a {
+    background-color: #fff;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    border-radius: 100%;
+    padding: 10px;
+}
+
+.sidebar-user-delete-sec i {
+    font-size: 14px;
+    color: #ff0000;
+    margin: 0;
+}
+
 .sidebar-user-number {
     display: flex;
     justify-content: center;
@@ -2906,7 +2929,7 @@ table td {
 }
 
 .finance-timesheet-total-section {
-    width: 65%;
+    width: 100%;
 }
 
 .finance-timesheet-left-sec {
@@ -2915,7 +2938,7 @@ table td {
 }
 
 .finance-timesheet-contact-second-sec {
-    width: 55%;
+    width: 40%;
 }
 
 .timesheet-top-section {
@@ -2960,7 +2983,7 @@ table td {
 }
 
 .finance-timesheet-contact-first-sec {
-    width: 40%;
+    width: 55%;
 }
 
 .finance-list-section {
@@ -3014,7 +3037,7 @@ table td {
 
 .finance-timesheet-second-table-section {
     margin-top: 20px;
-    width: 85%;
+    width: 55%;
     max-height: 250px;
     min-height: 250px;
     overflow-y: scroll;
@@ -3026,7 +3049,7 @@ table td {
     justify-content: space-between;
     align-items: center;
     margin-top: 5px;
-    width: 85%;
+    /* width: 55%; */
 }
 
 .finance-contact-icon-sec {
