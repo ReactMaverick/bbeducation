@@ -37,12 +37,21 @@
                                             <h2>Select a file</h2>
                                         </div>
                                         <div class="contact-icon-sec">
-                                            <a id="reloadBtn" style="cursor: pointer;">
+                                            <a style="cursor: pointer;" class="disabled-link" id="rejectTimesheetBtn"
+                                                title="Reject Timesheet">
+                                                <i class="fa-solid fa-circle-xmark"></i>
+                                            </a>
+                                            <a style="cursor: pointer;" class="disabled-link" id="sendTimesheetBtn"
+                                                title="Send for approval">
+                                                <i class="fa-solid fa-paper-plane"></i>
+                                            </a>
+                                            <a style="cursor: pointer;" class="disabled-link" id="viewTimesheetBtn"
+                                                title="View timesheet">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                            <a id="reloadBtn" style="cursor: pointer;" title="Reload">
                                                 <i class="fa-solid fa-arrows-rotate"></i>
                                             </a>
-                                            {{-- <a style="cursor: pointer;" class="disabled-link" id="editContactBttn">
-                                                <i class="fa-solid fa-folder-open"></i>
-                                            </a> --}}
                                         </div>
                                     </div>
                                     <div class="finance-list-section">
@@ -62,8 +71,8 @@
                                                     <tbody class="table-body-sec">
                                                         @foreach ($documentList as $key => $document)
                                                             <tr class="school-detail-table-data selectDocumentRow"
-                                                                id="selectDocumentRow{{ $document->school_id }}{{ $document->teacher_id }}"
-                                                                onclick="selectDocumentRowSelect({{ $document->school_id }}, {{ $document->teacher_id }})">
+                                                                id="selectDocumentRow{{ $document->teacher_timesheet_id }}"
+                                                                onclick="selectDocumentRowSelect({{ $document->teacher_timesheet_id }})">
                                                                 <td>
                                                                     @if ($document->knownAs_txt == null && $document->knownAs_txt == '')
                                                                         {{ $document->firstName_txt . ' ' . $document->surname_txt }}
@@ -80,8 +89,8 @@
                                                 </table>
                                             </div>
 
-                                            <input type="hidden" name="docSchoolId" id="docSchoolId" value="">
-                                            <input type="hidden" name="docTeacherId" id="docTeacherId" value="">
+                                            <input type="hidden" name="teacherTimesheetId" id="teacherTimesheetId"
+                                                value="">
                                             <input type="hidden" name="docStartDate" id="docStartDate"
                                                 value="{{ $weekStartDate }}">
                                             <input type="hidden" name="docEndDate" id="docEndDate"
@@ -508,44 +517,102 @@
             location.reload();
         });
 
-        function selectDocumentRowSelect(school_id, teacher_id) {
-            if ($('#selectDocumentRow' + school_id + teacher_id).hasClass('tableRowActive')) {
-                $('#docSchoolId').val('');
-                $('#docTeacherId').val('');
-                $('#selectDocumentRow' + school_id + teacher_id).removeClass('tableRowActive');
-                // $('#deleteContactHistoryBttn').addClass('disabled-link');
-
-                $('#teacherTimesheetTbody').html('');
-                $('#teacherTimesheetDiv').css('display', 'none');
+        function selectDocumentRowSelect(teacher_timesheet_id) {
+            $('#teacherTimesheetTbody').html('');
+            $('#teacherTimesheetDiv').css('display', 'none');
+            if ($('#selectDocumentRow' + teacher_timesheet_id).hasClass('tableRowActive')) {
+                $('#teacherTimesheetId').val('');
+                $('#selectDocumentRow' + teacher_timesheet_id).removeClass('tableRowActive');
+                $('#rejectTimesheetBtn').addClass('disabled-link');
+                $('#sendTimesheetBtn').addClass('disabled-link');
+                $('#viewTimesheetBtn').addClass('disabled-link');
             } else {
-                $('#docSchoolId').val(school_id);
-                $('#docTeacherId').val(teacher_id);
+                $('#teacherTimesheetId').val(teacher_timesheet_id);
                 $('.selectDocumentRow').removeClass('tableRowActive');
-                $('#selectDocumentRow' + school_id + teacher_id).addClass('tableRowActive');
-                // $('#deleteContactHistoryBttn').removeClass('disabled-link');
-
-                var weekStartDate = "{{ $weekStartDate }}";
-                var weekEndDate = "{{ $weekEndDate }}";
-                if (school_id && teacher_id && weekStartDate && weekEndDate) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ url('fetchTeacherSheetById') }}',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            school_id: school_id,
-                            teacher_id: teacher_id,
-                            weekStartDate: weekStartDate,
-                            weekEndDate: weekEndDate
-                        },
-                        success: function(data) {
-                            //console.log(data);
-                            $('#teacherTimesheetTbody').html('');
-                            $('#teacherTimesheetTbody').html(data.html);
-                            $('#teacherTimesheetDiv').css('display', 'block');
-                        }
-                    });
-                }
+                $('#selectDocumentRow' + teacher_timesheet_id).addClass('tableRowActive');
+                $('#rejectTimesheetBtn').removeClass('disabled-link');
+                $('#sendTimesheetBtn').removeClass('disabled-link');
+                $('#viewTimesheetBtn').removeClass('disabled-link');
             }
         }
+
+        $(document).on('click', '#viewTimesheetBtn', function() {
+            var teacher_timesheet_id = $('#teacherTimesheetId').val();
+            if (teacher_timesheet_id) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('fetchTeacherSheetById') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        teacher_timesheet_id: teacher_timesheet_id
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#teacherTimesheetTbody').html('');
+                        $('#teacherTimesheetTbody').html(data.html);
+                        $('#teacherTimesheetDiv').css('display', 'block');
+
+                        if (data.pdfPath) {
+                            var location = data.pdfPath;
+                            window.open(location);
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please select one document.");
+            }
+        });
+
+        $(document).on('click', '#rejectTimesheetBtn', function() {
+            var teacher_timesheet_id = $('#teacherTimesheetId').val();
+            if (teacher_timesheet_id) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to reject this timesheet?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                // $.ajax({
+                                //     type: 'POST',
+                                //     url: '{{ url('schoolContactDelete') }}',
+                                //     data: {
+                                //         "_token": "{{ csrf_token() }}",
+                                //         contact_id: contact_id
+                                //     },
+                                //     success: function(data) {
+                                //         location.reload();
+                                //     }
+                                // });
+                        }
+                    });
+
+                // $.ajax({
+                //     type: 'POST',
+                //     url: '{{ url('fetchTeacherSheetById') }}',
+                //     data: {
+                //         "_token": "{{ csrf_token() }}",
+                //         teacher_timesheet_id: teacher_timesheet_id
+                //     },
+                //     success: function(data) {
+                //         //console.log(data);
+                //         $('#teacherTimesheetTbody').html('');
+                //         $('#teacherTimesheetTbody').html(data.html);
+                //         $('#teacherTimesheetDiv').css('display', 'block');
+
+                //         if (data.pdfPath) {
+                //             var location = data.pdfPath;
+                //             window.open(location);
+                //         }
+                //     }
+                // });
+            } else {
+                swal("", "Please select one document.");
+            }
+        });
     </script>
 @endsection

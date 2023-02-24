@@ -193,6 +193,7 @@ Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnI
 Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEvent']);
 Route::post('/timesheetEventUpdate', [FinanceController::class, 'timesheetEventUpdate']);
 Route::post('/fetchTeacherSheetById', [FinanceController::class, 'fetchTeacherSheetById']);
+// Route::get('/teacher-timesheet', [FinanceController::class, 'teacherTimesheetView']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);

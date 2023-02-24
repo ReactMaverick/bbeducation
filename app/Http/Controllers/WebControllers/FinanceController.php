@@ -54,17 +54,17 @@ class FinanceController extends Controller
                 ->orderByRaw('COUNT(asnItem_id) DESC')
                 ->get();
 
-            $documentList = DB::table('teacher_timesheet_new')
-                ->LeftJoin('tbl_school', 'teacher_timesheet_new.school_id', '=', 'tbl_school.school_id')
-                ->LeftJoin('tbl_teacher', 'teacher_timesheet_new.teacher_id', '=', 'tbl_teacher.teacher_id')
-                ->select('teacher_timesheet_new.school_id', 'tbl_school.name_txt', 'teacher_timesheet_new.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
-                ->where('teacher_timesheet_new.timesheet_status', 0)
-                ->where('teacher_timesheet_new.submit_status', 1)
-                ->whereDate('teacher_timesheet_new.asnDate_dte', '>=', $weekStartDate)
-                ->whereDate('teacher_timesheet_new.asnDate_dte', '<=', $weekEndDate)
-                ->groupBy('teacher_timesheet_new.school_id')
-                ->groupBy('teacher_timesheet_new.teacher_id')
-                ->orderBy('tbl_teacher.firstName_txt', 'ASC')
+            $documentList = DB::table('teacher_timesheet')
+                ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
+                ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('pdf', 'teacher_timesheet.pdf_id', '=', 'pdf.pdf_id')
+                ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'pdf.pdf_name', 'pdf.pdf_path')
+                ->where('teacher_timesheet.timesheet_status', 0)
+                ->where('teacher_timesheet.submit_status', 1)
+                ->whereDate('teacher_timesheet.start_date', '=', $weekStartDate)
+                ->whereDate('teacher_timesheet.end_date', '=', $weekEndDate)
+                ->groupBy('teacher_timesheet.teacher_timesheet_id')
+                ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
 
             return view("web.finance.finance_timesheet", ['title' => $title, 'headerTitle' => $headerTitle, 'timesheetSchoolList' => $timesheetSchoolList, 'p_maxDate' => $p_maxDate, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'weekEndDate' => $weekEndDate]);
@@ -90,7 +90,7 @@ class FinanceController extends Controller
             ->where('school_id', $school_id)
             ->groupBy('tbl_asn.teacher_id', 'asnItem_id', 'asnDate_dte')
             ->orderBy('tbl_asn.teacher_id', 'ASC')
-            ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+            ->orderBy('tbl_asnItem.asnDate_dte', 'DESC')
             ->get();
 
         $html = '';
@@ -212,23 +212,28 @@ class FinanceController extends Controller
     public function fetchTeacherSheetById(Request $request)
     {
         $input = $request->all();
-        $school_id = $input['school_id'];
-        $teacher_id = $input['teacher_id'];
-        $weekStartDate = $input['weekStartDate'];
-        $weekEndDate = $input['weekEndDate'];
+        $teacher_timesheet_id = $input['teacher_timesheet_id'];
 
-        $teacherList = DB::table('teacher_timesheet_new')
-            ->LeftJoin('tbl_school', 'teacher_timesheet_new.school_id', '=', 'tbl_school.school_id')
-            ->LeftJoin('tbl_teacher', 'teacher_timesheet_new.teacher_id', '=', 'tbl_teacher.teacher_id')
-            ->select('teacher_timesheet_new.asnItem_id', 'teacher_timesheet_new.teacher_id', 'teacher_timesheet_new.asn_id', 'teacher_timesheet_new.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"))
-            ->where('teacher_timesheet_new.teacher_id', $teacher_id)
-            ->where('teacher_timesheet_new.school_id', $school_id)
-            ->where('teacher_timesheet_new.timesheet_status', 0)
-            ->where('teacher_timesheet_new.submit_status', 1)
-            ->whereDate('teacher_timesheet_new.asnDate_dte', '>=', $weekStartDate)
-            ->whereDate('teacher_timesheet_new.asnDate_dte', '<=', $weekEndDate)
-            ->groupBy('teacher_timesheet_new.asnDate_dte')
-            ->orderBy('teacher_timesheet_new.asnDate_dte', 'ASC')
+        $timesheetExist = DB::table('teacher_timesheet')
+            ->LeftJoin('pdf', 'teacher_timesheet.pdf_id', '=', 'pdf.pdf_id')
+            ->select('teacher_timesheet.*', 'pdf.pdf_path')
+            ->where('teacher_timesheet_id', $teacher_timesheet_id)
+            ->first();
+        $pdfPath = '';
+        if ($timesheetExist && $timesheetExist->pdf_path) {
+            if (file_exists($timesheetExist->pdf_path)) {
+                $pdfPath = asset($timesheetExist->pdf_path);
+            }
+        }
+
+        $teacherList = DB::table('teacher_timesheet')
+            ->LeftJoin('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
+            ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
+            ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
+            ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"))
+            ->where('teacher_timesheet.teacher_timesheet_id', $teacher_timesheet_id)
+            ->groupBy('teacher_timesheet_item.asnDate_dte')
+            ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
             ->get();
 
         $html = '';
@@ -248,8 +253,50 @@ class FinanceController extends Controller
             }
         }
 
-        return response()->json(['html' => $html]);
+        return response()->json(['html' => $html, 'pdfPath' => $pdfPath]);
     }
+
+    // public function teacherTimesheetView(Request $request)
+    // {
+    //     $webUserLoginData = Session::get('webUserLoginData');
+    //     if ($webUserLoginData) {
+    //         $title = array('pageTitle' => "Teacher Timesheet View");
+    //         $headerTitle = "Finance";
+    //         $company_id = $webUserLoginData->company_id;
+    //         $user_id = $webUserLoginData->user_id;
+    //         $input = $request->all();
+    //         $school_id = $input['school'];
+    //         $teacher_id = $input['teacher'];
+    //         $weekStartDate = $input['start'];
+    //         $weekEndDate = $input['end'];
+
+    //         $teacherList = DB::table('teacher_timesheet_new')
+    //             ->LeftJoin('tbl_school', 'teacher_timesheet_new.school_id', '=', 'tbl_school.school_id')
+    //             ->LeftJoin('tbl_teacher', 'teacher_timesheet_new.teacher_id', '=', 'tbl_teacher.teacher_id')
+    //             ->select('teacher_timesheet_new.asnItem_id', 'teacher_timesheet_new.teacher_id', 'teacher_timesheet_new.asn_id', 'teacher_timesheet_new.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"))
+    //             ->where('teacher_timesheet_new.teacher_id', $teacher_id)
+    //             ->where('teacher_timesheet_new.school_id', $school_id)
+    //             ->where('teacher_timesheet_new.timesheet_status', 0)
+    //             ->where('teacher_timesheet_new.submit_status', 1)
+    //             ->whereDate('teacher_timesheet_new.asnDate_dte', '>=', $weekStartDate)
+    //             ->whereDate('teacher_timesheet_new.asnDate_dte', '<=', $weekEndDate)
+    //             ->groupBy('teacher_timesheet_new.asnDate_dte')
+    //             ->orderBy('teacher_timesheet_new.asnDate_dte', 'ASC')
+    //             ->get();
+
+    //         $teacherDet = DB::table('tbl_teacher')
+    //             ->where('tbl_teacher.teacher_id', $teacher_id)
+    //             ->first();
+
+    //         $schoolDet = DB::table('tbl_school')
+    //             ->where('tbl_school.school_id', $school_id)
+    //             ->first();
+
+    //         return view("web.finance.finance_teacher_sheet", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherList' => $teacherList, 'teacherDet' => $teacherDet, 'schoolDet' => $schoolDet, 'weekStartDate' => $weekStartDate, 'weekEndDate' => $weekEndDate]);
+    //     } else {
+    //         return redirect()->intended('/');
+    //     }
+    // }
 
     public function financeInvoices(Request $request)
     {

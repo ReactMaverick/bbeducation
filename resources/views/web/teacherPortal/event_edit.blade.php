@@ -1,5 +1,4 @@
-<input type="hidden" name="teacher_timesheet_id" id="eTeacherTimesheetId"
-    value="{{ $eventItemDetail->teacher_timesheet_id }}">
+<input type="hidden" name="timesheet_item_id" id="eTeacherTimesheetId" value="{{ $eventItemDetail->timesheet_item_id }}">
 
 <div class="row">
     <div class="col-md-6">
