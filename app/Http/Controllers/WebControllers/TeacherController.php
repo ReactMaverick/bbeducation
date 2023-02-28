@@ -4840,7 +4840,8 @@ class TeacherController extends Controller
             DB::table('teacher_timesheet')
                 ->where('teacher_timesheet_id', $teacher_timesheet_id)
                 ->update([
-                    'submit_status' => 1
+                    'submit_status' => 1,
+                    'reject_status' => 0
                 ]);
         } else {
             $teacher_timesheet_id = DB::table('teacher_timesheet')
@@ -4850,6 +4851,7 @@ class TeacherController extends Controller
                     'start_date' => $request->weekStartDate,
                     'end_date' => $request->weekEndDate,
                     'submit_status' => 1,
+                    'reject_status' => 0,
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
         }

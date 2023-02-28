@@ -66,13 +66,14 @@
                                                             <th>Teacher</th>
                                                             <th>School</th>
                                                             <th>Date</th>
+                                                            <th>Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="table-body-sec">
                                                         @foreach ($documentList as $key => $document)
                                                             <tr class="school-detail-table-data selectDocumentRow"
                                                                 id="selectDocumentRow{{ $document->teacher_timesheet_id }}"
-                                                                onclick="selectDocumentRowSelect({{ $document->teacher_timesheet_id }})">
+                                                                onclick="selectDocumentRowSelect({{ $document->teacher_timesheet_id }}, '{{ $document->approve_by_school }}')">
                                                                 <td>
                                                                     @if ($document->knownAs_txt == null && $document->knownAs_txt == '')
                                                                         {{ $document->firstName_txt . ' ' . $document->surname_txt }}
@@ -83,6 +84,17 @@
                                                                 <td>{{ $document->name_txt }}</td>
                                                                 <td>({{ date('d/m/Y', strtotime($weekStartDate)) . '-' . date('d/m/Y', strtotime($weekEndDate)) }})
                                                                 </td>
+                                                                <td>
+                                                                    @if ($document->approve_by_school == 1)
+                                                                        {{ 'Send For Approval' }}
+                                                                    @elseif ($document->approve_by_school == 2)
+                                                                        {{ 'Approve' }}
+                                                                    @elseif ($document->approve_by_school == 3)
+                                                                        {{ 'Not Approve' }}
+                                                                    @else
+                                                                        {{ '--' }}
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -90,6 +102,8 @@
                                             </div>
 
                                             <input type="hidden" name="teacherTimesheetId" id="teacherTimesheetId"
+                                                value="">
+                                            <input type="hidden" name="teacherTimesheetStatus" id="teacherTimesheetStatus"
                                                 value="">
                                             <input type="hidden" name="docStartDate" id="docStartDate"
                                                 value="{{ $weekStartDate }}">
@@ -517,17 +531,19 @@
             location.reload();
         });
 
-        function selectDocumentRowSelect(teacher_timesheet_id) {
+        function selectDocumentRowSelect(teacher_timesheet_id, status) {
             $('#teacherTimesheetTbody').html('');
             $('#teacherTimesheetDiv').css('display', 'none');
             if ($('#selectDocumentRow' + teacher_timesheet_id).hasClass('tableRowActive')) {
                 $('#teacherTimesheetId').val('');
+                $('#teacherTimesheetStatus').val('');
                 $('#selectDocumentRow' + teacher_timesheet_id).removeClass('tableRowActive');
                 $('#rejectTimesheetBtn').addClass('disabled-link');
                 $('#sendTimesheetBtn').addClass('disabled-link');
                 $('#viewTimesheetBtn').addClass('disabled-link');
             } else {
                 $('#teacherTimesheetId').val(teacher_timesheet_id);
+                $('#teacherTimesheetStatus').val(status);
                 $('.selectDocumentRow').removeClass('tableRowActive');
                 $('#selectDocumentRow' + teacher_timesheet_id).addClass('tableRowActive');
                 $('#rejectTimesheetBtn').removeClass('disabled-link');
@@ -577,41 +593,68 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
-                                // $.ajax({
-                                //     type: 'POST',
-                                //     url: '{{ url('schoolContactDelete') }}',
-                                //     data: {
-                                //         "_token": "{{ csrf_token() }}",
-                                //         contact_id: contact_id
-                                //     },
-                                //     success: function(data) {
-                                //         location.reload();
-                                //     }
-                                // });
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('rejectTeacherSheet') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        teacher_timesheet_id: teacher_timesheet_id
+                                    },
+                                    success: function(data) {
+                                        //console.log(data);
+                                        $('#teacherTimesheetTbody').html('');
+                                        $('#teacherTimesheetDiv').css('display', 'none');
+
+                                        location.reload();
+                                    }
+                                });
                         }
                     });
-
-                // $.ajax({
-                //     type: 'POST',
-                //     url: '{{ url('fetchTeacherSheetById') }}',
-                //     data: {
-                //         "_token": "{{ csrf_token() }}",
-                //         teacher_timesheet_id: teacher_timesheet_id
-                //     },
-                //     success: function(data) {
-                //         //console.log(data);
-                //         $('#teacherTimesheetTbody').html('');
-                //         $('#teacherTimesheetTbody').html(data.html);
-                //         $('#teacherTimesheetDiv').css('display', 'block');
-
-                //         if (data.pdfPath) {
-                //             var location = data.pdfPath;
-                //             window.open(location);
-                //         }
-                //     }
-                // });
             } else {
-                swal("", "Please select one document.");
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#sendTimesheetBtn', function() {
+            var teacher_timesheet_id = $('#teacherTimesheetId').val();
+            var teacherTimesheetStatus = $('#teacherTimesheetStatus').val();
+            if (teacher_timesheet_id) {
+                if (teacherTimesheetStatus == 1) {
+                    swal("", "Timesheet already send to the school.");
+                } else if (teacherTimesheetStatus == 2) {
+                    swal("", "School is approved the timesheet. You cannot resend this timesheet.");
+                } else {
+                    swal({
+                            title: "",
+                            text: "Are you sure you wish to send this timesheet to school for approval?",
+                            buttons: {
+                                cancel: "No",
+                                Yes: "Yes"
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "Yes":
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('sendTimesheetToApproval') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            teacher_timesheet_id: teacher_timesheet_id
+                                        },
+                                        success: function(data) {
+                                            //console.log(data);
+                                            $('#teacherTimesheetTbody').html('');
+                                            $('#teacherTimesheetDiv').css('display', 'none');
+
+                                            location.reload();
+                                        }
+                                    });
+                            }
+                        });
+                }
+            } else {
+                swal("", "Please select one timesheet.");
             }
         });
     </script>

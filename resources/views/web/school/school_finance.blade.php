@@ -177,9 +177,9 @@
                             @endif
                         </div>
 
-                        <div class="billing-button">
+                        {{-- <div class="billing-button">
                             <button>Candidate Rates</button>
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>

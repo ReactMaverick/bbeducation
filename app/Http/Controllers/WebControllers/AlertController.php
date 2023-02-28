@@ -20,8 +20,8 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                echo $e;
-                exit;
+                // echo $e;
+                // exit;
             }
         }
     }
@@ -36,8 +36,24 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                echo $e;
-                exit;
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function school_reset_password($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/resetPasswordMailSchool', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Password reset link")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
             }
         }
     }

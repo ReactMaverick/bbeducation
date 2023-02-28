@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher</title>
+    <title>School</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('web/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('web/css/style.css') }}">
@@ -29,10 +29,10 @@
             <img src="{{ count($companyDetail) > 0 ? asset($companyDetail[0]->company_logo) : '' }}" alt="">
             <h1>{{ count($companyDetail) > 0 ? $companyDetail[0]->company_name : '' }}</h1>
             <span>Reset Your Password?</span>
-            <form action="{{ url('/teacher/teacherPasswordUpdate') }}" method="post"
+            <form action="{{ url('/school/schoolPasswordUpdate') }}" method="post"
                 class="reset-password-form-sec form-validate">
                 @csrf
-                <input type="hidden" name="teacher_id" value="{{ $teacher_id }}">
+                <input type="hidden" name="school_id" value="{{ $school_id }}">
                 <div class="form-group reset-password-form-group">
                     <!-- <label for="pwd">Password:</label> -->
                     <input type="password" class="form-control field-validate" name="password" placeholder="Password"
@@ -47,7 +47,7 @@
                     <i class="fa-regular fa-eye" id="confirm-password-sec-icon"></i>
 
                 </div>
-                @if ($teacherDetail)
+                @if ($schoolDetail)
                     <input type="submit" value="Submit">
                 @else
                     <input type="button" value="Submit">

@@ -61,6 +61,8 @@ class FinanceController extends Controller
                 ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'pdf.pdf_name', 'pdf.pdf_path')
                 ->where('teacher_timesheet.timesheet_status', 0)
                 ->where('teacher_timesheet.submit_status', 1)
+                ->where('teacher_timesheet.reject_status', 0)
+                // ->where('teacher_timesheet.approve_by_school', '!=', 1)
                 ->whereDate('teacher_timesheet.start_date', '=', $weekStartDate)
                 ->whereDate('teacher_timesheet.end_date', '=', $weekEndDate)
                 ->groupBy('teacher_timesheet.teacher_timesheet_id')
@@ -221,7 +223,7 @@ class FinanceController extends Controller
             ->first();
         $pdfPath = '';
         if ($timesheetExist && $timesheetExist->pdf_path) {
-            if (file_exists($timesheetExist->pdf_path)) {
+            if (file_exists(public_path($timesheetExist->pdf_path))) {
                 $pdfPath = asset($timesheetExist->pdf_path);
             }
         }
@@ -254,6 +256,48 @@ class FinanceController extends Controller
         }
 
         return response()->json(['html' => $html, 'pdfPath' => $pdfPath]);
+    }
+
+    public function rejectTeacherSheet(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $teacher_timesheet_id = $input['teacher_timesheet_id'];
+
+            DB::table('teacher_timesheet')
+                ->where('teacher_timesheet_id', $teacher_timesheet_id)
+                ->update([
+                    'reject_status' => 1,
+                    'rejected_by' => $user_id,
+                    'rejected_date' => date('Y-m-d')
+                ]);
+
+            return true;
+        }
+        return true;
+    }
+
+    public function sendTimesheetToApproval(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $teacher_timesheet_id = $input['teacher_timesheet_id'];
+
+            DB::table('teacher_timesheet')
+                ->where('teacher_timesheet_id', $teacher_timesheet_id)
+                ->update([
+                    'approve_by_school' => 1
+                ]);
+
+            return true;
+        }
+        return true;
     }
 
     // public function teacherTimesheetView(Request $request)

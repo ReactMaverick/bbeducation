@@ -77,7 +77,7 @@
                     <h2>Add New School</h2>
                 </div>
 
-                <form action="{{ url('/newSchoolInsert') }}" method="post" class="form-validate">
+                <form action="{{ url('/newSchoolInsert') }}" method="post" class="form-validate" id="addNewSchoolForm">
                     @csrf
                     <div class="modal-input-field-section">
 
@@ -87,6 +87,12 @@
                                     <label class="form-check-label">School Name</label><span style="color: red;">*</span>
                                     <input type="text" class="form-control field-validate" name="name_txt" id=""
                                         value="">
+                                </div>
+
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Email-id</label><span style="color: red;">*</span>
+                                    <input type="text" class="form-control email-validate" name="login_mail"
+                                        id="loginMailId" value="">
                                 </div>
 
                                 <div class="modal-input-field">
@@ -115,9 +121,12 @@
                                     <input type="hidden" name="lon_txt" id="lon_txt">
                                     <h6></h6>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
 
                                 <div class="form-group calendar-form-filter">
-                                    <label for="">Local Authority/Borough</label><span style="color: red;">*</span>
+                                    <label for="">Local Authority/Borough</label><span
+                                        style="color: red;">*</span>
                                     <select class="form-control field-validate select2" name="la_id">
                                         <option value="">Choose one</option>
                                         @foreach ($laBoroughList as $key2 => $laBorough)
@@ -127,8 +136,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
+
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Age Range</label><span style="color: red;">*</span>
                                     <select class="form-control field-validate select2" name="ageRange_int">
@@ -170,6 +178,20 @@
                                     <input type="text" class="form-control" name="website_txt" id=""
                                         value="">
                                 </div>
+
+                                <div class="form-group calendar-form-filter">
+                                    <label for="">Status</label><span style="color: red;">*</span>
+                                    <select class="form-control field-validate" name="activeStatus" style="width:100%;">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="modal-side-field mb-2">
+                                    <input type="checkbox" class="" name="passwordReset" id="passwordReset"
+                                        value="1">
+                                    <label class="form-check-label" for="passwordReset">Send password reset link</label>
+                                </div>
                             </div>
                         </div>
 
@@ -177,7 +199,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <button type="button" class="btn btn-secondary" id="addNewSchoolBtn">Submit</button>
 
                         <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
@@ -196,5 +218,28 @@
         function schoolDetail(school_id) {
             window.location.href = "{{ URL::to('/school-detail') }}" + '/' + school_id;
         }
+
+        $(document).on('click', '#addNewSchoolBtn', function() {
+            var loginMailId = $('#loginMailId').val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('checkSchoolMailExist') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    loginMail: loginMailId
+                },
+                async: false,
+                success: function(data) {
+                    if (data == 'Yes') {
+                        swal(
+                            'Failed!',
+                            'Email-id already exist.'
+                        );
+                    } else {
+                        $('#addNewSchoolForm').submit();
+                    }
+                }
+            });
+        });
     </script>
 @endsection

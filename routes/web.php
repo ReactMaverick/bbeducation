@@ -136,6 +136,7 @@ Route::post('/teacherPayrollUpdate', [TeacherController::class, 'teacherPayrollU
 
 // School
 Route::get('/schools', [SchoolController::class, 'schools']);
+Route::post('/checkSchoolMailExist', [SchoolController::class, 'checkSchoolMailExist']);
 Route::post('/newSchoolInsert', [SchoolController::class, 'newSchoolInsert']);
 Route::get('/school-search', [SchoolController::class, 'schoolSearch']);
 Route::get('/school-detail/{id}', [SchoolController::class, 'schoolDetail']);
@@ -194,6 +195,8 @@ Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEven
 Route::post('/timesheetEventUpdate', [FinanceController::class, 'timesheetEventUpdate']);
 Route::post('/fetchTeacherSheetById', [FinanceController::class, 'fetchTeacherSheetById']);
 // Route::get('/teacher-timesheet', [FinanceController::class, 'teacherTimesheetView']);
+Route::post('/rejectTeacherSheet', [FinanceController::class, 'rejectTeacherSheet']);
+Route::post('/sendTimesheetToApproval', [FinanceController::class, 'sendTimesheetToApproval']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
@@ -240,4 +243,26 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function 
     Route::post('/teacherTimesheetDelete', [TeacherController::class, 'teacherTimesheetDelete']);
 
     Route::get('/testMail', [TeacherController::class, 'testMail']);
+});
+
+// School Portal
+Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function () {
+    Route::get('/set-password/{id}', [SchoolController::class, 'schoolSetPassword']);
+    Route::post('/schoolPasswordUpdate', [SchoolController::class, 'schoolPasswordUpdate']);
+    Route::get('/', [SchoolController::class, 'schoolLogin']);
+    Route::post('/processLogin', [SchoolController::class, 'schoolProcessLogin']);
+    Route::get('/logout', [SchoolController::class, 'schoolLogout']);
+    Route::get('/detail', [SchoolController::class, 'logSchoolDetail']);
+    Route::post('/logSchoolContactInsert', [SchoolController::class, 'logSchoolContactInsert']);
+    Route::post('/logSchoolContactDetail', [SchoolController::class, 'logSchoolContactDetail']);
+    Route::post('/logSchoolContactUpdate', [SchoolController::class, 'logSchoolContactUpdate']);
+    Route::post('/logSchoolContactDelete', [SchoolController::class, 'logSchoolContactDelete']);
+    Route::post('/logSchoolContactItemInsert', [SchoolController::class, 'logSchoolContactItemInsert']);
+    Route::post('/logSchoolContactItemDetail', [SchoolController::class, 'logSchoolContactItemDetail']);
+    Route::post('/logSchoolContactItemUpdate', [SchoolController::class, 'logSchoolContactItemUpdate']);
+    Route::post('/logSchoolContactItemDelete', [SchoolController::class, 'logSchoolContactItemDelete']);
+    Route::get('/finance', [SchoolController::class, 'logSchoolFinance']);
+    Route::get('/invoice-pdf/{id}/{invoice_id}', [SchoolController::class, 'logSchoolInvoicePdf']);
+    Route::post('/logSchoolTeacherSheet', [SchoolController::class, 'logSchoolTeacherSheet']);
+    Route::post('/approveTeacherSheet', [SchoolController::class, 'approveTeacherSheet']);
 });
