@@ -15,11 +15,18 @@
                 @endif
             </span>
         </div>
-        @if ($schoolLoginData)
-            <div class="user-name-sec">
-                <i class="fa-solid fa-user"></i><span>{{ $schoolLoginData->name_txt }}</span>
+
+        <div class="user-name-sec dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                aria-expanded="false" style="padding: 0; color: #fff;">
+                <i class="fa-solid fa-user"></i><span>{{ $schoolLoginData ? $schoolLoginData->name_txt : '' }}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="{{ URL::to('/school/change-password') }}">Change Password</a>
+                <a class="dropdown-item" href="{{ URL::to('/school/logout') }}">Logout</a>
             </div>
-        @endif
+        </div>
+
     </div>
 
     <!-- </div> -->

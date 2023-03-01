@@ -112,7 +112,7 @@
             </a>
         </div>
 
-        <div class="sidebar-pages-section">
+        {{-- <div class="sidebar-pages-section">
             <a href="{{ URL::to('/teacher/logout') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -121,7 +121,7 @@
                     <span>Logout</span>
                 </div>
             </a>
-        </div>
+        </div> --}}
     </div>
 </div>
 

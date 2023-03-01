@@ -241,6 +241,9 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function 
     Route::post('/teacherTimesheetEdit', [TeacherController::class, 'teacherTimesheetEdit']);
     Route::post('/teacherTimesheetUpdate', [TeacherController::class, 'teacherTimesheetUpdate']);
     Route::post('/teacherTimesheetDelete', [TeacherController::class, 'teacherTimesheetDelete']);
+    Route::post('/teacherTimesheetAddNew', [TeacherController::class, 'teacherTimesheetAddNew']);
+    Route::get('/change-password', [TeacherController::class, 'logTeacherPassword']);
+    Route::post('/LogTeacherPasswordUpdate', [TeacherController::class, 'LogTeacherPasswordUpdate']);
 
     Route::get('/testMail', [TeacherController::class, 'testMail']);
 });
@@ -265,4 +268,8 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::get('/invoice-pdf/{id}/{invoice_id}', [SchoolController::class, 'logSchoolInvoicePdf']);
     Route::post('/logSchoolTeacherSheet', [SchoolController::class, 'logSchoolTeacherSheet']);
     Route::post('/approveTeacherSheet', [SchoolController::class, 'approveTeacherSheet']);
+    Route::get('/change-password', [SchoolController::class, 'logSchoolPassword']);
+    Route::post('/LogSchoolPasswordUpdate', [SchoolController::class, 'LogSchoolPasswordUpdate']);
+    Route::post('/logSchoolProfilePicAdd', [SchoolController::class, 'logSchoolProfilePicAdd']);
+    Route::post('/logSchoolProfilePicDelete', [SchoolController::class, 'logSchoolProfilePicDelete']);
 });

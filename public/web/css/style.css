@@ -912,9 +912,9 @@ table td {
 }
 
 .sidebar-user-edit-sec i {
-    font-size: 14px;
-    color: #40a0ed;
-    margin: 0;
+    font-size: 14px !important;
+    color: #40a0ed !important;
+    margin: 0 !important;
 }
 
 .sidebar-user-delete-sec {
@@ -935,9 +935,9 @@ table td {
 }
 
 .sidebar-user-delete-sec i {
-    font-size: 14px;
-    color: #ff0000;
-    margin: 0;
+    font-size: 14px !important;
+    color: #ff0000 !important;
+    margin: 0 !important;
 }
 
 .sidebar-user-number {
@@ -1479,7 +1479,7 @@ table td {
     font-size: 12px;
     font-weight: 500;
     color: #fff;
-    margin: 15px 0 50px 0;
+    margin: 15px 0 0 0;
 }
 
 .school-detail-sec i {

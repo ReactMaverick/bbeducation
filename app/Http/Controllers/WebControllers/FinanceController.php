@@ -270,6 +270,7 @@ class FinanceController extends Controller
             DB::table('teacher_timesheet')
                 ->where('teacher_timesheet_id', $teacher_timesheet_id)
                 ->update([
+                    'approve_by_school' => 0,
                     'reject_status' => 1,
                     'rejected_by' => $user_id,
                     'rejected_date' => date('Y-m-d')

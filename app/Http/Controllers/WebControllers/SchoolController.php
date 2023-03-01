@@ -2824,5 +2824,147 @@ class SchoolController extends Controller
         }
         return true;
     }
+
+    public function logSchoolPassword(Request $request)
+    {
+        $schoolLoginData = Session::get('schoolLoginData');
+        if ($schoolLoginData) {
+            $title = array('pageTitle' => "School Change Password");
+            $headerTitle = "Schools";
+            $company_id = $schoolLoginData->company_id;
+            $school_id = $schoolLoginData->school_id;
+
+            $schoolDetail = DB::table('tbl_school')
+                ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                })
+                ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                    $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                        ->where(function ($query) {
+                            $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                        });
+                })
+                ->LeftJoin('tbl_description as religion', function ($join) {
+                    $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                        ->where(function ($query) {
+                            $query->where('religion.descriptionGroup_int', '=', 29);
+                        });
+                })
+                ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                    $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                        ->where(function ($query) {
+                            $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                        });
+                })
+                ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                ->where('tbl_school.school_id', $school_id)
+                ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                // ->take(1)
+                ->first();
+
+            return view("web.schoolPortal.school_password", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'school_id' => $school_id]);
+        } else {
+            return redirect()->intended('/school');
+        }
+    }
+
+    public function LogSchoolPasswordUpdate(Request $request)
+    {
+        $schoolLoginData = Session::get('schoolLoginData');
+        if ($schoolLoginData) {
+            $company_id = $schoolLoginData->company_id;
+            $school_id = $schoolLoginData->school_id;
+
+            if ($request->password != $request->confirm_password) {
+                return redirect()->back()->with('error', "Password and confirm password not match.");
+            } else {
+                DB::table('tbl_school')
+                    ->where('school_id', '=', $school_id)
+                    ->update([
+                        'password' => Hash::make($request->password)
+                    ]);
+                return redirect()->back()->with('success', "Password updated successfully.");
+            }
+        } else {
+            return redirect()->intended('/school');
+        }
+    }
+
+    public function logSchoolProfilePicAdd(Request $request)
+    {
+        $schoolLoginData = Session::get('schoolLoginData');
+        if ($schoolLoginData) {
+            $company_id = $schoolLoginData->company_id;
+            $school_id = $schoolLoginData->school_id;
+
+            $schoolDet = DB::table('tbl_school')
+                ->where('school_id', $school_id)
+                ->first();
+
+            $fPath = '';
+            $fType = '';
+            $allowed_types = array('jpg', 'png', 'jpeg');
+            if ($image = $request->file('file')) {
+                $extension = $image->extension();
+                $file_name = $image->getClientOriginalName();
+                if (in_array(strtolower($extension), $allowed_types)) {
+                    $rand = mt_rand(100000, 999999);
+                    $name = time() . "_" . $rand . "." . $extension;
+                    if ($image->move(public_path('images/school'), $name)) {
+                        $fPath = 'images/school/' . $name;
+                        $fType = $extension;
+                    }
+                } else {
+                    return redirect()->back()->with('error', "Please upload valid file.");
+                }
+            } else {
+                return redirect()->back()->with('error', "Please upload valid file.");
+            }
+
+            if ($fPath) {
+                DB::table('tbl_school')
+                    ->where('school_id', '=', $school_id)
+                    ->update([
+                        'profile_pic' => $fPath
+                    ]);
+
+                if ($schoolDet) {
+                    if (file_exists($schoolDet->profile_pic)) {
+                        unlink($schoolDet->profile_pic);
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', "Profile image added successfully.");
+        } else {
+            return redirect()->intended('/school');
+        }
+    }
+
+    public function logSchoolProfilePicDelete(Request $request)
+    {
+        if ($request->school_id) {
+            $school_id = $request->school_id;
+
+            $schoolDet = DB::table('tbl_school')
+                ->where('school_id', $school_id)
+                ->first();
+
+            DB::table('tbl_school')
+                ->where('school_id', '=', $school_id)
+                ->update([
+                    'profile_pic' => NULL
+                ]);
+
+            if ($schoolDet) {
+                if (file_exists($schoolDet->profile_pic)) {
+                    unlink($schoolDet->profile_pic);
+                }
+            }
+        }
+        return true;
+    }
     /********* School Portal *********/
 }
