@@ -37,6 +37,10 @@
                                             <h2>Select a file</h2>
                                         </div>
                                         <div class="contact-icon-sec">
+                                            <a style="cursor: pointer;" class="disabled-link" id="timesheetMailtoBtn"
+                                                title="Mail Timesheet">
+                                                <i class="fa-solid fa-envelope"></i>
+                                            </a>
                                             <a style="cursor: pointer;" class="disabled-link" id="rejectTimesheetBtn"
                                                 title="Reject Timesheet">
                                                 <i class="fa-solid fa-circle-xmark"></i>
@@ -73,7 +77,7 @@
                                                         @foreach ($documentList as $key => $document)
                                                             <tr class="school-detail-table-data selectDocumentRow"
                                                                 id="selectDocumentRow{{ $document->teacher_timesheet_id }}"
-                                                                onclick="selectDocumentRowSelect({{ $document->teacher_timesheet_id }}, '{{ $document->approve_by_school }}')">
+                                                                onclick="selectDocumentRowSelect({{ $document->teacher_timesheet_id }}, '{{ $document->approve_by_school }}', '{{ $document->login_mail }}', '{{ $document->pdf_path }}')">
                                                                 <td>
                                                                     @if ($document->knownAs_txt == null && $document->knownAs_txt == '')
                                                                         {{ $document->firstName_txt . ' ' . $document->surname_txt }}
@@ -104,6 +108,10 @@
                                             <input type="hidden" name="teacherTimesheetId" id="teacherTimesheetId"
                                                 value="">
                                             <input type="hidden" name="teacherTimesheetStatus" id="teacherTimesheetStatus"
+                                                value="">
+                                            <input type="hidden" name="teacherTimesheetMail" id="teacherTimesheetMail"
+                                                value="">
+                                            <input type="hidden" name="teacherTimesheetPath" id="teacherTimesheetPath"
                                                 value="">
                                             <input type="hidden" name="docStartDate" id="docStartDate"
                                                 value="{{ $weekStartDate }}">
@@ -175,6 +183,9 @@
                                             <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtn"
                                                 title="Log timesheets">
                                                 <i class="fa-solid fa-square-check"></i>
+                                            </a>
+                                            <a style="cursor: pointer" id="reloadTimesheetBtn" title="Reload timesheets">
+                                                <i class="fa-solid fa-arrows-rotate"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -527,28 +538,99 @@
             }
         });
 
+        $(document).on('click', '#logTimesheetBtn', function() {
+            var teacher_timesheet_id = $('#teacherTimesheetId').val();
+            // var docStartDate = $('#docStartDate').val();
+            // var docEndDate = $('#docEndDate').val();
+            var schoolId = $('#selectedSchoolId').val();
+            if (teacher_timesheet_id) {
+                var asnItemIds = $('#asnItemIds').val();
+                if (asnItemIds) {
+                    swal({
+                            title: "Alert",
+                            text: "Are you sure you wish to log this timesheet?",
+                            buttons: {
+                                cancel: "No",
+                                Yes: "Yes"
+                            },
+                        })
+                        .then((value) => {
+                            switch (value) {
+                                case "Yes":
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '{{ url('timesheetAsnItemLog') }}',
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            asnItemIds: asnItemIds,
+                                            teacher_timesheet_id: teacher_timesheet_id,
+                                            // docStartDate: docStartDate,
+                                            // docEndDate: docEndDate,
+                                            schoolId: schoolId
+                                        },
+                                        async: false,
+                                        dataType: "json",
+                                        success: function(data) {
+                                            if (data.add == 'Yes') {
+                                                var idsArr = [];
+                                                if (asnItemIds) {
+                                                    idsArr = asnItemIds.split(',');
+                                                }
+                                                for (var i = 0; i < idsArr.length; i++) {
+                                                    $('#selectTeacherRow' + idsArr[i]).remove();
+                                                }
+                                                $('#asnItemIds').val('');
+                                                $('#deleteDaysBttn').addClass('disabled-link');
+                                                $('#editDaysBttn').addClass('disabled-link');
+                                                $('#logTimesheetBtn').addClass('disabled-link');
+                                                $('#selectDocumentRow' + teacher_timesheet_id)
+                                                    .remove();
+                                                var popTxt =
+                                                    'You have just logged a timesheet for ' + data
+                                                    .schoolName +
+                                                    '. Timesheet ID : ' + data.timesheet_id;
+                                                swal("", popTxt);
+                                            }
+                                        }
+                                    });
+                            }
+                        });
+                } else {
+                    swal("", "Please select one item.");
+                }
+            } else {
+                swal("", "Please select teacher timesheet document.");
+            }
+        });
+
         $(document).on('click', '#reloadBtn', function() {
             location.reload();
         });
 
-        function selectDocumentRowSelect(teacher_timesheet_id, status) {
+        function selectDocumentRowSelect(teacher_timesheet_id, status, login_mail, pdf_path) {
             $('#teacherTimesheetTbody').html('');
             $('#teacherTimesheetDiv').css('display', 'none');
             if ($('#selectDocumentRow' + teacher_timesheet_id).hasClass('tableRowActive')) {
                 $('#teacherTimesheetId').val('');
                 $('#teacherTimesheetStatus').val('');
+                $('#teacherTimesheetMail').val('');
+                $('#teacherTimesheetPath').val('');
                 $('#selectDocumentRow' + teacher_timesheet_id).removeClass('tableRowActive');
                 $('#rejectTimesheetBtn').addClass('disabled-link');
                 $('#sendTimesheetBtn').addClass('disabled-link');
                 $('#viewTimesheetBtn').addClass('disabled-link');
+                $('#timesheetMailtoBtn').addClass('disabled-link');
             } else {
                 $('#teacherTimesheetId').val(teacher_timesheet_id);
                 $('#teacherTimesheetStatus').val(status);
+                $('#teacherTimesheetMail').val(login_mail);
+                $('#teacherTimesheetPath').val(pdf_path);
                 $('.selectDocumentRow').removeClass('tableRowActive');
                 $('#selectDocumentRow' + teacher_timesheet_id).addClass('tableRowActive');
                 $('#rejectTimesheetBtn').removeClass('disabled-link');
                 $('#sendTimesheetBtn').removeClass('disabled-link');
                 $('#viewTimesheetBtn').removeClass('disabled-link');
+                $('#timesheetMailtoBtn').removeClass('disabled-link');
             }
         }
 
@@ -656,6 +738,34 @@
             } else {
                 swal("", "Please select one timesheet.");
             }
+        });
+
+        $(document).on('click', '#reloadTimesheetBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            if (schoolId) {
+                fetchTecher('{{ $p_maxDate }}', schoolId);
+            }
+        });
+
+        $(document).on('click', '#timesheetMailtoBtn', function(event) {
+            event.preventDefault();
+            var login_mail = $('#teacherTimesheetMail').val();
+            var loginMail = '';
+            if (login_mail) {
+                loginMail = login_mail;
+            } else {
+                loginMail = 'demo@gmail.com';
+            }
+            var path = $('#teacherTimesheetPath').val();
+            var pdfPath = '';
+            if (path) {
+                pdfPath = "<?php echo asset('/'); ?>" + path;
+            }
+            var subject = 'Approve the timesheet';
+            if (loginMail) {
+                window.location = 'mailto:' + loginMail + '?subject=' + subject + '&body=&attachment=' + pdfPath;
+            }
+            // alert('mailto:' + login_mail + '?subject=' + subject + '&body=&attachment=' + pdfPath)
         });
     </script>
 @endsection

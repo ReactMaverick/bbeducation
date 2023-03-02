@@ -201,6 +201,7 @@ Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
+Route::post('/timesheetAsnItemLog', [FinanceController::class, 'timesheetAsnItemLog']);
 // Finance
 
 // Management

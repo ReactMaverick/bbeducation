@@ -58,7 +58,7 @@ class FinanceController extends Controller
                 ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
                 ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->LeftJoin('pdf', 'teacher_timesheet.pdf_id', '=', 'pdf.pdf_id')
-                ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'pdf.pdf_name', 'pdf.pdf_path')
+                ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_school.login_mail', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'pdf.pdf_name', 'pdf.pdf_path')
                 ->where('teacher_timesheet.timesheet_status', 0)
                 ->where('teacher_timesheet.submit_status', 1)
                 ->where('teacher_timesheet.reject_status', 0)
@@ -127,6 +127,71 @@ class FinanceController extends Controller
                 ->delete();
         }
         return true;
+    }
+
+    public function timesheetAsnItemLog(Request $request)
+    {
+        $asnItemIds = $request->asnItemIds;
+        $teacher_timesheet_id = $request->teacher_timesheet_id;
+        // $docStartDate = $request->docStartDate;
+        // $docEndDate = $request->docEndDate;
+        $schoolId = $request->schoolId;
+        $idsArr = explode(",", $asnItemIds);
+        $result['add'] = 'No';
+        $schoolDet = DB::table('tbl_school')
+            ->where('school_id', $schoolId)
+            ->first();
+
+        if (count($idsArr) > 0 && $teacher_timesheet_id) {
+            $itemList = DB::table('tbl_asnItem')
+                ->LeftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                ->groupBy('tbl_asnItem.asnItem_id')
+                ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                ->get();
+
+            $timesheet_id = DB::table('tbl_timesheet')
+                ->insertGetId([
+                    'school_id' => $schoolId,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            $pdf = PDF::loadView("web.finance.timesheet_pdf", ['itemList' => $itemList]);
+            $pdfName = 'Timesheet_' . $timesheet_id . '.pdf';
+            // return $pdf->stream($pdfName);
+            // Save the PDF to the server
+            $pdf->save(public_path('pdfs/timesheet/' . $pdfName));
+
+            DB::table('tbl_timesheet')
+                ->where('timesheet_id', $timesheet_id)
+                ->update([
+                    'pdfLocation' => 'pdfs/timesheet/' . $pdfName,
+                    'pdfName' => $pdfName
+                ]);
+
+            DB::table('teacher_timesheet')
+                ->where('teacher_timesheet_id', $teacher_timesheet_id)
+                ->update([
+                    'timesheet_status' => 1,
+                    'timesheet_id' => $timesheet_id
+                ]);
+
+            foreach ($idsArr as $key => $id) {
+                DB::table('tbl_asnItem')
+                    ->where('asnItem_id', $id)
+                    ->update([
+                        'timesheet_id' => $timesheet_id
+                    ]);
+            }
+            $result['add'] = 'Yes';
+            $result['timesheet_id'] = $timesheet_id;
+            $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
+            return $result;
+        }
+        return $result;
     }
 
     public function timesheetEditEvent(Request $request)
