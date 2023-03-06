@@ -2676,7 +2676,7 @@ class SchoolController extends Controller
                 ->where('teacher_timesheet.submit_status', 1)
                 ->where('teacher_timesheet.reject_status', 0)
                 ->where('teacher_timesheet.approve_by_school', '=', 1)
-                ->whereDate('teacher_timesheet.school_id', '=', $school_id)
+                ->where('teacher_timesheet.school_id', '=', $school_id)
                 ->groupBy('teacher_timesheet.teacher_timesheet_id')
                 ->orderBy('teacher_timesheet.start_date', 'ASC')
                 ->get();

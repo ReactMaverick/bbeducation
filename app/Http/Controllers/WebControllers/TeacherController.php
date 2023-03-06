@@ -4742,6 +4742,7 @@ class TeacherController extends Controller
                 ->whereDate('teacher_timesheet.start_date', '=', $weekStartDate)
                 ->whereDate('teacher_timesheet.end_date', '=', $weekEndDate)
                 ->where('teacher_timesheet.teacher_id', $teacher_id)
+                ->where('teacher_timesheet.timesheet_status', '!=', 1)
                 ->groupBy('teacher_timesheet.teacher_timesheet_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();

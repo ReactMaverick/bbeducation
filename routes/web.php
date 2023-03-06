@@ -189,6 +189,7 @@ Route::get('/school-calendar/{id}', [SchoolController::class, 'schoolCalendar'])
 // Finance
 Route::get('/finance', [FinanceController::class, 'finance']);
 Route::get('/finance-timesheets', [FinanceController::class, 'financeTimesheets']);
+Route::post('/financeTimesheetApprove', [FinanceController::class, 'financeTimesheetApprove']);
 Route::post('/fetchTeacherById', [FinanceController::class, 'fetchTeacherById']);
 Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnItemDelete']);
 Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEvent']);
