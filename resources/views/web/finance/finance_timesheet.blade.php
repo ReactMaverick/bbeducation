@@ -432,7 +432,7 @@
                                                 <i class="fa-sharp fa-solid fa-paper-plane"></i>
                                             </a>
                                             <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtn"
-                                                title="Log timesheets">
+                                                title="Log timesheet">
                                                 <i class="fa-solid fa-square-check"></i>
                                             </a>
                                             {{-- <a style="cursor: pointer" id="reloadTimesheetBtn" title="Reload timesheets">
@@ -658,6 +658,52 @@
                                     },
                                     success: function(data) {
                                         location.reload();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#logTimesheetBtn', function() {
+            var approveAsnId = $('#approveAsnId').val();
+            if (approveAsnId) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to log this timesheet?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('timesheetAsnItemLog') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        approveAsnId: approveAsnId,
+                                        weekStartDate: "{{ $weekStartDate }}",
+                                        weekEndDate: "{{ $plusFiveDate }}"
+                                    },
+                                    success: function(data) {
+                                        if (data.add == 'Yes') {
+                                            $('#sendToSchoolBttn').addClass('disabled-link');
+                                            $('#logTimesheetBtn').addClass('disabled-link');
+                                            $('#editApprovTimesheetDiv' + approveAsnId)
+                                                .remove();
+                                            var popTxt =
+                                                'You have just logged a timesheet for ' + data
+                                                .schoolName +
+                                                '. Timesheet ID : ' + data.timesheet_id;
+                                            swal("", popTxt);
+                                        } else {
+                                            location.reload();
+                                        }
                                     }
                                 });
                         }

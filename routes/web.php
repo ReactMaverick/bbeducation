@@ -274,4 +274,5 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::post('/LogSchoolPasswordUpdate', [SchoolController::class, 'LogSchoolPasswordUpdate']);
     Route::post('/logSchoolProfilePicAdd', [SchoolController::class, 'logSchoolProfilePicAdd']);
     Route::post('/logSchoolProfilePicDelete', [SchoolController::class, 'logSchoolProfilePicDelete']);
+    Route::post('/logSchoolTimesheetLog', [SchoolController::class, 'logSchoolTimesheetLog']);
 });

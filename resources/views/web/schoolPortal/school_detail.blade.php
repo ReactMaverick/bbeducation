@@ -81,41 +81,6 @@
                         </div>
                     </div>
 
-                    <div class="school-details-second-sec">
-                        <div>
-                            <div class="details-heading">
-                                <h2>Last Contact</h2>
-                            </div>
-
-                            <!-- <div class="about-school-section"> -->
-                            <div class="school-name-section">
-                                <div class="school-detail-last-contact-text">
-                                    @if ($schoolDetail->schoolContactLog_id)
-                                        <p>
-                                            {{ $schoolDetail->firstName_txt }} {{ $schoolDetail->surname_txt }}
-                                            @if ($schoolDetail->method_int == 1)
-                                                {{ ' called' }}
-                                            @elseif ($schoolDetail->method_int == 2)
-                                                {{ ' emailed' }}
-                                            @elseif ($schoolDetail->method_int == 3)
-                                                {{ ' sent text' }}
-                                            @else
-                                                {{ ' met' }}
-                                            @endif
-                                            {{ ' on ' }}
-                                            @if ($schoolDetail->contactOn_dtm != 0)
-                                                {{ date('M d Y H:i', strtotime($schoolDetail->contactOn_dtm)) }}
-                                            @endif
-                                            {{ '. Spoke to: ' . $schoolDetail->spokeTo_txt . ' and noted: ' . $schoolDetail->notes_txt . '.' }}
-                                        </p>
-                                    @else
-                                        <p>We have no record of previous contact with this school.</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
 
                 <div class="school-detail-right-sec">
@@ -291,8 +256,8 @@
                                 <div class="col-md-6">
                                     <div class="modal-input-field">
                                         <label class="form-check-label">Address</label>
-                                        <input type="text" class="form-control mb-1" name="address1_txt"
-                                            id="" value="{{ $schoolDetail->address1_txt }}">
+                                        <input type="text" class="form-control mb-1" name="address1_txt" id=""
+                                            value="{{ $schoolDetail->address1_txt }}">
                                         <input type="text" class="form-control mb-1" name="address2_txt"
                                             id="" value="{{ $schoolDetail->address2_txt }}">
                                         <input type="text" class="form-control mb-1" name="address3_txt"

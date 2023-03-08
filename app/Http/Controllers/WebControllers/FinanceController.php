@@ -211,31 +211,38 @@ class FinanceController extends Controller
 
     public function financeTimesheetApprove(Request $request)
     {
-        $input = $request->all();
-        $asnIds = $input['asnIds'];
-        $weekStartDate = $input['weekStartDate'];
-        $weekEndDate = $input['weekEndDate'];
-        $asnIdsArr = explode(",", $asnIds);
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $asnIds = $input['asnIds'];
+            $weekStartDate = $input['weekStartDate'];
+            $weekEndDate = $input['weekEndDate'];
+            $asnIdsArr = explode(",", $asnIds);
 
-        $itemList = DB::table('tbl_asn')
-            ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
-            ->where('timesheet_id', NULL)
-            ->where('status_int', 3)
-            ->whereDate('asnDate_dte', '>=', $weekStartDate)
-            ->whereDate('asnDate_dte', '<=', $weekEndDate)
-            ->whereIn('tbl_asn.asn_id', $asnIdsArr)
-            ->where('admin_approve', 0)
-            ->where('send_to_school', 0)
-            ->groupBy('tbl_asnItem.asnItem_id')
-            ->pluck('tbl_asnItem.asnItem_id')
-            ->toArray();
+            $itemList = DB::table('tbl_asn')
+                ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->where('timesheet_id', NULL)
+                ->where('status_int', 3)
+                ->whereDate('asnDate_dte', '>=', $weekStartDate)
+                ->whereDate('asnDate_dte', '<=', $weekEndDate)
+                ->whereIn('tbl_asn.asn_id', $asnIdsArr)
+                ->where('company_id', $company_id)
+                ->where('admin_approve', 0)
+                ->where('send_to_school', 0)
+                ->groupBy('tbl_asnItem.asnItem_id')
+                ->pluck('tbl_asnItem.asnItem_id')
+                ->toArray();
 
-        DB::table('tbl_asnItem')
-            ->whereIn('asnItem_id', $itemList)
-            ->update([
-                'admin_approve' => 1
-            ]);
+            DB::table('tbl_asnItem')
+                ->whereIn('asnItem_id', $itemList)
+                ->update([
+                    'admin_approve' => 1
+                ]);
 
+            return true;
+        }
         return true;
     }
 
@@ -257,7 +264,8 @@ class FinanceController extends Controller
                 ->whereDate('asnDate_dte', '>=', $weekStartDate)
                 ->whereDate('asnDate_dte', '<=', $weekEndDate)
                 ->where('tbl_asn.asn_id', $asnId)
-                ->where('admin_approve', 0)
+                ->where('company_id', $company_id)
+                ->where('admin_approve', 1)
                 ->where('send_to_school', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->pluck('tbl_asnItem.asnItem_id')
@@ -272,6 +280,90 @@ class FinanceController extends Controller
             return true;
         }
         return true;
+    }
+
+    public function timesheetAsnItemLog(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        $result['add'] = 'No';
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $asnId = $request->approveAsnId;
+            $weekStartDate = $request->weekStartDate;
+            $weekEndDate = $request->weekEndDate;
+
+            $schoolDet = DB::table('tbl_asn')
+                ->select('tbl_asn.school_id', 'tbl_school.name_txt')
+                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                ->where('tbl_asn.asn_id', $asnId)
+                ->first();
+
+            $idsArr = DB::table('tbl_asn')
+                ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->where('timesheet_id', NULL)
+                ->where('status_int', 3)
+                ->whereDate('asnDate_dte', '>=', $weekStartDate)
+                ->whereDate('asnDate_dte', '<=', $weekEndDate)
+                ->where('tbl_asn.asn_id', $asnId)
+                ->where('company_id', $company_id)
+                ->where('admin_approve', 1)
+                ->where('send_to_school', 0)
+                ->groupBy('tbl_asnItem.asnItem_id')
+                ->pluck('tbl_asnItem.asnItem_id')
+                ->toArray();
+
+            if (count($idsArr) > 0 && $schoolDet) {
+                $itemList = DB::table('tbl_asnItem')
+                    ->LeftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                    ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                    ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                    ->groupBy('tbl_asnItem.asnItem_id')
+                    ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                    ->get();
+
+                $timesheet_id = DB::table('tbl_timesheet')
+                    ->insertGetId([
+                        'school_id' => $schoolDet->school_id,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+
+                $pdf = PDF::loadView("web.finance.timesheet_pdf", ['itemList' => $itemList]);
+                $pdfName = 'Timesheet_' . $timesheet_id . '.pdf';
+                // return $pdf->stream($pdfName);
+                // Save the PDF to the server
+                $pdf->save(public_path('pdfs/timesheet/' . $pdfName));
+
+                DB::table('tbl_timesheet')
+                    ->where('timesheet_id', $timesheet_id)
+                    ->update([
+                        'pdfLocation' => 'pdfs/timesheet/' . $pdfName,
+                        'pdfName' => $pdfName
+                    ]);
+
+                // DB::table('teacher_timesheet')
+                //     ->where('teacher_timesheet_id', $teacher_timesheet_id)
+                //     ->update([
+                //         'timesheet_status' => 1,
+                //         'timesheet_id' => $timesheet_id
+                //     ]);
+
+                foreach ($idsArr as $key => $id) {
+                    DB::table('tbl_asnItem')
+                        ->where('asnItem_id', $id)
+                        ->update([
+                            'timesheet_id' => $timesheet_id
+                        ]);
+                }
+                $result['add'] = 'Yes';
+                $result['timesheet_id'] = $timesheet_id;
+                $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
+                return $result;
+            }
+        }
+        return $result;
     }
 
     public function fetchTeacherById(Request $request)
@@ -326,71 +418,6 @@ class FinanceController extends Controller
                 ->delete();
         }
         return true;
-    }
-
-    public function timesheetAsnItemLog(Request $request)
-    {
-        $asnItemIds = $request->asnItemIds;
-        $teacher_timesheet_id = $request->teacher_timesheet_id;
-        // $docStartDate = $request->docStartDate;
-        // $docEndDate = $request->docEndDate;
-        $schoolId = $request->schoolId;
-        $idsArr = explode(",", $asnItemIds);
-        $result['add'] = 'No';
-        $schoolDet = DB::table('tbl_school')
-            ->where('school_id', $schoolId)
-            ->first();
-
-        if (count($idsArr) > 0 && $teacher_timesheet_id) {
-            $itemList = DB::table('tbl_asnItem')
-                ->LeftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
-                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
-                ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
-                ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
-                ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
-                ->groupBy('tbl_asnItem.asnItem_id')
-                ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
-                ->get();
-
-            $timesheet_id = DB::table('tbl_timesheet')
-                ->insertGetId([
-                    'school_id' => $schoolId,
-                    'timestamp_ts' => date('Y-m-d H:i:s')
-                ]);
-
-            $pdf = PDF::loadView("web.finance.timesheet_pdf", ['itemList' => $itemList]);
-            $pdfName = 'Timesheet_' . $timesheet_id . '.pdf';
-            // return $pdf->stream($pdfName);
-            // Save the PDF to the server
-            $pdf->save(public_path('pdfs/timesheet/' . $pdfName));
-
-            DB::table('tbl_timesheet')
-                ->where('timesheet_id', $timesheet_id)
-                ->update([
-                    'pdfLocation' => 'pdfs/timesheet/' . $pdfName,
-                    'pdfName' => $pdfName
-                ]);
-
-            DB::table('teacher_timesheet')
-                ->where('teacher_timesheet_id', $teacher_timesheet_id)
-                ->update([
-                    'timesheet_status' => 1,
-                    'timesheet_id' => $timesheet_id
-                ]);
-
-            foreach ($idsArr as $key => $id) {
-                DB::table('tbl_asnItem')
-                    ->where('asnItem_id', $id)
-                    ->update([
-                        'timesheet_id' => $timesheet_id
-                    ]);
-            }
-            $result['add'] = 'Yes';
-            $result['timesheet_id'] = $timesheet_id;
-            $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
-            return $result;
-        }
-        return $result;
     }
 
     public function timesheetEditEvent(Request $request)

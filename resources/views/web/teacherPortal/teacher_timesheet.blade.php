@@ -88,10 +88,11 @@
 
                                 @foreach ($calenderList as $key1 => $calender)
                                     <form action="{{ url('/teacher/logTeacherTimesheetAdd') }}" method="post"
-                                        id="teacherTimesheetForm_{{ $calender->teacher_id }}_{{ $calender->school_id }}"
+                                        id="teacherTimesheetForm_{{ $calender->teacher_id }}_{{ $calender->school_id }}_{{ $calender->asn_id }}"
                                         style="width: 100%; margin: 0;">
                                         @csrf
 
+                                        <input type="hidden" name="asnId" value="{{ $calender->asn_id }}">
                                         <input type="hidden" name="school_id" value="{{ $calender->school_id }}">
                                         <input type="hidden" name="teacher_id" value="{{ $calender->teacher_id }}">
                                         <input type="hidden" name="weekStartDate" value="{{ $weekStartDate }}">
@@ -107,21 +108,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
+                                                    @if ($calender->day1Avail_txt && $calender->day1asnDate_dte && $calender->teacher_timesheet_id)
                                                         <div class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day1Link_id }}', '{{ $calender->day1asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day1asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }})">
+                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day1asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day1asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }})">
                                                             <p>{{ $calender->day1Avail_txt }}</p>
                                                         </div>
                                                     @else
-                                                        @if ($calender->reject_status == 1)
-                                                            <div class="teacher-calendar-days-field3"
-                                                                style="cursor: pointer;"
-                                                                onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate)) }}', {{ $calender->reject_status }})">
-                                                            </div>
-                                                        @else
-                                                            <div class="teacher-calendar-days-field3"></div>
-                                                        @endif
+                                                        <div class="teacher-calendar-days-field3" style="cursor: pointer;"
+                                                            onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate)) }}', {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->day1asnItem_id }}')">
+                                                        </div>
                                                     @endif
                                                     <input type="hidden" name="asnItem_id[]"
                                                         value="{{ $calender->day1asnItem_id }}">
@@ -131,21 +127,16 @@
                                                         value="{{ $calender->day1Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
+                                                    @if ($calender->day2Avail_txt && $calender->day2asnDate_dte && $calender->teacher_timesheet_id)
                                                         <div class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day2Link_id }}', '{{ $calender->day2asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day2asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }})">
+                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day2asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day2asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }})">
                                                             <p>{{ $calender->day2Avail_txt }}</p>
                                                         </div>
                                                     @else
-                                                        @if ($calender->reject_status == 1)
-                                                            <div class="teacher-calendar-days-field3"
-                                                                style="cursor: pointer;"
-                                                                onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +1 days')) }}', {{ $calender->reject_status }})">
-                                                            </div>
-                                                        @else
-                                                            <div class="teacher-calendar-days-field3"></div>
-                                                        @endif
+                                                        <div class="teacher-calendar-days-field3" style="cursor: pointer;"
+                                                            onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +1 days')) }}', {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->day2asnItem_id }}')">
+                                                        </div>
                                                     @endif
                                                     <input type="hidden" name="asnItem_id[]"
                                                         value="{{ $calender->day2asnItem_id }}">
@@ -155,21 +146,16 @@
                                                         value="{{ $calender->day2Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
+                                                    @if ($calender->day3Avail_txt && $calender->day3asnDate_dte && $calender->teacher_timesheet_id)
                                                         <div class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day3Link_id }}', '{{ $calender->day3asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day3asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }})">
+                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day3asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day3asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }})">
                                                             <p>{{ $calender->day3Avail_txt }}</p>
                                                         </div>
                                                     @else
-                                                        @if ($calender->reject_status == 1)
-                                                            <div class="teacher-calendar-days-field3"
-                                                                style="cursor: pointer;"
-                                                                onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +2 days')) }}', {{ $calender->reject_status }})">
-                                                            </div>
-                                                        @else
-                                                            <div class="teacher-calendar-days-field3"></div>
-                                                        @endif
+                                                        <div class="teacher-calendar-days-field3" style="cursor: pointer;"
+                                                            onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +2 days')) }}', {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->day3asnItem_id }}')">
+                                                        </div>
                                                     @endif
                                                     <input type="hidden" name="asnItem_id[]"
                                                         value="{{ $calender->day3asnItem_id }}">
@@ -179,21 +165,16 @@
                                                         value="{{ $calender->day3Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
+                                                    @if ($calender->day4Avail_txt && $calender->day4asnDate_dte && $calender->teacher_timesheet_id)
                                                         <div class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day4Link_id }}', '{{ $calender->day4asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day4asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }})">
+                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day4asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day4asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }})">
                                                             <p>{{ $calender->day4Avail_txt }}</p>
                                                         </div>
                                                     @else
-                                                        @if ($calender->reject_status == 1)
-                                                            <div class="teacher-calendar-days-field3"
-                                                                style="cursor: pointer;"
-                                                                onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +3 days')) }}', {{ $calender->reject_status }})">
-                                                            </div>
-                                                        @else
-                                                            <div class="teacher-calendar-days-field3"></div>
-                                                        @endif
+                                                        <div class="teacher-calendar-days-field3" style="cursor: pointer;"
+                                                            onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +3 days')) }}', {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->day4asnItem_id }}')">
+                                                        </div>
                                                     @endif
                                                     <input type="hidden" name="asnItem_id[]"
                                                         value="{{ $calender->day4asnItem_id }}">
@@ -203,21 +184,16 @@
                                                         value="{{ $calender->day4Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
+                                                    @if ($calender->day5Avail_txt && $calender->day5asnDate_dte && $calender->teacher_timesheet_id)
                                                         <div class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day5Link_id }}', '{{ $calender->day5asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day5asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }})">
+                                                            onclick="calDateClick('edit', '{{ $calender->teacher_id }}', '{{ $calender->day5asnItem_id }}', '{{ $calender->school_id }}', '{{ $calender->day5asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }})">
                                                             <p>{{ $calender->day5Avail_txt }}</p>
                                                         </div>
                                                     @else
-                                                        @if ($calender->reject_status == 1)
-                                                            <div class="teacher-calendar-days-field3"
-                                                                style="cursor: pointer;"
-                                                                onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +4 days')) }}', {{ $calender->reject_status }})">
-                                                            </div>
-                                                        @else
-                                                            <div class="teacher-calendar-days-field3"></div>
-                                                        @endif
+                                                        <div class="teacher-calendar-days-field3" style="cursor: pointer;"
+                                                            onclick="addNewItem('{{ $calender->teacher_timesheet_id }}', '{{ $calender->teacher_id }}', '{{ $calender->school_id }}', '{{ date('d-m-Y', strtotime($weekStartDate . ' +4 days')) }}', {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->day5asnItem_id }}')">
+                                                        </div>
                                                     @endif
                                                     <input type="hidden" name="asnItem_id[]"
                                                         value="{{ $calender->day5asnItem_id }}">
@@ -241,13 +217,19 @@
                                                             Timesheet</button>
                                                     @endif
 
-                                                    @if ($calender->submit_status)
-                                                        <button type="button" class="btn btn-secondary mt-3"
-                                                            style="float: right; background-color: #acd6f1">Timesheet
-                                                            Submitted</button>
+                                                    @if ($calender->teacher_timesheet_id)
+                                                        @if ($calender->submit_status)
+                                                            <button type="button" class="btn btn-secondary mt-3"
+                                                                style="float: right; background-color: #acd6f1">Timesheet
+                                                                Submitted</button>
+                                                        @else
+                                                            <button type="submit" class="btn btn-secondary mt-3"
+                                                                style="float: right; background-color: #48A0DC">Submit
+                                                                Timesheet</button>
+                                                        @endif
                                                     @else
-                                                        <button type="submit" class="btn btn-secondary mt-3"
-                                                            style="float: right; background-color: #48A0DC">Submit
+                                                        <button type="button" class="btn btn-secondary mt-3"
+                                                            style="float: right; background-color: #acd6f1">Submit
                                                             Timesheet</button>
                                                     @endif
                                                 </div>
@@ -274,7 +256,7 @@
     <!-- Event Add Modal -->
     <div class="modal fade" id="eventAddModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content">
+            <div class="modal-content calendar-modal-content" style="width: 70%;">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -291,44 +273,31 @@
                     @csrf
 
                     <input type="hidden" name="teacher_timesheet_id" id="addTeacherTimesheetId" value="">
+                    <input type="hidden" name="teacher_asn_id" id="addTeacherAsnId" value="">
+                    <input type="hidden" name="teacher_asn_item_id" id="addTeacherAsnItemId" value="">
                     <input type="hidden" name="school_id" id="addSchoolId" value="">
                     <input type="hidden" name="teacher_id" id="addTeacherId" value="">
                     <input type="hidden" name="asnDate_dte" id="addAsnDate" value="">
 
                     <div class="modal-input-field-section">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Date</label>
-                                    <p id="asnDateHtml"></p>
-                                </div>
+                            <div class="col-md-6 form-group modal-input-field">
+                                <label class="form-check-label">Date</label>
+                                <p id="asnDateHtml"></p>
+                            </div>
+                        </div>
 
-                                <div class="form-group calendar-form-filter">
-                                    <label for="">Part Of Day</label>
-                                    <select class="form-control field-validate-2" name="dayPart_int"
-                                        id="dayPart_int_add">
-                                        <option value="">Choose one</option>
-                                        @foreach ($dayPartList as $key1 => $dayPart)
-                                            <option value="{{ $dayPart->description_int }}">
-                                                {{ $dayPart->description_txt }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group modal-input-field">
+                                <label class="form-check-label">From</label>
+                                <input type="time" class="form-control field-validate-2" name="start_tm"
+                                    id="" value="">
                             </div>
 
-                            <div class="col-md-6 modal-form-right-sec">
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Percentage of a day</label>
-                                    <input type="text" class="form-control number-validate-2" name="dayPercent_dec"
-                                        id="" value="">
-                                </div>
-
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Hours</label>
-                                    <input type="text" class="form-control onlynumber" name="hours_dec"
-                                        id="hours_dec_add" value="">
-                                </div>
+                            <div class="col-md-6 form-group modal-input-field">
+                                <label class="form-check-label">To</label>
+                                <input type="time" class="form-control field-validate-2" name="end_tm"
+                                    id="" value="">
                             </div>
                         </div>
                     </div>
@@ -404,7 +373,7 @@
             });
         });
 
-        function calDateClick(type, teacher_id, asn_id, asnItem_id, school_id, asnDate_dte, submit_status, reject_status) {
+        function calDateClick(type, teacher_id, asnItem_id, school_id, asnDate_dte, submit_status, reject_status, asn_id) {
             // alert(reject_status)
             if (submit_status && submit_status == 1 && reject_status == 0) {
                 swal("",
@@ -412,7 +381,7 @@
                 );
             } else {
                 var SITEURL = "{{ url('/') }}";
-                var form = $("#teacherTimesheetForm_" + teacher_id + '_' + school_id);
+                var form = $("#teacherTimesheetForm_" + teacher_id + '_' + school_id + '_' + asn_id);
                 var timesheetId = '';
                 $.ajax({
                     url: SITEURL + "/teacher/logTeacherTimesheetAddAjax",
@@ -478,17 +447,17 @@
             }
         });
 
-        function addNewItem(teacher_timesheet_id, teacher_id, school_id, asn_date, reject_status) {
+        function addNewItem(teacher_timesheet_id, teacher_id, school_id, asn_date, reject_status, asn_id, asnItem_id) {
             // alert(reject_status)
-            if (reject_status == 1 && teacher_timesheet_id) {
-                $("#asnDateHtml").html(asn_date);
-                $("#addTeacherTimesheetId").val(teacher_timesheet_id);
-                $("#addSchoolId").val(school_id);
-                $("#addTeacherId").val(teacher_id);
-                $("#addAsnDate").val(asn_date);
+            $("#asnDateHtml").html(asn_date);
+            $("#addTeacherAsnId").val(asn_id);
+            $("#addTeacherAsnItemId").val(asnItem_id);
+            $("#addTeacherTimesheetId").val(teacher_timesheet_id);
+            $("#addSchoolId").val(school_id);
+            $("#addTeacherId").val(teacher_id);
+            $("#addAsnDate").val(asn_date);
 
-                $('#eventAddModal').modal('show');
-            }
+            $('#eventAddModal').modal('show');
         }
     </script>
 @endsection
