@@ -4,6 +4,10 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{!! asset('plugins/sweetalert/sweetalert.min.js') !!}"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.0/jquery.timepicker.js"
+    integrity="sha512-v84GNWs/NREzyztDm0s2NCXR9tIXH4aD/pe3uktyJeCWICr+/J38obdjXx1wxPRzTXHY54Hf0zBD5fbuRSNvGw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <?php if (Session::has('success')){ ?>
 <script>
     $(document).ready(function() {

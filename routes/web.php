@@ -190,6 +190,7 @@ Route::get('/school-calendar/{id}', [SchoolController::class, 'schoolCalendar'])
 Route::get('/finance', [FinanceController::class, 'finance']);
 Route::get('/finance-timesheets', [FinanceController::class, 'financeTimesheets']);
 Route::post('/financeTimesheetApprove', [FinanceController::class, 'financeTimesheetApprove']);
+Route::post('/financeTimesheetReject', [FinanceController::class, 'financeTimesheetReject']);
 Route::post('/fetchTeacherById', [FinanceController::class, 'fetchTeacherById']);
 Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnItemDelete']);
 Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEvent']);
@@ -275,4 +276,10 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::post('/logSchoolProfilePicAdd', [SchoolController::class, 'logSchoolProfilePicAdd']);
     Route::post('/logSchoolProfilePicDelete', [SchoolController::class, 'logSchoolProfilePicDelete']);
     Route::post('/logSchoolTimesheetLog', [SchoolController::class, 'logSchoolTimesheetLog']);
+    Route::post('/logSchoolTimesheetReject', [SchoolController::class, 'logSchoolTimesheetReject']);
+
+    // without login
+    Route::get('/teacher-timesheet-approve/{asn_id}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDir']);
+    Route::post('/logSchoolTimesheetRejectDir', [SchoolController::class, 'logSchoolTimesheetRejectDir']);
+    Route::post('/logSchoolTimesheetLogDir', [SchoolController::class, 'logSchoolTimesheetLogDir']);
 });

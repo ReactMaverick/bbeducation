@@ -141,7 +141,12 @@
                                 <div class="contact-heading-text">
                                     <h2>Teacher Timesheets</h2>
                                 </div>
+
                                 <div class="contact-icon-sec">
+                                    <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
+                                        title="Reject timesheet">
+                                        <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                    </a>
                                     <a style="cursor: pointer;" class="disabled-link" id="logTimesheetBtn"
                                         title="Log timesheet">
                                         <i class="fa-solid fa-square-check"></i>
@@ -410,11 +415,13 @@
                 $('#approveAsnId').val('');
                 $('#editApprovTimesheetDiv' + asn_id).removeClass('timesheetActive');
                 $('#logTimesheetBtn').addClass('disabled-link');
+                $('#timesheetRejectBtn').addClass('disabled-link');
             } else {
                 $('#approveAsnId').val(asn_id);
                 $('.editApprovTimesheetDiv').removeClass('timesheetActive');
                 $('#editApprovTimesheetDiv' + asn_id).addClass('timesheetActive');
                 $('#logTimesheetBtn').removeClass('disabled-link');
+                $('#timesheetRejectBtn').removeClass('disabled-link');
             }
         }
 
@@ -455,6 +462,40 @@
                                         } else {
                                             location.reload();
                                         }
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#timesheetRejectBtn', function() {
+            var asnId = $('#approveAsnId').val();
+            if (asnId) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to reject the selected timesheet?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('/school/logSchoolTimesheetReject') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnId: asnId,
+                                        weekStartDate: "{{ $weekStartDate }}",
+                                        weekEndDate: "{{ $plusFiveDate }}"
+                                    },
+                                    success: function(data) {
+                                        location.reload();
                                     }
                                 });
                         }

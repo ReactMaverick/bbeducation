@@ -46,6 +46,30 @@
         .finance-contact-icon-sec i {
             font-size: 25px;
         }
+
+        .rejectDiv {
+            background-color: #e75943;
+            width: 100%;
+            min-height: 65px;
+            border-radius: 5%;
+            border: 1px solid #e75943;
+        }
+
+        .rejectDiv p {
+            color: #fff;
+        }
+
+        .approveDiv {
+            background-color: #55e743;
+            width: 100%;
+            min-height: 65px;
+            border-radius: 5%;
+            border: 1px solid #55e743;
+        }
+
+        .approveDiv p {
+            color: #fff;
+        }
     </style>
     <div class="assignment-detail-page-section">
         <div class="row assignment-detail-row">
@@ -70,7 +94,7 @@
                         <div class="finance-timesheet-section">
                             <div class="finance-timesheet-left-sec">
 
-                                <div class="finance-timesheet-contact-first-sec">
+                                <div class="finance-timesheet-contact-first-sec" style="width: 65%;">
 
                                     <div class="invoice-top-section mb-2">
 
@@ -80,6 +104,18 @@
 
                                         <div class="invoice-top-btn-sec mr-3">
                                             <button id="selectAllBtn">Select All</button>
+                                        </div>
+                                        <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link" id="timesheetEditBtn"
+                                                title="Edit timesheet">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                        </div>
+                                        <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
+                                                title="Reject timesheet">
+                                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                            </a>
                                         </div>
                                         <div class="finance-contact-icon-sec">
                                             <a style="cursor: pointer" class="disabled-link" id="timesheetApproveBtn"
@@ -134,6 +170,9 @@
                                             <p>Friday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day5Amount_total }}</p>
                                         </div>
+                                        <div class="teacher-calendar-days-text">
+                                            <p>Status</p>
+                                        </div>
                                     </div>
 
                                     <input type="hidden" name="" id="timesheetAsnIds" value="{{ $asnIds }}">
@@ -142,18 +181,24 @@
                                         <div class="teacher-calendar-table-section">
 
                                             @foreach ($calenderList as $key1 => $calender)
+                                                <?php
+                                                $adminApprove = 0;
+                                                if ($calender->admin_approve1 == 2 || $calender->admin_approve2 == 2 || $calender->admin_approve3 == 2 || $calender->admin_approve4 == 2 || $calender->admin_approve5 == 2) {
+                                                    $adminApprove = 1;
+                                                }
+                                                ?>
                                                 <div class="calendar-outer-sec editTimesheetDiv"
                                                     id="editTimesheetDiv{{ $calender->asn_id }}"
                                                     onclick="timesheetRow('{{ $calender->asn_id }}')">
                                                     <div class="calendar-section">
-                                                        <div class="date-left-teacher-calendar">
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             <div class="teacher-calendar-days-field3">
                                                                 <p>
                                                                     {{ $calender->name_txt }}
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <div class="date-left-teacher-calendar">
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             <div class="teacher-calendar-days-field3">
                                                                 <p>
                                                                     @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
@@ -164,7 +209,7 @@
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <div class="date-left-teacher-calendar">
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
@@ -174,7 +219,7 @@
                                                                 <div class="teacher-calendar-days-field3"></div>
                                                             @endif
                                                         </div>
-                                                        <div class="date-left-teacher-calendar">
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
@@ -184,7 +229,7 @@
                                                                 <div class="teacher-calendar-days-field3"></div>
                                                             @endif
                                                         </div>
-                                                        <div class="date-left-teacher-calendar">
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
@@ -194,7 +239,7 @@
                                                                 <div class="teacher-calendar-days-field3"></div>
                                                             @endif
                                                         </div>
-                                                        <div class="date-left-teacher-calendar">
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
@@ -204,7 +249,7 @@
                                                                 <div class="teacher-calendar-days-field3"></div>
                                                             @endif
                                                         </div>
-                                                        <div class="date-left-teacher-calendar">
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
@@ -212,6 +257,17 @@
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3"></div>
+                                                            @endif
+                                                        </div>
+                                                        <div class="date-left-teacher-calendar" style="width: 12%;">
+                                                            @if ($adminApprove == 1)
+                                                                <div class="teacher-calendar-days-field3 rejectDiv">
+                                                                    <p>Reject</p>
+                                                                </div>
+                                                            @else
+                                                                <div class="teacher-calendar-days-field3">
+                                                                    <p>Pending</p>
+                                                                </div>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -224,7 +280,7 @@
                                     <input type="hidden" name="" id="ajaxTimesheetAsnIds" value="">
                                 </div>
 
-                                <div class="finance-timesheet-contact-second-sec">
+                                <div class="finance-timesheet-contact-second-sec" style="width: 32%;">
                                     <div class="contact-heading">
                                         <div class="contact-heading-text">
                                             <h2>Select a file</h2>
@@ -442,7 +498,7 @@
                                     </div>
                                 </div>
 
-                                <div class="finance-timesheet-contact-second-sec" style="display: none"
+                                <div class="finance-timesheet-contact-second-sec" style="display: none;"
                                     id="teacherTimesheetDiv">
                                     <div class="finance-timesheet-table-section" style="margin-top: 0;">
                                         <table class="table finance-timesheet-page-table" id="">
@@ -507,8 +563,12 @@
             $('#ajaxTimesheetAsnIds').val(ids);
             if (ids) {
                 $('#timesheetApproveBtn').removeClass('disabled-link');
+                $('#timesheetRejectBtn').removeClass('disabled-link');
+                $('#timesheetEditBtn').removeClass('disabled-link');
             } else {
                 $('#timesheetApproveBtn').addClass('disabled-link');
+                $('#timesheetRejectBtn').addClass('disabled-link');
+                $('#timesheetEditBtn').addClass('disabled-link');
             }
         }
 
@@ -559,6 +619,56 @@
                                 });
                         }
                     });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#timesheetRejectBtn', function() {
+            var asnIds = $('#ajaxTimesheetAsnIds').val();
+            if (asnIds) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to reject all the selected timesheets?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('financeTimesheetReject') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnIds: asnIds,
+                                        weekStartDate: "{{ $weekStartDate }}",
+                                        weekEndDate: "{{ $plusFiveDate }}"
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#timesheetEditBtn', function() {
+            var asnIds = $('#ajaxTimesheetAsnIds').val();
+            if (asnIds) {
+                var idsArr = [];
+                idsArr = asnIds.split(',');
+                if (idsArr.length == 1) {
+                    var location = "{{ url('/assignment-details') }}" + '/' + idsArr[0];
+                    window.open(location);
+                } else {
+                    swal("", "You cannot edit more then one timesheet at a time.");
+                }
             } else {
                 swal("", "Please select one timesheet.");
             }

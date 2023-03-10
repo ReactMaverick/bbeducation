@@ -57,4 +57,20 @@ class AlertController extends Controller
             }
         }
     }
+
+    public function sendToSchoolApproval($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/timesheet_approval', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Timesheet For Approval")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
 }
