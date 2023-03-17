@@ -31,6 +31,7 @@
 <script>
     $(document).ready(function() {
         $(".select2").select2();
+        $('#fullLoader').hide();
     });
 
     $(document).on('keyup', '.onlynumber', function(e) {

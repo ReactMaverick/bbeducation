@@ -199,11 +199,22 @@ Route::post('/fetchTeacherSheetById', [FinanceController::class, 'fetchTeacherSh
 // Route::get('/teacher-timesheet', [FinanceController::class, 'teacherTimesheetView']);
 Route::post('/rejectTeacherSheet', [FinanceController::class, 'rejectTeacherSheet']);
 Route::post('/sendTimesheetToApproval', [FinanceController::class, 'sendTimesheetToApproval']);
+Route::post('/timesheetAsnItemLog', [FinanceController::class, 'timesheetAsnItemLog']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
+Route::post('/timesheetEventEdit', [FinanceController::class, 'timesheetEventEdit']);
+Route::post('/timesheetEventUpdateAjax', [FinanceController::class, 'timesheetEventUpdateAjax']);
+Route::post('/financeProcessInvoice', [FinanceController::class, 'financeProcessInvoice']);
+Route::post('/financeInvoiceSplit', [FinanceController::class, 'financeInvoiceSplit']);
+Route::post('/financeSplitInvoiceCreate', [FinanceController::class, 'financeSplitInvoiceCreate']);
+Route::post('/financeInvoiceEdit', [FinanceController::class, 'financeInvoiceEdit']);
+Route::post('/financeInvoiceUpdate', [FinanceController::class, 'financeInvoiceUpdate']);
+Route::post('/financeInvItemInsert', [FinanceController::class, 'financeInvItemInsert']);
+Route::post('/financeInvoiceItemEdit', [FinanceController::class, 'financeInvoiceItemEdit']);
+Route::post('/financeInvoiceItemUpdate', [FinanceController::class, 'financeInvoiceItemUpdate']);
+Route::post('/financeInvoiceItemDelete', [FinanceController::class, 'financeInvoiceItemDelete']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
-Route::post('/timesheetAsnItemLog', [FinanceController::class, 'timesheetAsnItemLog']);
 // Finance
 
 // Management

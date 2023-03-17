@@ -47,22 +47,42 @@
     <table style="margin: auto; width: 90%; border-collapse: collapse;">
         <tr style="border: 2px solid #000; background-color: #48A0DC; ">
             <th
-                style="text-align:left; color: #fff; font-size: 14px; font-weight: 400; width: 60%; padding: 4px 0 4px 15px;">
-                Date</th>
-            <!-- <th style="width: 30%;"></th> -->
+                style="text-align:center; color: #fff; font-size: 14px; font-weight: 400; width: 30%; padding: 4px 0 4px 15px;">
+                Teacher</th>
             <th
-                style="text-align:left; color: #fff; font-size: 14px; font-weight: 400; width: 40%; padding: 4px 0 4px 15px;border-left: 2px solid #000;">
+                style="text-align:center; color: #fff; font-size: 14px; font-weight: 400; width: 30%; padding: 4px 0 4px 15px;border-left: 2px solid #000;">
+                Date</th>
+            <th
+                style="text-align:center; color: #fff; font-size: 14px; font-weight: 400; width: 20%; padding: 4px 0 4px 15px;border-left: 2px solid #000;">
                 Part</th>
+            <th
+                style="text-align:center; color: #fff; font-size: 14px; font-weight: 400; width: 20%; padding: 4px 0 4px 15px; border-left: 2px solid #000;">
+                Approve/Reject</th>
         </tr>
 
         @foreach ($mailData['itemList'] as $key => $item)
+            <?php $cnt = count($mailData['itemList']); ?>
             <tr style="border: 2px solid #000;">
                 <td
-                    style="text-align:left; color: #000; font-size: 14px; font-weight: 400; width: 60%; padding: 4px 0 4px 15px;">
+                    style="text-align:center; color: #000; font-size: 14px; font-weight: 400; width: 30%; padding: 4px 0 4px 15px;">
+                    @if ($item->knownAs_txt == null && $item->knownAs_txt == '')
+                        {{ $item->firstName_txt . ' ' . $item->surname_txt }}
+                    @else
+                        {{ $item->knownAs_txt . ' ' . $item->surname_txt }}
+                    @endif
+                </td>
+                <td
+                    style="text-align:center; color: #000; font-size: 14px; font-weight: 400; width: 30%; padding: 4px 0 4px 15px; border-left: 2px solid #000;">
                     {{ $item->asnDate_dte }} </td>
                 <td
-                    style="text-align:left; color: #000; font-size: 14px; font-weight: 400; width: 40%; padding: 4px 15px 4px 0; border-left: 2px solid #000;">
+                    style="text-align:center; color: #000; font-size: 14px; font-weight: 400; width: 20%; padding: 4px 15px 4px 0; border-left: 2px solid #000;">
                     {{ $item->datePart_txt }}</td>
+                @if ($key == 0)
+                    <td style="text-align:center; color: #000; font-size: 14px; font-weight: 400; width: 20%; padding: 4px 15px 4px 0; border-left: 2px solid #000;"
+                        rowspan="{{ $cnt }}">
+                        <a href="{{ $mailData['rUrl'] }}">Click Here</a>
+                    </td>
+                @endif
             </tr>
         @endforeach
 
@@ -71,8 +91,6 @@
 
 <div style="width: 100%; display:block;">
     <p>
-        Please click the bellow link to approve/reject this timesheet.<br>
-        {{ $mailData['rUrl'] }}<br><br>
         <strong>Sincerely,</strong><br>
         BBEDUCATION
     </p>

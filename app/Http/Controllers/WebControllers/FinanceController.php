@@ -689,11 +689,519 @@ class FinanceController extends Controller
             $headerTitle = "Finance";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
+            $p_maxDate = date('Y-m-d');
+            if ($request->date) {
+                $p_maxDate = date('Y-m-d', strtotime($request->date));
+            }
 
-            return view("web.finance.finance_invoice", ['title' => $title, 'headerTitle' => $headerTitle]);
+            $p_invoiceNumberMin = '';
+            if ($request->invoiceNumberMin) {
+                $p_invoiceNumberMin = $request->invoiceNumberMin;
+            }
+            $p_invoiceNumberMax = '';
+            if ($request->invoiceNumberMax) {
+                $p_invoiceNumberMax = $request->invoiceNumberMax;
+            }
+
+            DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->whereRaw("tbl_asnItem.timesheet_id IS NOT NULL AND (tbl_asnItem.charge_dec IS NULL OR tbl_asnItem.cost_dec IS NULL)")
+                ->update([
+                    'tbl_asnItem.charge_dec' => DB::raw("tbl_asn.charge_dec"),
+                    'tbl_asnItem.cost_dec' => DB::raw("tbl_asn.cost_dec")
+                ]);
+
+            $timesheetList = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('asnItem_id', 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'asnDate_dte', 'tbl_asnItem.charge_dec', 'tbl_asnItem.cost_dec')
+                ->where('timesheet_id', '!=', NULL)
+                ->where('tbl_asnItem.invoice_id', '=', NULL)
+                ->whereDate('asnDate_dte', '<=', $p_maxDate)
+                ->groupBy('asnItem_id')
+                ->orderByRaw('school_id,teacher_id,asnDate_dte')
+                ->get();
+
+            $invoiceList = DB::table('tbl_school')
+                ->LeftJoin('tbl_invoice', 'tbl_school.school_id', '=', 'tbl_invoice.school_id')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_contactItemSch.school_id, contactItem_txt AS invoiceEmail_txt FROM tbl_contactItemSch LEFT JOIN tbl_schoolContact ON tbl_schoolContact.contact_id = tbl_contactItemSch.schoolContact_id WHERE receiveInvoices_status <> 0 AND (tbl_schoolContact.isCurrent_status = -1 OR tbl_contactItemSch.schoolContact_id IS NULL) GROUP BY tbl_contactItemSch.school_id) AS t_email"),
+                    function ($join) {
+                        $join->on('tbl_school.school_id', '=', 't_email.school_id');
+                    }
+                )
+                ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte')
+                ->whereBetween('tbl_invoice.invoice_id', array($p_invoiceNumberMin, $p_invoiceNumberMax))
+                ->groupBy('tbl_invoice.invoice_id')
+                ->orderBy('tbl_invoice.invoice_id', 'ASC')
+                ->orderBy('invoiceDate_dte', 'DESC')
+                ->orderByRaw('SUM(numItems_dec * charge_dec)')
+                ->get();
+
+            return view("web.finance.finance_invoice", ['title' => $title, 'headerTitle' => $headerTitle, 'timesheetList' => $timesheetList, 'p_maxDate' => $p_maxDate, 'p_invoiceNumberMin' => $p_invoiceNumberMin, 'p_invoiceNumberMax' => $p_invoiceNumberMax, 'invoiceList' => $invoiceList]);
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function timesheetEventEdit(Request $request)
+    {
+        $result['exist'] = "No";
+        $asnItemId = $request->asnItemId;
+        $eventItemDetail = DB::table('tbl_asnItem')
+            ->where('tbl_asnItem.asnItem_id', $asnItemId)
+            ->first();
+
+        if ($eventItemDetail) {
+            $dayPartList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 20)
+                ->get();
+
+            $view = view("web.finance.invoice_event_edit", ['eventItemDetail' => $eventItemDetail, 'dayPartList' => $dayPartList])->render();
+            $result['exist'] = "Yes";
+            $result['eventId'] = $eventItemDetail->asnItem_id;
+            $result['html'] = $view;
+            return response()->json($result);
+        } else {
+            $result['exist'] = "No";
+            return response()->json($result);
+        }
+        return response()->json($result);
+    }
+
+    public function timesheetEventUpdateAjax(Request $request)
+    {
+        $editEventId = $request->editEventId;
+
+        DB::table('tbl_asnItem')
+            ->where('asnItem_id', $editEventId)
+            ->update([
+                'dayPart_int' => $request->dayPart_int,
+                'asnDate_dte' => date("Y-m-d", strtotime($request->asnDate_dte)),
+                'charge_dec' => $request->charge_dec,
+                'dayPercent_dec' => $request->dayPercent_dec,
+                'hours_dec' => $request->hours_dec,
+                'cost_dec' => $request->cost_dec
+            ]);
+
+        $p_maxDate = $request->p_maxDate;
+
+        $timesheetList = DB::table('tbl_asn')
+            ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+            ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+            ->select('asnItem_id', 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'asnDate_dte', 'tbl_asnItem.charge_dec', 'tbl_asnItem.cost_dec')
+            ->where('timesheet_id', '!=', NULL)
+            ->where('tbl_asnItem.invoice_id', '=', NULL)
+            ->whereDate('asnDate_dte', '<=', $p_maxDate)
+            ->groupBy('asnItem_id')
+            ->orderByRaw('school_id,teacher_id,asnDate_dte')
+            ->get();
+
+        $html = '';
+        if (count($timesheetList) > 0) {
+            foreach ($timesheetList as $key1 => $timesheet) {
+                $name = '';
+                if ($timesheet->knownAs_txt == null && $timesheet->knownAs_txt == '') {
+                    $name = $timesheet->firstName_txt . ' ' . $timesheet->surname_txt;
+                } else {
+                    $name = $timesheet->knownAs_txt . ' ' . $timesheet->surname_txt;
+                }
+                $date = date('d-m-Y', strtotime($timesheet->asnDate_dte));
+                $html .= "<tr class='school-detail-table-data editTimesheetRow'
+                                            id='editTimesheetRow$timesheet->asnItem_id'
+                                            onclick='timesheetRow($timesheet->asnItem_id)'>
+                                            <td>$timesheet->name_txt</td>
+                                            <td>$name</td>
+                                            <td>$date</td>
+                                            <td>$timesheet->charge_dec</td>
+                                        </tr>";
+            }
+        }
+
+        $result['status'] = "success";
+        $result['eventId'] = $editEventId;
+        $result['html'] = $html;
+        return response()->json($result);
+    }
+
+    public function financeProcessInvoice(Request $request)
+    {
+        $p_maxDate = $request->p_maxDate;
+        $timesheetAsnItemIds = $request->timesheetAsnItemIds;
+        $idsArr = explode(",", $timesheetAsnItemIds);
+        if (count($idsArr) > 0) {
+            $itemList = DB::table('tbl_asnItem')
+                ->leftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                ->leftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->leftJoin('tbl_student', 'tbl_asn.student_id', '=', 'tbl_student.student_id')
+                ->select('asnItem_id', 'tbl_asnItem.asn_id', 'tbl_asn.teacher_id', 'school_id', DB::raw("CONCAT(DATE_FORMAT(asnDate_dte, '%d/%m/%Y'), ' - ', (IF(tbl_teacher.knownAs_txt IS NULL OR tbl_teacher.knownAs_txt = '', CONCAT(tbl_teacher.firstName_txt, ' ',  IFNULL(tbl_teacher.surname_txt, '')), CONCAT(tbl_teacher.firstName_txt, ' (', tbl_teacher.knownAs_txt, ') ',  IFNULL(tbl_teacher.surname_txt, '')))), ' - ', IF(tbl_asn.student_id IS NULL, IF(yearGroup_int IS NULL AND subject_int IS NULL, 'Cover', IF(subject_int IS NOT NULL, (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 6 AND description_int = subject_int), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 34 AND description_int = yearGroup_int))), CONCAT('Tutoring: ', CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt)))) AS description_txt"), DB::raw("IF(hours_dec IS NULL, dayPercent_dec, hours_dec) AS numItems"), DB::raw("IF(hours_dec IS NULL, 'day', 'hour') AS numItemsDescription_txt"), 'asnDate_dte', DB::raw("IF(hours_dec IS NULL, tbl_asnItem.charge_dec, tbl_asnItem.charge_dec / 6) AS charge_dec"), DB::raw("IF(hours_dec IS NULL, tbl_asnItem.cost_dec, tbl_asnItem.cost_dec / 6) AS cost_dec"))
+                ->whereIn('asnItem_id', $idsArr)
+                ->get();
+            // dd($itemList);
+            $newItemList = array();
+            if (count($itemList) > 0) {
+                foreach ($itemList as $key => $value) {
+                    if (!isset($newItemList[$value->school_id])) {
+                        $newItemList[$value->school_id] = array();
+                    }
+                    array_push($newItemList[$value->school_id], $value);
+                }
+            }
+            // dd($newItemList);
+            $firstInvoiceId = '';
+            $invoice_id = '';
+            foreach ($newItemList as $key1 => $value1) {
+                $invoice_id = DB::table('tbl_invoice')
+                    ->insertGetId([
+                        'school_id' => $key1,
+                        'invoiceDate_dte' => date('Y-m-d'),
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+                if ($firstInvoiceId == '') {
+                    $firstInvoiceId = $invoice_id;
+                }
+                foreach ($value1 as $key2 => $val2) {
+                    DB::table('tbl_invoiceItem')
+                        ->insertGetId([
+                            'invoice_id' => $invoice_id,
+                            'asnItem_id' => $val2->asnItem_id,
+                            'teacher_id' => $val2->teacher_id,
+                            'description_txt' => $val2->description_txt,
+                            'numItems_dec' => $val2->numItems,
+                            'numItemsDescription_txt' => $val2->numItemsDescription_txt,
+                            'dateFor_dte' => $val2->asnDate_dte,
+                            'charge_dec' => $val2->charge_dec,
+                            'cost_dec' => $val2->cost_dec
+                        ]);
+
+                    DB::table('tbl_asnItem')
+                        ->where('asnItem_id', $val2->asnItem_id)
+                        ->update([
+                            'invoice_id' => $invoice_id
+                        ]);
+                }
+            }
+
+            return redirect('/finance-invoices?invoiceNumberMin=' . $firstInvoiceId . '&invoiceNumberMax=' . $invoice_id . '&date=' . $p_maxDate);
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function financeInvoiceSplit(Request $request)
+    {
+        $input = $request->all();
+        $editInvoiceId = $input['editInvoiceId'];
+
+        $invoiceDetail = DB::table('tbl_invoice')
+            ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_invoice.school_id')
+            ->select('tbl_invoice.*', 'tbl_school.name_txt')
+            ->where('tbl_invoice.invoice_id', $editInvoiceId)
+            ->first();
+        $invoiceItemList = DB::table('tbl_invoiceItem')
+            ->select('tbl_invoiceItem.*')
+            ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+            ->get();
+
+        $view = view("web.finance.invoice_split_view", ['invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function financeSplitInvoiceCreate(Request $request)
+    {
+        // dd($request->all());
+        $user_id = '';
+        $editData = array();
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $user_id = $webUserLoginData->user_id;
+        }
+        $splitInvoiceId = $request->splitInvoiceId;
+        $school_id = $request->splitInvoiceSchoolId;
+
+        if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
+            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
+        }
+        if ($request->paidOn_dte != null || $request->paidOn_dte != '') {
+            $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
+        }
+        DB::table('tbl_invoice')
+            ->where('invoice_id', $splitInvoiceId)
+            ->update($editData);
+
+        $invoice_id = DB::table('tbl_invoice')
+            ->insertGetId([
+                'school_id' => $school_id,
+                'invoiceDate_dte' => date('Y-m-d')
+            ]);
+        $splitInvoiceSelectedItems = $request->splitInvoiceSelectedItems;
+        $selectedIdArray = explode(",", $splitInvoiceSelectedItems);
+        foreach ($selectedIdArray as $key => $value) {
+            $invoiceItemDet = DB::table('tbl_invoiceItem')
+                ->select('tbl_invoiceItem.*')
+                ->where('tbl_invoiceItem.invoiceItem_id', $value)
+                ->first();
+            if ($invoiceItemDet) {
+                DB::table('tbl_invoiceItem')
+                    ->insert([
+                        'invoice_id' => $invoice_id,
+                        'asnItem_id' => $invoiceItemDet->asnItem_id,
+                        'teacher_id' => $invoiceItemDet->teacher_id,
+                        'description_txt' => $invoiceItemDet->description_txt,
+                        'numItems_dec' => $invoiceItemDet->numItems_dec,
+                        'numItemsDescription_txt' => $invoiceItemDet->numItemsDescription_txt,
+                        'dateFor_dte' => $invoiceItemDet->dateFor_dte,
+                        'charge_dec' => $invoiceItemDet->charge_dec,
+                        'cost_dec' => $invoiceItemDet->cost_dec,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+
+                DB::table('tbl_invoiceItem')
+                    ->where('invoiceItem_id', $value)
+                    ->delete();
+            }
+        }
+
+        $msg = "New invoice has been created with the ID : " . $invoice_id;
+        return redirect()->back()->with('success', $msg);
+    }
+
+    public function financeInvoiceEdit(Request $request)
+    {
+        $input = $request->all();
+        $editInvoiceId = $input['editInvoiceId'];
+
+        $paymentMethodList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 42)
+            ->get();
+        $invoiceDetail = DB::table('tbl_invoice')
+            ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_invoice.school_id')
+            ->select('tbl_invoice.*', 'tbl_school.name_txt')
+            ->where('tbl_invoice.invoice_id', $editInvoiceId)
+            ->first();
+        $invoiceItemList = DB::table('tbl_invoiceItem')
+            ->select('tbl_invoiceItem.*')
+            ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+            ->get();
+
+        $view = view("web.finance.invoice_edit_view", ['paymentMethodList' => $paymentMethodList, 'invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function financeInvoiceUpdate(Request $request)
+    {
+        $invoice_id = $request->invoice_id;
+        $editData = array();
+
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $editData['paymentLoggedBy_id'] = $webUserLoginData->user_id;
+            $editData['sentBy_int'] = $webUserLoginData->user_id;
+        }
+        if ($request->factored_status) {
+            $editData['factored_status'] = -1;
+        }
+        if ($request->creditNote_status) {
+            $editData['creditNote_status'] = -1;
+        }
+        if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
+            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
+        }
+        if ($request->paidOn_dte != null || $request->paidOn_dte != '') {
+            $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
+        }
+        $editData['paymentMethod_int'] = $request->paymentMethod_int;
+        $editData['sentOn_dte'] = date('Y-m-d');
+        $editData['timestamp_ts'] = date('Y-m-d H:i:s');
+
+        DB::table('tbl_invoice')
+            ->where('invoice_id', $invoice_id)
+            ->update($editData);
+
+        return redirect()->back()->with('success', "Invoice updated successfully.");
+    }
+
+    public function financeInvItemInsert(Request $request)
+    {
+        $invoice_id = $request->invoice_id;
+
+        DB::table('tbl_invoiceItem')
+            ->insert([
+                'invoice_id' => $invoice_id,
+                'description_txt' => $request->description_txt,
+                'numItems_dec' => $request->numItems_dec,
+                'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                'charge_dec' => $request->charge_dec,
+                'cost_dec' => $request->cost_dec,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        $invoiceItemList = DB::table('tbl_invoiceItem')
+            ->select('tbl_invoiceItem.*')
+            ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+            ->get();
+
+        $html = '';
+        if (count($invoiceItemList) > 0) {
+            foreach ($invoiceItemList as $key => $invoiceItem) {
+                $asn = '';
+                $tch = '';
+                if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null) {
+                    $asn = 'Y';
+                } else {
+                    $asn = 'N';
+                }
+                if ($invoiceItem->teacher_id != '' || $invoiceItem->teacher_id != null) {
+                    $tch = 'Y';
+                } else {
+                    $tch = 'N';
+                }
+                $html .= "<tr class='school-detail-table-data editInvItemRow'
+                        onclick='invItemRowSelect($invoiceItem->invoiceItem_id)'
+                        id='editInvItemRow$invoiceItem->invoiceItem_id'>
+                        <td style='width: 50%;'>$invoiceItem->description_txt</td>
+                        <td>" . (int)$invoiceItem->numItems_dec . "</td>
+                        <td>" . (int)$invoiceItem->charge_dec . "</td>
+                        <td>" . (int)$invoiceItem->cost_dec . "</td>
+                        <td>$asn</td>
+                        <td>$tch</td>
+                    </tr>";
+            }
+        }
+
+        $result['status'] = "success";
+        $result['eventId'] = $invoice_id;
+        $result['html'] = $html;
+        return response()->json($result);
+    }
+
+    public function financeInvoiceItemEdit(Request $request)
+    {
+        $input = $request->all();
+        $invoiceItem_id = $input['editInvItemId'];
+
+        $itemDetail = DB::table('tbl_invoiceItem')
+            ->where('invoiceItem_id', "=", $invoiceItem_id)
+            ->first();
+
+        $view = view("web.finance.invoice_item_edit_view", ['itemDetail' => $itemDetail])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function financeInvoiceItemUpdate(Request $request)
+    {
+        $invoiceItem_id = $request->editInvItemId;
+        $invoice_id = $request->invoice_id;
+
+        DB::table('tbl_invoiceItem')
+            ->where('invoiceItem_id', $invoiceItem_id)
+            ->update([
+                'description_txt' => $request->description_txt,
+                'numItems_dec' => $request->numItems_dec,
+                'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                'charge_dec' => $request->charge_dec,
+                'cost_dec' => $request->cost_dec,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        $invoiceItemList = DB::table('tbl_invoiceItem')
+            ->select('tbl_invoiceItem.*')
+            ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+            ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+            ->get();
+
+        $html = '';
+        if (count($invoiceItemList) > 0) {
+            foreach ($invoiceItemList as $key => $invoiceItem) {
+                $asn = '';
+                $tch = '';
+                if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null) {
+                    $asn = 'Y';
+                } else {
+                    $asn = 'N';
+                }
+                if ($invoiceItem->teacher_id != '' || $invoiceItem->teacher_id != null) {
+                    $tch = 'Y';
+                } else {
+                    $tch = 'N';
+                }
+                $html .= "<tr class='school-detail-table-data editInvItemRow'
+                        onclick='invItemRowSelect($invoiceItem->invoiceItem_id)'
+                        id='editInvItemRow$invoiceItem->invoiceItem_id'>
+                        <td style='width: 50%;'>$invoiceItem->description_txt</td>
+                        <td>" . (int)$invoiceItem->numItems_dec . "</td>
+                        <td>" . (int)$invoiceItem->charge_dec . "</td>
+                        <td>" . (int)$invoiceItem->cost_dec . "</td>
+                        <td>$asn</td>
+                        <td>$tch</td>
+                    </tr>";
+            }
+        }
+
+        $result['status'] = "success";
+        $result['html'] = $html;
+        return response()->json($result);
+    }
+
+    public function financeInvoiceItemDelete(Request $request)
+    {
+        $invoiceItem_id = $request->editInvItemId;
+
+        $itemDetail = DB::table('tbl_invoiceItem')
+            ->where('invoiceItem_id', "=", $invoiceItem_id)
+            ->first();
+        $html = '';
+        $result['status'] = "failed";
+        if ($itemDetail) {
+            DB::table('tbl_invoiceItem')
+                ->where('invoiceItem_id', $invoiceItem_id)
+                ->delete();
+
+            $invoiceItemList = DB::table('tbl_invoiceItem')
+                ->select('tbl_invoiceItem.*')
+                ->where('tbl_invoiceItem.invoice_id', $itemDetail->invoice_id)
+                ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+                ->get();
+
+            if (count($invoiceItemList) > 0) {
+                foreach ($invoiceItemList as $key => $invoiceItem) {
+                    $asn = '';
+                    $tch = '';
+                    if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null) {
+                        $asn = 'Y';
+                    } else {
+                        $asn = 'N';
+                    }
+                    if ($invoiceItem->teacher_id != '' || $invoiceItem->teacher_id != null) {
+                        $tch = 'Y';
+                    } else {
+                        $tch = 'N';
+                    }
+                    $html .= "<tr class='school-detail-table-data editInvItemRow'
+                        onclick='invItemRowSelect($invoiceItem->invoiceItem_id)'
+                        id='editInvItemRow$invoiceItem->invoiceItem_id'>
+                        <td style='width: 50%;'>$invoiceItem->description_txt</td>
+                        <td>" . (int)$invoiceItem->numItems_dec . "</td>
+                        <td>" . (int)$invoiceItem->charge_dec . "</td>
+                        <td>" . (int)$invoiceItem->cost_dec . "</td>
+                        <td>$asn</td>
+                        <td>$tch</td>
+                    </tr>";
+                }
+            }
+            $result['status'] = "success";
+        }
+
+        $result['html'] = $html;
+        return response()->json($result);
     }
 
     public function financePayroll(Request $request)

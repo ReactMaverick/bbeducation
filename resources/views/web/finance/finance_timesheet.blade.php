@@ -112,12 +112,6 @@
                                             </a>
                                         </div>
                                         <div class="finance-contact-icon-sec">
-                                            <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
-                                                title="Reject timesheet">
-                                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
-                                            </a>
-                                        </div>
-                                        <div class="finance-contact-icon-sec">
                                             <a style="cursor: pointer" class="disabled-link" id="timesheetApproveBtn"
                                                 title="Approve timesheet">
                                                 <i class="fa-solid fa-square-check"></i>
