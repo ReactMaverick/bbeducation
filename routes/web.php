@@ -212,6 +212,9 @@ Route::post('/financeInvItemInsert', [FinanceController::class, 'financeInvItemI
 Route::post('/financeInvoiceItemEdit', [FinanceController::class, 'financeInvoiceItemEdit']);
 Route::post('/financeInvoiceItemUpdate', [FinanceController::class, 'financeInvoiceItemUpdate']);
 Route::post('/financeInvoiceItemDelete', [FinanceController::class, 'financeInvoiceItemDelete']);
+Route::post('/financeInvoiceSave', [FinanceController::class, 'financeInvoiceSave']);
+Route::post('/financeInvoiceMail', [FinanceController::class, 'financeInvoiceMail']);
+Route::post('/financeInvoiceAllMail', [FinanceController::class, 'financeInvoiceAllMail']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);

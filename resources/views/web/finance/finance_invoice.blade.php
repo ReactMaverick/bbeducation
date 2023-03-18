@@ -24,6 +24,8 @@
                                         value="{{ app('request')->input('invoiceNumberMax') }}">
                                     <input type="date" name="date"
                                         value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                                    <input type="hidden" name="showSent"
+                                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
                                     <button type="submit" class="timesheet-search-btn">Search</button>
                                 </form>
                             </div>
@@ -99,7 +101,8 @@
 
                         <div class="invoice-top-second-section">
                             <form action="{{ url('/finance-invoices') }}" method="get"
-                                style="margin-bottom: 0;display: flex; align-items: center; width: 56%;">
+                                style="margin-bottom: 0;display: flex; align-items: center; width: 56%;"
+                                id="invoiceFromToForm">
                                 <div class="form-group invoice-top-first-input-sec">
                                     <label for="invoiceFrom" class="col-form-label">Invoice From</label>
                                     <input type="text" id="invoiceFrom" class="onlynumber" name="invoiceNumberMin"
@@ -112,6 +115,8 @@
                                 </div>
                                 <input type="hidden" name="date"
                                     value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                                <input type="hidden" name="showSent" id="showSentId"
+                                    value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
                                 <div class="finance-invoice-icon-sec">
                                     <button type="submit" class="timesheet-search-btn"
                                         style="border: none; background-color: transparent"><i
@@ -120,7 +125,8 @@
                             </form>
                             <div class="invoice-checkbox-top-section">
                                 <div class="invoice-checkbox-sec">
-                                    <input type="checkbox" id="show_sent" name="show_sent" value="1">
+                                    <input type="checkbox" id="show_sent" name="show_sent" value="1"
+                                        {{ app('request')->input('showSent') == 'true' ? 'checked' : '' }}>
                                 </div>
                                 <div class="invoice-checkbox-sec">
                                     <label for="show_sent">Show Sent</label>
@@ -128,7 +134,8 @@
                             </div>
 
                             <div class="finance-invoice-icon-sec">
-                                <a style="cursor: pointer" class="disabled-link" id="saveInvoiceBtn" title="Save Invoice">
+                                <a style="cursor: pointer" class="disabled-link" id="saveInvoiceBtn"
+                                    title="Save Invoice">
                                     <i class="fa-solid fa-file-lines"></i>
                                 </a>
                             </div>
@@ -148,8 +155,7 @@
                             </div>
 
                             <div class="finance-invoice-icon-sec">
-                                <a style="cursor: pointer" class="disabled-link" id="sendAllInvoiceBtn"
-                                    title="Send All Listed Invoice">
+                                <a style="cursor: pointer" id="sendAllInvoiceBtn" title="Send All Listed Invoice">
                                     <i class="fa-solid fa-envelope"></i>
                                     <div class="finance-invoice-second-icon-sec">
                                         <i class="fa-solid fa-plus"></i>
@@ -471,7 +477,7 @@
                 $('#saveInvoiceBtn').addClass('disabled-link');
                 $('#splitInvoiceBtn').addClass('disabled-link');
                 $('#viewInvoiceBtn').addClass('disabled-link');
-                $('#sendAllInvoiceBtn').addClass('disabled-link');
+                // $('#sendAllInvoiceBtn').addClass('disabled-link');
                 $('#sendSelectedInvoiceBtn').addClass('disabled-link');
                 $('#editInvoiceBtn').addClass('disabled-link');
             } else {
@@ -481,7 +487,7 @@
                 $('#saveInvoiceBtn').removeClass('disabled-link');
                 $('#splitInvoiceBtn').removeClass('disabled-link');
                 $('#viewInvoiceBtn').removeClass('disabled-link');
-                $('#sendAllInvoiceBtn').removeClass('disabled-link');
+                // $('#sendAllInvoiceBtn').removeClass('disabled-link');
                 $('#sendSelectedInvoiceBtn').removeClass('disabled-link');
                 $('#editInvoiceBtn').removeClass('disabled-link');
             }
@@ -563,6 +569,141 @@
             } else {
                 swal("", "Please select one invoice.");
             }
+        });
+
+        $(document).on('click', '#saveInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('financeInvoiceSave') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editInvoiceId: editInvoiceId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        // console.log(data);
+                        if (data.exist == 'Yes' && data.invoice_path) {
+                            // window.location.href = data.invoice_path;
+                            // location.replace(data.invoice_path);
+                            const link = document.createElement('a');
+                            link.href = data.invoice_path;
+                            link.download = (data.invoice_path).split("/").pop();
+                            link.target = '_blank';
+                            link.click();
+                        }
+                    }
+                });
+                $('#fullLoader').hide();
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#viewInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('financeInvoiceSave') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editInvoiceId: editInvoiceId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        // console.log(data);
+                        if (data.exist == 'Yes' && data.invoice_path) {
+                            // window.location.href = data.invoice_path;
+                            window.open(
+                                data.invoice_path,
+                                '_blank'
+                            );
+                        }
+                    }
+                });
+                $('#fullLoader').hide();
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#sendSelectedInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('financeInvoiceMail') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editInvoiceId: editInvoiceId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        // console.log(data);
+                        if (data.exist == 'Yes') {
+                            var subject = 'Finance Invoice';
+                            if (data.sendMail) {
+                                window.location = 'mailto:' + data.sendMail + '?subject=' + subject +
+                                    '&body=&attachment=' + data.invoice_path;
+                            }
+                        }
+                    }
+                });
+                $('#fullLoader').hide();
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#sendAllInvoiceBtn', function() {
+            var invoiceNumberMin = "{{ app('request')->input('invoiceNumberMin') }}";
+            var invoiceNumberMax = "{{ app('request')->input('invoiceNumberMax') }}";
+            if (invoiceNumberMin && invoiceNumberMax) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('financeInvoiceAllMail') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        invoiceNumberMin: invoiceNumberMin,
+                        invoiceNumberMax: invoiceNumberMax
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        // console.log(data);
+                        if (data.exist == 'Yes') {
+                            var subject = 'Finance Invoice';
+                            var attachments = data.attachmentArr;
+                            var mailto = 'mailto:' + data.sendMail + '?subject=' + encodeURIComponent(
+                                    subject) +
+                                '&body=';
+                            for (var i = 0; i < attachments.length; i++) {
+                                mailto += '&attachment=' + encodeURIComponent(attachments[i]);
+                            }
+                            window.location.href = mailto;
+                        }
+                    }
+                });
+                $('#fullLoader').hide();
+            }
+        });
+
+        $(document).on('change', '#show_sent', function() {
+            if ($(this).is(":checked")) {
+                $('#showSentId').val('true');
+            } else {
+                $('#showSentId').val('false');
+            }
+            $('#invoiceFromToForm').submit();
         });
     </script>
 @endsection
