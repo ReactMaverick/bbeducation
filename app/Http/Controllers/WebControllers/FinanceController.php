@@ -1536,11 +1536,175 @@ class FinanceController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            return view("web.finance.finance_payroll", ['title' => $title, 'headerTitle' => $headerTitle]);
+            if (Carbon::now()->isFriday()) {
+                $friday = Carbon::now()->format('Y-m-d');
+            } else {
+                $friday = Carbon::now()->next('Friday')->format('Y-m-d');
+            }
+
+            $payrollList = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('tbl_asnItem.asnItem_id', 'tbl_asn.asn_id', 'tbl_asn.teacher_id', 'tbl_asn.school_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'asnDate_dte', 'dayPercent_dec AS dayPart_dec', 'tbl_asnItem.cost_dec AS pay_dec')
+                ->where('invoice_id', '!=', NULL)
+                ->where('payroll_id', '=', NULL)
+                ->groupBy(['teacher_id', 'school_id', 'asnItem_id'])
+                ->orderBy('teacher_id')
+                ->orderBy('asnDate_dte')
+                ->get();
+
+            $paySummaryList = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->LeftJoin('tbl_payrollRun', 'tbl_asnItem.payroll_id', '=', 'tbl_payrollRun.payroll_id')
+                ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('tbl_asn.teacher_id', DB::raw("SUM(dayPercent_dec) AS days_dec"), DB::raw("CAST(SUM(dayPercent_dec * tbl_asnItem.cost_dec) AS DECIMAL(7, 2)) AS grossPay_dec"), 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                ->where('tbl_asnItem.payroll_id', '!=', NULL)
+                ->whereDate('tbl_payrollRun.payDate_dte', '=', $friday)
+                ->groupBy('tbl_asn.teacher_id')
+                ->get();
+
+            $payrollRunList = DB::table('tbl_asn')
+                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->LeftJoin('tbl_payrollRun', 'tbl_asnItem.payroll_id', '=', 'tbl_payrollRun.payroll_id')
+                ->select('tbl_payrollRun.payroll_id', 'payDate_dte', DB::raw("COUNT(DISTINCT teacher_id) AS teachers_int"), DB::raw("CAST(SUM(dayPercent_dec * tbl_asnItem.cost_dec) AS DECIMAL(9,2)) AS grossPay_dec"))
+                ->where('tbl_asnItem.payroll_id', '!=', NULL)
+                ->groupBy('payDate_dte')
+                ->orderBy('payDate_dte', 'DESC')
+                ->get();
+
+            return view("web.finance.finance_payroll", ['title' => $title, 'headerTitle' => $headerTitle, 'friday' => $friday, 'payrollList' => $payrollList, 'paySummaryList' => $paySummaryList, 'payrollRunList' => $payrollRunList]);
         } else {
             return redirect()->intended('/');
         }
     }
+
+    public function payrollEventEdit(Request $request)
+    {
+        $result['exist'] = "No";
+        $asnItemId = $request->asnItemId;
+        $eventItemDetail = DB::table('tbl_asnItem')
+            ->where('tbl_asnItem.asnItem_id', $asnItemId)
+            ->first();
+
+        if ($eventItemDetail) {
+            $result['exist'] = "Yes";
+            $result['eventItemDetail'] = $eventItemDetail;
+            return response()->json($result);
+        } else {
+            $result['exist'] = "No";
+            return response()->json($result);
+        }
+        return response()->json($result);
+    }
+
+    public function payrollEventUpdate(Request $request)
+    {
+        $editEventId = $request->asnItem_id;
+
+        DB::table('tbl_asnItem')
+            ->where('asnItem_id', $editEventId)
+            ->update([
+                'cost_dec' => $request->cost_dec
+            ]);
+
+        $payrollList = DB::table('tbl_asn')
+            ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+            ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+            ->select('tbl_asnItem.asnItem_id', 'tbl_asn.asn_id', 'tbl_asn.teacher_id', 'tbl_asn.school_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'asnDate_dte', 'dayPercent_dec AS dayPart_dec', 'tbl_asnItem.cost_dec AS pay_dec')
+            ->where('invoice_id', '!=', NULL)
+            ->where('payroll_id', '=', NULL)
+            ->groupBy(['teacher_id', 'school_id', 'asnItem_id'])
+            ->orderBy('teacher_id')
+            ->orderBy('asnDate_dte')
+            ->get();
+
+        $html = '';
+        if (count($payrollList) > 0) {
+            foreach ($payrollList as $key1 => $payroll) {
+                $name = '';
+                if ($payroll->knownAs_txt == null && $payroll->knownAs_txt == '') {
+                    $name = $payroll->firstName_txt . ' ' . $payroll->surname_txt;
+                } else {
+                    $name = $payroll->firstName_txt . ' (' . $payroll->knownAs_txt . ') ' . $payroll->surname_txt;
+                }
+                $date = date('d-m-Y', strtotime($payroll->asnDate_dte));
+                $html .= "<tr class='school-detail-table-data editPayrollRow'
+                                            id='editPayrollRow$payroll->asnItem_id'
+                                            onclick='payrollRow($payroll->asnItem_id)'>
+                                            <td>$name</td>
+                                            <td>$payroll->name_txt</td>
+                                            <td>$date</td>
+                                            <td>$payroll->dayPart_dec</td>
+                                            <td>$payroll->pay_dec</td>
+                                        </tr>";
+            }
+        }
+
+        $result['status'] = "success";
+        $result['eventId'] = $editEventId;
+        $result['html'] = $html;
+        return response()->json($result);
+    }
+
+    public function financeProcessPayroll(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            if (Carbon::now()->isFriday()) {
+                $friday = Carbon::now()->format('Y-m-d');
+            } else {
+                $friday = Carbon::now()->next('Friday')->format('Y-m-d');
+            }
+
+            $payrollAsnItemIds = $request->payrollAsnItemIds;
+            $idsArr = explode(",", $payrollAsnItemIds);
+            if (count($idsArr) > 0) {
+                $payrollList = DB::table('tbl_asn')
+                    ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                    ->select('tbl_asnItem.asnItem_id', 'tbl_asn.asn_id', 'tbl_asn.teacher_id', 'tbl_asn.school_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'asnDate_dte', 'dayPercent_dec AS dayPart_dec', 'tbl_asnItem.cost_dec AS pay_dec')
+                    ->where('invoice_id', '!=', NULL)
+                    ->where('payroll_id', '=', NULL)
+                    ->whereIn('asnItem_id', $idsArr)
+                    ->groupBy(['teacher_id', 'school_id', 'asnItem_id'])
+                    ->orderBy('teacher_id')
+                    ->orderBy('asnDate_dte')
+                    ->get();
+
+                if (count($payrollList) > 0) {
+                    $payroll_id = DB::table('tbl_payrollRun')
+                        ->insertGetId([
+                            'runOn_dtm' => date('Y-m-d H:i:s'),
+                            'runBy_id' => $user_id,
+                            'payDate_dte' => $friday,
+                            'timestamp_ts' => date('Y-m-d H:i:s')
+                        ]);
+
+                    foreach ($payrollList as $key2 => $val2) {
+                        DB::table('tbl_asnItem')
+                            ->where('asnItem_id', $val2->asnItem_id)
+                            ->update([
+                                'payroll_id' => $payroll_id
+                            ]);
+                    }
+                }
+
+                return redirect()->back();
+            } else {
+                return redirect()->back();
+            }
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+
 
     public function financeRemittance(Request $request)
     {

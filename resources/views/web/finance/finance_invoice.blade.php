@@ -667,33 +667,48 @@
             var invoiceNumberMin = "{{ app('request')->input('invoiceNumberMin') }}";
             var invoiceNumberMax = "{{ app('request')->input('invoiceNumberMax') }}";
             if (invoiceNumberMin && invoiceNumberMax) {
-                $('#fullLoader').show();
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ url('financeInvoiceAllMail') }}',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        invoiceNumberMin: invoiceNumberMin,
-                        invoiceNumberMax: invoiceNumberMax
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function(data) {
-                        // console.log(data);
-                        if (data.exist == 'Yes') {
-                            var subject = 'Finance Invoice';
-                            var attachments = data.attachmentArr;
-                            var mailto = 'mailto:' + data.sendMail + '?subject=' + encodeURIComponent(
-                                    subject) +
-                                '&body=';
-                            for (var i = 0; i < attachments.length; i++) {
-                                mailto += '&attachment=' + encodeURIComponent(attachments[i]);
-                            }
-                            window.location.href = mailto;
+                swal({
+                        title: "",
+                        text: "This will send all the listed invoices. Continue?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('financeInvoiceAllMail') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        invoiceNumberMin: invoiceNumberMin,
+                                        invoiceNumberMax: invoiceNumberMax
+                                    },
+                                    dataType: "json",
+                                    async: false,
+                                    success: function(data) {
+                                        // console.log(data);
+                                        if (data.exist == 'Yes') {
+                                            var subject = 'Finance Invoice';
+                                            var attachments = data.attachmentArr;
+                                            var mailto = 'mailto:' + data.sendMail + '?subject=' +
+                                                encodeURIComponent(
+                                                    subject) +
+                                                '&body=';
+                                            for (var i = 0; i < attachments.length; i++) {
+                                                mailto += '&attachment=' + encodeURIComponent(
+                                                    attachments[i]);
+                                            }
+                                            window.location.href = mailto;
+                                        }
+                                    }
+                                });
+                                $('#fullLoader').hide();
                         }
-                    }
-                });
-                $('#fullLoader').hide();
+                    });
             }
         });
 

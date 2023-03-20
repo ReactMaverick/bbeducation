@@ -216,6 +216,9 @@ Route::post('/financeInvoiceSave', [FinanceController::class, 'financeInvoiceSav
 Route::post('/financeInvoiceMail', [FinanceController::class, 'financeInvoiceMail']);
 Route::post('/financeInvoiceAllMail', [FinanceController::class, 'financeInvoiceAllMail']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
+Route::post('/payrollEventEdit', [FinanceController::class, 'payrollEventEdit']);
+Route::post('/payrollEventUpdate', [FinanceController::class, 'payrollEventUpdate']);
+Route::post('/financeProcessPayroll', [FinanceController::class, 'financeProcessPayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
 // Finance

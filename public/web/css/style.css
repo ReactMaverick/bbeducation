@@ -3035,6 +3035,18 @@ table td {
     margin-bottom: 0;
 }
 
+.finance-payroll-page-tbl {
+    border: 1px solid #afabab;
+    min-height: 355px;
+    max-height: 355px;
+    overflow-y: scroll;
+}
+
+.payroll-table-right-sec {
+    display: flex;
+    margin-top: 10px;
+}
+
 .finance-timesheet-second-table-section {
     margin-top: 20px;
     width: 55%;
@@ -3342,8 +3354,9 @@ table td {
 }
 
 .finance-payroll-table-section {
-    display: flex;
+    /* display: flex; */
     margin-top: 10px;
+    width: 50%;
 }
 
 .finance-payroll-page-table {
