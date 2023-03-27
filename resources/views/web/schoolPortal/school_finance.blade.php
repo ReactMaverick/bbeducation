@@ -90,6 +90,10 @@
                                         title="Preview Invoice">
                                         <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                                     </a>
+                                    <a style="cursor: pointer;" class="disabled-link" id="addPaymentMethodBtn"
+                                        title="Add Payment Method">
+                                        <i class="fa-solid fa-square-check"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -111,6 +115,8 @@
                                         <th>Vat</th>
                                         <th>Gross</th>
                                         <th>Paid On</th>
+                                        <th>Status</th>
+                                        <th>Paid On (School)</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -126,6 +132,21 @@
                                             <td>
                                                 @if ($Invoices->paidOn_dte != null)
                                                     {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($Invoices->school_paid_dte)
+                                                    Paid
+                                                    @if ($Invoices->paymentMethod_txt)
+                                                        (by {{ $Invoices->paymentMethod_txt }})
+                                                    @endif
+                                                @else
+                                                    Due
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($Invoices->school_paid_dte != null)
+                                                    {{ date('d-m-Y', strtotime($Invoices->school_paid_dte)) }}
                                                 @endif
                                             </td>
                                         </tr>
@@ -319,9 +340,41 @@
         </div>
     </div>
 
+    <!-- Invoice Payment method Modal -->
+    <div class="modal fade" id="invoicePaymentMethodModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width:75%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Edit Invoice</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Edit Invoice</h2>
+                </div>
+
+                <form action="{{ url('/school/logSchoolInvoicePayMethodEdit') }}" method="post" class="form-validate-2"
+                    enctype="multipart/form-data">
+                    @csrf
+
+                    <div id="invoicePaymentMethodAjax"></div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Invoice Payment method Modal -->
+
     <script>
         $(document).ready(function() {
-            $('#myTable, #myTable1').DataTable();
+            $('#myTable').DataTable({
+                "order": [
+                    [1, "desc"]
+                ]
+            });
         });
 
         $(document).on('change', '#includePaid', function() {
@@ -383,7 +436,7 @@
                 // $('#creditNoteBttn').addClass('disabled-link');
                 // $('#splitInvoiceBtn').addClass('disabled-link');
                 $('#previewInvoiceBtn').addClass('disabled-link');
-                // $('#sendInvoiceBtn').addClass('disabled-link');
+                $('#addPaymentMethodBtn').addClass('disabled-link');
                 // $('#deleteInvoiceBttn').addClass('disabled-link');
             } else {
                 $('#editInvoiceId').val(invoice_id);
@@ -394,7 +447,7 @@
                 // $('#creditNoteBttn').removeClass('disabled-link');
                 // $('#splitInvoiceBtn').removeClass('disabled-link');
                 $('#previewInvoiceBtn').removeClass('disabled-link');
-                // $('#sendInvoiceBtn').removeClass('disabled-link');
+                $('#addPaymentMethodBtn').removeClass('disabled-link');
                 // $('#deleteInvoiceBttn').removeClass('disabled-link');
             }
         }
@@ -405,6 +458,27 @@
             if (editInvoiceSchoolId && editInvoiceId) {
                 var rUrl = '<?php echo url('/school/invoice-pdf/'); ?>' + '/' + editInvoiceSchoolId + '/' + editInvoiceId;
                 window.open(rUrl, '_blank');
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#addPaymentMethodBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('/school/logSchoolInvoicePayMethod') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editInvoiceId: editInvoiceId
+                    },
+                    success: function(res) {
+                        //console.log(res);
+                        $('#invoicePaymentMethodAjax').html(res.html);
+                    }
+                });
+                $('#invoicePaymentMethodModal').modal("show");
             } else {
                 swal("", "Please select one invoice.");
             }

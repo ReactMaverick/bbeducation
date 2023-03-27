@@ -92,11 +92,11 @@
                                 </div>
 
                                 <div class="finance-payroll-top-btn-sec">
-                                    <a style="cursor: pointer;" onclick="clickDate('prev','{{ $friday }}')">
+                                    <a style="cursor: pointer;" onclick="clickDate('prev')">
                                         <i class="fa-solid fa-caret-left"></i>
                                     </a>
-                                    <span>{{ date('d-m-Y', strtotime($friday)) }}</span>
-                                    <a style="cursor: pointer;" onclick="clickDate('next','{{ $friday }}')">
+                                    <span id="dateSpan">{{ date('d-m-Y', strtotime($friday)) }}</span>
+                                    <a style="cursor: pointer;" onclick="clickDate('next')">
                                         <i class="fa-solid fa-caret-right"></i>
                                     </a>
                                 </div>
@@ -105,7 +105,7 @@
                             <input type="hidden" name="" id="fridayDate" value="{{ $friday }}">
 
                             <div class="finance-payroll-icon">
-                                <a href="#">
+                                <a style="cursor: pointer;" id="exportPayrollBtn">
                                     <i class="fa-solid fa-piggy-bank">
                                     </i>
                                 </a>
@@ -150,8 +150,10 @@
                                         </tr>
                                     </thead>
                                     <tbody class="table-body-sec">
-                                        @foreach ($payrollRunList as $key2 => $payrollRun)
-                                            <tr class="school-detail-table-data editContactRow">
+                                        @foreach ($payrollRunList as $key3 => $payrollRun)
+                                            <tr class="school-detail-table-data editPayrollRunRow"
+                                                id="editPayrollRunRow{{ $key3 + 1 }}"
+                                                onclick="payrollRowRun('{{ $key3 + 1 }}','{{ $payrollRun->payDate_dte }}')">
                                                 <td>{{ date('d-m-Y', strtotime($payrollRun->payDate_dte)) }}</td>
                                                 <td>{{ $payrollRun->teachers_int }}</td>
                                                 <td>{{ $payrollRun->grossPay_dec }}</td>
@@ -356,8 +358,45 @@
             }
         });
 
-        function clickDate(type, date) {
-
+        function clickDate(dateType) {
+            $('#fullLoader').show();
+            var fridayDate = $('#fridayDate').val();
+            fetchPaySummary(dateType, fridayDate);
         }
+
+        function payrollRowRun(keyId, payDate_dte) {
+            $('.editPayrollRunRow').removeClass('tableRowActive');
+            $('#editPayrollRunRow' + keyId).addClass('tableRowActive');
+
+            fetchPaySummary('', payDate_dte);
+        }
+
+        function fetchPaySummary(dateType, fridayDate) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('payrollDateChange') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    dateType: dateType,
+                    fridayDate: fridayDate
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    // console.log(data);
+                    $('#fridayDate').val(data.newFriday);
+                    $('#dateSpan').html(data.formattedDate);
+                    $('#paySummaryTbody').html(data.html);
+
+                    $('#fullLoader').hide();
+                }
+            });
+        }
+
+        $(document).on('click', '#exportPayrollBtn', function() {
+            var fridayDate = $('#fridayDate').val();
+            var url = "{{ url('exportPayroll') }}" + '/' + fridayDate;
+            window.open(url, '_blank');
+        });
     </script>
 @endsection

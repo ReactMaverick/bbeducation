@@ -520,9 +520,10 @@
                                         //console.log(data);
                                         $('#spanInvId').html(editInvoiceId);
                                         $('#invoiceISplitAjax').html(data.html);
+                                        $('#fullLoader').hide();
                                     }
                                 });
-                                $('#fullLoader').hide();
+                                // $('#fullLoader').hide();
                                 $('#splitInvoiceModal').modal("show");
                         }
                     });
@@ -562,9 +563,10 @@
                     success: function(data) {
                         //console.log(data);
                         $('#invoiceEditAjax').html(data.html);
+                        $('#fullLoader').hide();
                     }
                 });
-                $('#fullLoader').hide();
+                // $('#fullLoader').hide();
                 $('#editInvoiceModal').modal("show");
             } else {
                 swal("", "Please select one invoice.");
@@ -595,9 +597,10 @@
                             link.target = '_blank';
                             link.click();
                         }
+                        $('#fullLoader').hide();
                     }
                 });
-                $('#fullLoader').hide();
+                // $('#fullLoader').hide();
             } else {
                 swal("", "Please select one invoice.");
             }
@@ -620,14 +623,20 @@
                         // console.log(data);
                         if (data.exist == 'Yes' && data.invoice_path) {
                             // window.location.href = data.invoice_path;
-                            window.open(
-                                data.invoice_path,
-                                '_blank'
-                            );
+                            // window.open(
+                            //     data.invoice_path,
+                            //     '_blank', true
+                            // );
+                            var newWindow = window.open(data.invoice_path, '_blank');
+                            newWindow.location.href = data.invoice_path;
+                            newWindow.addEventListener('load', function() {
+                                newWindow.location.reload(true);
+                            });
                         }
+                        $('#fullLoader').hide();
                     }
                 });
-                $('#fullLoader').hide();
+                // $('#fullLoader').hide();
             } else {
                 swal("", "Please select one invoice.");
             }
@@ -651,13 +660,15 @@
                         if (data.exist == 'Yes') {
                             var subject = 'Finance Invoice';
                             if (data.sendMail) {
-                                window.location = 'mailto:' + data.sendMail + '?subject=' + subject +
-                                    '&body=&attachment=' + data.invoice_path;
+                                window.location = 'mailto:' + data.sendMail + '?subject=' +
+                                    encodeURIComponent(subject) + '&body=&attachment=' +
+                                    encodeURIComponent(data.invoice_path);
                             }
                         }
+                        $('#fullLoader').hide();
                     }
                 });
-                $('#fullLoader').hide();
+                // $('#fullLoader').hide();
             } else {
                 swal("", "Please select one invoice.");
             }
@@ -704,9 +715,10 @@
                                             }
                                             window.location.href = mailto;
                                         }
+                                        $('#fullLoader').hide();
                                     }
                                 });
-                                $('#fullLoader').hide();
+                                // $('#fullLoader').hide();
                         }
                     });
             }

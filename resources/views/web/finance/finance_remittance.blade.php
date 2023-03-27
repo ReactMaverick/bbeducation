@@ -71,6 +71,8 @@
                                         <th>Net</th>
                                         <th>VAT</th>
                                         <th>Gross</th>
+                                        <th>Status By School</th>
+                                        <th>Paid On (School)</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -91,6 +93,21 @@
                                             <td>{{ $Invoices->net_dec }}</td>
                                             <td>{{ $Invoices->vat_dec }}</td>
                                             <td>{{ $Invoices->gross_dec }}</td>
+                                            <td>
+                                                @if ($Invoices->school_paid_dte)
+                                                    Paid
+                                                    @if ($Invoices->paymentMethod_txt)
+                                                        (by {{ $Invoices->paymentMethod_txt }})
+                                                    @endif
+                                                @else
+                                                    Due
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($Invoices->school_paid_dte != null)
+                                                    {{ date('d-m-Y', strtotime($Invoices->school_paid_dte)) }}
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -105,15 +122,21 @@
                             <h2>Amount Owed</h2>
                             <div class="amount-owed-price-sec">
                                 <span>Net</span>
-                                <p>&#8377 82,888.86</p>
+                                @if ($invoiceCal->net_dec)
+                                    <p>&#8377 {{ $invoiceCal->net_dec }}</p>
+                                @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Vat</span>
-                                <p>&#8377 16,557.77</p>
+                                @if ($invoiceCal->vat_dec)
+                                    <p>&#8377 {{ $invoiceCal->vat_dec }}</p>
+                                @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Gross</span>
-                                <p>&#8377 99,466.63</p>
+                                @if ($invoiceCal->gross_dec)
+                                    <p>&#8377 {{ $invoiceCal->gross_dec }}</p>
+                                @endif
                             </div>
                         </div>
 
@@ -121,15 +144,21 @@
                             <h2>Amount Overdue</h2>
                             <div class="amount-owed-price-sec">
                                 <span>Net</span>
-                                <p>&#8377 82,888.86</p>
+                                @if ($invoiceCal->net_dec)
+                                    <p>&#8377 {{ $invoiceCal->net_dec }}</p>
+                                @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Vat</span>
-                                <p>&#8377 16,557.77</p>
+                                @if ($invoiceCal->vat_dec)
+                                    <p>&#8377 {{ $invoiceCal->vat_dec }}</p>
+                                @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Gross</span>
-                                <p>&#8377 99,466.63</p>
+                                @if ($invoiceCal->gross_dec)
+                                    <p>&#8377 {{ $invoiceCal->gross_dec }}</p>
+                                @endif
                             </div>
 
                             {{-- <div class="Amount-owed-icon-sec">
@@ -147,7 +176,11 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                "order": [
+                    [0, "desc"]
+                ]
+            });
         });
 
         $(document).on('change', '#includePaid', function() {

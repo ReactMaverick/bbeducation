@@ -219,6 +219,8 @@ Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
 Route::post('/payrollEventEdit', [FinanceController::class, 'payrollEventEdit']);
 Route::post('/payrollEventUpdate', [FinanceController::class, 'payrollEventUpdate']);
 Route::post('/financeProcessPayroll', [FinanceController::class, 'financeProcessPayroll']);
+Route::post('/payrollDateChange', [FinanceController::class, 'payrollDateChange']);
+Route::get('/exportPayroll/{date}', [FinanceController::class, 'exportPayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
 // Finance
@@ -294,6 +296,8 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::post('/logSchoolProfilePicDelete', [SchoolController::class, 'logSchoolProfilePicDelete']);
     Route::post('/logSchoolTimesheetLog', [SchoolController::class, 'logSchoolTimesheetLog']);
     Route::post('/logSchoolTimesheetReject', [SchoolController::class, 'logSchoolTimesheetReject']);
+    Route::post('/logSchoolInvoicePayMethod', [SchoolController::class, 'logSchoolInvoicePayMethod']);
+    Route::post('/logSchoolInvoicePayMethodEdit', [SchoolController::class, 'logSchoolInvoicePayMethodEdit']);
 
     // without login
     Route::get('/teacher-timesheet-approve/{asn_id}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDir']);

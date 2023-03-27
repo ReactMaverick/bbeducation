@@ -145,22 +145,27 @@
                                             <p>Teacher</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate)) }}</p>
                                             <p>Monday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day1Amount_total }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +1 days')) }}</p>
                                             <p>Tuesday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day2Amount_total }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +2 days')) }}</p>
                                             <p>Wednesday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day3Amount_total }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +3 days')) }}</p>
                                             <p>Thursday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day4Amount_total }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +4 days')) }}</p>
                                             <p>Friday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day5Amount_total }}</p>
                                         </div>
@@ -361,22 +366,27 @@
                                             <p>Teacher</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate)) }}</p>
                                             <p>Monday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day1Amount_total1 }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +1 days')) }}</p>
                                             <p>Tuesday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day2Amount_total1 }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +2 days')) }}</p>
                                             <p>Wednesday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day3Amount_total1 }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +3 days')) }}</p>
                                             <p>Thursday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day4Amount_total1 }}</p>
                                         </div>
                                         <div class="teacher-calendar-days-text">
+                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +4 days')) }}</p>
                                             <p>Friday</p>
                                             <p class="teacher-calendar-bottom-text">{{ $day5Amount_total1 }}</p>
                                         </div>
@@ -598,6 +608,7 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
+                                $('#fullLoader').show();
                                 $.ajax({
                                     type: 'POST',
                                     url: '{{ url('financeTimesheetApprove') }}',
@@ -724,16 +735,38 @@
 
         function timesheetApprovRow(asn_id) {
             if ($('#editApprovTimesheetDiv' + asn_id).hasClass('timesheetActive')) {
-                $('#approveAsnId').val('');
+                setApproveIds(asn_id, 'rm');
                 $('#editApprovTimesheetDiv' + asn_id).removeClass('timesheetActive');
-                $('#sendToSchoolBttn').addClass('disabled-link');
-                $('#logTimesheetBtn').addClass('disabled-link');
             } else {
-                $('#approveAsnId').val(asn_id);
-                $('.editApprovTimesheetDiv').removeClass('timesheetActive');
+                setApproveIds(asn_id, 'add');
                 $('#editApprovTimesheetDiv' + asn_id).addClass('timesheetActive');
+            }
+        }
+
+        function setApproveIds(asn_id, type) {
+            var ItemId = parseInt(asn_id);
+            var ids = '';
+            var idsArr = [];
+            var asnItemIds = $('#approveAsnId').val();
+            if (asnItemIds) {
+                idsArr = asnItemIds.split(',');
+            }
+            if (type == 'add') {
+                idsArr.push(ItemId);
+            }
+            if (type == 'rm') {
+                idsArr = jQuery.grep(idsArr, function(value) {
+                    return value != ItemId;
+                });
+            }
+            ids = idsArr.toString();
+            $('#approveAsnId').val(ids);
+            if (ids) {
                 $('#sendToSchoolBttn').removeClass('disabled-link');
                 $('#logTimesheetBtn').removeClass('disabled-link');
+            } else {
+                $('#sendToSchoolBttn').addClass('disabled-link');
+                $('#logTimesheetBtn').addClass('disabled-link');
             }
         }
 
@@ -751,6 +784,7 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
+                                $('#fullLoader').show();
                                 $.ajax({
                                     type: 'POST',
                                     url: '{{ url('sendTimesheetToApproval') }}',
@@ -764,6 +798,7 @@
                                         location.reload();
                                     }
                                 });
+                                // $('#fullLoader').hide();
                         }
                     });
             } else {
@@ -785,6 +820,7 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
+                                $('#fullLoader').show();
                                 $.ajax({
                                     type: 'POST',
                                     url: '{{ url('timesheetAsnItemLog') }}',
@@ -795,16 +831,21 @@
                                         weekEndDate: "{{ $plusFiveDate }}"
                                     },
                                     success: function(data) {
+                                        $('#fullLoader').hide();
                                         if (data.add == 'Yes') {
                                             $('#sendToSchoolBttn').addClass('disabled-link');
                                             $('#logTimesheetBtn').addClass('disabled-link');
-                                            $('#editApprovTimesheetDiv' + approveAsnId)
-                                                .remove();
-                                            var popTxt =
-                                                'You have just logged a timesheet for ' + data
-                                                .schoolName +
-                                                '. Timesheet ID : ' + data.timesheet_id;
-                                            swal("", popTxt);
+                                            var arrAsnId = approveAsnId.split(',');
+                                            for (var i = 0; i < arrAsnId.length; i++) {
+                                                $('#editApprovTimesheetDiv' + arrAsnId[i])
+                                                    .remove();
+                                            }
+                                            if (data.message) {
+                                                var popTxt =
+                                                    'You have just logged timesheet for ' + data
+                                                    .message;
+                                                swal("", popTxt);
+                                            }
                                         } else {
                                             location.reload();
                                         }

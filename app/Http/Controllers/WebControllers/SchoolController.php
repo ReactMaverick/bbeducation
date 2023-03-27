@@ -2667,7 +2667,13 @@ class SchoolController extends Controller
 
             $Invoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ->LeftJoin('tbl_description as SchoolPaymentMethod', function ($join) {
+                    $join->on('SchoolPaymentMethod.description_int', '=', 'tbl_invoice.school_paid_method')
+                        ->where(function ($query) {
+                            $query->where('SchoolPaymentMethod.descriptionGroup_int', '=', 42);
+                        });
+                })
+                ->select('tbl_invoice.*', 'SchoolPaymentMethod.description_txt as paymentMethod_txt', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                 ->where('tbl_invoice.school_id', $school_id);
@@ -3328,7 +3334,9 @@ class SchoolController extends Controller
             $timesheet_id = DB::table('tbl_timesheet')
                 ->insertGetId([
                     'school_id' => $schoolDet->school_id,
-                    'timestamp_ts' => date('Y-m-d H:i:s')
+                    'timestamp_ts' => date('Y-m-d H:i:s'),
+                    'log_by_type' => 'School',
+                    'log_by' => $school_id
                 ]);
 
             $pdf = PDF::loadView("web.finance.timesheet_pdf", ['itemList' => $itemList]);
@@ -3357,6 +3365,44 @@ class SchoolController extends Controller
             return $result;
         }
         return $result;
+    }
+
+    public function logSchoolInvoicePayMethod(Request $request)
+    {
+        $input = $request->all();
+        $editInvoiceId = $input['editInvoiceId'];
+
+        $invoiceDetail = DB::table('tbl_invoice')
+            ->where('invoice_id', "=", $editInvoiceId)
+            ->first();
+
+        $paymentMethodList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 42)
+            ->get();
+
+        $view = view("web.schoolPortal.invoice_pay_method", ['invoiceDetail' => $invoiceDetail, 'paymentMethodList' => $paymentMethodList])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function logSchoolInvoicePayMethodEdit(Request $request)
+    {
+        $schoolLoginData = Session::get('schoolLoginData');
+        if ($schoolLoginData) {
+            $company_id = $schoolLoginData->company_id;
+            $school_id = $schoolLoginData->school_id;
+
+            DB::table('tbl_invoice')
+                ->where('invoice_id', '=', $request->invoice_id)
+                ->update([
+                    'school_paid_dte' => $request->school_paid_dte,
+                    'school_paid_method' => $request->school_paid_method,
+                    'school_paid_by' => $school_id
+                ]);
+            return redirect()->back()->with('success', "Record updated successfully.");
+        } else {
+            return redirect()->intended('/school');
+        }
     }
     /********* School Portal *********/
 }
