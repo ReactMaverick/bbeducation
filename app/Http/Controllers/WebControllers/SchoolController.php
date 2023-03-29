@@ -2678,12 +2678,30 @@ class SchoolController extends Controller
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                 ->where('tbl_invoice.school_id', $school_id);
             if ($request->include == '') {
-                $Invoices->where('tbl_invoice.paidOn_dte', NULL);
+                $Invoices->where('tbl_invoice.paidOn_dte', NULL)
+                    ->where('tbl_invoice.school_paid_dte', NULL);
             }
             if ($request->method) {
                 $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
             }
             $schoolInvoices = $Invoices->groupBy('tbl_invoice.invoice_id')
+                ->get();
+
+            $schoolPaidInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->LeftJoin('tbl_description as SchoolPaymentMethod', function ($join) {
+                    $join->on('SchoolPaymentMethod.description_int', '=', 'tbl_invoice.school_paid_method')
+                        ->where(function ($query) {
+                            $query->where('SchoolPaymentMethod.descriptionGroup_int', '=', 42);
+                        });
+                })
+                ->select('tbl_invoice.*', 'SchoolPaymentMethod.description_txt as paymentMethod_txt', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+                ->where('tbl_invoice.school_id', $school_id)
+                ->where('tbl_invoice.school_paid_dte', '!=', NULL)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->groupBy('tbl_invoice.invoice_id')
                 ->get();
 
             $documentList = DB::table('teacher_timesheet')
@@ -2764,7 +2782,7 @@ class SchoolController extends Controller
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
 
-            return view("web.schoolPortal.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList]);
+            return view("web.schoolPortal.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList, 'schoolPaidInvoices' => $schoolPaidInvoices]);
         } else {
             return redirect()->intended('/school');
         }
@@ -3288,7 +3306,14 @@ class SchoolController extends Controller
                 'rejected_by' => $school_id
             ]);
 
-        return true;
+        if (count($idsArr) > 0) {
+            $result['add'] = 'Yes';
+        } else {
+            $result['add'] = 'No';
+        }
+
+
+        return $result;
     }
 
     public function logSchoolTimesheetLogDir(Request $request)

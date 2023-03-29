@@ -279,6 +279,15 @@
                     enctype="multipart/form-data" id="splitInvoiceForm">
                     @csrf
 
+                    <input type="hidden" name="invoiceNumberMin"
+                        value="{{ app('request')->input('invoiceNumberMin') }}">
+                    <input type="hidden" name="invoiceNumberMax"
+                        value="{{ app('request')->input('invoiceNumberMax') }}">
+                    <input type="hidden" name="date"
+                        value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                    <input type="hidden" name="showSent"
+                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
+
                     <div class="modal-input-field-section" id="invoiceISplitAjax" style="width: 100%;"></div>
 
                     <!-- Modal footer -->
@@ -659,10 +668,13 @@
                         // console.log(data);
                         if (data.exist == 'Yes') {
                             var subject = 'Finance Invoice';
+                            var body = "Hello!";
                             if (data.sendMail) {
+                                var attachment = data.invoice_path;
                                 window.location = 'mailto:' + data.sendMail + '?subject=' +
-                                    encodeURIComponent(subject) + '&body=&attachment=' +
-                                    encodeURIComponent(data.invoice_path);
+                                    encodeURIComponent(subject) + '&body=' +
+                                    encodeURIComponent(body) + '&attachment=' +
+                                    encodeURIComponent(attachment);
                             }
                         }
                         $('#fullLoader').hide();
@@ -710,8 +722,9 @@
                                                     subject) +
                                                 '&body=';
                                             for (var i = 0; i < attachments.length; i++) {
+                                                var attachment = "file://" + attachments[i];
                                                 mailto += '&attachment=' + encodeURIComponent(
-                                                    attachments[i]);
+                                                    attachment);
                                             }
                                             window.location.href = mailto;
                                         }

@@ -56,11 +56,8 @@
 
                 @include('web.schoolPortal.school_header')
 
-                <div class="school-finance-right-sec">
-
-
-                    <div class="school-finance-section">
-
+                <div class="row school-finance-right-sec">
+                    <div class="col-md-6">
                         <div class="school-finance-sec" style="justify-content: space-between;">
                             <div class="school-finance-contact-heading-text">
                                 <h2>Finance</h2>
@@ -97,7 +94,9 @@
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
                         <input type="hidden" name="" id="editInvoiceId" value="">
                         <input type="hidden" name="" id="editInvoiceSchoolId" value="{{ $school_id }}">
                         <input type="hidden" name="" id="editInvoiceIncludeId"
@@ -116,7 +115,6 @@
                                         <th>Gross</th>
                                         <th>Paid On</th>
                                         <th>Status</th>
-                                        <th>Paid On (School)</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -134,6 +132,58 @@
                                                     {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
                                                 @endif
                                             </td>
+                                            <td>
+                                                @if ($Invoices->paidOn_dte != null)
+                                                    Paid
+                                                @else
+                                                    @if ($Invoices->school_paid_dte)
+                                                        Paid
+                                                        @if ($Invoices->paymentMethod_txt)
+                                                            (by {{ $Invoices->paymentMethod_txt }})
+                                                        @endif
+                                                    @else
+                                                        Due
+                                                    @endif
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="school-finance-table-section">
+                            <table class="table school-detail-page-table" id="myTable2">
+                                <thead>
+                                    <tr class="school-detail-table-heading">
+                                        <th>Invoice Number</th>
+                                        <th>Date</th>
+                                        <th>Net</th>
+                                        <th>Vat</th>
+                                        <th>Gross</th>
+                                        {{-- <th>Paid On</th> --}}
+                                        <th>Status</th>
+                                        <th>Paid On (School)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body-sec">
+                                    @foreach ($schoolPaidInvoices as $key => $Invoices)
+                                        <tr class="school-detail-table-data editInvoiceRow"
+                                            onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
+                                            id="editInvoiceRow{{ $Invoices->invoice_id }}">
+                                            <td>{{ $Invoices->invoice_id }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
+                                            <td>{{ $Invoices->net_dec }}</td>
+                                            <td>{{ $Invoices->vat_dec }}</td>
+                                            <td>{{ $Invoices->gross_dec }}</td>
+                                            {{-- <td>
+                                                @if ($Invoices->paidOn_dte != null)
+                                                    {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
+                                                @endif
+                                            </td> --}}
                                             <td>
                                                 @if ($Invoices->school_paid_dte)
                                                     Paid
@@ -156,6 +206,11 @@
 
                             <hr>
                         </div>
+                    </div>
+                </div>
+
+                <div class="school-finance-right-sec">
+                    <div class="school-finance-section">
 
                         <div class="finance-timesheet-contact-first-sec" style="width: 100%">
                             <div class="contact-heading mb-2">
@@ -373,6 +428,11 @@
             $('#myTable').DataTable({
                 "order": [
                     [1, "desc"]
+                ]
+            });
+            $('#myTable2').DataTable({
+                "order": [
+                    [6, "desc"]
                 ]
             });
         });

@@ -123,19 +123,19 @@
                             <div class="amount-owed-price-sec">
                                 <span>Net</span>
                                 @if ($invoiceCal->net_dec)
-                                    <p>&#8377 {{ $invoiceCal->net_dec }}</p>
+                                    <p>&#163 {{ $invoiceCal->net_dec }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Vat</span>
                                 @if ($invoiceCal->vat_dec)
-                                    <p>&#8377 {{ $invoiceCal->vat_dec }}</p>
+                                    <p>&#163 {{ $invoiceCal->vat_dec }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Gross</span>
                                 @if ($invoiceCal->gross_dec)
-                                    <p>&#8377 {{ $invoiceCal->gross_dec }}</p>
+                                    <p>&#163 {{ $invoiceCal->gross_dec }}</p>
                                 @endif
                             </div>
                         </div>
@@ -145,19 +145,19 @@
                             <div class="amount-owed-price-sec">
                                 <span>Net</span>
                                 @if ($invoiceCal->net_dec)
-                                    <p>&#8377 {{ $invoiceCal->net_dec }}</p>
+                                    <p>&#163 {{ $invoiceCal->net_dec }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Vat</span>
                                 @if ($invoiceCal->vat_dec)
-                                    <p>&#8377 {{ $invoiceCal->vat_dec }}</p>
+                                    <p>&#163 {{ $invoiceCal->vat_dec }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Gross</span>
                                 @if ($invoiceCal->gross_dec)
-                                    <p>&#8377 {{ $invoiceCal->gross_dec }}</p>
+                                    <p>&#163 {{ $invoiceCal->gross_dec }}</p>
                                 @endif
                             </div>
 
@@ -178,7 +178,7 @@
         $(document).ready(function() {
             $('#myTable').DataTable({
                 "order": [
-                    [0, "desc"]
+                    [11, "desc"]
                 ]
             });
         });

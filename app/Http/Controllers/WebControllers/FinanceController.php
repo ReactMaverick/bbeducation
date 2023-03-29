@@ -990,6 +990,7 @@ class FinanceController extends Controller
         }
         $splitInvoiceId = $request->splitInvoiceId;
         $school_id = $request->splitInvoiceSchoolId;
+        $editData['invoice_path'] = NULL;
 
         if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
             $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
@@ -1033,9 +1034,13 @@ class FinanceController extends Controller
                     ->delete();
             }
         }
-
+        $maxNum = $request->invoiceNumberMax;
+        if ($invoice_id) {
+            $maxNum = $invoice_id;
+        }
+        $url = url("/finance-invoices?invoiceNumberMin=" . $request->invoiceNumberMin . "&invoiceNumberMax=" . $maxNum . "&date=" . $request->date . "&showSent=" . $request->showSent . "");
         $msg = "New invoice has been created with the ID : " . $invoice_id;
-        return redirect()->back()->with('success', $msg);
+        return redirect($url)->with('success', $msg);
     }
 
     public function financeInvoiceEdit(Request $request)

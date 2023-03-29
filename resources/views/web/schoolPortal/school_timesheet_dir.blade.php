@@ -101,6 +101,8 @@
                         .schoolName +
                         '. Timesheet ID : ' + data.timesheet_id;
                     swal("", popTxt);
+                } else {
+                    swal("", "Action has been already taken.");
                 }
             }
         });
@@ -123,9 +125,12 @@
             weekEndDate: "{{ $plusFiveDate }}"
         },
         success: function(data) {
-            // location.reload();
-            // window.top.close();
-            swal("", "Timesheet rejected successfully");
+            if (data.add == 'Yes') {
+                swal("", "Timesheet rejected successfully");
+            } else {
+                swal("", "Action has been already taken.");
+            }
+
         }
     });
 </script>
