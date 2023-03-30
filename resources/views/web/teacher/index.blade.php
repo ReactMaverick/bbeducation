@@ -173,17 +173,18 @@
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Postcode</label><span style="color: red;">*</span>
                                     <input type="text" class="form-control field-validate" name="postcode_txt"
-                                        id="" value="">
+                                        id="postcodeTxt" value="">
                                 </div>
 
                                 <div class="modal-grid-reference-text">
-                                    <a href="javascript:void(0)">Get Grid References</a>
+                                    <a style="cursor: pointer" id="gridReference">Get Grid References</a>
                                 </div>
-
+                                <input type="hidden" name="lat_txt" id="latTxt">
+                                <input type="hidden" name="lon_txt" id="lonTxt">
 
                                 <div class="modal-input-field">
                                     <label class="form-check-label">Grid References</label>
-                                    <h2></h2>
+                                    <h2 id="gridRefHtml"></h2>
                                 </div>
 
                                 <div class="form-group calendar-form-filter">
@@ -322,6 +323,34 @@
                     }
                 }
             });
+        });
+
+        $(document).on('click', '#gridReference', function() {
+            var postcodeTxt = $('#postcodeTxt').val();
+            if (postcodeTxt) {
+                postcodeTxt = postcodeTxt.replace(/\s/g, '');
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('getGridReference') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        postcodeTxt: postcodeTxt
+                    },
+                    async: false,
+                    success: function(data) {
+                        $('#latTxt').val('');
+                        $('#lonTxt').val('');
+                        $('#gridRefHtml').html('');
+                        if (data) {
+                            $('#latTxt').val(data.lat);
+                            $('#lonTxt').val(data.long);
+                            $('#gridRefHtml').html(data.lat + ', ' + data.long);
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please enter postcode.");
+            }
         });
     </script>
 @endsection

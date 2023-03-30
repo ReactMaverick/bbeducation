@@ -9,6 +9,7 @@ use App\Http\Controllers\WebControllers\SchoolController;
 use App\Http\Controllers\WebControllers\FinanceController;
 use App\Http\Controllers\WebControllers\ManagementController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,7 @@ Route::get('/assignment-finance/{id}', [AssignmentController::class, 'assignment
 // Teacher
 Route::get('/teachers', [TeacherController::class, 'teachers']);
 Route::post('/checkTeacherMailExist', [TeacherController::class, 'checkTeacherMailExist']);
+Route::post('/getGridReference', [TeacherController::class, 'getGridReference']);
 Route::post('/newTeacherInsert', [TeacherController::class, 'newTeacherInsert']);
 Route::get('/teacher-search', [TeacherController::class, 'teacherSearch']);
 Route::get('/teacher-pending-reference', [TeacherController::class, 'teacherPendingReference']);
@@ -303,4 +305,15 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::get('/teacher-timesheet-approve/{asn_id}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDir']);
     Route::post('/logSchoolTimesheetRejectDir', [SchoolController::class, 'logSchoolTimesheetRejectDir']);
     Route::post('/logSchoolTimesheetLogDir', [SchoolController::class, 'logSchoolTimesheetLogDir']);
+});
+
+
+Route::get('/attachment', function () {
+    $fileUrl = request()->query('url');
+    $filename = basename($fileUrl);
+    $fileContents = file_get_contents($fileUrl);
+    return response($fileContents, 200, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"'
+    ]);
 });

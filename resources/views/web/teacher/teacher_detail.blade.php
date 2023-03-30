@@ -180,7 +180,9 @@
                                 </thead>
                                 <tbody class="table-body-sec">
                                     @foreach ($contactItemList as $key => $contactItem)
-                                        <tr class="school-detail-table-data editContactRow" id="editContactRow{{ $contactItem->contactItemTch_id }}" onclick="contactItemRowSelect({{ $contactItem->contactItemTch_id }})">
+                                        <tr class="school-detail-table-data editContactRow"
+                                            id="editContactRow{{ $contactItem->contactItemTch_id }}"
+                                            onclick="contactItemRowSelect({{ $contactItem->contactItemTch_id }})">
                                             <td>{{ $contactItem->type_txt }}</td>
                                             <td>{{ $contactItem->contactItem_txt }}</td>
                                         </tr>
@@ -286,7 +288,8 @@
                                     <select class="form-control" name="title_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($titleList as $key1 => $title)
-                                            <option value="{{ $title->description_int }}" {{ $teacherDetail->title_int == $title->description_int ? 'selected' : '' }} >
+                                            <option value="{{ $title->description_int }}"
+                                                {{ $teacherDetail->title_int == $title->description_int ? 'selected' : '' }}>
                                                 {{ $title->description_txt }}
                                             </option>
                                         @endforeach
@@ -295,14 +298,14 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">First Name</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control field-validate" name="firstName_txt" id=""
-                                        value="{{ $teacherDetail->firstName_txt }}">
+                                    <input type="text" class="form-control field-validate" name="firstName_txt"
+                                        id="" value="{{ $teacherDetail->firstName_txt }}">
                                 </div>
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Surname</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control field-validate" name="surname_txt" id=""
-                                        value="{{ $teacherDetail->surname_txt }}">
+                                    <input type="text" class="form-control field-validate" name="surname_txt"
+                                        id="" value="{{ $teacherDetail->surname_txt }}">
                                 </div>
 
                                 <div class="form-group modal-input-field">
@@ -320,22 +323,25 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Maiden (or previous) Name</label>
-                                    <input type="text" class="form-control" name="maidenPreviousNames_txt" id=""
-                                        value="{{ $teacherDetail->maidenPreviousNames_txt }}">
+                                    <input type="text" class="form-control" name="maidenPreviousNames_txt"
+                                        id="" value="{{ $teacherDetail->maidenPreviousNames_txt }}">
                                 </div>
 
                                 <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Date of Birth</label><span style="color: red;">*</span>
+                                    <label class="form-check-label">Date of Birth</label><span
+                                        style="color: red;">*</span>
                                     <input type="date" class="form-control field-validate" name="DOB_dte"
-                                        id="" value="{{ date("Y-m-d",strtotime($teacherDetail->DOB_dte)) }}">
+                                        id="" value="{{ date('Y-m-d', strtotime($teacherDetail->DOB_dte)) }}">
                                 </div>
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Nationality</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate select2" name="nationality_int"  style="width:100%;">
+                                    <select class="form-control field-validate select2" name="nationality_int"
+                                        style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($nationalityList as $key2 => $nationality)
-                                            <option value="{{ $nationality->description_int }}" {{ $teacherDetail->nationality_int == $nationality->description_int ? 'selected' : '' }} >
+                                            <option value="{{ $nationality->description_int }}"
+                                                {{ $teacherDetail->nationality_int == $nationality->description_int ? 'selected' : '' }}>
                                                 {{ $nationality->description_txt }}
                                             </option>
                                         @endforeach
@@ -406,16 +412,21 @@
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Postcode</label><span style="color: red;">*</span>
                                     <input type="text" class="form-control field-validate-2" name="postcode_txt"
-                                        id="" value="{{ $teacherDetail->postcode_txt }}">
+                                        id="postcodeTxt" value="{{ $teacherDetail->postcode_txt }}">
                                 </div>
 
                                 <div class="modal-grid-reference-text">
-                                    <a href="javascript:void(0)">Get Grid References</a>
+                                    <a style="cursor: pointer" id="gridReference">Get Grid References</a>
                                 </div>
+                                <input type="hidden" name="lat_txt" id="latTxt"
+                                    value="{{ $teacherDetail->lat_txt }}">
+                                <input type="hidden" name="lon_txt" id="lonTxt"
+                                    value="{{ $teacherDetail->lon_txt }}">
 
                                 <div class="modal-input-field">
                                     <label class="form-check-label">Grid References</label>
-                                    <h2></h2>
+                                    <h2 id="gridRefHtml">{{ $teacherDetail->lat_txt . ', ' . $teacherDetail->lon_txt }}
+                                    </h2>
                                 </div>
                             </div>
                         </div>
@@ -490,7 +501,8 @@
                                     <select class="form-control" name="emergencyContactRelation_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($ralationshipList as $key1 => $ralationship)
-                                            <option value="{{ $ralationship->description_int }}" {{ $teacherDetail->emergencyContactRelation_int == $ralationship->description_int ? 'selected' : '' }} >
+                                            <option value="{{ $ralationship->description_int }}"
+                                                {{ $teacherDetail->emergencyContactRelation_int == $ralationship->description_int ? 'selected' : '' }}>
                                                 {{ $ralationship->description_txt }}
                                             </option>
                                         @endforeach
@@ -548,7 +560,8 @@
                             <div class="col-md-12">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Contact Type</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate-3 select2" name="type_int" id="" style="width: 100%;">
+                                    <select class="form-control field-validate-3 select2" name="type_int" id=""
+                                        style="width: 100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($contactTypeList as $key1 => $contactType)
                                             <option value="{{ $contactType->description_int }}">
@@ -633,7 +646,7 @@
             $('#myTable').DataTable();
         });
 
-        function contactItemRowSelect(contactItemTch_id){
+        function contactItemRowSelect(contactItemTch_id) {
             if ($('#editContactRow' + contactItemTch_id).hasClass('tableRowActive')) {
                 $('#teacherContactItemId').val('');
                 $('#editContactRow' + contactItemTch_id).removeClass('tableRowActive');
@@ -669,6 +682,34 @@
                 $('#contactItemEditModal').modal("show");
             } else {
                 swal("", "Please select one contact.");
+            }
+        });
+
+        $(document).on('click', '#gridReference', function() {
+            var postcodeTxt = $('#postcodeTxt').val();
+            if (postcodeTxt) {
+                postcodeTxt = postcodeTxt.replace(/\s/g, '');
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('getGridReference') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        postcodeTxt: postcodeTxt
+                    },
+                    async: false,
+                    success: function(data) {
+                        $('#latTxt').val('');
+                        $('#lonTxt').val('');
+                        $('#gridRefHtml').html('');
+                        if (data) {
+                            $('#latTxt').val(data.lat);
+                            $('#lonTxt').val(data.long);
+                            $('#gridRefHtml').html(data.lat + ', ' + data.long);
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please enter postcode.");
             }
         });
     </script>

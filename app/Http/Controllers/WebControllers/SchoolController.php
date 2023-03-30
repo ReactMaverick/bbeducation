@@ -355,6 +355,14 @@ class SchoolController extends Controller
     public function schoolAddressUpdate(Request $request)
     {
         $school_id = $request->school_id;
+        $lat_txt = 0;
+        if ($request->lat_txt) {
+            $lat_txt = $request->lat_txt;
+        }
+        $lon_txt = 0;
+        if ($request->lon_txt) {
+            $lon_txt = $request->lon_txt;
+        }
         DB::table('tbl_school')->where('school_id', '=', $school_id)
             ->update([
                 'address1_txt' =>    $request->address1_txt,
@@ -363,7 +371,9 @@ class SchoolController extends Controller
                 'address4_txt' =>    $request->address4_txt,
                 'postcode_txt' =>    $request->postcode_txt,
                 'baseRate_dec' =>    $request->baseRate_dec,
-                'website_txt' =>    $request->website_txt
+                'website_txt' =>    $request->website_txt,
+                'lat_txt' => $lat_txt,
+                'lon_txt' => $lon_txt
             ]);
 
         return redirect('/school-detail/' . $school_id)->with('success', "Address updated successfully.");

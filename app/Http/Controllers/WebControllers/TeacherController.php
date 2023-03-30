@@ -84,6 +84,38 @@ class TeacherController extends Controller
         }
     }
 
+    public function getGridReference(Request $request)
+    {
+        $postcodeTxt = $request->postcodeTxt;
+        $api_key = env('MAP_QUEST_KEY', 'b7h48hPFtiu4ntA2y1jNb7giRZo04E1j');
+        $result['lat'] = '';
+        $result['long'] = '';
+
+        if (!empty($postcodeTxt)) {
+            try {
+                // $URL = "https://www.mapquestapi.com/geocoding/v1/address?key=" . $api_key . "&postalCode=" . $postcodeTxt . "";
+                $url = "http://www.mapquestapi.com/geocoding/v1/address?key=$api_key&postalCode=$postcodeTxt";
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                // Parse the JSON response and extract the latitude and longitude
+                $data = json_decode($response, true);
+                $lat = $data['results'][0]['locations'][0]['latLng']['lat'];
+                $lng = $data['results'][0]['locations'][0]['latLng']['lng'];
+
+                $result['lat'] = $lat;
+                $result['long'] = $lng;
+            } catch (\Exception $e) {
+                //echo $e;exit;
+            }
+        }
+
+        return response()->json($result);
+    }
+
     public function newTeacherInsert(Request $request)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -1025,13 +1057,24 @@ class TeacherController extends Controller
                 return redirect()->back()->with('error', "Please fill all mandatory fields.");
             }
 
+            $lat_txt = 0;
+            if ($request->lat_txt) {
+                $lat_txt = $request->lat_txt;
+            }
+            $lon_txt = 0;
+            if ($request->lon_txt) {
+                $lon_txt = $request->lon_txt;
+            }
+
             DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
                 ->update([
                     'address1_txt' => $request->address1_txt,
                     'address2_txt' => $request->address2_txt,
                     'address3_txt' => $request->address3_txt,
                     'address4_txt' => $request->address4_txt,
-                    'postcode_txt' => $request->postcode_txt
+                    'postcode_txt' => $request->postcode_txt,
+                    'lat_txt' => $lat_txt,
+                    'lon_txt' => $lon_txt
                 ]);
 
             return redirect()->back()->with('success', "Address updated successfully.");

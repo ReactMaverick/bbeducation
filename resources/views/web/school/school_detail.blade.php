@@ -313,7 +313,7 @@
 
                                     <div class="modal-input-field">
                                         <label class="form-check-label">Postcode</label>
-                                        <input type="text" class="form-control" name="postcode_txt" id=""
+                                        <input type="text" class="form-control" name="postcode_txt" id="postcodeTxt"
                                             value="{{ $schoolDetail->postcode_txt }}">
                                     </div>
                                 </div>
@@ -330,13 +330,17 @@
                                             value="{{ $schoolDetail->baseRate_dec }}">
                                     </div>
                                     <div class="modal-grid-reference-text">
-                                        <a href="#">Get Grid References</a>
+                                        <a style="cursor: pointer" id="gridReference">Get Grid References</a>
                                     </div>
-
+                                    <input type="hidden" name="lat_txt" id="latTxt"
+                                        value="{{ $schoolDetail->lat_txt }}">
+                                    <input type="hidden" name="lon_txt" id="lonTxt"
+                                        value="{{ $schoolDetail->lon_txt }}">
 
                                     <div class="modal-input-field">
                                         <label class="form-check-label">Grid References</label>
-                                        <h2>{{ $schoolDetail->lat_txt . ', ' . $schoolDetail->lon_txt }}</h2>
+                                        <h2 id="gridRefHtml">{{ $schoolDetail->lat_txt . ', ' . $schoolDetail->lon_txt }}
+                                        </h2>
                                     </div>
                                 </div>
                             </div>
@@ -859,6 +863,34 @@
                     });
             } else {
                 swal("", "Please select one contact item.");
+            }
+        });
+
+        $(document).on('click', '#gridReference', function() {
+            var postcodeTxt = $('#postcodeTxt').val();
+            if (postcodeTxt) {
+                postcodeTxt = postcodeTxt.replace(/\s/g, '');
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('getGridReference') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        postcodeTxt: postcodeTxt
+                    },
+                    async: false,
+                    success: function(data) {
+                        $('#latTxt').val('');
+                        $('#lonTxt').val('');
+                        $('#gridRefHtml').html('');
+                        if (data) {
+                            $('#latTxt').val(data.lat);
+                            $('#lonTxt').val(data.long);
+                            $('#gridRefHtml').html(data.lat + ', ' + data.long);
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please enter postcode.");
             }
         });
     </script>
