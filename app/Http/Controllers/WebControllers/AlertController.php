@@ -73,4 +73,23 @@ class AlertController extends Controller
             }
         }
     }
+
+    public function sendInvoiceToSchool($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/school_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->subject($mailData['subject'])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['invoice_name']])
+                        ->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
 }

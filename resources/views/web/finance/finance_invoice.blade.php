@@ -189,6 +189,7 @@
                                         <th>Tch</th>
                                         <th>Email</th>
                                         <th>Factor</th>
+                                        <th>Mail Send</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -205,6 +206,13 @@
                                             <td>{{ $invoice->teachers_int }}</td>
                                             <td>{{ $invoice->hasEmail_status }}</td>
                                             <td>{{ $invoice->factored_status }}</td>
+                                            <td>
+                                                @if ($invoice->sentMailDate)
+                                                    Yes
+                                                @else
+                                                    No
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -606,6 +614,12 @@
                             link.target = '_blank';
                             link.click();
                         }
+                        var subject = 'Finance Invoice';
+                        var body = "Hello";
+                        window.location = 'mailto:' + data.sendMail + '?subject=' +
+                            encodeURIComponent(subject) + '&body=' +
+                            encodeURIComponent(body);
+
                         $('#fullLoader').hide();
                     }
                 });
@@ -651,88 +665,38 @@
             }
         });
 
-        $(document).on('click', '#sendSelectedInvoiceBtn', function() {
+        $(document).on('click', '#sendSelectedInvoiceBtn', function(e) {
+            // e.preventDefault();
             var editInvoiceId = $('#editInvoiceId').val();
             if (editInvoiceId) {
-                $('#fullLoader').show();
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ url('financeInvoiceMail') }}',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        editInvoiceId: editInvoiceId
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function(data) {
-                        // console.log(data);
-                        if (data.exist == 'Yes') {
-                            var subject = 'Finance Invoice';
-                            var body = "Hello";
-                            if (data.sendMail) {
-                                var attachment = data.invoice_path;
-                                window.location = 'mailto:' + data.sendMail + '?subject=' +
-                                    encodeURIComponent(subject) + '&body=' +
-                                    encodeURIComponent(body) + '&attachment=' +
-                                    encodeURIComponent(attachment);
-
-                                // var attachmentUrl = data.invoice_path;
-                                // var attachmentLaravelUrl = '{{ url('/attachment') }}' + "?url=" +
-                                //     encodeURIComponent(attachmentUrl);
-                                // console.log(attachmentLaravelUrl);
-                                // var mailtoLink = "mailto:" + encodeURIComponent(data.sendMail) +
-                                //     "?subject=" + encodeURIComponent(subject) +
-                                //     "&body=" + encodeURIComponent(body) + "&attachment=" +
-                                //     encodeURIComponent(attachmentLaravelUrl);
-                                // window.location.href = mailtoLink;
-
-                                // var recipient = data.sendMail;
-                                // var subject = "Finance Invoice";
-                                // var body = "Hello";
-                                // var attachmentUrl = data.invoice_path;
-                                // var mailtoLink = "mailto:" + encodeURIComponent(recipient) +
-                                //     "?subject=" + encodeURIComponent(subject) +
-                                //     "&body=" + encodeURIComponent(body);
-                                // $.ajax({
-                                //     url: attachmentUrl,
-                                //     type: "GET",
-                                //     dataType: "binary",
-                                //     responseType: "arraybuffer",
-                                //     success: function(data) {
-                                //         var base64data = btoa(String.fromCharCode.apply(
-                                //             null, new Uint8Array(data)));
-                                //         var attachment = "attachment:myfile.pdf;base64," +
-                                //             base64data;
-                                //         mailtoLink += "&" + encodeURIComponent(attachment);
-                                //         window.location.href = mailtoLink;
-                                //     },
-                                //     error: function() {
-                                //         console.log("Error retrieving file content");
-                                //     }
-                                // });
-
-                                // var file = data.invoice_path;
-                                // var data1 = {
-                                //     to: data.sendMail,
-                                //     subject: 'Email Subject',
-                                //     body: 'Email Body',
-                                //     attachment: file
-                                // };
-
-                                // var mailto_link = 'mailto:' + data1.to + '?subject=' + data1.subject +
-                                //     '&body=' + data1.body;
-
-                                // if (data1.attachment) {
-                                //     mailto_link += '&attachment=' + data1.attachment;
-                                // }
-
-                                // window.location.href = mailto_link;
-                            }
+                swal({
+                        title: "",
+                        text: "This will send the selected invoice. Continue?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('financeInvoiceMail') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        editInvoiceId: editInvoiceId
+                                    },
+                                    dataType: "json",
+                                    // async: false,
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                                // $('#fullLoader').hide();
                         }
-                        $('#fullLoader').hide();
-                    }
-                });
-                // $('#fullLoader').hide();
+                    });
             } else {
                 swal("", "Please select one invoice.");
             }
@@ -763,24 +727,9 @@
                                         invoiceNumberMax: invoiceNumberMax
                                     },
                                     dataType: "json",
-                                    async: false,
+                                    // async: false,
                                     success: function(data) {
-                                        // console.log(data);
-                                        if (data.exist == 'Yes') {
-                                            var subject = 'Finance Invoice';
-                                            var attachments = data.attachmentArr;
-                                            var mailto = 'mailto:' + data.sendMail + '?subject=' +
-                                                encodeURIComponent(
-                                                    subject) +
-                                                '&body=';
-                                            for (var i = 0; i < attachments.length; i++) {
-                                                var attachment = "file://" + attachments[i];
-                                                mailto += '&attachment=' + encodeURIComponent(
-                                                    attachment);
-                                            }
-                                            window.location.href = mailto;
-                                        }
-                                        $('#fullLoader').hide();
+                                        location.reload();
                                     }
                                 });
                                 // $('#fullLoader').hide();

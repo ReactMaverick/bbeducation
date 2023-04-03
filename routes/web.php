@@ -9,7 +9,7 @@ use App\Http\Controllers\WebControllers\SchoolController;
 use App\Http\Controllers\WebControllers\FinanceController;
 use App\Http\Controllers\WebControllers\ManagementController;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -305,15 +305,4 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::get('/teacher-timesheet-approve/{asn_id}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDir']);
     Route::post('/logSchoolTimesheetRejectDir', [SchoolController::class, 'logSchoolTimesheetRejectDir']);
     Route::post('/logSchoolTimesheetLogDir', [SchoolController::class, 'logSchoolTimesheetLogDir']);
-});
-
-
-Route::get('/attachment', function () {
-    $fileUrl = request()->query('url');
-    $filename = basename($fileUrl);
-    $fileContents = file_get_contents($fileUrl);
-    return response($fileContents, 200, [
-        'Content-Type' => 'application/pdf',
-        'Content-Disposition' => 'attachment; filename="' . $filename . '"'
-    ]);
 });

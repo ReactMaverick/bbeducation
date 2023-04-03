@@ -799,7 +799,7 @@ class FinanceController extends Controller
                         $join->on('tbl_school.school_id', '=', 't_email.school_id');
                     }
                 )
-                ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte')
+                ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_invoice.sentMailBy', 'tbl_invoice.sentMailDate', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte')
                 ->whereBetween('tbl_invoice.invoice_id', array($p_invoiceNumberMin, $p_invoiceNumberMax))
                 ->groupBy('tbl_invoice.invoice_id')
                 ->orderBy('tbl_invoice.invoice_id', 'ASC')
@@ -1362,99 +1362,6 @@ class FinanceController extends Controller
                 ->groupBy('tbl_invoice.invoice_id')
                 ->first();
             if ($schoolInvoices) {
-                $fileExist = 'No';
-                if ($schoolInvoices->invoice_path) {
-                    if (file_exists(public_path($schoolInvoices->invoice_path))) {
-                        $fileExist = 'Yes';
-                    }
-                }
-
-                if ($fileExist == 'Yes') {
-                    $result['exist'] = 'Yes';
-                    $result['invoice_path'] = asset($schoolInvoices->invoice_path);
-                } else {
-                    $invoiceItemList = DB::table('tbl_invoiceItem')
-                        ->select('tbl_invoiceItem.*')
-                        ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
-                        ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
-                        ->get();
-
-                    $companyDetail = DB::table('company')
-                        ->select('company.*')
-                        ->where('company.company_id', $company_id)
-                        ->first();
-
-                    $schoolDetail = DB::table('tbl_school')
-                        ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
-                        ->LeftJoin('tbl_schoolContactLog', function ($join) {
-                            $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
-                        })
-                        ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
-                        ->LeftJoin('tbl_description as AgeRange', function ($join) {
-                            $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
-                                ->where(function ($query) {
-                                    $query->where('AgeRange.descriptionGroup_int', '=', 28);
-                                });
-                        })
-                        ->LeftJoin('tbl_description as religion', function ($join) {
-                            $join->on('religion.description_int', '=', 'tbl_school.religion_int')
-                                ->where(function ($query) {
-                                    $query->where('religion.descriptionGroup_int', '=', 29);
-                                });
-                        })
-                        ->LeftJoin('tbl_description as SchoolType', function ($join) {
-                            $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
-                                ->where(function ($query) {
-                                    $query->where('SchoolType.descriptionGroup_int', '=', 30);
-                                });
-                        })
-                        ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
-                        ->where('tbl_school.school_id', $schoolInvoices->school_id)
-                        ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
-                        ->first();
-
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
-                    $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
-                    $pdf->save(public_path('pdfs/invoice/' . $pdfName));
-                    $fPath = 'pdfs/invoice/' . $pdfName;
-
-                    DB::table('tbl_invoice')
-                        ->where('invoice_id', '=', $editInvoiceId)
-                        ->update([
-                            'invoice_path' => $fPath
-                        ]);
-
-                    if (file_exists(public_path($fPath))) {
-                        $result['exist'] = 'Yes';
-                        $result['invoice_path'] = asset($fPath);
-                    }
-                }
-            }
-        } else {
-            $result['exist'] = 'No';
-        }
-        return response()->json($result);
-    }
-
-    public function financeInvoiceMail(Request $request)
-    {
-        $webUserLoginData = Session::get('webUserLoginData');
-        if ($webUserLoginData) {
-            $company_id = $webUserLoginData->company_id;
-            $user_id = $webUserLoginData->user_id;
-            $input = $request->all();
-            $editInvoiceId = $input['editInvoiceId'];
-            $result['exist'] = 'No';
-
-            $schoolInvoices = DB::table('tbl_invoice')
-                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
-                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
-                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
-                ->where('tbl_invoice.invoice_id', $editInvoiceId)
-                ->groupBy('tbl_invoice.invoice_id')
-                ->first();
-            if ($schoolInvoices) {
                 $contactDet = DB::table('tbl_schoolContact')
                     ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
                     ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
@@ -1534,15 +1441,151 @@ class FinanceController extends Controller
 
                     if (file_exists(public_path($fPath))) {
                         $result['exist'] = 'Yes';
-                        $result['sendMail'] = $sendMail;
                         $result['invoice_path'] = asset($fPath);
                     }
+                    $result['sendMail'] = $sendMail;
                 }
             }
         } else {
             $result['exist'] = 'No';
         }
         return response()->json($result);
+    }
+
+    public function financeInvoiceMail(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $editInvoiceId = $input['editInvoiceId'];
+            $result['exist'] = 'No';
+
+            $schoolInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+                ->where('tbl_invoice.invoice_id', $editInvoiceId)
+                ->groupBy('tbl_invoice.invoice_id')
+                ->first();
+            if ($schoolInvoices) {
+                $contactDet = DB::table('tbl_schoolContact')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                    ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                    ->where('tbl_schoolContact.isCurrent_status', '-1')
+                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                    ->where('tbl_contactItemSch.type_int', 1)
+                    ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                    ->first();
+                $sendMail = '';
+                $invoice_path = '';
+                if ($contactDet && $contactDet->contactItem_txt) {
+                    $sendMail = $contactDet->contactItem_txt;
+                }
+
+                $fileExist = 'No';
+                if ($schoolInvoices->invoice_path) {
+                    if (file_exists(public_path($schoolInvoices->invoice_path))) {
+                        $fileExist = 'Yes';
+                        $invoice_path = asset($schoolInvoices->invoice_path);
+                    }
+                }
+
+                if ($fileExist == 'Yes') {
+                    $result['exist'] = 'Yes';
+                    $result['sendMail'] = $sendMail;
+                    // $result['invoice_path'] = asset($schoolInvoices->invoice_path);
+                } else {
+                    $invoiceItemList = DB::table('tbl_invoiceItem')
+                        ->select('tbl_invoiceItem.*')
+                        ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+                        ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+                        ->get();
+
+                    $companyDetail = DB::table('company')
+                        ->select('company.*')
+                        ->where('company.company_id', $company_id)
+                        ->first();
+
+                    $schoolDetail = DB::table('tbl_school')
+                        ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                        ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                            $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                        })
+                        ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                        ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                            $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                                ->where(function ($query) {
+                                    $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as religion', function ($join) {
+                            $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                                ->where(function ($query) {
+                                    $query->where('religion.descriptionGroup_int', '=', 29);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                            $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                                ->where(function ($query) {
+                                    $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                                });
+                        })
+                        ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                        ->where('tbl_school.school_id', $schoolInvoices->school_id)
+                        ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                        ->first();
+
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+                    $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
+                    $pdf->save(public_path('pdfs/invoice/' . $pdfName));
+                    $fPath = 'pdfs/invoice/' . $pdfName;
+
+                    DB::table('tbl_invoice')
+                        ->where('invoice_id', '=', $editInvoiceId)
+                        ->update([
+                            'invoice_path' => $fPath
+                        ]);
+
+                    if (file_exists(public_path($fPath))) {
+                        $result['exist'] = 'Yes';
+                        $result['sendMail'] = $sendMail;
+                        $invoice_path = asset($fPath);
+                    }
+                }
+
+                $invoice_name = '';
+                if ($invoice_path) {
+                    $parts = explode("/", $invoice_path);
+                    $invoice_name = end($parts);
+                }
+
+                if ($contactDet && $contactDet->contactItem_txt) {
+                    $mailData['subject'] = "Invoice - " . $editInvoiceId;
+                    $mailData['invoice_path'] = $invoice_path;
+                    $mailData['invoice_name'] = $invoice_name;
+                    $mailData['contactDet'] = $contactDet;
+                    $mailData['mail'] = $contactDet->contactItem_txt;
+                    $myVar = new AlertController();
+                    $myVar->sendInvoiceToSchool($mailData);
+
+                    DB::table('tbl_invoice')
+                        ->where('invoice_id', '=', $editInvoiceId)
+                        ->update([
+                            'sentMailDate' => date('Y-m-d'),
+                            'sentMailBy' => $user_id
+                        ]);
+                }
+
+                return response()->json($result);
+            }
+        } else {
+            $result['exist'] = 'No';
+            return response()->json($result);
+        }
     }
 
     public function financeInvoiceAllMail(Request $request)
@@ -1584,18 +1627,32 @@ class FinanceController extends Controller
                     ->groupBy('tbl_invoice.invoice_id')
                     ->first();
                 if ($schoolInvoices) {
-                    $sendMail = 'demo@gmail.com';
+                    $contactDet = DB::table('tbl_schoolContact')
+                        ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                        ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                        ->where('tbl_schoolContact.isCurrent_status', '-1')
+                        ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                        ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                        ->where('tbl_contactItemSch.type_int', 1)
+                        ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                        ->first();
+                    $sendMail = '';
+                    $invoice_path = '';
+                    if ($contactDet && $contactDet->contactItem_txt) {
+                        $sendMail = $contactDet->contactItem_txt;
+                    }
 
                     $fileExist = 'No';
                     if ($schoolInvoices->invoice_path) {
                         if (file_exists(public_path($schoolInvoices->invoice_path))) {
                             $fileExist = 'Yes';
+                            $invoice_path = asset($schoolInvoices->invoice_path);
                         }
                     }
 
                     if ($fileExist == 'Yes') {
                         $invoice_path = asset($schoolInvoices->invoice_path);
-                        array_push($attachmentArr, $invoice_path);
+                        // array_push($attachmentArr, $invoice_path);
                     } else {
                         $invoiceItemList = DB::table('tbl_invoiceItem')
                             ->select('tbl_invoiceItem.*')
@@ -1653,13 +1710,32 @@ class FinanceController extends Controller
                             array_push($attachmentArr, $invoice_path);
                         }
                     }
+
+                    $invoice_name = '';
+                    if ($invoice_path) {
+                        $parts = explode("/", $invoice_path);
+                        $invoice_name = end($parts);
+                    }
+
+                    if ($contactDet && $contactDet->contactItem_txt) {
+                        $mailData['subject'] = "Invoice - " . $value->invoice_id;
+                        $mailData['invoice_path'] = $invoice_path;
+                        $mailData['invoice_name'] = $invoice_name;
+                        $mailData['contactDet'] = $contactDet;
+                        $mailData['mail'] = $contactDet->contactItem_txt;
+                        $myVar = new AlertController();
+                        $myVar->sendInvoiceToSchool($mailData);
+
+                        DB::table('tbl_invoice')
+                            ->where('invoice_id', '=', $value->invoice_id)
+                            ->update([
+                                'sentMailDate' => date('Y-m-d'),
+                                'sentMailBy' => $user_id
+                            ]);
+                    }
                 }
             }
-            if (count($attachmentArr) > 0) {
-                $result['exist'] = 'Yes';
-                $result['sendMail'] = $sendMail;
-                $result['attachmentArr'] = $attachmentArr;
-            }
+            $result['exist'] = 'Yes';
         } else {
             $result['exist'] = 'No';
         }
