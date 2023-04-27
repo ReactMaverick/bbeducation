@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PayrollExport;
+use App\Exports\InvoiceExport;
 
 class FinanceController extends Controller
 {
@@ -770,6 +771,11 @@ class FinanceController extends Controller
                 $p_invoiceNumberMax = $request->invoiceNumberMax;
             }
 
+            $showSent = 'false';
+            if ($request->showSent) {
+                $showSent = $request->showSent;
+            }
+
             DB::table('tbl_asn')
                 ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
                 ->whereRaw("tbl_asnItem.timesheet_id IS NOT NULL AND (tbl_asnItem.charge_dec IS NULL OR tbl_asnItem.cost_dec IS NULL)")
@@ -790,7 +796,7 @@ class FinanceController extends Controller
                 ->orderByRaw('school_id,teacher_id,asnDate_dte')
                 ->get();
 
-            $invoiceList = DB::table('tbl_school')
+            $invoices = DB::table('tbl_school')
                 ->LeftJoin('tbl_invoice', 'tbl_school.school_id', '=', 'tbl_invoice.school_id')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                 ->leftJoin(
@@ -800,14 +806,24 @@ class FinanceController extends Controller
                     }
                 )
                 ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_invoice.sentMailBy', 'tbl_invoice.sentMailDate', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte')
-                ->whereBetween('tbl_invoice.invoice_id', array($p_invoiceNumberMin, $p_invoiceNumberMax))
-                ->groupBy('tbl_invoice.invoice_id')
+                ->whereBetween('tbl_invoice.invoice_id', array($p_invoiceNumberMin, $p_invoiceNumberMax));
+            if ($showSent == 'true') {
+                $invoices->where('tbl_invoice.sentMailDate', '!=', NULL);
+            } else {
+                $invoices->where('tbl_invoice.sentMailDate', NULL);
+            }
+
+            $invoiceList = $invoices->groupBy('tbl_invoice.invoice_id')
                 ->orderBy('tbl_invoice.invoice_id', 'ASC')
                 ->orderBy('invoiceDate_dte', 'DESC')
                 ->orderByRaw('SUM(numItems_dec * charge_dec)')
                 ->get();
 
-            return view("web.finance.finance_invoice", ['title' => $title, 'headerTitle' => $headerTitle, 'timesheetList' => $timesheetList, 'p_maxDate' => $p_maxDate, 'p_invoiceNumberMin' => $p_invoiceNumberMin, 'p_invoiceNumberMax' => $p_invoiceNumberMax, 'invoiceList' => $invoiceList]);
+            $templateDet = DB::table('mail_template')
+                ->where('mail_template_id', '=', 1)
+                ->first();
+
+            return view("web.finance.finance_invoice", ['title' => $title, 'headerTitle' => $headerTitle, 'timesheetList' => $timesheetList, 'p_maxDate' => $p_maxDate, 'p_invoiceNumberMin' => $p_invoiceNumberMin, 'p_invoiceNumberMax' => $p_invoiceNumberMax, 'invoiceList' => $invoiceList, 'templateDet' => $templateDet]);
         } else {
             return redirect()->intended('/');
         }
@@ -1460,6 +1476,7 @@ class FinanceController extends Controller
             $user_id = $webUserLoginData->user_id;
             $input = $request->all();
             $editInvoiceId = $input['editInvoiceId'];
+            $temp_description = $input['temp_description'];
             $result['exist'] = 'No';
 
             $schoolInvoices = DB::table('tbl_invoice')
@@ -1565,6 +1582,7 @@ class FinanceController extends Controller
 
                 if ($contactDet && $contactDet->contactItem_txt) {
                     $mailData['subject'] = "Invoice - " . $editInvoiceId;
+                    $mailData['temp_description'] = $temp_description;
                     $mailData['invoice_path'] = $invoice_path;
                     $mailData['invoice_name'] = $invoice_name;
                     $mailData['contactDet'] = $contactDet;
@@ -1580,11 +1598,10 @@ class FinanceController extends Controller
                         ]);
                 }
 
-                return response()->json($result);
+                return redirect()->back()->with('success', "Mail send successfully.");
             }
         } else {
-            $result['exist'] = 'No';
-            return response()->json($result);
+            return redirect()->intended('/');
         }
     }
 
@@ -1597,6 +1614,7 @@ class FinanceController extends Controller
             $input = $request->all();
             $p_invoiceNumberMin = $input['invoiceNumberMin'];
             $p_invoiceNumberMax = $input['invoiceNumberMax'];
+            $temp_description = $input['temp_description'];
             $result['exist'] = 'No';
 
             $invoiceList = DB::table('tbl_school')
@@ -1720,6 +1738,7 @@ class FinanceController extends Controller
                     if ($contactDet && $contactDet->contactItem_txt) {
                         $mailData['subject'] = "Invoice - " . $value->invoice_id;
                         $mailData['invoice_path'] = $invoice_path;
+                        $mailData['temp_description'] = $temp_description;
                         $mailData['invoice_name'] = $invoice_name;
                         $mailData['contactDet'] = $contactDet;
                         $mailData['mail'] = $contactDet->contactItem_txt;
@@ -1735,11 +1754,10 @@ class FinanceController extends Controller
                     }
                 }
             }
-            $result['exist'] = 'Yes';
+            return redirect()->back()->with('success', "Mail send successfully.");
         } else {
-            $result['exist'] = 'No';
+            return redirect()->intended('/');
         }
-        return response()->json($result);
     }
 
     public function financePayroll(Request $request)
@@ -2085,6 +2103,46 @@ class FinanceController extends Controller
             return $pdf->stream($pdfName);
         } else {
             return redirect()->intended('/');
+        }
+    }
+
+    public function exportInvoiceByDate(Request $request, $from, $to, $type)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
+            if ($type == 'Excel') {
+                $fileName = 'InvoiceExport' . time() . '.xlsx';
+
+                return Excel::download(new InvoiceExport($from, $to), $fileName);
+            }
+            if ($type == 'CSV') {
+                $fileName = 'InvoiceExport' . time() . '.csv';
+
+                return Excel::download(new InvoiceExport($from, $to), $fileName, \Maatwebsite\Excel\Excel::CSV);
+            }
+            if ($type == 'Pdf') {
+                $invoicesList = DB::table('tbl_invoice')
+                    ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                    ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
+                    ->select('tbl_invoice.invoice_id AS InvoiceNo', 'name_txt AS Customer', DB::raw("DATE_FORMAT(invoiceDate_dte, '%d/%m/%Y') AS InvoiceDate"), DB::raw("DATE_FORMAT(DATE_ADD(invoiceDate_dte, INTERVAL 30 DAY), '%d/%m/%Y') AS DueDate"), DB::raw("'Net 30' AS Terms"), DB::raw("'' AS Memo"), DB::raw("'Teachers' AS prodOrService"), DB::raw("'Teachers' AS ItemDescription"), DB::raw("'' AS ItemQuantity"), DB::raw("'' AS ItemRate"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(9,2)) AS ItemAmount"), DB::raw("'20%' AS ItemTaxCode"), DB::raw("CAST(SUM(numItems_dec * charge_dec) * .2 AS DECIMAL(9,2)) AS ItemTaxAmount"))
+                    ->whereBetween('tbl_invoice.invoiceDate_dte', [$from, $to])
+                    ->groupBy('tbl_invoice.invoice_id')
+                    ->get();
+
+                $fileName = 'InvoiceExport' . time() . '.pdf';
+
+                $pdf = PDF::loadView('web.finance.invoice_by_date_pdf', ['invoicesList' => $invoicesList, 'companyDetail' => $companyDetail])->setPaper('a4', 'landscape');
+
+                return $pdf->download($fileName);
+            }
         }
     }
 }

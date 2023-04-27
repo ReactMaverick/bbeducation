@@ -225,6 +225,7 @@ Route::post('/payrollDateChange', [FinanceController::class, 'payrollDateChange'
 Route::get('/exportPayroll/{date}', [FinanceController::class, 'exportPayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
+Route::get('/exportInvoiceByDate/{from}/{to}/{type}', [FinanceController::class, 'exportInvoiceByDate']);
 // Finance
 
 // Management

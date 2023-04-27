@@ -346,7 +346,96 @@
     </div>
     <!-- Edit Invoice Modal -->
 
+    <!-- Send Selected Invoice Modal -->
+    <div class="modal fade" id="selectedInvModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width:100%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Send Invoice</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <form action="{{ url('/financeInvoiceMail') }}" method="post" class=""
+                    enctype="multipart/form-data" id="sendInvFormId">
+                    @csrf
+
+                    <input type="hidden" name="editInvoiceId" id="formInvoiceId" value="">
+
+                    <div class="modal-input-field-section mt-3">
+                        <div class="modal-input-field">
+                            <label class="form-check-label">Mail Body</label>
+                            <textarea class="form-control" name="temp_description" id="temp_description" rows="12" cols="50">{!! $templateDet->temp_description !!}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="formSendInvBtn">Send</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Send Selected Invoice Modal -->
+
+    <!-- Send Listed Invoice Modal -->
+    <div class="modal fade" id="listedInvModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width:100%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Send Invoice</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <form action="{{ url('/financeInvoiceAllMail') }}" method="post" class=""
+                    enctype="multipart/form-data" id="sendListedInvFormId">
+                    @csrf
+
+                    <input type="hidden" name="invoiceNumberMin"
+                        value="{{ app('request')->input('invoiceNumberMin') }}">
+                    <input type="hidden" name="invoiceNumberMax"
+                        value="{{ app('request')->input('invoiceNumberMax') }}">
+
+                    <div class="modal-input-field-section mt-3">
+                        <div class="modal-input-field">
+                            <label class="form-check-label">Mail Body</label>
+                            <textarea class="form-control" name="temp_description" id="listed_temp_description" rows="12" cols="50">{!! $templateDet->temp_description !!}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="formSendListInvBtn">Send</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Send Listed Invoice Modal -->
+
+    <script src="//cdn.ckeditor.com/4.4.7/standard-all/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.4.7/standard-all/adapters/jquery.js"></script>
+
     <script>
+        $(document).ready(function() {
+            $('#temp_description').ckeditor({
+                toolbar: [],
+            });
+            $('#listed_temp_description').ckeditor({
+                toolbar: [],
+            });
+        });
+
         function timesheetRow(asnItem_id) {
             if ($('#editTimesheetRow' + asnItem_id).hasClass('tableRowActive')) {
                 setIds(asnItem_id, 'rm');
@@ -665,77 +754,32 @@
             }
         });
 
-        $(document).on('click', '#sendSelectedInvoiceBtn', function(e) {
-            // e.preventDefault();
+        $(document).on('click', '#sendSelectedInvoiceBtn', function() {
             var editInvoiceId = $('#editInvoiceId').val();
             if (editInvoiceId) {
-                swal({
-                        title: "",
-                        text: "This will send the selected invoice. Continue?",
-                        buttons: {
-                            cancel: "No",
-                            Yes: "Yes"
-                        },
-                    })
-                    .then((value) => {
-                        switch (value) {
-                            case "Yes":
-                                $('#fullLoader').show();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '{{ url('financeInvoiceMail') }}',
-                                    data: {
-                                        "_token": "{{ csrf_token() }}",
-                                        editInvoiceId: editInvoiceId
-                                    },
-                                    dataType: "json",
-                                    // async: false,
-                                    success: function(data) {
-                                        location.reload();
-                                    }
-                                });
-                                // $('#fullLoader').hide();
-                        }
-                    });
+                $('#formInvoiceId').val(editInvoiceId);
+                $('#selectedInvModal').modal("show");
             } else {
                 swal("", "Please select one invoice.");
             }
+        });
+
+        $(document).on('click', '#formSendInvBtn', function() {
+            $('#fullLoader').show();
+            $('#sendInvFormId').submit();
         });
 
         $(document).on('click', '#sendAllInvoiceBtn', function() {
             var invoiceNumberMin = "{{ app('request')->input('invoiceNumberMin') }}";
             var invoiceNumberMax = "{{ app('request')->input('invoiceNumberMax') }}";
             if (invoiceNumberMin && invoiceNumberMax) {
-                swal({
-                        title: "",
-                        text: "This will send all the listed invoices. Continue?",
-                        buttons: {
-                            cancel: "No",
-                            Yes: "Yes"
-                        },
-                    })
-                    .then((value) => {
-                        switch (value) {
-                            case "Yes":
-                                $('#fullLoader').show();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '{{ url('financeInvoiceAllMail') }}',
-                                    data: {
-                                        "_token": "{{ csrf_token() }}",
-                                        invoiceNumberMin: invoiceNumberMin,
-                                        invoiceNumberMax: invoiceNumberMax
-                                    },
-                                    dataType: "json",
-                                    // async: false,
-                                    success: function(data) {
-                                        location.reload();
-                                    }
-                                });
-                                // $('#fullLoader').hide();
-                        }
-                    });
+                $('#listedInvModal').modal("show");
             }
+        });
+
+        $(document).on('click', '#formSendListInvBtn', function() {
+            $('#fullLoader').show();
+            $('#sendListedInvFormId').submit();
         });
 
         $(document).on('change', '#show_sent', function() {
