@@ -232,6 +232,8 @@ Route::get('/exportInvoiceByDate/{from}/{to}/{type}', [FinanceController::class,
 Route::get('/management', [ManagementController::class, 'management']);
 Route::get('/management-user', [ManagementController::class, 'managementUser']);
 Route::get('/management-mailshot', [ManagementController::class, 'managementMailshot']);
+Route::post('/studentInsert', [ManagementController::class, 'studentInsert']);
+Route::post('/studentUpdate', [ManagementController::class, 'studentUpdate']);
 // Management
 
 

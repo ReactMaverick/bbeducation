@@ -8,7 +8,9 @@
     <i class="fa-brands fa-black-tie">
         <span class="topbar-text">{{ $teacherDetail->professionalType_txt }}</span>
     </i>
-    <i class="fa-solid fa-star topbar-star-icon"></i>
+    <a style="cursor: pointer;" onclick="addteacherFab('{{ $teacherDetail->teacher_id }}')">
+        <i class="fa-solid fa-star topbar-star-icon"></i>
+    </a>
 
     <a href="{{ URL::to('/teacher-calendar-list/' . $teacherDetail->teacher_id) }}">
         <i class="fa-regular fa-calendar-days">
@@ -20,3 +22,9 @@
         <i class="fa-solid fa-trash trash-icon"></i>
     </a>
 </div>
+
+<script>
+    function addteacherFab(teacher_id) {
+        // alert(teacher_id)
+    }
+</script>
