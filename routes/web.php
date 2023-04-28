@@ -134,6 +134,8 @@ Route::post('/teacherContactLogUpdate', [TeacherController::class, 'teacherConta
 Route::post('/teacherContactLogDelete', [TeacherController::class, 'teacherContactLogDelete']);
 Route::get('/teacher-payroll/{id}', [TeacherController::class, 'teacherPayroll']);
 Route::post('/teacherPayrollUpdate', [TeacherController::class, 'teacherPayrollUpdate']);
+Route::post('/teacherFabAdd', [TeacherController::class, 'teacherFabAdd']);
+Route::post('/teacherHeaderStatusUpdate', [TeacherController::class, 'teacherHeaderStatusUpdate']);
 // Teacher
 
 // School
@@ -186,6 +188,7 @@ Route::post('/schoolDocumentUpdate', [SchoolController::class, 'schoolDocumentUp
 Route::post('/schoolDocumentDelete', [SchoolController::class, 'schoolDocumentDelete']);
 Route::post('/schoolBillingAddressUpdate', [SchoolController::class, 'schoolBillingAddressUpdate']);
 Route::get('/school-calendar/{id}', [SchoolController::class, 'schoolCalendar']);
+Route::post('/schoolHeaderFabAdd', [SchoolController::class, 'schoolHeaderFabAdd']);
 // School
 
 // Finance
@@ -271,6 +274,7 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function 
     Route::post('/teacherTimesheetAddNew', [TeacherController::class, 'teacherTimesheetAddNew']);
     Route::get('/change-password', [TeacherController::class, 'logTeacherPassword']);
     Route::post('/LogTeacherPasswordUpdate', [TeacherController::class, 'LogTeacherPasswordUpdate']);
+    Route::post('/LogTeacherStatusUpdateHead', [TeacherController::class, 'LogTeacherStatusUpdateHead']);
 
     Route::get('/testMail', [TeacherController::class, 'testMail']);
 });
