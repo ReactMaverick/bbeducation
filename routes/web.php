@@ -71,6 +71,7 @@ Route::post('/addAsnPreferredTeacher', [AssignmentController::class, 'addAsnPref
 Route::post('/updateAssignmentTeacher', [AssignmentController::class, 'updateAssignmentTeacher']);
 Route::get('/assignment-school/{id}', [AssignmentController::class, 'assignmentSchool']);
 Route::get('/assignment-finance/{id}', [AssignmentController::class, 'assignmentFinance']);
+Route::post('/changeAsnProfType', [AssignmentController::class, 'changeAsnProfType']);
 // Assignment
 
 // Teacher
@@ -189,6 +190,8 @@ Route::post('/schoolDocumentDelete', [SchoolController::class, 'schoolDocumentDe
 Route::post('/schoolBillingAddressUpdate', [SchoolController::class, 'schoolBillingAddressUpdate']);
 Route::get('/school-calendar/{id}', [SchoolController::class, 'schoolCalendar']);
 Route::post('/schoolHeaderFabAdd', [SchoolController::class, 'schoolHeaderFabAdd']);
+Route::post('/addAsnCandRate', [SchoolController::class, 'addAsnCandRate']);
+Route::post('/addAllCandRate', [SchoolController::class, 'addAllCandRate']);
 // School
 
 // Finance

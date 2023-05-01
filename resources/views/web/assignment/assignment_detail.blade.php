@@ -75,7 +75,8 @@
                                 <div class="form-group assignment-detail-form-group">
                                     <label for="">Professional Type</label>
                                     <select id="" class="form-control select2" name="professionalType_int"
-                                        style="width:100%;">
+                                        style="width:100%;"
+                                        onchange="changeProfType('{{ $assignmentDetail->school_id }}', this.value)">
                                         <option value="">Choose one</option>
                                         @foreach ($profTypeList as $key => $profType)
                                             <option value="{{ $profType->description_int }}"
@@ -103,8 +104,9 @@
                             <div class="row filter-input-sec">
                                 <div class="form-group filter-input-sec-group col-md-6">
                                     <label for="">Daily Charge</label>
-                                    <input type="text" class="form-control assignment-detail-form-control" id=""
-                                        name="charge_dec" placeholder="" value="{{ $assignmentDetail->charge_dec }}">
+                                    <input type="text" class="form-control assignment-detail-form-control"
+                                        id="asnDailyCharge" name="charge_dec" placeholder=""
+                                        value="{{ $assignmentDetail->charge_dec ? $assignmentDetail->charge_dec : $selectedRate }}">
                                 </div>
 
                                 <div class="form-group filter-input-sec-group2 col-md-6">
@@ -985,5 +987,23 @@
                 });
             }
         });
+
+        function changeProfType(school_id, type) {
+            // alert(school_id + ',' + type)
+            if (school_id && type) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('changeAsnProfType') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        school_id: school_id,
+                        type: type
+                    },
+                    success: function(data) {
+                        $('#asnDailyCharge').val(data.rate);
+                    }
+                });
+            }
+        }
     </script>
 @endsection

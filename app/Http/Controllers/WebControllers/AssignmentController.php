@@ -217,6 +217,15 @@ class AssignmentController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 20)
                 ->get();
 
+            $rateExist = DB::table('tbl_asnRatesSchool')
+                ->where('school_id', $assignmentDetail->school_id)
+                ->where('teacherType_int', $assignmentDetail->professionalType_int)
+                ->first();
+            $selectedRate = '';
+            if ($rateExist) {
+                $selectedRate = $rateExist->asnRate_dec;
+            }
+
             if ($request->ajax()) {
                 $startDate = $request->start;
                 $endDate = $request->end;
@@ -237,7 +246,7 @@ class AssignmentController extends Controller
                 return response()->json($eventItem);
             }
 
-            return view("web.assignment.assignment_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'asn_id' => $id, 'assignmentDetail' => $assignmentDetail, 'ageRangeList' => $ageRangeList, 'subjectList' => $subjectList, 'yearGrList' => $yearGrList, 'assLengthList' => $assLengthList, 'profTypeList' => $profTypeList, 'studentList' => $studentList, 'assignmentStatusList' => $assignmentStatusList, 'dayPartList' => $dayPartList, 'prevDays' => $prevDays, 'nextDays' => $nextDays]);
+            return view("web.assignment.assignment_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'asn_id' => $id, 'assignmentDetail' => $assignmentDetail, 'ageRangeList' => $ageRangeList, 'subjectList' => $subjectList, 'yearGrList' => $yearGrList, 'assLengthList' => $assLengthList, 'profTypeList' => $profTypeList, 'studentList' => $studentList, 'assignmentStatusList' => $assignmentStatusList, 'dayPartList' => $dayPartList, 'prevDays' => $prevDays, 'nextDays' => $nextDays, 'selectedRate' => $selectedRate]);
         } else {
             return redirect()->intended('/');
         }
@@ -1741,5 +1750,27 @@ class AssignmentController extends Controller
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function changeAsnProfType(Request $request)
+    {
+        $school_id = $request->school_id;
+        $type = $request->type;
+        $rate = '';
+        $mainRate = DB::table('tbl_asnRates')
+            ->where('descriptionGroup_id', "=", 7)
+            ->where('descriptionGroup_int', "=", $type)
+            ->first();
+
+        $schoolRate = DB::table('tbl_asnRatesSchool')
+            ->where('school_id', "=", $school_id)
+            ->where('teacherType_int', "=", $type)
+            ->first();
+        if ($schoolRate) {
+            $rate = $schoolRate->asnRate_dec;
+        } else if ($mainRate) {
+            $rate = $mainRate->asnRate_dec;
+        }
+        return response()->json(['rate' => $rate]);
     }
 }

@@ -177,7 +177,8 @@
                             @endif
                         </div>
 
-                        <div class="billing-button">
+                        <div class="billing-button" data-toggle="modal" data-target="#editCandidateRateModal"
+                            style="cursor: pointer;">
                             <button>Candidate Rates</button>
                         </div>
 
@@ -310,6 +311,92 @@
         </div>
     </div>
     <!-- Split Invoice Modal -->
+
+    <!-- Candidate Rate Edit Modal -->
+    <div class="modal fade" id="editCandidateRateModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width: 65%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Edit Assignment Rates</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Edit Assignment Rates</h2>
+                </div>
+
+                <form action="{{ url('/addAllCandRate') }}" method="post">
+                    @csrf
+                    <div class="modal-input-field-section">
+                        <input type="hidden" name="school_id" id="rateSchoolId"
+                            value="{{ $schoolDetail->school_id }}">
+
+                        <div class="row">
+                            <div class="finance-timesheet-contact-second-sec mb-3" style="width: 100%;">
+                                <div class="contact-heading">
+                                    <div class="contact-heading-text">
+                                        <h2>Profession ( Select one )</h2>
+                                    </div>
+                                </div>
+                                <div class="finance-list-section">
+                                    <div class="finance-list-text-section">
+                                        <div class="finance-list-text">
+                                            <table class="table finance-timesheet-page-table" id="">
+                                                <tbody class="table-body-sec">
+                                                    @foreach ($candRateList as $key => $candRate)
+                                                        <?php $fRate = $candRate->schAsnRate_dec ? $candRate->schAsnRate_dec : $candRate->mainAsnRate_dec;
+                                                        ?>
+
+                                                        <input type="hidden" name="rateDescInt[]"
+                                                            value="{{ $candRate->description_int }}">
+                                                        <input type="hidden" name="rateDescRate[]"
+                                                            value="{{ $fRate }}">
+
+                                                        <tr class="school-detail-table-data selectRateRow"
+                                                            id="selectRateRow{{ $candRate->description_int }}"
+                                                            onclick="selectRateRowSelect({{ $candRate->description_int }}, '{{ $fRate }}')">
+                                                            <td>{{ $candRate->description_txt }}</td>
+                                                            <td>{{ $fRate }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <div class="modal-input-field">
+                                    <label class="form-check-label">Profession Rate</label>
+                                    <input type="hidden" id="selectedRateInt" value="">
+                                    <input type="text" class="form-control onlynumber" name="profession_rate"
+                                        id="selectedRateValue" value="">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="modal-footer calendar-modal-footer">
+                                    <button type="button" class="btn btn-secondary" id="saveRate">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Candidate Rate Edit Modal -->
 
     <script>
         $(document).ready(function() {
@@ -611,6 +698,43 @@
                     });
             } else {
                 swal("", "Please select one invoice.");
+            }
+        });
+
+        function selectRateRowSelect(description_int, fRate) {
+            if ($('#selectRateRow' + description_int).hasClass('tableRowActive')) {
+                $('#selectedRateInt').val('');
+                $('#selectedRateValue').val('');
+                $('#selectRateRow' + description_int).removeClass('tableRowActive');
+            } else {
+                $('#selectedRateInt').val(description_int);
+                $('#selectedRateValue').val(fRate);
+                $('.selectRateRow').removeClass('tableRowActive');
+                $('#selectRateRow' + description_int).addClass('tableRowActive');
+            }
+        }
+
+        $(document).on('click', '#saveRate', function() {
+            var schoolId = $('#rateSchoolId').val();
+            var selectedRateInt = $('#selectedRateInt').val();
+            var selectedRateValue = $('#selectedRateValue').val();
+            // console.log(schoolId + ',' + selectedRateInt + ',' + selectedRateValue);
+            if (selectedRateInt) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('addAsnCandRate') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        schoolId: schoolId,
+                        selectedRateInt: selectedRateInt,
+                        selectedRateValue: selectedRateValue
+                    },
+                    success: function(data) {
+                        location.reload();
+                    }
+                });
+            } else {
+                swal("", "Please select one profession.");
             }
         });
     </script>

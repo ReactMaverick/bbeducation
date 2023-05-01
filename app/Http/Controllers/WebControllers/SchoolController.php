@@ -1091,7 +1091,28 @@ class SchoolController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 7)
                 ->get();
 
-            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet, 'paymentMethodList' => $paymentMethodList, 'profTypeList' => $profTypeList]);
+            $candRateList = DB::table('tbl_description')
+                ->LeftJoin('tbl_asnRates', function ($join) {
+                    $join->on('tbl_asnRates.descriptionGroup_int', '=', 'tbl_description.description_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_asnRates.descriptionGroup_id', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_asnRatesSchool', function ($join) use ($id) {
+                    $join->on('tbl_asnRatesSchool.teacherType_int', '=', 'tbl_description.description_int')
+                        ->where(function ($query) use ($id) {
+                            $query->where('tbl_asnRatesSchool.school_id', '=', $id);
+                        });
+                })
+                ->select('tbl_description.description_int', 'tbl_description.description_txt', 'tbl_asnRates.asnRate_dec as mainAsnRate_dec', 'tbl_asnRatesSchool.asnRateSchool_id', 'tbl_asnRatesSchool.asnRate_dec as schAsnRate_dec')
+                ->where('tbl_description.descriptionGroup_int', 7)
+                ->where('tbl_description.description_int', '<=', 12)
+                ->orderBy('tbl_description.description_int', 'ASC')
+                ->get();
+
+            // dd($candRateList);
+
+            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet, 'paymentMethodList' => $paymentMethodList, 'profTypeList' => $profTypeList, 'candRateList' => $candRateList]);
         } else {
             return redirect()->intended('/');
         }
@@ -2302,6 +2323,72 @@ class SchoolController extends Controller
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function addAsnCandRate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $schoolId = $request->schoolId;
+            $selectedRateInt = $request->selectedRateInt;
+            $selectedRateValue = $request->selectedRateValue;
+            $rateExist = DB::table('tbl_asnRatesSchool')
+                ->where('school_id', $schoolId)
+                ->where('teacherType_int', $selectedRateInt)
+                ->first();
+            if ($rateExist) {
+                DB::table('tbl_asnRatesSchool')
+                    ->where('asnRateSchool_id', '=', $rateExist->asnRateSchool_id)
+                    ->update([
+                        'asnRate_dec' => $selectedRateValue
+                    ]);
+            } else {
+                DB::table('tbl_asnRatesSchool')
+                    ->insert([
+                        'school_id' => $schoolId,
+                        'teacherType_int' => $selectedRateInt,
+                        'asnRate_dec' => $selectedRateValue
+                    ]);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addAllCandRate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $school_id = $request->school_id;
+
+            foreach ($request->rateDescInt as $key => $value) {
+                $rateExist = DB::table('tbl_asnRatesSchool')
+                    ->where('school_id', $school_id)
+                    ->where('teacherType_int', $value)
+                    ->first();
+                if ($rateExist) {
+                    DB::table('tbl_asnRatesSchool')
+                        ->where('asnRateSchool_id', '=', $rateExist->asnRateSchool_id)
+                        ->update([
+                            'asnRate_dec' => $request->rateDescRate[$key]
+                        ]);
+                } else {
+                    DB::table('tbl_asnRatesSchool')
+                        ->insert([
+                            'school_id' => $school_id,
+                            'teacherType_int' => $value,
+                            'asnRate_dec' => $request->rateDescRate[$key]
+                        ]);
+                }
+            }
+
+            return redirect()->back()->with('success', "Assignment rate updated successfully.");
+        } else {
+            return redirect()->intended('/');
         }
     }
 
