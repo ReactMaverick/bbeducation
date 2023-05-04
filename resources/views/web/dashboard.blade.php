@@ -9,14 +9,19 @@
                         <div class="date-sec">
                             <span>Week Beginning</span>
                             <div class="date-text">
-                                <a href="{{ URL::to('/dashboard?date='.date('Y-m-d', strtotime($weekStartDate .' -7 days')) ) }}"><i class="fa-solid fa-caret-left"></i></a>
+                                <a
+                                    href="{{ URL::to('/dashboard?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}"><i
+                                        class="fa-solid fa-caret-left"></i></a>
                                 <h2>{{ date('D d M Y', strtotime($weekStartDate)) }}</h2>
-                                <a href="{{ URL::to('/dashboard?date='.date('Y-m-d', strtotime($weekStartDate .' +7 days')) ) }}"><i class="fa-solid fa-caret-right"></i></a>
+                                <a
+                                    href="{{ URL::to('/dashboard?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}"><i
+                                        class="fa-solid fa-caret-right"></i></a>
                             </div>
                         </div>
                         <div class="sidebar-sec">
                             <div class="sidebar-data">
-                                <h2>{{ number_format((float)$sideBarData[0]->daysThisWeek, 1, '.', '') }}</h2>
+                                {{-- <h2>{{ number_format((float)$sideBarData[0]->daysThisWeek, 1, '.', '') }}</h2> --}}
+                                <h2>{{ number_format((float) $asnSubquery->daysThisPeriod_dec, 1, '.', '') }}</h2>
                             </div>
                             <div class="sidebar-sec-text">
                                 <span>Days this Week</span>
@@ -25,7 +30,8 @@
 
                         <div class="sidebar-sec">
                             <div class="sidebar-data2">
-                                <h2>{{ $sideBarData[0]->teachersWorking }}</h2>
+                                {{-- <h2>{{ $sideBarData[0]->teachersWorking }}</h2> --}}
+                                <h2>{{ $asnSubquery->teachersWorking_int }}</h2>
                             </div>
                             <div class="sidebar-sec-text">
                                 <span>Teachers Working</span>
@@ -34,7 +40,8 @@
 
                         <div class="sidebar-sec">
                             <div class="sidebar-data3">
-                                <h2>{{ $sideBarData[0]->schoolsUsing }}</h2>
+                                {{-- <h2>{{ $sideBarData[0]->schoolsUsing }}</h2> --}}
+                                <h2>{{ $asnSubquery->schoolsUsing_int }}</h2>
                             </div>
                             <div class="sidebar-sec-text">
                                 <span>Schools Using</span>
@@ -42,11 +49,12 @@
                         </div>
                         <div class="price-sec">
                             <span>Predicted GP (this week)</span>
-                            <h2>&#163 {{ number_format((float)$sideBarData[0]->predictedGP, 1, '.', '') }}</h2>
+                            {{-- <h2>&#163 {{ number_format((float)$sideBarData[0]->predictedGP, 1, '.', '') }}</h2> --}}
+                            <h2>&#163 {{ number_format((float) $asnSubquery->predictedGP_dec, 1, '.', '') }}</h2>
                             <span>Billed That Week</span>
-                            <h2>&#163 0.00</h2>
+                            <h2>&#163 {{ $billedSubquery->actualBilled_dec }}</h2>
                             <span>Invoices This Week</span>
-                            <h2>&#163 0.00</h2>
+                            <h2>&#163 {{ $invoiceSubquery->actualGP_dec }}</h2>
                         </div>
                     </div>
                 </div>

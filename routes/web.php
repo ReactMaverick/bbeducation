@@ -240,6 +240,8 @@ Route::get('/management-user', [ManagementController::class, 'managementUser']);
 Route::get('/management-mailshot', [ManagementController::class, 'managementMailshot']);
 Route::post('/studentInsert', [ManagementController::class, 'studentInsert']);
 Route::post('/studentUpdate', [ManagementController::class, 'studentUpdate']);
+Route::post('/viewMetricsAjax', [ManagementController::class, 'viewMetricsAjax']);
+Route::post('/viewMetricsExport', [ManagementController::class, 'viewMetricsExport']);
 // Management
 
 

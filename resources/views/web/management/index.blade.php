@@ -44,7 +44,8 @@
                         </a>
                     </div> --}}
                     <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-chart-line"></i>
+                        <a data-toggle="modal" data-target="#viewMetricsModal" style="cursor: pointer;"> <i
+                                class="fa-solid fa-chart-line"></i>
                             <p>View Metrics</p>
                         </a>
                     </div>
@@ -191,6 +192,105 @@
     </div>
     <!-- Student Edit Modal -->
 
+    <!-- View Metrics Modal -->
+    <div class="modal fade" id="viewMetricsModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width: 65%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Finance Report</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-chart-line school-edit-icon"></i>
+                    <h2>Metrics Report</h2>
+                </div>
+
+                <form action="{{ url('/viewMetricsExport') }}" method="post">
+                    @csrf
+                    <div class="modal-input-field-section">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="modal-input-field">
+                                    <label class="form-check-label">Start Date</label>
+                                    <input type="date" class="form-control" name="start_date" id="metricStartDate"
+                                        value="{{ $startOfMonth }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modal-input-field">
+                                    <label class="form-check-label">End Date</label>
+                                    <input type="date" class="form-control" name="end_date" id="metricEndDate"
+                                        value="{{ $endOfMonth }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="metricSubmitBtn">Submit</button>
+                    </div>
+
+                    <div class="modal-input-field-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>Total Days</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p id="totalDaysView">{{ $asnSubquery->daysThisPeriod_dec }}</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p>Teachers Working</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p id="teacherWorkView">{{ $asnSubquery->teachersWorking_int }}</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p>School using ( {{ $companyDetail->company_name }} )</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p id="schoolView">{{ $asnSubquery->schoolsUsing_int }}</p>
+                            </div>
+
+
+                            <div class="col-md-6 mt-3">
+                                <p>Predicted GP</p>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <p>£ <span id="predGpView">{{ $asnSubquery->predictedGP_dec }}</span></p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p>Billed GP</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>£ <span id="billGpView">{{ $billedSubquery->actualBilled_dec }}</span></p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p>Total Turnover</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>£ <span id="turnoverView">{{ $invoiceSubquery->actualGP_dec }}</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary">Export</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- View Metrics Modal -->
+
     <script>
         $(document).on('click', '#studentAddBtn', function() {
             var error = "";
@@ -294,6 +394,45 @@
                         swal("", "Student updated successfully.");
                     }
                 });
+            }
+        });
+
+        $(document).on('click', '#metricSubmitBtn', function(e) {
+            var metricStartDate = $("#metricStartDate").val();
+            var metricEndDate = $("#metricEndDate").val();
+            if (metricStartDate && metricEndDate) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('viewMetricsAjax') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        metricStartDate: metricStartDate,
+                        metricEndDate: metricEndDate
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data == 'login') {
+                            var loginUrl = '<?php echo url('/'); ?>';
+                            window.location.assign(loginUrl);
+                        } else {
+                            $('#totalDaysView').html('');
+                            $('#teacherWorkView').html('');
+                            $('#schoolView').html('');
+                            $('#predGpView').html('');
+                            $('#billGpView').html('');
+                            $('#turnoverView').html('');
+
+                            $('#totalDaysView').html(data.asnSubquery.daysThisPeriod_dec);
+                            $('#teacherWorkView').html(data.asnSubquery.teachersWorking_int);
+                            $('#schoolView').html(data.asnSubquery.schoolsUsing_int);
+                            $('#predGpView').html(data.asnSubquery.predictedGP_dec);
+                            $('#billGpView').html(data.billedSubquery.actualBilled_dec);
+                            $('#turnoverView').html(data.invoiceSubquery.actualGP_dec);
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please enter start date and end date both.");
             }
         });
     </script>
