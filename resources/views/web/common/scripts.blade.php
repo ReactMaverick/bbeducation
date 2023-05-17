@@ -32,6 +32,11 @@
     $(document).ready(function() {
         $(".select2").select2();
         $('#fullLoader').hide();
+
+        $('.datePickerPaste').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        });
     });
 
     $(document).on('keyup', '.onlynumber', function(e) {
@@ -133,10 +138,29 @@
             }
         });
 
+        $(".datepaste-validate").each(function() {
+            var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+            if (this.value == '' || !dateRegex.test(this.value)) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
 
+    });
+
+    $(document).on('keyup change', '.datepaste-validate', function(e) {
+        var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+        if (this.value == '' || !dateRegex.test(this.value)) {
+            $(this).closest(".form-group").addClass('has-error');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+        }
     });
 
     $(document).on('keyup focusout', '.phone-validate', function(e) {
@@ -319,10 +343,29 @@
             }
         });
 
+        $(".datepaste-validate-2").each(function() {
+            var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+            if (this.value == '' || !dateRegex.test(this.value)) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
 
+    });
+
+    $(document).on('keyup change', '.datepaste-validate-2', function(e) {
+        var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+        if (this.value == '' || !dateRegex.test(this.value)) {
+            $(this).closest(".form-group").addClass('has-error');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+        }
     });
 
     $(document).on('keyup focusout', '.phone-validate-2', function(e) {
@@ -515,10 +558,29 @@
             }
         });
 
+        $(".datepaste-validate-3").each(function() {
+            var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+            if (this.value == '' || !dateRegex.test(this.value)) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
 
+    });
+
+    $(document).on('keyup change', '.datepaste-validate-3', function(e) {
+        var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+        if (this.value == '' || !dateRegex.test(this.value)) {
+            $(this).closest(".form-group").addClass('has-error');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+        }
     });
 
     $(document).on('keyup focusout', '.phone-validate-3', function(e) {
@@ -711,10 +773,29 @@
             }
         });
 
+        $(".datepaste-validate-4").each(function() {
+            var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+            if (this.value == '' || !dateRegex.test(this.value)) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
 
+    });
+
+    $(document).on('keyup change', '.datepaste-validate-4', function(e) {
+        var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+        if (this.value == '' || !dateRegex.test(this.value)) {
+            $(this).closest(".form-group").addClass('has-error');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+        }
     });
 
     $(document).on('keyup focusout', '.phone-validate-4', function(e) {
@@ -882,10 +963,29 @@
             }
         });
 
+        $(".datepaste-validate-5").each(function() {
+            var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+            if (this.value == '' || !dateRegex.test(this.value)) {
+                $(this).closest(".form-group").addClass('has-error');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
+        });
+
         if (error == "has error") {
             return false;
         }
 
+    });
+
+    $(document).on('keyup change', '.datepaste-validate-5', function(e) {
+        var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+        if (this.value == '' || !dateRegex.test(this.value)) {
+            $(this).closest(".form-group").addClass('has-error');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+        }
     });
 
     $(document).on('keyup focusout', '.phone-validate-5', function(e) {

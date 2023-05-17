@@ -169,7 +169,8 @@
                                     <h2>Health Decoration Date</h2>
                                 </div>
                                 <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->healthDeclaration_dte!=null?date('d-m-Y', strtotime($teacherDetail->healthDeclaration_dte)):'' }}</p>
+                                    <p>{{ $teacherDetail->healthDeclaration_dte != null ? date('d-m-Y', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -234,8 +235,8 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Max. Distance</label>
-                                    <input type="text" class="form-control numberField" name="prefDistance_int" id=""
-                                        value="{{ $teacherDetail->prefDistance_int }}">
+                                    <input type="text" class="form-control numberField" name="prefDistance_int"
+                                        id="" value="{{ $teacherDetail->prefDistance_int }}">
                                 </div>
 
                                 <div class="form-group modal-input-field">
@@ -245,8 +246,8 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Current Rate</label>
-                                    <input type="text" class="form-control numberField" name="currentRate_dec" id=""
-                                        value="{{ $teacherDetail->currentRate_dec }}">
+                                    <input type="text" class="form-control numberField" name="currentRate_dec"
+                                        id="" value="{{ $teacherDetail->currentRate_dec }}">
                                 </div>
                             </div>
                             <div class="col-md-6 modal-form-right-sec">
@@ -273,8 +274,8 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Pref. Year Group</label>
-                                    <input type="text" class="form-control numberField" name="prefYearGroup_int" id=""
-                                        value="{{ $teacherDetail->prefYearGroup_int }}">
+                                    <input type="text" class="form-control numberField" name="prefYearGroup_int"
+                                        id="" value="{{ $teacherDetail->prefYearGroup_int }}">
                                 </div>
 
                                 <div class="form-group modal-input-field">
@@ -342,8 +343,9 @@
 
                                 <div class="modal-input-field">
                                     <label class="form-check-label">Health Decoration Date</label>
-                                    <input type="date" class="form-control" name="healthDeclaration_dte" id=""
-                                        value="{{ $teacherDetail->healthDeclaration_dte != null?date("Y-m-d",strtotime($teacherDetail->healthDeclaration_dte)):'' }}">
+                                    <input type="text" class="form-control datePickerPaste"
+                                        name="healthDeclaration_dte" id=""
+                                        value="{{ $teacherDetail->healthDeclaration_dte != null ? date('d/m/Y', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}">
                                 </div>
                             </div>
                             <div class="col-md-6 modal-form-right-sec">

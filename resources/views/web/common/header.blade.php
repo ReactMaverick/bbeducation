@@ -67,18 +67,18 @@
                 </i>
             </a>
         </li>
-        <li class="nav-item dropdown">
+        {{-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="fa-solid fa-gear">
                     <span class="tab-section-text">Settings</span>
                 </i>
             </a>
-            {{-- <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="{{ URL::to('/profile') }}">Profile</a>
                 <!-- <div class="dropdown-divider"></div> -->
-            </div> --}}
-        </li>
+            </div>
+        </li> --}}
         <li class="nav-item @if ($headerTitle == 'Logout') header-active @endif ">
             <a class="nav-link" href="{{ URL::to('/logout') }}">
                 <i class="fa-solid fa-arrow-right-from-bracket">

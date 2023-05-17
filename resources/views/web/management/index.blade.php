@@ -14,7 +14,7 @@
                         </a>
                     </div> --}}
 
-                    <div class="about-finance">
+                    {{-- <div class="about-finance">
                         <a href="#"> <i class="fa-solid fa-user"></i>
                             <p>Manage Users</p>
                         </a>
@@ -24,7 +24,7 @@
                         <a href="{{ URL::to('/management-mailshot') }}"> <i class="fa-solid fa-envelope"></i>
                             <p>Mailshots</p>
                         </a>
-                    </div>
+                    </div> --}}
                     <div class="about-finance">
                         <a data-toggle="modal" data-target="#studentAddModal" style="cursor: pointer;">
                             <i class="fa-solid fa-people-group"></i>

@@ -35,9 +35,6 @@
                                 <div class="teacher-profession-heading-text">
                                     <h2>SubType</h2>
                                 </div>
-                                <!-- <div class="teacher-profession-name-text">
-                                            <p>Mr</p>
-                                        </div> -->
                             </div>
                             <div class="school-name-section">
                                 <div class="teacher-profession-heading-text">
@@ -84,8 +81,8 @@
                                     <h2>Imported Title</h2>
                                 </div>
                                 <!-- <div class="teacher-profession-name-text">
-                                            <p>Spanish</p>
-                                        </div> -->
+                                                                                <p>Spanish</p>
+                                                                            </div> -->
                             </div>
                         </div>
                     </div>
@@ -131,11 +128,15 @@
                                     <h2>Interview Details</h2>
                                 </div>
                                 <div class="teacher-profession-name-text">
-                                    @if($teacherDetail->int_firstName_txt && $teacherDetail->int_surname_txt && $teacherDetail->interviewCompletedOn_dtm != null)
-                                    <p>Interviewed by
-                                        {{ $teacherDetail->int_firstName_txt . ' ' . $teacherDetail->int_surname_txt }} on
-                                        {{ $teacherDetail->interviewCompletedOn_dtm != null ? date('d-m-Y', strtotime($teacherDetail->interviewCompletedOn_dtm)) : '' }}
-                                    </p>
+                                    @if (
+                                        $teacherDetail->int_firstName_txt &&
+                                            $teacherDetail->int_surname_txt &&
+                                            $teacherDetail->interviewCompletedOn_dtm != null)
+                                        <p>Interviewed by
+                                            {{ $teacherDetail->int_firstName_txt . ' ' . $teacherDetail->int_surname_txt }}
+                                            on
+                                            {{ $teacherDetail->interviewCompletedOn_dtm != null ? date('d-m-Y', strtotime($teacherDetail->interviewCompletedOn_dtm)) : '' }}
+                                        </p>
                                     @endif
                                 </div>
                             </div>
@@ -170,7 +171,9 @@
                                 </thead>
                                 <tbody class="table-body-sec">
                                     @foreach ($teacherSubjects as $key1 => $subjects)
-                                        <tr class="school-detail-table-data editSubjectRow" id="editSubjectRow{{ $subjects->teacherSubject_id }}" onclick="teachingSubjectRowSelect({{ $subjects->teacherSubject_id }})">
+                                        <tr class="school-detail-table-data editSubjectRow"
+                                            id="editSubjectRow{{ $subjects->teacherSubject_id }}"
+                                            onclick="teachingSubjectRowSelect({{ $subjects->teacherSubject_id }})">
                                             <td>{{ $subjects->subject_txt }}</td>
                                             <td>
                                                 @if ($subjects->isMain_status == -1)
@@ -216,7 +219,9 @@
                                 </thead>
                                 <tbody class="table-body-sec">
                                     @foreach ($teacherQualifications as $key2 => $qualifications)
-                                        <tr class="school-detail-table-data editQualificationRow" id="editQualificationRow{{ $qualifications->qualification_id }}" onclick="qualificationRowSelect({{ $qualifications->qualification_id }})">
+                                        <tr class="school-detail-table-data editQualificationRow"
+                                            id="editQualificationRow{{ $qualifications->qualification_id }}"
+                                            onclick="qualificationRowSelect({{ $qualifications->qualification_id }})">
                                             <td>{{ $qualifications->subType_txt }}</td>
                                             <td>{{ $qualifications->title_txt }}</td>
                                             <td>
@@ -274,10 +279,12 @@
                             <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Candidate Type</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate select2" name="professionalType_int" style="width:100%;">
+                                    <select class="form-control field-validate select2" name="professionalType_int"
+                                        style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($candidateList as $key4 => $candidate)
-                                            <option value="{{ $candidate->description_int }}" {{ $teacherDetail->professionalType_int==$candidate->description_int?'selected':'' }} >
+                                            <option value="{{ $candidate->description_int }}"
+                                                {{ $teacherDetail->professionalType_int == $candidate->description_int ? 'selected' : '' }}>
                                                 {{ $candidate->description_txt }}
                                             </option>
                                         @endforeach
@@ -286,10 +293,12 @@
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Age Range</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate select2" name="ageRangeSpecialism_int" style="width:100%;">
+                                    <select class="form-control field-validate select2" name="ageRangeSpecialism_int"
+                                        style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($agerangeList as $key5 => $agerange)
-                                            <option value="{{ $agerange->description_int }}" {{ $teacherDetail->ageRangeSpecialism_int==$agerange->description_int?'selected':'' }} >
+                                            <option value="{{ $agerange->description_int }}"
+                                                {{ $teacherDetail->ageRangeSpecialism_int == $agerange->description_int ? 'selected' : '' }}>
                                                 {{ $agerange->description_txt }}
                                             </option>
                                         @endforeach
@@ -299,20 +308,22 @@
                                 <div class="modal-side-field mb-2">
                                     <label class="form-check-label" for="NQTRequired_status">NQT Year Required</label>
                                     <input type="checkbox" class="" name="NQTRequired_status"
-                                        id="NQTRequired_status" value="1" {{ $teacherDetail->NQTRequired_status=='-1'?'checked':'' }}>
+                                        id="NQTRequired_status" value="1"
+                                        {{ $teacherDetail->NQTRequired_status == '-1' ? 'checked' : '' }}>
                                 </div>
                             </div>
                             <div class="col-md-6 modal-form-right-sec">
                                 <div class="modal-input-field">
                                     <label class="form-check-label">NQT Year Completed</label>
-                                    <input type="date" class="form-control" name="NQTCompleted_dte" id=""
-                                        value="{{ $teacherDetail->NQTCompleted_dte != null?date("Y-m-d",strtotime($teacherDetail->NQTCompleted_dte)):'' }}">
+                                    <input type="text" class="form-control datePickerPaste" name="NQTCompleted_dte"
+                                        id=""
+                                        value="{{ $teacherDetail->NQTCompleted_dte != null ? date('d/m/Y', strtotime($teacherDetail->NQTCompleted_dte)) : '' }}">
                                 </div>
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Teacher Reference Number</label>
-                                    <input type="text" class="form-control" name="profTRN_txt"
-                                        id="" value="{{ $teacherDetail->profTRN_txt }}">
+                                    <input type="text" class="form-control" name="profTRN_txt" id=""
+                                        value="{{ $teacherDetail->profTRN_txt }}">
                                 </div>
                             </div>
                         </div>
@@ -368,7 +379,8 @@
                                     <select class="form-control select2" name="interviewQuality_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($interviewQualityList as $key4 => $interviewQuality)
-                                            <option value="{{ $interviewQuality->description_int }}" {{ $teacherDetail->interviewQuality_int==$interviewQuality->description_int?'selected':'' }} >
+                                            <option value="{{ $interviewQuality->description_int }}"
+                                                {{ $teacherDetail->interviewQuality_int == $interviewQuality->description_int ? 'selected' : '' }}>
                                                 {{ $interviewQuality->description_txt }}
                                             </option>
                                         @endforeach
@@ -377,10 +389,12 @@
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Language Skills</label>
-                                    <select class="form-control select2" name="interviewLanguageSkills_int" style="width:100%;">
+                                    <select class="form-control select2" name="interviewLanguageSkills_int"
+                                        style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($languageSkillList as $key5 => $languageSkill)
-                                            <option value="{{ $languageSkill->description_int }}" {{ $teacherDetail->interviewLanguageSkills_int==$languageSkill->description_int?'selected':'' }} >
+                                            <option value="{{ $languageSkill->description_int }}"
+                                                {{ $teacherDetail->interviewLanguageSkills_int == $languageSkill->description_int ? 'selected' : '' }}>
                                                 {{ $languageSkill->description_txt }}
                                             </option>
                                         @endforeach
@@ -388,9 +402,10 @@
                                 </div>
 
                                 <div class="modal-input-field">
-                                    <label class="form-check-label">Interviewed Date/Time</label>
-                                    <input type="datetime-local" class="form-control" name="interviewCompletedOn_dtm" id=""
-                                        value="{{ $teacherDetail->interviewCompletedOn_dtm != null?date("Y-m-d H:i",strtotime($teacherDetail->interviewCompletedOn_dtm)):'' }}">
+                                    <label class="form-check-label">Interviewed Date</label>
+                                    <input type="text" class="form-control datePickerPaste"
+                                        name="interviewCompletedOn_dtm" id=""
+                                        value="{{ $teacherDetail->interviewCompletedOn_dtm != null ? date('d/m/Y', strtotime($teacherDetail->interviewCompletedOn_dtm)) : '' }}">
                                 </div>
                             </div>
                             <div class="col-md-6 modal-form-right-sec">
@@ -450,7 +465,8 @@
                             <div class="col-md-12">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Subject</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate-2 select2" name="subject_id" id="" style="width: 100%;">
+                                    <select class="form-control field-validate-2 select2" name="subject_id"
+                                        id="" style="width: 100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($subjectList as $key1 => $subjects)
                                             <option value="{{ $subjects->description_int }}">
@@ -462,8 +478,8 @@
 
                                 <div class="modal-side-field mb-2">
                                     <label class="form-check-label" for="isMain_status">Main Subject</label>
-                                    <input type="checkbox" class="" name="isMain_status"
-                                        id="isMain_status" value="1">
+                                    <input type="checkbox" class="" name="isMain_status" id="isMain_status"
+                                        value="1">
                                 </div>
                             </div>
                         </div>
@@ -562,7 +578,7 @@
                             <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Qualification Type</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate-4" name="type_int"  style="width:100%;">
+                                    <select class="form-control field-validate-4" name="type_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($typeList as $key1 => $type)
                                             <option value="{{ $type->description_int }}">
@@ -574,7 +590,7 @@
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">subtype</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate-4" name="subType_int"  style="width:100%;">
+                                    <select class="form-control field-validate-4" name="subType_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($subTypeList as $key1 => $subType)
                                             <option value="{{ $subType->description_int }}">
@@ -586,25 +602,27 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Title</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control field-validate-4" name="title_txt" id="" value="">
+                                    <input type="text" class="form-control field-validate-4" name="title_txt"
+                                        id="" value="">
                                 </div>
 
                                 <div class="modal-side-field mb-2">
                                     <label class="form-check-label" for="givesQTS_status">Gives QTS</label>
-                                    <input type="checkbox" class="" name="givesQTS_status"
-                                        id="givesQTS_status" value="1">
+                                    <input type="checkbox" class="" name="givesQTS_status" id="givesQTS_status"
+                                        value="1">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Awarding Body</label>
-                                    <input type="text" class="form-control" name="awardingBody_txt"
-                                        id="" value="">
+                                    <input type="text" class="form-control" name="awardingBody_txt" id=""
+                                        value="">
                                 </div>
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Qualification Date</label>
-                                    <input type="date" class="form-control" name="qualified_dte" id="" value="">
+                                    <input type="text" class="form-control datePickerPaste" name="qualified_dte"
+                                        id="" value="">
                                 </div>
                             </div>
                         </div>
@@ -679,7 +697,7 @@
             });
         });
 
-        function teachingSubjectRowSelect(teacherSubject_id){
+        function teachingSubjectRowSelect(teacherSubject_id) {
             if ($('#editSubjectRow' + teacherSubject_id).hasClass('tableRowActive')) {
                 $('#teacherSubjectId').val('');
                 $('#editSubjectRow' + teacherSubject_id).removeClass('tableRowActive');
@@ -714,7 +732,7 @@
             }
         });
 
-        function qualificationRowSelect(qualification_id){
+        function qualificationRowSelect(qualification_id) {
             if ($('#editQualificationRow' + qualification_id).hasClass('tableRowActive')) {
                 $('#teacherQualificationId').val('');
                 $('#editQualificationRow' + qualification_id).removeClass('tableRowActive');
@@ -782,6 +800,5 @@
                 swal("", "Please select one qualification.");
             }
         });
-
     </script>
 @endsection

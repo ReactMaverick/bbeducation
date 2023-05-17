@@ -330,8 +330,9 @@
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Date of Birth</label><span
                                         style="color: red;">*</span>
-                                    <input type="date" class="form-control field-validate" name="DOB_dte"
-                                        id="" value="{{ date('Y-m-d', strtotime($teacherDetail->DOB_dte)) }}">
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate"
+                                        name="DOB_dte" id=""
+                                        value="{{ date('d/m/Y', strtotime($teacherDetail->DOB_dte)) }}">
                                 </div>
 
                                 <div class="form-group calendar-form-filter">

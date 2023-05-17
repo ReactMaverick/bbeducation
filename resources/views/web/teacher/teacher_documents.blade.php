@@ -618,9 +618,9 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Date Register On Update</label>
-                                    <input type="date" class="form-control" name="vetUpdateServiceReg_dte"
-                                        id=""
-                                        value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('Y-m-d', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}">
+                                    <input type="text" class="form-control datePickerPaste"
+                                        name="vetUpdateServiceReg_dte" id=""
+                                        value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('d/m/Y', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}">
                                 </div>
 
                                 <div class="modal-side-field mb-2">

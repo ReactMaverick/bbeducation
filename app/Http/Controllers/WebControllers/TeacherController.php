@@ -137,7 +137,7 @@ class TeacherController extends Controller
             }
             $NQTCompleted_dte = NULL;
             if ($request->NQTCompleted_dte != '') {
-                $NQTCompleted_dte = date("Y-m-d", strtotime($request->NQTCompleted_dte));
+                $NQTCompleted_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->NQTCompleted_dte)));
             }
             $activeStatus = 0;
             if ($request->activeStatus) {
@@ -160,7 +160,7 @@ class TeacherController extends Controller
                     'address4_txt' => $request->address4_txt,
                     'postcode_txt' => $request->postcode_txt,
                     'nationality_int' => $request->nationality_int,
-                    'DOB_dte' => date("Y-m-d", strtotime($request->DOB_dte)),
+                    'DOB_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->DOB_dte))),
                     'professionalType_int' => $request->professionalType_int,
                     'ageRangeSpecialism_int' => $request->ageRangeSpecialism_int,
                     'NQTRequired_status' => $NQTRequired_status,
@@ -1051,7 +1051,7 @@ class TeacherController extends Controller
                     'maidenPreviousNames_txt' => $request->maidenPreviousNames_txt,
                     'middleNames_txt' => $request->middleNames_txt,
                     'nationality_int' => $request->nationality_int,
-                    'DOB_dte' => date("Y-m-d", strtotime($request->DOB_dte))
+                    'DOB_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->DOB_dte)))
                 ]);
 
             return redirect()->back()->with('success', "Details updated successfully.");
@@ -1382,7 +1382,7 @@ class TeacherController extends Controller
             }
             $NQTCompleted_dte = NULL;
             if ($request->NQTCompleted_dte != '') {
-                $NQTCompleted_dte = date("Y-m-d", strtotime($request->NQTCompleted_dte));
+                $NQTCompleted_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->NQTCompleted_dte)));
             }
 
             DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
@@ -1409,7 +1409,7 @@ class TeacherController extends Controller
             $teacher_id = $request->teacher_id;
             $interviewCompletedOn_dtm = NULL;
             if ($request->interviewCompletedOn_dtm != '') {
-                $interviewCompletedOn_dtm = date("Y-m-d H:i:s", strtotime($request->interviewCompletedOn_dtm));
+                $interviewCompletedOn_dtm = date("Y-m-d H:i:s", strtotime(str_replace('/', '-', $request->interviewCompletedOn_dtm)));
             }
 
             DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
@@ -1533,7 +1533,7 @@ class TeacherController extends Controller
             }
             $qualified_dte = NULL;
             if ($request->qualified_dte != '') {
-                $qualified_dte = date("Y-m-d", strtotime($request->qualified_dte));
+                $qualified_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->qualified_dte)));
             }
 
             DB::table('tbl_teacherQualification')
@@ -1599,7 +1599,7 @@ class TeacherController extends Controller
             }
             $qualified_dte = NULL;
             if ($request->qualified_dte != '') {
-                $qualified_dte = date("Y-m-d", strtotime($request->qualified_dte));
+                $qualified_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->qualified_dte)));
             }
 
             DB::table('tbl_teacherQualification')
@@ -1799,7 +1799,7 @@ class TeacherController extends Controller
             $teacher_id = $request->teacher_id;
             $healthDeclaration_dte = NULL;
             if ($request->healthDeclaration_dte != '') {
-                $healthDeclaration_dte = date("Y-m-d", strtotime($request->healthDeclaration_dte));
+                $healthDeclaration_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->healthDeclaration_dte)));
             }
 
             DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
@@ -1956,11 +1956,11 @@ class TeacherController extends Controller
             }
             $employedFrom_dte = NULL;
             if ($request->employedFrom_dte != '') {
-                $employedFrom_dte = date("Y-m-d", strtotime($request->employedFrom_dte));
+                $employedFrom_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->employedFrom_dte)));
             }
             $employedUntil_dte = NULL;
             if ($request->employedUntil_dte != '') {
-                $employedUntil_dte = date("Y-m-d", strtotime($request->employedUntil_dte));
+                $employedUntil_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->employedUntil_dte)));
             }
 
             DB::table('tbl_teacherReference')
@@ -2022,11 +2022,11 @@ class TeacherController extends Controller
             }
             $employedFrom_dte = NULL;
             if ($request->employedFrom_dte != '') {
-                $employedFrom_dte = date("Y-m-d", strtotime($request->employedFrom_dte));
+                $employedFrom_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->employedFrom_dte)));
             }
             $employedUntil_dte = NULL;
             if ($request->employedUntil_dte != '') {
-                $employedUntil_dte = date("Y-m-d", strtotime($request->employedUntil_dte));
+                $employedUntil_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->employedUntil_dte)));
             }
 
             DB::table('tbl_teacherReference')
@@ -2554,7 +2554,7 @@ class TeacherController extends Controller
             }
             $vetUpdateServiceReg_dte = NULL;
             if ($request->vetUpdateServiceReg_dte != '') {
-                $vetUpdateServiceReg_dte = date("Y-m-d", strtotime($request->vetUpdateServiceReg_dte));
+                $vetUpdateServiceReg_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
             }
             $vetList99Checked_dte = NULL;
             if ($request->vetList99Checked_dte) {

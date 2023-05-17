@@ -201,17 +201,17 @@
                                 </div>
 
                                 <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Employed Fromm</label><span
+                                    <label class="form-check-label">Employed From</label><span
                                         style="color: red;">*</span>
-                                    <input type="date" class="form-control field-validate" name="employedFrom_dte"
-                                        id="" value="">
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate"
+                                        name="employedFrom_dte" id="" value="">
                                 </div>
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Employed Until</label><span
                                         style="color: red;">*</span>
-                                    <input type="date" class="form-control field-validate" name="employedUntil_dte"
-                                        id="" value="">
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate"
+                                        name="employedUntil_dte" id="" value="">
                                 </div>
                             </div>
                         </div>

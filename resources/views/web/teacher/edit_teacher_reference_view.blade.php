@@ -1,10 +1,11 @@
 <div class="col-md-6">
     <div class="form-group calendar-form-filter">
         <label for="">Reference Type</label><span style="color: red;">*</span>
-        <select class="form-control field-validate-2" name="referenceType_id"  style="width:100%;">
+        <select class="form-control field-validate-2" name="referenceType_id" style="width:100%;">
             <option value="">Choose one</option>
             @foreach ($referenceTypeList as $key1 => $referenceType)
-                <option value="{{ $referenceType->referenceType_id }}" {{ $Detail->referenceType_id==$referenceType->referenceType_id?'selected':'' }} >
+                <option value="{{ $referenceType->referenceType_id }}"
+                    {{ $Detail->referenceType_id == $referenceType->referenceType_id ? 'selected' : '' }}>
                     {{ $referenceType->title_txt }}
                 </option>
             @endforeach
@@ -31,8 +32,8 @@
 
     <div class="form-group modal-input-field">
         <label class="form-check-label">Postcode</label><span style="color: red;">*</span>
-        <input type="text" class="form-control field-validate-2" name="postcode_txt"
-            id="" value="{{ $Detail->postcode_txt }}">
+        <input type="text" class="form-control field-validate-2" name="postcode_txt" id=""
+            value="{{ $Detail->postcode_txt }}">
     </div>
 </div>
 <div class="col-md-6">
@@ -50,13 +51,22 @@
 
     <div class="form-group modal-input-field">
         <label class="form-check-label">Employed Fromm</label><span style="color: red;">*</span>
-        <input type="date" class="form-control field-validate-2" name="employedFrom_dte"
-            id="" value="{{ $Detail->employedFrom_dte }}">
+        <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="employedFrom_dte"
+            id="" value="{{ date('d/m/Y', strtotime($Detail->employedFrom_dte)) }}">
     </div>
 
     <div class="form-group modal-input-field">
         <label class="form-check-label">Employed Until</label><span style="color: red;">*</span>
-        <input type="date" class="form-control field-validate-2" name="employedUntil_dte"
-            id="" value="{{ $Detail->employedUntil_dte }}">
+        <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="employedUntil_dte"
+            id="" value="{{ date('d/m/Y', strtotime($Detail->employedUntil_dte)) }}">
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('.datePickerPaste').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        });
+    });
+</script>
