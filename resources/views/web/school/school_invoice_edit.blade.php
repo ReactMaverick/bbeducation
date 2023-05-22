@@ -33,8 +33,9 @@
                                     <div class="col-md-5">
                                         <div class="form-group modal-input-field">
                                             <label class="form-check-label">Invoice Date</label>
-                                            <input type="date" class="form-control" name="invoiceDate_dte" id=""
-                                                value="{{ $invoiceDetail->invoiceDate_dte }}">
+                                            <input type="text" class="form-control datePickerPaste"
+                                                name="invoiceDate_dte" id=""
+                                                value="{{ date('d/m/Y', strtotime($invoiceDetail->invoiceDate_dte)) }}">
                                         </div>
 
                                         <div class="modal-side-field mb-2">
@@ -51,8 +52,9 @@
 
                                         <div class="form-group modal-input-field">
                                             <label class="form-check-label">Paid On</label>
-                                            <input type="date" class="form-control" name="paidOn_dte" id=""
-                                                value="{{ $invoiceDetail->paidOn_dte }}">
+                                            <input type="text" class="form-control datePickerPaste" name="paidOn_dte"
+                                                id=""
+                                                value="{{ $invoiceDetail->paidOn_dte ? date('d/m/Y', strtotime($invoiceDetail->paidOn_dte)) : '' }}">
                                         </div>
 
                                         <div class="form-group calendar-form-filter">
@@ -104,7 +106,8 @@
                                                         <tr class="school-detail-table-data editInvItemRow"
                                                             onclick="invItemRowSelect({{ $invoiceItem->invoiceItem_id }})"
                                                             id="editInvItemRow{{ $invoiceItem->invoiceItem_id }}">
-                                                            <td style="width: 50%;">{{ $invoiceItem->description_txt }}</td>
+                                                            <td style="width: 50%;">{{ $invoiceItem->description_txt }}
+                                                            </td>
                                                             <td>{{ (int) $invoiceItem->numItems_dec }}</td>
                                                             <td>{{ (int) $invoiceItem->charge_dec }}</td>
                                                             <td>{{ (int) $invoiceItem->cost_dec }}</td>
@@ -135,7 +138,8 @@
                             <div class="modal-footer calendar-modal-footer">
                                 <button type="submit" class="btn btn-secondary">Save</button>
 
-                                <a href="{{ url('/school-finance/'.$school_id.'?include='.$include.'&method='.$method) }}" class="btn btn-danger cancel-btn">Back</a>
+                                <a href="{{ url('/school-finance/' . $school_id . '?include=' . $include . '&method=' . $method) }}"
+                                    class="btn btn-danger cancel-btn">Back</a>
                             </div>
                         </form>
                     </div>
@@ -162,7 +166,8 @@
                     <h2>Add Invoice Item</h2>
                 </div>
 
-                <form action="{{ url('/schoolFinanceInvItemInsert') }}" method="post" class="form-validate" enctype="multipart/form-data">
+                <form action="{{ url('/schoolFinanceInvItemInsert') }}" method="post" class="form-validate"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="modal-input-field-section">
                         {{-- <h6>{{ $schoolDetail->name_txt }}</h6>
@@ -173,30 +178,36 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Item Description</label><span style="color: red;">*</span>
+                                    <label class="form-check-label">Item Description</label><span
+                                        style="color: red;">*</span>
                                     <textarea name="description_txt" id="" cols="30" rows="4" class="form-control field-validate"></textarea>
                                 </div>
 
                                 <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Number of Items</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control number-validate" name="numItems_dec" id="" value="">
+                                    <label class="form-check-label">Number of Items</label><span
+                                        style="color: red;">*</span>
+                                    <input type="text" class="form-control number-validate" name="numItems_dec"
+                                        id="" value="">
                                 </div>
 
                                 <div class="modal-input-field form-group">
                                     <label class="form-check-label">Linked Date</label><span style="color: red;">*</span>
-                                    <input type="date" class="form-control field-validate" name="dateFor_dte" id="" value="">
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate"
+                                        name="dateFor_dte" id="" value="">
                                 </div>
 
                                 <div class="modal-input-field form-group">
                                     <label class="form-check-label">Charge</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control number-validate" name="charge_dec" id="" value="">
+                                    <input type="text" class="form-control number-validate" name="charge_dec"
+                                        id="" value="">
                                 </div>
 
                                 <div class="modal-input-field form-group">
                                     <label class="form-check-label">Cost</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control number-validate" name="cost_dec" id="" value="">
+                                    <input type="text" class="form-control number-validate" name="cost_dec"
+                                        id="" value="">
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
 
@@ -229,7 +240,8 @@
                     <h2>Edit Invoice Item</h2>
                 </div>
 
-                <form action="{{ url('/schoolFinanceInvItemUpdate') }}" method="post" class="form-validate-2" enctype="multipart/form-data">
+                <form action="{{ url('/schoolFinanceInvItemUpdate') }}" method="post" class="form-validate-2"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="editInvItemId" id="editInvItemId" value="">
                     <div class="modal-input-field-section">
@@ -331,5 +343,4 @@
             }
         });
     </script>
-
 @endsection

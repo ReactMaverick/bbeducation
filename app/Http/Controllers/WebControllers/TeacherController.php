@@ -2440,7 +2440,7 @@ class TeacherController extends Controller
             $typeList = DB::table('tbl_description')
                 ->select('tbl_description.*')
                 ->where('tbl_description.descriptionGroup_int', 19)
-                ->where('tbl_description.description_int', '!=', 1)
+                // ->where('tbl_description.description_int', '!=', 1)
                 ->get();
 
             $headerStatusList = DB::table('tbl_description')
@@ -2650,7 +2650,7 @@ class TeacherController extends Controller
             }
             $DBSDate_dte = NULL;
             if ($request->DBSDate_dte != '') {
-                $DBSDate_dte = date("Y-m-d", strtotime($request->DBSDate_dte));
+                $DBSDate_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->DBSDate_dte)));
             }
             $dbsWarning_status = 0;
             if ($request->dbsWarning_status) {
@@ -2715,7 +2715,7 @@ class TeacherController extends Controller
             }
             $DBSDate_dte = NULL;
             if ($request->DBSDate_dte != '') {
-                $DBSDate_dte = date("Y-m-d", strtotime($request->DBSDate_dte));
+                $DBSDate_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->DBSDate_dte)));
             }
             $dbsWarning_status = 0;
             if ($request->dbsWarning_status) {
@@ -2896,7 +2896,7 @@ class TeacherController extends Controller
         $typeList = DB::table('tbl_description')
             ->select('tbl_description.*')
             ->where('tbl_description.descriptionGroup_int', 19)
-            ->where('tbl_description.description_int', '!=', 1)
+            // ->where('tbl_description.description_int', '!=', 1)
             ->get();
 
         $view = view("web.teacher.document_edit_view", ['docDetail' => $docDetail, 'typeList' => $typeList])->render();
@@ -4194,7 +4194,7 @@ class TeacherController extends Controller
             $teacher_id = $teacherLoginData->teacher_id;
             $healthDeclaration_dte = NULL;
             if ($request->healthDeclaration_dte != '') {
-                $healthDeclaration_dte = date("Y-m-d", strtotime($request->healthDeclaration_dte));
+                $healthDeclaration_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->healthDeclaration_dte)));
             }
 
             DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
@@ -4332,7 +4332,7 @@ class TeacherController extends Controller
             $typeList = DB::table('tbl_description')
                 ->select('tbl_description.*')
                 ->where('tbl_description.descriptionGroup_int', 19)
-                ->where('tbl_description.description_int', '!=', 1)
+                // ->where('tbl_description.description_int', '!=', 1)
                 ->get();
 
             $headerStatusList = DB::table('tbl_description')

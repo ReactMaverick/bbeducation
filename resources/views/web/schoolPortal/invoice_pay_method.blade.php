@@ -5,8 +5,9 @@
         <div class="col-md-6">
             <div class="form-group modal-input-field">
                 <label class="form-check-label">Paid On</label>
-                <input type="date" class="form-control field-validate-2" name="school_paid_dte" id=""
-                    value="{{ $invoiceDetail->school_paid_dte ? $invoiceDetail->school_paid_dte : date('Y-m-d') }}">
+                <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="school_paid_dte"
+                    id=""
+                    value="{{ $invoiceDetail->school_paid_dte ? date('d/m/Y', strtotime($invoiceDetail->school_paid_dte)) : date('d/m/Y') }}">
             </div>
         </div>
         <div class="col-md-6">
@@ -36,3 +37,12 @@
 
     <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('.datePickerPaste').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        });
+    });
+</script>

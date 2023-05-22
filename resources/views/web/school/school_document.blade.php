@@ -107,17 +107,21 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Document Name</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control field-validate" name="file_name"
-                                        id="" value="">
+                                    <label class="form-check-label">Document Name</label>
+                                    <input type="text" class="form-control" name="file_name" id="fileName"
+                                        value="">
                                 </div>
+                                <input type="hidden" class="form-control" name="file_name_hidden" id="file_name_hidden"
+                                    value="">
 
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Document Type</label><span style="color: red;">*</span>
-                                    <select class="form-control field-validate" name="documentType" id="documentType">
+                                    <select class="form-control field-validate" name="documentType" id="documentType"
+                                        onchange="docTypeChange(this.value, this.options[this.selectedIndex].getAttribute('descTxt'))">
                                         <option value="">Choose one</option>
                                         @foreach ($typeList as $key5 => $type)
-                                            <option value="{{ $type->document_type_id }}">
+                                            <option value="{{ $type->document_type_id }}"
+                                                descTxt="{{ $type->document_type_text }}">
                                                 {{ $type->document_type_text }}
                                             </option>
                                         @endforeach
@@ -281,5 +285,13 @@
                 $('#othersText').closest(".form-group").removeClass('has-error');
             }
         });
+
+        function docTypeChange(desc_int, description_txt) {
+            var txt = $('#fileName').val()
+            $('#file_name_hidden').val(description_txt)
+            if (txt == null || txt == '') {
+                $('#fileName').val(description_txt)
+            }
+        }
     </script>
 @endsection

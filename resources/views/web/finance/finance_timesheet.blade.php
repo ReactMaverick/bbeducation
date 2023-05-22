@@ -85,7 +85,8 @@
                             <div class="form-group timesheet-top-input-sec">
                                 <form action="{{ url('/finance-timesheets') }}" method="get">
                                     <label for="" class="col-form-label">Timesheets Until</label>
-                                    <input type="date" name="date" id="timesheetDate" value="{{ $p_maxDate }}">
+                                    <input type="text" class="datePickerPaste" name="date" id="timesheetDate"
+                                        value="{{ date('d/m/Y', strtotime($p_maxDate)) }}">
                                     <button type="submit" class="timesheet-search-btn">Search</button>
                                 </form>
                             </div>

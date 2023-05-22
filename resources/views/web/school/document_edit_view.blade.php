@@ -3,17 +3,21 @@
     <div class="col-md-12">
         <div class="modal-input-field form-group">
             <label class="form-check-label">Document Name</label>
-            <input type="text" class="form-control field-validate-2" name="file_name" id=""
+            <input type="text" class="form-control" name="file_name" id="fileNameEdit"
                 value="{{ $docDetail->file_name }}">
         </div>
 
+        <input type="hidden" class="form-control" name="file_name_hidden" id="file_name_hidden_edit" value="">
+
         <div class="form-group calendar-form-filter">
             <label for="">Document Type</label><span style="color: red;">*</span>
-            <select class="form-control field-validate-2" name="documentType" id="editDocumentType">
+            <select class="form-control field-validate-2" name="documentType" id="editDocumentType"
+                onchange="docTypeChangeEdit(this.value, this.options[this.selectedIndex].getAttribute('descTxt'))">
                 <option value="">Choose one</option>
                 @foreach ($typeList as $key5 => $type)
                     <option value="{{ $type->document_type_id }}"
-                        {{ $docDetail->documentType == $type->document_type_id ? 'selected' : '' }}>
+                        {{ $docDetail->documentType == $type->document_type_id ? 'selected' : '' }}
+                        descTxt="{{ $type->document_type_text }}">
                         {{ $type->document_type_text }}
                     </option>
                 @endforeach
@@ -48,4 +52,12 @@
             $('#editOthersText').closest(".form-group").removeClass('has-error');
         }
     });
+
+    function docTypeChangeEdit(desc_int, description_txt) {
+        var txt = $('#fileNameEdit').val()
+        $('#file_name_hidden_edit').val(description_txt)
+        if (txt == null || txt == '') {
+            $('#fileNameEdit').val(description_txt)
+        }
+    }
 </script>

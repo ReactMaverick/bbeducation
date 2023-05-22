@@ -343,9 +343,9 @@
 
                                 <div class="modal-input-field">
                                     <label class="form-check-label">Health Decoration Date</label>
-                                    <input type="date" class="form-control" name="healthDeclaration_dte"
-                                        id=""
-                                        value="{{ $teacherDetail->healthDeclaration_dte != null ? date('Y-m-d', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}">
+                                    <input type="text" class="form-control datePickerPaste"
+                                        name="healthDeclaration_dte" id=""
+                                        value="{{ $teacherDetail->healthDeclaration_dte != null ? date('d/m/Y', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}">
                                 </div>
                             </div>
                             <div class="col-md-6 modal-form-right-sec">

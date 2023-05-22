@@ -39,7 +39,7 @@ class FinanceController extends Controller
             $user_id = $webUserLoginData->user_id;
             $p_maxDate = date('Y-m-d');
             if ($request->date) {
-                $p_maxDate = date('Y-m-d', strtotime($request->date));
+                $p_maxDate = date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
             }
 
             $weekStartDate = Carbon::parse($p_maxDate)->startOfWeek()->format('Y-m-d');
@@ -759,8 +759,10 @@ class FinanceController extends Controller
             $user_id = $webUserLoginData->user_id;
             $p_maxDate = date('Y-m-d');
             if ($request->date) {
-                $p_maxDate = date('Y-m-d', strtotime($request->date));
+                $p_maxDate = date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
             }
+            // echo $p_maxDate;
+            // exit;
 
             $p_invoiceNumberMin = '';
             if ($request->invoiceNumberMin) {
@@ -863,7 +865,7 @@ class FinanceController extends Controller
             ->where('asnItem_id', $editEventId)
             ->update([
                 'dayPart_int' => $request->dayPart_int,
-                'asnDate_dte' => date("Y-m-d", strtotime($request->asnDate_dte)),
+                'asnDate_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->asnDate_dte))),
                 'charge_dec' => $request->charge_dec,
                 'dayPercent_dec' => $request->dayPercent_dec,
                 'hours_dec' => $request->hours_dec,

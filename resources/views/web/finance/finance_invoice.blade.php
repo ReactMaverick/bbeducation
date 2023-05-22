@@ -22,8 +22,8 @@
                                         value="{{ app('request')->input('invoiceNumberMin') }}">
                                     <input type="hidden" name="invoiceNumberMax"
                                         value="{{ app('request')->input('invoiceNumberMax') }}">
-                                    <input type="date" name="date"
-                                        value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                                    <input type="text" class="datePickerPaste" name="date"
+                                        value="{{ app('request')->input('date') ? app('request')->input('date') : date('d/m/Y', strtotime($p_maxDate)) }}">
                                     <input type="hidden" name="showSent"
                                         value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
                                     <button type="submit" class="timesheet-search-btn">Search</button>

@@ -1217,7 +1217,7 @@ class SchoolController extends Controller
                 'invoice_id' => $invoice_id,
                 'description_txt' => $request->description_txt,
                 'numItems_dec' => $request->numItems_dec,
-                'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                'dateFor_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->dateFor_dte))),
                 'charge_dec' => $request->charge_dec,
                 'cost_dec' => $request->cost_dec,
                 'timestamp_ts' => date('Y-m-d H:i:s')
@@ -1248,7 +1248,7 @@ class SchoolController extends Controller
             ->update([
                 'description_txt' => $request->description_txt,
                 'numItems_dec' => $request->numItems_dec,
-                'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                'dateFor_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->dateFor_dte))),
                 'charge_dec' => $request->charge_dec,
                 'cost_dec' => $request->cost_dec,
                 'timestamp_ts' => date('Y-m-d H:i:s')
@@ -1284,10 +1284,10 @@ class SchoolController extends Controller
             $editData['creditNote_status'] = -1;
         }
         if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
-            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
+            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->invoiceDate_dte)));
         }
         if ($request->paidOn_dte != null || $request->paidOn_dte != '') {
-            $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
+            $editData['paidOn_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->paidOn_dte)));
         }
         $editData['paymentMethod_int'] = $request->paymentMethod_int;
         $editData['sentOn_dte'] = date('Y-m-d');
@@ -2045,7 +2045,7 @@ class SchoolController extends Controller
                 ->insert([
                     'school_id' => $school_id,
                     'file_location' => $fPath,
-                    'file_name' => $request->file_name,
+                    'file_name' => $request->file_name ? $request->file_name : $request->file_name_hidden,
                     'documentType' => $request->documentType,
                     'othersText' => $request->othersText,
                     'file_type' => $fType,
@@ -2113,7 +2113,7 @@ class SchoolController extends Controller
                 ->where('schoolDocument_id', '=', $editDocumentId)
                 ->update([
                     'file_location' => $fPath,
-                    'file_name' => $request->file_name,
+                    'file_name' => $request->file_name ? $request->file_name : $request->file_name_hidden,
                     'documentType' => $request->documentType,
                     'othersText' => $request->othersText,
                     'file_type' => $fType,
@@ -3628,7 +3628,7 @@ class SchoolController extends Controller
             DB::table('tbl_invoice')
                 ->where('invoice_id', '=', $request->invoice_id)
                 ->update([
-                    'school_paid_dte' => $request->school_paid_dte,
+                    'school_paid_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->school_paid_dte))),
                     'school_paid_method' => $request->school_paid_method,
                     'school_paid_by' => $school_id
                 ]);

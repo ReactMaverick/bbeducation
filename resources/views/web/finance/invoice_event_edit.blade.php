@@ -4,8 +4,8 @@
     <div class="col-md-6">
         <div class="form-group modal-input-field">
             <label class="form-check-label">Date</label>
-            <input type="date" class="form-control field-validate" name="asnDate_dte" id=""
-                value="{{ $eventItemDetail->asnDate_dte }}">
+            <input type="text" class="form-control datePickerPaste datepaste-validate" name="asnDate_dte"
+                id="" value="{{ date('d/m/Y', strtotime($eventItemDetail->asnDate_dte)) }}">
         </div>
 
         <div class="form-group calendar-form-filter">
@@ -58,5 +58,12 @@
             $('#hours_dec_ajx').removeClass('number-validate');
             $('#hours_dec_ajx').closest(".form-group").removeClass('has-error');
         }
+    });
+
+    $(document).ready(function() {
+        $('.datePickerPaste').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        });
     });
 </script>

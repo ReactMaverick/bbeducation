@@ -7,8 +7,9 @@
 
     <div class="form-group modal-input-field">
         <label class="form-check-label">Certificate Date</label><span style="color: red;">*</span>
-        <input type="date" class="form-control field-validate-2" name="DBSDate_dte" id=""
-            value="{{ $detail->DBSDate_dte != null ? date('Y-m-d', strtotime($detail->DBSDate_dte)) : '' }}">
+        <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="DBSDate_dte"
+            id=""
+            value="{{ $detail->DBSDate_dte != null ? date('d/m/Y', strtotime($detail->DBSDate_dte)) : '' }}">
     </div>
 
     <div class="form-group modal-input-field">
@@ -38,7 +39,8 @@
 
     <div class="form-group modal-input-field">
         <label class="form-check-label">Warning Message</label>
-        <textarea name="dbsWarning_txt" id="dbsWarning_txt_edit" cols="30" rows="3" class="form-control" {{ $detail->dbsWarning_status == '-1' ? '' : 'disabled' }}>{{ $detail->dbsWarning_txt }}</textarea>
+        <textarea name="dbsWarning_txt" id="dbsWarning_txt_edit" cols="30" rows="3" class="form-control"
+            {{ $detail->dbsWarning_status == '-1' ? '' : 'disabled' }}>{{ $detail->dbsWarning_txt }}</textarea>
     </div>
 
     <div class="modal-side-field mb-2">
@@ -46,10 +48,18 @@
         <label class="form-check-label" for="lastCheckedOnEdit">Update 'Last Checked On' date
             to today's date</label>
     </div>
-    <input type="hidden" name="lastCheckedOn_dte" id="" value="{{ $detail->lastCheckedOn_dte != null ? date('Y-m-d', strtotime($detail->lastCheckedOn_dte)) : '' }}">
+    <input type="hidden" name="lastCheckedOn_dte" id=""
+        value="{{ $detail->lastCheckedOn_dte != null ? date('Y-m-d', strtotime($detail->lastCheckedOn_dte)) : '' }}">
 </div>
 
 <script>
+    $(document).ready(function() {
+        $('.datePickerPaste').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
+        });
+    });
+
     $("#dbsWarning_status_edit").change(function() {
         if ($(this).is(":checked")) {
             $('#dbsWarning_txt_edit').attr('disabled', false);

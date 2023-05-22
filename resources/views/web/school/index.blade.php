@@ -222,26 +222,58 @@
         }
 
         $(document).on('click', '#addNewSchoolBtn', function() {
-            var loginMailId = $('#loginMailId').val();
-            $.ajax({
-                type: 'POST',
-                url: '{{ url('checkSchoolMailExist') }}',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    loginMail: loginMailId
-                },
-                async: false,
-                success: function(data) {
-                    if (data == 'Yes') {
-                        swal(
-                            'Failed!',
-                            'Email-id already exist.'
-                        );
-                    } else {
-                        $('#addNewSchoolForm').submit();
-                    }
+            var error = "";
+            $(".field-validate").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
                 }
             });
+            $(".email-validate").each(function() {
+                var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+                if (this.value != '' && validEmail.test(this.value)) {
+                    $(this).closest(".form-group").removeClass('has-error');
+
+                } else {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                }
+            });
+            $(".datepaste-validate").each(function() {
+                var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+                if (this.value == '' || !dateRegex.test(this.value)) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            if (error == "has error") {
+                return false;
+            } else {
+                var loginMailId = $('#loginMailId').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('checkSchoolMailExist') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        loginMail: loginMailId
+                    },
+                    async: false,
+                    success: function(data) {
+                        if (data == 'Yes') {
+                            swal(
+                                'Failed!',
+                                'Email-id already exist.'
+                            );
+                        } else {
+                            $('#addNewSchoolForm').submit();
+                        }
+                    }
+                });
+            }
         });
 
         $(document).on('click', '#gridReference', function() {
