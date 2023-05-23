@@ -49,6 +49,11 @@
                             <p>View Metrics</p>
                         </a>
                     </div>
+                    <div class="about-finance">
+                        <a href="#"> <i class="fa-solid fa-user"></i>
+                            <p>Manage Users</p>
+                        </a>
+                    </div>
                     {{-- <div class="about-finance">
                         <a href="#"> <i class="fa-solid fa-person"></i>
                             <p>Export to</p>
@@ -216,15 +221,15 @@
                             <div class="col-md-6">
                                 <div class="modal-input-field">
                                     <label class="form-check-label">Start Date</label>
-                                    <input type="date" class="form-control" name="start_date" id="metricStartDate"
-                                        value="{{ $startOfMonth }}">
+                                    <input type="text" class="form-control datePickerPaste" name="start_date"
+                                        id="metricStartDate" value="{{ date('d/m/Y', strtotime($startOfMonth)) }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="modal-input-field">
                                     <label class="form-check-label">End Date</label>
-                                    <input type="date" class="form-control" name="end_date" id="metricEndDate"
-                                        value="{{ $endOfMonth }}">
+                                    <input type="text" class="form-control datePickerPaste" name="end_date"
+                                        id="metricEndDate" value="{{ date('d/m/Y', strtotime($endOfMonth)) }}">
                                 </div>
                             </div>
                         </div>
