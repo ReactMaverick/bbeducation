@@ -1011,10 +1011,10 @@ class FinanceController extends Controller
         $editData['invoice_path'] = NULL;
 
         if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
-            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
+            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->invoiceDate_dte)));
         }
         if ($request->paidOn_dte != null || $request->paidOn_dte != '') {
-            $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
+            $editData['paidOn_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->paidOn_dte)));
         }
         DB::table('tbl_invoice')
             ->where('invoice_id', $splitInvoiceId)
@@ -1102,10 +1102,10 @@ class FinanceController extends Controller
             $editData['creditNote_status'] = -1;
         }
         if ($request->invoiceDate_dte != null || $request->invoiceDate_dte != '') {
-            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime($request->invoiceDate_dte));
+            $editData['invoiceDate_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->invoiceDate_dte)));
         }
         if ($request->paidOn_dte != null || $request->paidOn_dte != '') {
-            $editData['paidOn_dte'] = date("Y-m-d", strtotime($request->paidOn_dte));
+            $editData['paidOn_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->paidOn_dte)));
         }
         $editData['paymentMethod_int'] = $request->paymentMethod_int;
         $editData['sentOn_dte'] = date('Y-m-d');
@@ -1127,7 +1127,7 @@ class FinanceController extends Controller
                 'invoice_id' => $invoice_id,
                 'description_txt' => $request->description_txt,
                 'numItems_dec' => $request->numItems_dec,
-                'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                'dateFor_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->dateFor_dte))),
                 'charge_dec' => $request->charge_dec,
                 'cost_dec' => $request->cost_dec,
                 'timestamp_ts' => date('Y-m-d H:i:s')
@@ -1201,7 +1201,7 @@ class FinanceController extends Controller
                 ->update([
                     'description_txt' => $request->description_txt,
                     'numItems_dec' => $request->numItems_dec,
-                    'dateFor_dte' => date("Y-m-d", strtotime($request->dateFor_dte)),
+                    'dateFor_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->dateFor_dte))),
                     'charge_dec' => $request->charge_dec,
                     'cost_dec' => $request->cost_dec,
                     'timestamp_ts' => date('Y-m-d H:i:s')

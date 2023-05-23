@@ -94,8 +94,8 @@ class ManagementController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
 
-            $startOfMonth = $request->metricStartDate;
-            $endOfMonth = $request->metricEndDate;
+            $startOfMonth = date("Y-m-d", strtotime(str_replace('/', '-', $request->metricStartDate)));
+            $endOfMonth = date("Y-m-d", strtotime(str_replace('/', '-', $request->metricEndDate)));
 
             $asnSubquery = DB::table('tbl_asn')
                 ->selectRaw('CAST(SUM(dayPercent_dec) AS DECIMAL(9,1)) AS daysThisPeriod_dec')
@@ -156,8 +156,8 @@ class ManagementController extends Controller
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
-            $startOfMonth = $request->start_date;
-            $endOfMonth = $request->end_date;
+            $startOfMonth = date("Y-m-d", strtotime(str_replace('/', '-', $request->start_date)));
+            $endOfMonth = date("Y-m-d", strtotime(str_replace('/', '-', $request->end_date)));
 
             $fileName = 'MetricsReport' . time() . '.xlsx';
 

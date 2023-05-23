@@ -7,8 +7,8 @@
     <div class="col-md-6">
         <div class="modal-input-field form-group">
             <label class="form-check-label">Invoice Date</label>
-            <input type="date" class="form-control" name="invoiceDate_dte" id=""
-                value="{{ $invoiceDetail->invoiceDate_dte != null ? $invoiceDetail->invoiceDate_dte : '' }}">
+            <input type="text" class="form-control datePickerPaste" name="invoiceDate_dte" id=""
+                value="{{ $invoiceDetail->invoiceDate_dte != null ? date('d/m/Y', strtotime($invoiceDetail->invoiceDate_dte)) : '' }}">
         </div>
 
         <div class="modal-side-field form-group">
@@ -26,10 +26,9 @@
     <div class="col-md-6">
         <div class="modal-input-field form-group">
             <label class="form-check-label">Paid On</label>
-            <input type="date" class="form-control" name="paidOn_dte" id=""
-                value="{{ $invoiceDetail->paidOn_dte != null ? $invoiceDetail->paidOn_dte : '' }}">
+            <input type="text" class="form-control datePickerPaste" name="paidOn_dte" id=""
+                value="{{ $invoiceDetail->paidOn_dte != null ? date('d/m/Y', strtotime($invoiceDetail->paidOn_dte)) : '' }}">
         </div>
-
         <div class="form-group calendar-form-filter">
             <label for="">Payment Method</label>
             <select class="form-control" name="paymentMethod_int" id="">
@@ -140,8 +139,8 @@
 
                             <div class="modal-input-field form-group">
                                 <label class="form-check-label">Linked Date</label><span style="color: red;">*</span>
-                                <input type="date" class="form-control field-validate-3" name="dateFor_dte"
-                                    id="" value="">
+                                <input type="text" class="form-control datePickerPaste datepaste-validate-3"
+                                    name="dateFor_dte" id="" value="">
                             </div>
 
                             <div class="modal-input-field form-group">
@@ -218,6 +217,11 @@
             searching: false,
             paging: false,
             info: false
+        });
+
+        $('.datePickerPaste').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true
         });
     });
 
