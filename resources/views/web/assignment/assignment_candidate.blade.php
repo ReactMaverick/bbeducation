@@ -242,10 +242,11 @@
 
         $(function() {
 
-            $(".selectTeacherRow").on("click", function(e) {
+            $(document).on("click", ".selectTeacherRow", function(e) {
                     clicks++; //count clicks
                     var teacherId = $(this).attr('teacher-id');
                     var isContinuity = $(this).attr('isContinuity');
+                    // alert(teacherId)
                     if (clicks === 1) {
                         timer = setTimeout(function() {
                             // alert("Single Click=>"+teacherId); //perform single-click action
@@ -300,6 +301,8 @@
                     } else {
                         clearTimeout(timer); //prevent single-click action
                         // alert("Double Click=>" + teacherId); //perform double-click action
+                        var teacherId = $(this).attr('teacher-id');
+                        var isContinuity = $(this).attr('isContinuity');
                         if (isContinuity == 1) {
                             if ($('#selectCandidate' + teacherId).hasClass('tableRowActive')) {
                                 $('#assignTeacherId').val('');
@@ -344,7 +347,7 @@
                         clicks = 0; //after action performed, reset counter
                     }
                 })
-                .on("dblclick", function(e) {
+                .on("dblclick", ".selectTeacherRow", function(e) {
                     e.preventDefault(); //cancel system double-click event
                     var teacherId = $(this).attr('teacher-id');
                     var location = "{{ url('/teacher-detail') }}" + '/' + teacherId;

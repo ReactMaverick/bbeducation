@@ -878,7 +878,13 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.calendar_by_id", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'quickList' => $quickList, 'teacher_id' => $id]);
+            $headerStatusList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 3)
+                ->orderBy('tbl_description.description_int', 'ASC')
+                ->get();
+
+            return view("web.teacher.calendar_by_id", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'quickList' => $quickList, 'teacher_id' => $id, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
