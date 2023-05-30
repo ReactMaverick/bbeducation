@@ -87,9 +87,14 @@
                 </a>
             @endif
         </div>
+
         <div class="assignment-detail-user-img-sec">
             <div class="user-img-sec">
-                <img src="{{ asset('web/images/user-img.png') }}" alt="">
+                @if ($assignmentDetail->file_location != null || $assignmentDetail->file_location != '')
+                    <img src="{{ asset($assignmentDetail->file_location) }}" alt="">
+                @else
+                    <img src="{{ asset('web/images/user-img.png') }}" alt="">
+                @endif
             </div>
         </div>
 

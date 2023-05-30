@@ -37,7 +37,8 @@ class FinanceController extends Controller
             $headerTitle = "Finance";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
-            $p_maxDate = date('Y-m-d');
+            $todayDate = date('Y-m-d');
+            $p_maxDate = Carbon::parse($todayDate)->endOfWeek()->format('Y-m-d');
             if ($request->date) {
                 $p_maxDate = date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
             }
@@ -757,7 +758,8 @@ class FinanceController extends Controller
             $headerTitle = "Finance";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
-            $p_maxDate = date('Y-m-d');
+            $todayDate = date('Y-m-d');
+            $p_maxDate = Carbon::parse($todayDate)->endOfWeek()->format('Y-m-d');
             if ($request->date) {
                 $p_maxDate = date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
             }

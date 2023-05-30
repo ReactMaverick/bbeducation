@@ -481,7 +481,8 @@
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Emergency Contact</label>
                                     <input type="text" class="form-control" name="emergencyContactName_txt"
-                                        id="" value="{{ $teacherDetail->emergencyContactName_txt }}">
+                                        id=""
+                                        value="{{ $teacherDetail->emergencyContactName_txt ? $teacherDetail->emergencyContactName_txt : '02084329644' }}">
                                 </div>
 
                                 <div class="form-group modal-input-field">

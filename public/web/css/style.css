@@ -2761,6 +2761,7 @@ table td {
 }
 
 .teacher-calendar-slider {
+    width: 96%;
     padding: 0 15px;
 }
 
@@ -2813,8 +2814,9 @@ table td {
 
 .date-left-teacher-calendar {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    /* flex-direction: column; */
+    justify-content: center;
+    /* align-items: center; */
     margin-top: 10px;
     width: 15%;
 }
@@ -2837,14 +2839,30 @@ table td {
 
 .teacher-calendar-days-field3 {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    /* flex-direction: column; */
+    /* align-items: center; */
+    /* justify-content: space-between; */
     background-color: #fff;
     width: 100%;
     min-height: 65px;
     border-radius: 5%;
     border: 1px solid #9dc3e6;
+}
+.calendar_first_sec {
+    width: 25%;
+    border-right: 1px solid #e2e2e2;
+}
+.calendar_first_sec img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.calendar_right_sec {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 10px;
+    width: 75%;
 }
 
 .teacher-calendar-days-field3 p {

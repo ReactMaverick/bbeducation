@@ -219,7 +219,7 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="cand-vetting-modal-heading-sec">
-                            <p>Health Decleration</p>
+                            <p>Health Declaration</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -232,7 +232,7 @@
                 <div class="row align-items-end">
                     <div class="col-md-8">
                         <div class="cand-vetting-modal-input-field">
-                            <p>Health Decleration</p>
+                            <p>Health Declaration</p>
                             @if ($vettingDetail->healthDeclaration_txt)
                                 <span>{{ $vettingDetail->healthDeclaration_txt }}</span>
                             @else
@@ -572,10 +572,48 @@
             <button type="button" class="btn btn-secondary" id="candVettingEditBtn">Update</button>
         @endif
 
-        <button type="button"
-            class="btn btn-warning {{ $emailExist == 'Yes' ? '' : 'cand-vetting-approve-disable-btn' }}">Approve and
-            Send</button>
+        @if ($emailExist == 'Yes')
+            <button type="button" class="btn btn-warning"
+                onclick="vettingSend('{{ $vettingDetail->vetting_id }}')">Approve and Send</button>
+        @else
+            <button type="button" class="btn btn-warning cand-vetting-approve-disable-btn">Approve and Send</button>
+        @endif
 
         <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
     </div>
 </form>
+
+<script>
+    function vettingSend(vetting_id) {
+        if (vetting_id) {
+            $('#fullLoader').show();
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('approveVettingSend') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    vetting_id: vetting_id
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    // console.log(data);
+                    if (data.exist == 'Yes' && data.invoice_path) {
+                        const link = document.createElement('a');
+                        link.href = data.invoice_path;
+                        link.download = data.pdfName;
+                        link.target = '_blank';
+                        link.click();
+                    }
+                    var subject = data.subject;
+                    var body = "Hello";
+                    window.location = 'mailto:' + data.sendMail + '?subject=' +
+                        encodeURIComponent(subject) + '&body=' +
+                        encodeURIComponent(body);
+
+                    $('#fullLoader').hide();
+                }
+            });
+        }
+    }
+</script>

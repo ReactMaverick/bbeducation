@@ -277,7 +277,8 @@
 
     <table style="width: 70%; border-collapse: collapse; margin: 20px 0 50px 0;">
         <tr>
-            <td style="text-align:center; font-size: 14px; font-weight: 400;"><a href="{{ url('/') }}"
+            <td style="text-align:center; font-size: 14px; font-weight: 400;"><a
+                    href="https://bumblebee-education.co.uk/"
                     style="color: #48A0DC; text-decoration: none;">www.bumblebee-education.co.uk </a></td>
             <td style="text-align:center; color: #48A0DC; font-size: 14px; font-weight: 400;"><span>Tel : 0208 4329844 /
                     Fax: 0208432635</span></td>

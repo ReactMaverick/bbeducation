@@ -9,6 +9,7 @@ use DB;
 use Session;
 use Illuminate\Support\Carbon;
 use Carbon\CarbonPeriod;
+use PDF;
 
 class AssignmentController extends Controller
 {
@@ -152,11 +153,17 @@ class AssignmentController extends Controller
                             $query->where('assType.descriptionGroup_int', '=', 35);
                         });
                 })
-                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'))
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_teacherDocument.teacherDocument_id, tbl_teacherDocument.teacher_id, tbl_teacherDocument.file_location FROM tbl_teacherDocument LEFT JOIN tbl_asn ON tbl_asn.teacher_id = tbl_teacherDocument.teacher_id WHERE tbl_asn.asn_id = $id AND tbl_teacherDocument.type_int = 1 AND tbl_teacherDocument.isCurrent_status <> 0 ORDER BY tbl_teacherDocument.teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    function ($join) {
+                        $join->on('tbl_asn.teacher_id', '=', 't_document.teacher_id');
+                    }
+                )
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'), 'file_location', 'teacherDocument_id')
                 ->where('tbl_asn.asn_id', $id)
                 ->groupBy('tbl_asn.asn_id')
                 ->first();
-
+            // dd($assignmentDetail);
             // echo $currentMonth = date('m');
             // exit;
             $prevDays = DB::table('tbl_asn')
@@ -1047,6 +1054,58 @@ class AssignmentController extends Controller
         }
     }
 
+    public function approveVettingSend(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $vetting_id = $input['vetting_id'];
+            $result['exist'] = 'No';
+
+            $vettingDetail = DB::table('tbl_asnVetting')
+                ->where('vetting_id', $vetting_id)
+                ->first();
+            if ($vettingDetail) {
+                $sendMail = $vettingDetail->faoEmail_txt;
+
+                // if ($vettingDetail->invoice_path) {
+                //     if (file_exists(public_path($vettingDetail->invoice_path))) {
+                //         unlink($vettingDetail->invoice_path);
+                //     }
+                // }
+
+                $companyDetail = DB::table('company')
+                    ->select('company.*')
+                    ->where('company.company_id', $company_id)
+                    ->first();
+
+                $pdf = PDF::loadView('web.assignment.candidate_vetting_pdf', ['vettingDetail' => $vettingDetail, 'companyDetail' => $companyDetail]);
+                $pdfName = 'Vetting-' . $vettingDetail->vetting_id . '-' . str_replace(" ", "", $vettingDetail->candidateName_txt) . '.pdf';
+                $pdf->save(public_path('pdfs/vettings/' . $pdfName));
+                $fPath = 'pdfs/vettings/' . $pdfName;
+
+                DB::table('tbl_asnVetting')
+                    ->where('vetting_id', $vetting_id)
+                    ->update([
+                        'invoice_path' => $fPath
+                    ]);
+
+                if (file_exists(public_path($fPath))) {
+                    $result['exist'] = 'Yes';
+                    $result['pdfName'] = $pdfName;
+                    $result['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
+                    $result['invoice_path'] = asset($fPath);
+                }
+                $result['sendMail'] = $sendMail;
+            }
+        } else {
+            $result['exist'] = 'No';
+        }
+        return response()->json($result);
+    }
+
     public function assignmentStatusEdit(Request $request)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -1112,7 +1171,13 @@ class AssignmentController extends Controller
                             $query->where('assType.descriptionGroup_int', '=', 35);
                         });
                 })
-                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'))
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_teacherDocument.teacherDocument_id, tbl_teacherDocument.teacher_id, tbl_teacherDocument.file_location FROM tbl_teacherDocument LEFT JOIN tbl_asn ON tbl_asn.teacher_id = tbl_teacherDocument.teacher_id WHERE tbl_asn.asn_id = $id AND tbl_teacherDocument.type_int = 1 AND tbl_teacherDocument.isCurrent_status <> 0 ORDER BY tbl_teacherDocument.teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    function ($join) {
+                        $join->on('tbl_asn.teacher_id', '=', 't_document.teacher_id');
+                    }
+                )
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), 'file_location', 'teacherDocument_id')
                 ->where('tbl_asn.asn_id', $id)
                 ->groupBy('tbl_asn.asn_id')
                 ->first();
@@ -1396,7 +1461,13 @@ class AssignmentController extends Controller
                             $query->where('assType.descriptionGroup_int', '=', 35);
                         });
                 })
-                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'))
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_teacherDocument.teacherDocument_id, tbl_teacherDocument.teacher_id, tbl_teacherDocument.file_location FROM tbl_teacherDocument LEFT JOIN tbl_asn ON tbl_asn.teacher_id = tbl_teacherDocument.teacher_id WHERE tbl_asn.asn_id = $id AND tbl_teacherDocument.type_int = 1 AND tbl_teacherDocument.isCurrent_status <> 0 ORDER BY tbl_teacherDocument.teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    function ($join) {
+                        $join->on('tbl_asn.teacher_id', '=', 't_document.teacher_id');
+                    }
+                )
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), 'file_location', 'teacherDocument_id')
                 ->where('tbl_asn.asn_id', $id)
                 ->groupBy('tbl_asn.asn_id')
                 ->first();
@@ -1462,7 +1533,7 @@ class AssignmentController extends Controller
                 ->select('tbl_teacher.teacher_id', 'tbl_teacher.knownAs_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'statusTbl.description_txt as status_txt', DB::raw('(CAST(((ACOS(SIN(tbl_teacher.lat_txt * PI() / 180) * SIN(' . $v_schoolLat . ' * PI() / 180) + COS(tbl_teacher.lat_txt * PI() / 180) * COS(' . $v_schoolLat . ' * PI() / 180) * COS((tbl_teacher.lon_txt - ' . $v_schoolLon . ') * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS DECIMAL(7, 1))) AS distance_dec'), DB::raw('CAST(IF(daysBlocked_int + daysBooked_int >= ' . $v_asnDatesCount . ', 0, IF((IFNULL(daysBlocked_int, 0) + IFNULL(daysBooked_int, 0)) / ' . $v_asnDatesCount . ' < 0, 0, (1 - ((IFNULL(daysBlocked_int, 0) + IFNULL(daysBooked_int, 0)) / ' . $v_asnDatesCount . ')) * 100)) AS DECIMAL(5, 1)) AS availability_dec'), 'tbl_teacher.prefYearGroup_int', 't_subject.teacher_id as subjectTeacherId', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt');
 
             if ($request->showall) {
-                $candidate->whereIn('applicationStatus_int', array('1', '2'));
+                // $candidate->whereIn('applicationStatus_int', array('1', '2'));
                 // $candidate->whereIn('applicationStatus_int', array('1', '2'))
                 //     ->whereRaw('(' . $v_ageRange . ' = 0 OR ageRangeSpecialism_int = ' . $v_ageRange . ') AND (tbl_teacher.isCurrent_status <> 0) AND (professionalType_int = ' . $v_professionalType . ' OR ' . $v_professionalType . ' = 0)');
             } else {
@@ -1607,7 +1678,13 @@ class AssignmentController extends Controller
                             $query->where('assType.descriptionGroup_int', '=', 35);
                         });
                 })
-                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'))
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_teacherDocument.teacherDocument_id, tbl_teacherDocument.teacher_id, tbl_teacherDocument.file_location FROM tbl_teacherDocument LEFT JOIN tbl_asn ON tbl_asn.teacher_id = tbl_teacherDocument.teacher_id WHERE tbl_asn.asn_id = $id AND tbl_teacherDocument.type_int = 1 AND tbl_teacherDocument.isCurrent_status <> 0 ORDER BY tbl_teacherDocument.teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    function ($join) {
+                        $join->on('tbl_asn.teacher_id', '=', 't_document.teacher_id');
+                    }
+                )
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), 'file_location', 'teacherDocument_id')
                 ->where('tbl_asn.asn_id', $id)
                 ->groupBy('tbl_asn.asn_id')
                 ->first();
@@ -1731,7 +1808,13 @@ class AssignmentController extends Controller
                             $query->where('assType.descriptionGroup_int', '=', 35);
                         });
                 })
-                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'))
+                ->leftJoin(
+                    DB::raw("(SELECT tbl_teacherDocument.teacherDocument_id, tbl_teacherDocument.teacher_id, tbl_teacherDocument.file_location FROM tbl_teacherDocument LEFT JOIN tbl_asn ON tbl_asn.teacher_id = tbl_teacherDocument.teacher_id WHERE tbl_asn.asn_id = $id AND tbl_teacherDocument.type_int = 1 AND tbl_teacherDocument.isCurrent_status <> 0 ORDER BY tbl_teacherDocument.teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    function ($join) {
+                        $join->on('tbl_asn.teacher_id', '=', 't_document.teacher_id');
+                    }
+                )
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), 'file_location', 'teacherDocument_id')
                 ->where('tbl_asn.asn_id', $id)
                 ->groupBy('tbl_asn.asn_id')
                 ->first();

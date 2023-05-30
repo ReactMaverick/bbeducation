@@ -326,6 +326,9 @@
                                 <a href="#">
                                     <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                                 </a> --}}
+                                <a style="cursor: pointer;" class="disabled-link" id="viewDocumentBttn">
+                                    <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
+                                </a>
 
                                 <a data-toggle="modal" data-target="#documentAddModal" style="cursor: pointer;">
                                     <i class="fa-solid fa-plus"></i>
@@ -353,8 +356,7 @@
                                                 id="editDocumentRow{{ $document->teacherDocument_id }}"
                                                 onclick="documentRowSelect({{ $document->teacherDocument_id }})">
                                                 <td>{{ $key + 1 }}</td>
-                                                <td><a href="{{ asset($document->file_location) }}"
-                                                        target="_blank">{{ $document->file_name }}</a></td>
+                                                <td>{{ $document->file_name }}</td>
                                                 <td>{{ $document->file_type }}</td>
                                                 <td>{{ $document->doc_type_txt }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($document->uploadOn_dtm)) }}</td>
@@ -1137,38 +1139,103 @@
 
         function documentRowSelect(teacherDocument_id) {
             if ($('#editDocumentRow' + teacherDocument_id).hasClass('tableRowActive')) {
-                $('#DocumentId').val('');
+                setIds(teacherDocument_id, 'rm');
                 $('#editDocumentRow' + teacherDocument_id).removeClass('tableRowActive');
-                $('#deleteDocumentBttn').addClass('disabled-link');
-                $('#editDocumentBttn').addClass('disabled-link');
-                $('#documentMailBttn').addClass('disabled-link');
             } else {
-                $('#DocumentId').val(teacherDocument_id);
-                $('.editDocumentRow').removeClass('tableRowActive');
+                setIds(teacherDocument_id, 'add');
                 $('#editDocumentRow' + teacherDocument_id).addClass('tableRowActive');
+            }
+        }
+
+        function setIds(teacherDocument_id, type) {
+            var ItemId = parseInt(teacherDocument_id);
+            var ids = '';
+            var idsArr = [];
+            var asnItemIds = $('#DocumentId').val();
+            if (asnItemIds) {
+                idsArr = asnItemIds.split(',');
+            }
+            if (type == 'add') {
+                idsArr.push(ItemId);
+            }
+            if (type == 'rm') {
+                idsArr = jQuery.grep(idsArr, function(value) {
+                    return value != ItemId;
+                });
+            }
+            ids = idsArr.toString();
+            $('#DocumentId').val(ids);
+            if (ids) {
                 $('#deleteDocumentBttn').removeClass('disabled-link');
                 $('#editDocumentBttn').removeClass('disabled-link');
                 $('#documentMailBttn').removeClass('disabled-link');
+                $('#viewDocumentBttn').removeClass('disabled-link');
+            } else {
+                $('#deleteDocumentBttn').addClass('disabled-link');
+                $('#editDocumentBttn').addClass('disabled-link');
+                $('#documentMailBttn').addClass('disabled-link');
+                $('#viewDocumentBttn').addClass('disabled-link');
             }
         }
 
         $(document).on('click', '#editDocumentBttn', function() {
             var DocumentId = $('#DocumentId').val();
             if (DocumentId) {
-                $('#editDocumentId').val(DocumentId);
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ url('getTeacherDocDetail') }}',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        DocumentId: DocumentId
-                    },
-                    success: function(data) {
-                        //console.log(data);
-                        $('#docEditAjax').html(data.html);
-                    }
-                });
-                $('#DocumentEditModal').modal("show");
+                var idsArr = [];
+                idsArr = DocumentId.split(',');
+                if (idsArr.length == 1) {
+                    $('#editDocumentId').val(idsArr[0]);
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('getTeacherDocDetail') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            DocumentId: idsArr[0]
+                        },
+                        success: function(data) {
+                            //console.log(data);
+                            $('#docEditAjax').html(data.html);
+                        }
+                    });
+                    $('#DocumentEditModal').modal("show");
+                } else {
+                    swal("",
+                        "You cannot edit more then one document at a time. Please reduce selection to one item."
+                    );
+                }
+            } else {
+                swal("", "Please select one document.");
+            }
+        });
+
+        $(document).on('click', '#viewDocumentBttn', function() {
+            var DocumentId = $('#DocumentId').val();
+            if (DocumentId) {
+                var idsArr = [];
+                idsArr = DocumentId.split(',');
+                if (idsArr.length == 1) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('teacherDocumentFetch') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            teacherDocument_id: idsArr[0]
+                        },
+                        success: function(data) {
+                            if (data) {
+                                var newWindow = window.open(data, '_blank');
+                                newWindow.location.href = data;
+                                newWindow.addEventListener('load', function() {
+                                    newWindow.location.reload(true);
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    swal("",
+                        "You cannot preview more then one document at a time. Please reduce selection to one item."
+                    );
+                }
             } else {
                 swal("", "Please select one document.");
             }
@@ -1179,7 +1246,7 @@
             if (DocumentId) {
                 swal({
                         title: "Alert",
-                        text: "Are you sure you wish to remove this document?",
+                        text: "Are you sure you wish to remove the selected file(s)?",
                         buttons: {
                             cancel: "No",
                             Yes: "Yes"
@@ -1205,6 +1272,64 @@
                 swal("", "Please select one document.");
             }
         });
+
+        // $(document).on('click', '#documentMailBttn', function() {
+        //     var DocumentId = $('#DocumentId').val();
+        //     if (DocumentId) {
+        //         var form = $('<form>', {
+        //             action: '{{ url('teacherDocumentMail') }}',
+        //             method: 'POST',
+        //             target: '_blank' // Open in a new tab or window
+        //         }).append($('<input>', {
+        //             type: 'hidden',
+        //             name: '_token',
+        //             value: '{{ csrf_token() }}'
+        //         })).append($('<input>', {
+        //             type: 'hidden',
+        //             name: 'DocumentId',
+        //             value: DocumentId
+        //         }));
+
+        //         $('body').append(form);
+        //         form.submit();
+        //     } else {
+        //         swal("", "Please select one document.");
+        //     }
+        // });
+
+        $(document).on('click', '#documentMailBttn', function() {
+            var documentId = $('#DocumentId').val();
+            if (documentId) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('teacherDocumentMail') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        DocumentId: documentId
+                    },
+                    success: function(data) {
+                        if (data) {
+                            data.forEach(function(url) {
+                                const link = document.createElement('a');
+                                link.href = url;
+                                link.download = (url).split("/").pop();
+                                link.target = '_blank';
+                                link.click();
+                            });
+                        }
+                        var subject = '';
+                        var body = "";
+                        window.location = 'mailto:?subject=';
+
+                        $('#fullLoader').hide();
+                    }
+                });
+            } else {
+                swal("", "Please select one document.");
+            }
+        });
+
 
         function docTypeChange(desc_int, description_txt) {
             $('#docNameHidden').val(description_txt)

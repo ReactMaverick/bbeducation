@@ -13,6 +13,8 @@ use Carbon\CarbonPeriod;
 use App\Http\Controllers\WebControllers\AlertController;
 use Hash;
 use PDF;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Response;
 
 class TeacherController extends Controller
 {
@@ -2462,6 +2464,37 @@ class TeacherController extends Controller
         }
     }
 
+    public function teacherDocumentFetch(Request $request)
+    {
+        $filePath = '';
+        $det = DB::table('tbl_teacherDocument')
+            ->where('teacherDocument_id', $request->teacherDocument_id)
+            ->first();
+        if ($det && $det->file_location) {
+            $filePath = asset($det->file_location);
+        }
+        return response()->json($filePath);
+    }
+
+    public function teacherDocumentMail(Request $request)
+    {
+        $documentId = $request->input('DocumentId');
+        $attachments = [];
+
+        $docIds = explode(",", $documentId);
+        foreach ($docIds as $key => $value) {
+            $det = DB::table('tbl_teacherDocument')
+                ->where('teacherDocument_id', $value)
+                ->first();
+            if ($det && $det->file_location) {
+                $filePath = asset($det->file_location);
+                array_push($attachments, $filePath);
+            }
+        }
+
+        return response()->json($attachments);
+    }
+
     public function teacherDocumentListUpdate(Request $request)
     {
         $webUserLoginData = Session::get('webUserLoginData');
@@ -2789,13 +2822,13 @@ class TeacherController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    if ($image->move('public/images/teacher', $name)) {
-                        $fPath = 'public/images/teacher/' . $name;
+                    if ($image->move(public_path('images/teacher'), $name)) {
+                        $fPath = 'images/teacher/' . $name;
                         $fType = $extension;
                     }
                 } else {
@@ -2923,13 +2956,13 @@ class TeacherController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    if ($image->move('public/images/teacher', $name)) {
-                        $fPath = 'public/images/teacher/' . $name;
+                    if ($image->move(public_path('images/teacher'), $name)) {
+                        $fPath = 'images/teacher/' . $name;
                         $fType = $extension;
                         if (file_exists($file_location)) {
                             unlink($file_location);
@@ -3012,65 +3045,69 @@ class TeacherController extends Controller
     public function teacherDocumentDelete(Request $request)
     {
         $DocumentId = $request->DocumentId;
-        $docDetail = DB::table('tbl_teacherDocument')
-            ->where('teacherDocument_id', "=", $DocumentId)
-            ->first();
-        if ($docDetail) {
-            DB::table('tbl_teacherDocument')
-                ->where('teacherDocument_id', "=", $DocumentId)
-                ->delete();
+        $docIds = explode(",", $DocumentId);
+        foreach ($docIds as $key => $value) {
+            $docDetail = DB::table('tbl_teacherDocument')
+                ->where('teacherDocument_id', "=", $value)
+                ->first();
+            if ($docDetail) {
+                DB::table('tbl_teacherDocument')
+                    ->where('teacherDocument_id', "=", $value)
+                    ->delete();
 
-            if (file_exists($docDetail->file_location)) {
-                unlink($docDetail->file_location);
-            }
+                if (file_exists($docDetail->file_location)) {
+                    unlink($docDetail->file_location);
+                }
 
-            $eData = array();
-            if ($docDetail->type_int == 3) {
-                $eData['docPassport_status'] = 0;
-            }
-            if ($docDetail->type_int == 4) {
-                $eData['docDriversLicence_status'] = 0;
-            }
-            if ($docDetail->type_int == 5) {
-                $eData['docBankStatement_status'] = 0;
-            }
-            if ($docDetail->type_int == 6) {
-                $eData['docDBS_status'] = 0;
-            }
-            if ($docDetail->type_int == 8) {
-                $eData['docDisqualForm_status'] = 0;
-            }
-            if ($docDetail->type_int == 9) {
-                $eData['docHealthDec_status'] = 0;
-            }
-            if ($docDetail->type_int == 10) {
-                $eData['docEUCard_status'] = 0;
-            }
-            if ($docDetail->type_int == 11) {
-                $eData['docUtilityBill_status'] = 0;
-            }
-            if ($docDetail->type_int == 12) {
-                $eData['docTelephoneBill_status'] = 0;
-            }
-            if ($docDetail->type_int == 13) {
-                $eData['docBenefitStatement_status'] = 0;
-            }
-            if ($docDetail->type_int == 14) {
-                $eData['docCreditCardBill_status'] = 0;
-            }
-            if ($docDetail->type_int == 15 || $docDetail->type_int == 17) {
-                $eData['docP45P60_status'] = 0;
-            }
-            if ($docDetail->type_int == 16) {
-                $eData['docCouncilTax_status'] = 0;
-            }
+                $eData = array();
+                if ($docDetail->type_int == 3) {
+                    $eData['docPassport_status'] = 0;
+                }
+                if ($docDetail->type_int == 4) {
+                    $eData['docDriversLicence_status'] = 0;
+                }
+                if ($docDetail->type_int == 5) {
+                    $eData['docBankStatement_status'] = 0;
+                }
+                if ($docDetail->type_int == 6) {
+                    $eData['docDBS_status'] = 0;
+                }
+                if ($docDetail->type_int == 8) {
+                    $eData['docDisqualForm_status'] = 0;
+                }
+                if ($docDetail->type_int == 9) {
+                    $eData['docHealthDec_status'] = 0;
+                }
+                if ($docDetail->type_int == 10) {
+                    $eData['docEUCard_status'] = 0;
+                }
+                if ($docDetail->type_int == 11) {
+                    $eData['docUtilityBill_status'] = 0;
+                }
+                if ($docDetail->type_int == 12) {
+                    $eData['docTelephoneBill_status'] = 0;
+                }
+                if ($docDetail->type_int == 13) {
+                    $eData['docBenefitStatement_status'] = 0;
+                }
+                if ($docDetail->type_int == 14) {
+                    $eData['docCreditCardBill_status'] = 0;
+                }
+                if ($docDetail->type_int == 15 || $docDetail->type_int == 17) {
+                    $eData['docP45P60_status'] = 0;
+                }
+                if ($docDetail->type_int == 16) {
+                    $eData['docCouncilTax_status'] = 0;
+                }
 
-            if ($eData) {
-                DB::table('tbl_teacher')
-                    ->where('teacher_id', '=', $docDetail->teacher_id)
-                    ->update($eData);
+                if ($eData) {
+                    DB::table('tbl_teacher')
+                        ->where('teacher_id', '=', $docDetail->teacher_id)
+                        ->update($eData);
+                }
             }
         }
+
         return 1;
     }
 
@@ -4364,7 +4401,7 @@ class TeacherController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
@@ -4479,7 +4516,7 @@ class TeacherController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
@@ -4780,7 +4817,7 @@ class TeacherController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);

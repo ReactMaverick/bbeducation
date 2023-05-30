@@ -59,6 +59,7 @@ Route::post('/assignmentDetailUpdate', [AssignmentController::class, 'assignment
 Route::post('/checkVettingExist', [AssignmentController::class, 'checkVettingExist']);
 Route::post('/createCandidateVetting', [AssignmentController::class, 'createCandidateVetting']);
 Route::post('/updateCandidateVetting', [AssignmentController::class, 'updateCandidateVetting']);
+Route::post('/approveVettingSend', [AssignmentController::class, 'approveVettingSend']);
 Route::post('/assignmentStatusEdit', [AssignmentController::class, 'assignmentStatusEdit']);
 Route::get('/assignment-contact/{id}', [AssignmentController::class, 'assignmentContact']);
 Route::post('/assignmentContactLogInsert', [AssignmentController::class, 'assignmentContactLogInsert']);
@@ -137,6 +138,8 @@ Route::get('/teacher-payroll/{id}', [TeacherController::class, 'teacherPayroll']
 Route::post('/teacherPayrollUpdate', [TeacherController::class, 'teacherPayrollUpdate']);
 Route::post('/teacherFabAdd', [TeacherController::class, 'teacherFabAdd']);
 Route::post('/teacherHeaderStatusUpdate', [TeacherController::class, 'teacherHeaderStatusUpdate']);
+Route::post('/teacherDocumentFetch', [TeacherController::class, 'teacherDocumentFetch']);
+Route::post('/teacherDocumentMail', [TeacherController::class, 'teacherDocumentMail']);
 // Teacher
 
 // School

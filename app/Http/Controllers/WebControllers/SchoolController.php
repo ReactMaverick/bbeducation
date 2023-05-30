@@ -2026,12 +2026,12 @@ class SchoolController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('images/school', $name);
+                    $image->move(public_path('images/school'), $name);
                     $fPath = 'images/school/' . $name;
                     $fType = $extension;
                 } else {
@@ -2091,12 +2091,12 @@ class SchoolController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);
                     $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move('images/school', $name);
+                    $image->move(public_path('images/school'), $name);
                     $fPath = 'images/school/' . $name;
                     $fType = $extension;
                     if (file_exists($file_location)) {
@@ -3211,7 +3211,7 @@ class SchoolController extends Controller
             $fType = '';
             $allowed_types = array('jpg', 'png', 'jpeg');
             if ($image = $request->file('file')) {
-                $extension = $image->extension();
+                $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
                 if (in_array(strtolower($extension), $allowed_types)) {
                     $rand = mt_rand(100000, 999999);

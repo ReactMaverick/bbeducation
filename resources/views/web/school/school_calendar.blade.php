@@ -87,14 +87,16 @@
                                             <div class="date-left-teacher-calendar date-left-school-calendar">
                                                 <div class="teacher-calendar-days-field3" style="cursor: pointer;"
                                                     onclick="calDateClick('teacher', '{{ $calender->teacher_id }}', '')">
-                                                    <p>
-                                                        @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
-                                                            {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
-                                                        @else
-                                                            {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
-                                                        @endif
-                                                    </p>
-                                                    <p>{{ $calender->totalDays }} Days</p>
+                                                    <div class="calendar_right_sec" style="width: 100%">
+                                                        <p>
+                                                            @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
+                                                                {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
+                                                            @else
+                                                                {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
+                                                            @endif
+                                                        </p>
+                                                        <p>{{ $calender->totalDays }} Days</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="date-left-teacher-calendar date-left-school-calendar">

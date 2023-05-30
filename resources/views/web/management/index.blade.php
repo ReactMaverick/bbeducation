@@ -49,11 +49,11 @@
                             <p>View Metrics</p>
                         </a>
                     </div>
-                    <div class="about-finance">
+                    {{-- <div class="about-finance">
                         <a href="#"> <i class="fa-solid fa-user"></i>
                             <p>Manage Users</p>
                         </a>
-                    </div>
+                    </div> --}}
                     {{-- <div class="about-finance">
                         <a href="#"> <i class="fa-solid fa-person"></i>
                             <p>Export to</p>

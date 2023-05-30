@@ -106,7 +106,7 @@
                                     <label for="">Daily Charge</label>
                                     <input type="text" class="form-control assignment-detail-form-control"
                                         id="asnDailyCharge" name="charge_dec" placeholder=""
-                                        value="{{ $assignmentDetail->charge_dec ? $assignmentDetail->charge_dec : $selectedRate }}">
+                                        value="{{ $assignmentDetail->charge_dec ? $assignmentDetail->charge_dec : '' }}">
                                 </div>
 
                                 <div class="form-group filter-input-sec-group2 col-md-6">

@@ -56,7 +56,8 @@
     $(document).ready(function() {
         $('.datePickerPaste').datepicker({
             format: 'dd/mm/yyyy',
-            autoclose: true
+            autoclose: true,
+            weekStart: 1
         });
     });
 

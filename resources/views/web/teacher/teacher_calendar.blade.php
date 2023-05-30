@@ -97,14 +97,23 @@
                                 <div class="date-left-teacher-calendar">
                                     <div class="teacher-calendar-days-field3" style="cursor: pointer;"
                                         onclick="calDateClick('teacher', '{{ $calender->teacher_id }}', '', '')">
-                                        <p>
-                                            @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
-                                                {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
+                                        <div class="calendar_first_sec">
+                                            @if ($calender->file_location != null || $calender->file_location != '')
+                                                <img src="{{ asset($calender->file_location) }}" alt="">
                                             @else
-                                                {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
+                                                <img src="{{ asset('web/images/user-img.png') }}" alt="">
                                             @endif
-                                        </p>
-                                        <p>{{ $calender->totalDays }} Days</p>
+                                        </div>
+                                        <div class="calendar_right_sec">
+                                            <p>
+                                                @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
+                                                    {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
+                                                @else
+                                                    {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
+                                                @endif
+                                            </p>
+                                            <p>{{ $calender->totalDays }} Days</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="date-left-teacher-calendar">

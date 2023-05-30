@@ -737,5 +737,43 @@
                 swal("", "Please select one profession.");
             }
         });
+
+        $(document).on('click', '#sendInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('financeInvoiceSave') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editInvoiceId: editInvoiceId
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function(data) {
+                        // console.log(data);
+                        if (data.exist == 'Yes' && data.invoice_path) {
+                            // window.location.href = data.invoice_path;
+                            // location.replace(data.invoice_path);
+                            const link = document.createElement('a');
+                            link.href = data.invoice_path;
+                            link.download = (data.invoice_path).split("/").pop();
+                            link.target = '_blank';
+                            link.click();
+                        }
+                        var subject = 'Finance Invoice';
+                        var body = "Hello";
+                        window.location = 'mailto:' + data.sendMail + '?subject=' +
+                            encodeURIComponent(subject) + '&body=' +
+                            encodeURIComponent(body);
+
+                        $('#fullLoader').hide();
+                    }
+                });
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
     </script>
 @endsection
