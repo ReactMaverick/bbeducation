@@ -128,7 +128,7 @@ class SchoolController extends Controller
                 $myVar->school_reset_password($mailData);
             }
 
-            return redirect('/schools')->with('success', "School added successfully.");
+            return redirect('/school-detail/'.$school_id)->with('success', "School added successfully.");
         } else {
             return redirect()->intended('/');
         }
@@ -2024,7 +2024,7 @@ class SchoolController extends Controller
 
             $fPath = '';
             $fType = '';
-            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx','txt');
             if ($image = $request->file('file')) {
                 $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
@@ -2089,7 +2089,7 @@ class SchoolController extends Controller
 
             $fPath = '';
             $fType = '';
-            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
             if ($image = $request->file('file')) {
                 $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();

@@ -184,7 +184,7 @@ class TeacherController extends Controller
                 $myVar->reset_password($mailData);
             }
 
-            return redirect()->back()->with('success', "Teacher added successfully.");
+            return redirect('/teacher-detail/'.$teacher_id)->with('success', "Teacher added successfully.");
         } else {
             return redirect()->intended('/');
         }
@@ -2820,7 +2820,7 @@ class TeacherController extends Controller
 
             $fPath = '';
             $fType = '';
-            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
             if ($image = $request->file('file')) {
                 $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();
@@ -2954,7 +2954,7 @@ class TeacherController extends Controller
 
             $fPath = '';
             $fType = '';
-            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
             if ($image = $request->file('file')) {
                 $extension = $image->getClientOriginalExtension();
                 $file_name = $image->getClientOriginalName();

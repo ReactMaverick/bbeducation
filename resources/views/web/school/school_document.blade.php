@@ -139,7 +139,7 @@
                                         style="color: red;">*</span>
                                     <input type="file" class="form-control file-validate" name="file" id=""
                                         value=""><span> *Only file type 'jpg', 'png', 'jpeg', 'pdf', 'doc',
-                                        'docx'</span>
+                                        'docx', 'txt'</span>
                                 </div>
                             </div>
                         </div>

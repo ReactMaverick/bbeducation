@@ -253,7 +253,7 @@
                             <div class="col-md-6">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Start Date</label>
-                                    <input type="date" class="form-control field-validate-2" name="blockStartDate"
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="blockStartDate"
                                         id="blockStartDate" value="">
                                 </div>
 
@@ -273,7 +273,7 @@
                             <div class="col-md-6 modal-form-right-sec">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">End Date</label>
-                                    <input type="date" class="form-control field-validate-2" name="blockEndDate"
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="blockEndDate"
                                         id="blockEndDate" value="">
                                 </div>
 
@@ -325,13 +325,13 @@
                             <div class="col-md-12">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Start Date</label>
-                                    <input type="date" class="form-control field-validate-3" name="unblockStartDate"
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-3" name="unblockStartDate"
                                         id="unblockStartDate" value="">
                                 </div>
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">End Date</label>
-                                    <input type="date" class="form-control field-validate-3" name="unblockEndDate"
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-3" name="unblockEndDate"
                                         id="unblockEndDate" value="">
                                 </div>
                             </div>
@@ -449,12 +449,24 @@
                 droppable: false,
                 allDayDefault: false,
                 select: function(event_start, event_end, allDay) {
+                    var AddEvntSts = 'No';
+                    var start = moment(event_start);
+                    var end = moment(event_end);
+
+                    var lastDayOfMonth = start.clone().endOf('month').date();
+                    if (start.date() == lastDayOfMonth) {
+                        AddEvntSts = 'Yes';
+                    } else if ((event_end._d.getDate() - 1) != event_start._d.getDate()) {
+                        AddEvntSts = 'No';
+                    } else {
+                        AddEvntSts = 'Yes';
+                    }
                     // console.log('event_start ==>', event_start)
                     // console.log('event_end ==>', event_end)
 
                     // console.log('event_start date ==>', event_start._d.getDate())
-                    // console.log('event_end date ==>', event_end._d.getDate() - 1)
-                    if ((event_end._d.getDate() - 1) != event_start._d.getDate()) {
+                    // console.log('event_end date ==>', event_end._d.getDate())
+                    if (AddEvntSts == 'No') {
                         calendar.fullCalendar('unselect');
                     } else {
                         // var event_name = prompt('Event Name:');
@@ -471,26 +483,27 @@
                                 dataType: "json",
                                 success: function(data) {
                                     if (data) {
-                                        if (data.type == 'Delete') {
-                                            calendar.fullCalendar('removeEvents', data
-                                                .eventId);
-                                        } else if (data.type == 'Add') {
-                                            calendar.fullCalendar('renderEvent', {
-                                                id: data.eventItem.id,
-                                                title: data.eventItem.title,
-                                                start: data.eventItem.start,
-                                                editable: false
-                                            }, true);
-                                        } else if (data.type == 'Update') {
-                                            calendar.fullCalendar('removeEvents', data
-                                                .eventItem.id);
-                                            calendar.fullCalendar('renderEvent', {
-                                                id: data.eventItem.id,
-                                                title: data.eventItem.title,
-                                                start: data.eventItem.start,
-                                                editable: false
-                                            }, true);
-                                        }
+                                        // if (data.type == 'Delete') {
+                                        //     calendar.fullCalendar('removeEvents', data
+                                        //         .eventId);
+                                        // } else if (data.type == 'Add') {
+                                        //     calendar.fullCalendar('renderEvent', {
+                                        //         id: data.eventItem.id,
+                                        //         title: data.eventItem.title,
+                                        //         start: data.eventItem.start,
+                                        //         editable: false
+                                        //     }, true);
+                                        // } else if (data.type == 'Update') {
+                                        //     calendar.fullCalendar('removeEvents', data
+                                        //         .eventItem.id);
+                                        //     calendar.fullCalendar('renderEvent', {
+                                        //         id: data.eventItem.id,
+                                        //         title: data.eventItem.title,
+                                        //         start: data.eventItem.start,
+                                        //         editable: false
+                                        //     }, true);
+                                        // }
+                                        calendar.fullCalendar('refetchEvents');
                                     }
                                     calendar.fullCalendar('unselect');
                                 }
@@ -554,19 +567,20 @@
                             dataType: "json",
                             success: function(data) {
                                 if (data) {
-                                    if (data.type == 'Delete') {
-                                        calendar.fullCalendar('removeEvents', data
-                                            .eventId);
-                                    } else if (data.type == 'Update') {
-                                        calendar.fullCalendar('removeEvents', data
-                                            .eventItem.id);
-                                        calendar.fullCalendar('renderEvent', {
-                                            id: data.eventItem.id,
-                                            title: data.eventItem.title,
-                                            start: data.eventItem.start,
-                                            editable: false
-                                        }, true);
-                                    }
+                                    // if (data.type == 'Delete') {
+                                    //     calendar.fullCalendar('removeEvents', data
+                                    //         .eventId);
+                                    // } else if (data.type == 'Update') {
+                                    //     calendar.fullCalendar('removeEvents', data
+                                    //         .eventItem.id);
+                                    //     calendar.fullCalendar('renderEvent', {
+                                    //         id: data.eventItem.id,
+                                    //         title: data.eventItem.title,
+                                    //         start: data.eventItem.start,
+                                    //         editable: false
+                                    //     }, true);
+                                    // }
+                                    calendar.fullCalendar('refetchEvents');
                                 }
                             }
                         });
@@ -631,14 +645,15 @@
                     success: function(data) {
                         if (data) {
                             if (data.status == 'success') {
-                                $("#full_calendar_events").fullCalendar('removeEvents', data
-                                    .eventId);
-                                $("#full_calendar_events").fullCalendar('renderEvent', {
-                                    id: data.eventItem.id,
-                                    title: data.eventItem.title,
-                                    start: data.eventItem.start,
-                                    editable: false
-                                }, true);
+                                // $("#full_calendar_events").fullCalendar('removeEvents', data
+                                //     .eventId);
+                                // $("#full_calendar_events").fullCalendar('renderEvent', {
+                                //     id: data.eventItem.id,
+                                //     title: data.eventItem.title,
+                                //     start: data.eventItem.start,
+                                //     editable: false
+                                // }, true);
+                                $("#full_calendar_events").fullCalendar('refetchEvents');
                                 date = moment(data.eventItem.start, "YYYY-MM-DD");
                                 $("#full_calendar_events").fullCalendar('gotoDate', date);
 
@@ -740,16 +755,17 @@
                                 var months = DateObj.getMonth();
                                 var CurrentDateObj = new Date();
                                 var CurrentMonths = CurrentDateObj.getMonth();
-                                if (months == CurrentMonths) {
-                                    $.each(data.eventItemArr, function(val, text) {
-                                        $("#full_calendar_events").fullCalendar('renderEvent', {
-                                            id: text.id,
-                                            title: text.title,
-                                            start: text.start,
-                                            editable: false
-                                        }, true);
-                                    });
-                                }
+                                // if (months == CurrentMonths) {
+                                //     $.each(data.eventItemArr, function(val, text) {
+                                //         $("#full_calendar_events").fullCalendar('renderEvent', {
+                                //             id: text.id,
+                                //             title: text.title,
+                                //             start: text.start,
+                                //             editable: false
+                                //         }, true);
+                                //     });
+                                // }
+                                $("#full_calendar_events").fullCalendar('refetchEvents');
 
                                 if (data.firstDate) {
                                     date = moment(data.firstDate, "YYYY-MM-DD");
@@ -805,10 +821,11 @@
                         if (data) {
                             if (data.status == 'success') {
                                 // location.reload();
-                                $.each(data.IdArray, function(val1, text1) {
-                                    $("#full_calendar_events").fullCalendar('removeEvents',
-                                        text1);
-                                });
+                                // $.each(data.IdArray, function(val1, text1) {
+                                //     $("#full_calendar_events").fullCalendar('removeEvents',
+                                //         text1);
+                                // });
+                                $("#full_calendar_events").fullCalendar('refetchEvents');
 
                                 if (data.firstDate) {
                                     date = moment(data.firstDate, "YYYY-MM-DD");

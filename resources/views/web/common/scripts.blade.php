@@ -130,7 +130,7 @@
                 error = "has error";
             } else {
                 var ext = $('.file-validate').val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                     $(this).closest(".form-group").addClass('has-error');
                     error = "has error";
                 } else {
@@ -240,7 +240,7 @@
             error = "has error";
         } else {
             var ext = $('.file-validate').val().split('.').pop().toLowerCase();
-            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                 $(this).closest(".form-group").addClass('has-error');
                 error = "has error";
             } else {
@@ -335,7 +335,7 @@
                 error = "has error";
             } else {
                 var ext = $('.file-validate-2').val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                     $(this).closest(".form-group").addClass('has-error');
                     error = "has error";
                 } else {
@@ -445,7 +445,7 @@
             error = "has error";
         } else {
             var ext = $('.file-validate-2').val().split('.').pop().toLowerCase();
-            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                 $(this).closest(".form-group").addClass('has-error');
                 error = "has error";
             } else {
@@ -541,7 +541,7 @@
                 error = "has error";
             } else {
                 var ext = $('.file-validate-3').val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                     $(this).closest(".form-group").addClass('has-error');
                     error = "has error";
                 } else {
@@ -660,7 +660,7 @@
             error = "has error";
         } else {
             var ext = $('.file-validate-3').val().split('.').pop().toLowerCase();
-            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                 $(this).closest(".form-group").addClass('has-error');
                 error = "has error";
             } else {
@@ -765,7 +765,7 @@
                 error = "has error";
             } else {
                 var ext = $('.file-validate-4').val().split('.').pop().toLowerCase();
-                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+                if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                     $(this).closest(".form-group").addClass('has-error');
                     error = "has error";
                 } else {
@@ -875,7 +875,7 @@
             error = "has error";
         } else {
             var ext = $('.file-validate-4').val().split('.').pop().toLowerCase();
-            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx']) == -1) {
+            if ($.inArray(ext, ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt']) == -1) {
                 $(this).closest(".form-group").addClass('has-error');
                 error = "has error";
             } else {

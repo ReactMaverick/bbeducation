@@ -34,7 +34,7 @@
         <div class="modal-input-field form-group">
             <label class="form-check-label">Upload Document</label>
             <input type="file" class="form-control file-validate-2" name="file" id=""
-                value=""><span> *Only file type 'jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx'</span>
+                value=""><span> *Only file type 'jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt'</span>
         </div>
     </div>
 </div>
