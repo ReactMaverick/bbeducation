@@ -559,50 +559,99 @@ class AssignmentController extends Controller
                 $cost_dec = $Detail->cost_dec;
             }
 
+            $weekDaysArr = array();
+            if ($request->blockDays) {
+                $weekDaysArr = explode(",", $request->blockDays);
+            }
+
             $period = CarbonPeriod::create($blockStartDate, $blockEndDate);
             foreach ($period as $date) {
                 // echo $date->format('Y-m-d');
                 $day = date('D', strtotime($date->format('Y-m-d')));
-                if ($day == 'Mon' || $day == 'Tue' || $day == 'Wed' || $day == 'Thu' || $day == 'Fri') {
-                    if ($firstDate == '') {
-                        $firstDate = $date->format('Y-m-d');
+                if (count($weekDaysArr) > 0) {
+                    if (in_array($day, $weekDaysArr) && ($day == 'Mon' || $day == 'Tue' || $day == 'Wed' || $day == 'Thu' || $day == 'Fri')) {
+                        if ($firstDate == '') {
+                            $firstDate = $date->format('Y-m-d');
+                        }
+                        $eventItemExist = DB::table('tbl_asnItem')
+                            ->where('tbl_asnItem.asn_id', $assignmentId)
+                            ->whereDate('tbl_asnItem.asnDate_dte', $date->format('Y-m-d'))
+                            ->first();
+
+                        if ($eventItemExist) {
+                            array_push($IdArray, $eventItemExist->asnItem_id);
+                            DB::table('tbl_asnItem')
+                                ->where('asnItem_id', $eventItemExist->asnItem_id)
+                                ->delete();
+                        }
+                        $asnItem_id = DB::table('tbl_asnItem')
+                            ->insertGetId([
+                                'asn_id' => $assignmentId,
+                                'asnDate_dte' => $date->format('Y-m-d'),
+                                'dayPart_int' => $blockDayPart,
+                                'dayPercent_dec' => $dayPercent_dec,
+                                'hours_dec' => $blockHour,
+                                'charge_dec' => $charge_dec,
+                                'cost_dec' => $cost_dec,
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+
+                        $eventItem = DB::table('tbl_asnItem')
+                            ->LeftJoin('tbl_description', function ($join) {
+                                $join->on('tbl_description.description_int', '=', 'tbl_asnItem.dayPart_int')
+                                    ->where(function ($query) {
+                                        $query->where('tbl_description.descriptionGroup_int', '=', 20);
+                                    });
+                            })
+                            ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt) AS title'))
+                            ->where('tbl_asnItem.asnItem_id', $asnItem_id)
+                            ->groupBy('tbl_asnItem.asnItem_id')
+                            ->first();
+
+                        array_push($eventItemArr, $eventItem);
                     }
-                    $eventItemExist = DB::table('tbl_asnItem')
-                        ->where('tbl_asnItem.asn_id', $assignmentId)
-                        ->whereDate('tbl_asnItem.asnDate_dte', $date->format('Y-m-d'))
-                        ->first();
+                } else {
+                    if ($day == 'Mon' || $day == 'Tue' || $day == 'Wed' || $day == 'Thu' || $day == 'Fri') {
+                        if ($firstDate == '') {
+                            $firstDate = $date->format('Y-m-d');
+                        }
+                        $eventItemExist = DB::table('tbl_asnItem')
+                            ->where('tbl_asnItem.asn_id', $assignmentId)
+                            ->whereDate('tbl_asnItem.asnDate_dte', $date->format('Y-m-d'))
+                            ->first();
 
-                    if ($eventItemExist) {
-                        array_push($IdArray, $eventItemExist->asnItem_id);
-                        DB::table('tbl_asnItem')
-                            ->where('asnItem_id', $eventItemExist->asnItem_id)
-                            ->delete();
+                        if ($eventItemExist) {
+                            array_push($IdArray, $eventItemExist->asnItem_id);
+                            DB::table('tbl_asnItem')
+                                ->where('asnItem_id', $eventItemExist->asnItem_id)
+                                ->delete();
+                        }
+                        $asnItem_id = DB::table('tbl_asnItem')
+                            ->insertGetId([
+                                'asn_id' => $assignmentId,
+                                'asnDate_dte' => $date->format('Y-m-d'),
+                                'dayPart_int' => $blockDayPart,
+                                'dayPercent_dec' => $dayPercent_dec,
+                                'hours_dec' => $blockHour,
+                                'charge_dec' => $charge_dec,
+                                'cost_dec' => $cost_dec,
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+
+                        $eventItem = DB::table('tbl_asnItem')
+                            ->LeftJoin('tbl_description', function ($join) {
+                                $join->on('tbl_description.description_int', '=', 'tbl_asnItem.dayPart_int')
+                                    ->where(function ($query) {
+                                        $query->where('tbl_description.descriptionGroup_int', '=', 20);
+                                    });
+                            })
+                            ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt) AS title'))
+                            ->where('tbl_asnItem.asnItem_id', $asnItem_id)
+                            ->groupBy('tbl_asnItem.asnItem_id')
+                            ->first();
+
+                        array_push($eventItemArr, $eventItem);
                     }
-                    $asnItem_id = DB::table('tbl_asnItem')
-                        ->insertGetId([
-                            'asn_id' => $assignmentId,
-                            'asnDate_dte' => $date->format('Y-m-d'),
-                            'dayPart_int' => $blockDayPart,
-                            'dayPercent_dec' => $dayPercent_dec,
-                            'hours_dec' => $blockHour,
-                            'charge_dec' => $charge_dec,
-                            'cost_dec' => $cost_dec,
-                            'timestamp_ts' => date('Y-m-d H:i:s')
-                        ]);
-
-                    $eventItem = DB::table('tbl_asnItem')
-                        ->LeftJoin('tbl_description', function ($join) {
-                            $join->on('tbl_description.description_int', '=', 'tbl_asnItem.dayPart_int')
-                                ->where(function ($query) {
-                                    $query->where('tbl_description.descriptionGroup_int', '=', 20);
-                                });
-                        })
-                        ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt) AS title'))
-                        ->where('tbl_asnItem.asnItem_id', $asnItem_id)
-                        ->groupBy('tbl_asnItem.asnItem_id')
-                        ->first();
-
-                    array_push($eventItemArr, $eventItem);
                 }
             }
 

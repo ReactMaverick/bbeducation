@@ -253,10 +253,82 @@
                             <div class="col-md-6">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Start Date</label>
-                                    <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="blockStartDate"
-                                        id="blockStartDate" value="">
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-2"
+                                        name="blockStartDate" id="blockStartDate" value="">
                                 </div>
+                            </div>
+                            <div class="col-md-6 modal-form-right-sec">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">End Date</label>
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-2"
+                                        name="blockEndDate" id="blockEndDate" value="">
+                                </div>
+                            </div>
 
+                            <input type="hidden" name="blockDays" id="blockDays" value="">
+
+                            <div class="col-md-12" style="padding-right: 0">
+                                <div class="block_booking">
+                                    <div class="block_booking_inr_div">
+                                        <div class="date_calendar_top_sec">
+                                            <span>Monday</span>
+                                        </div>
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Mon', event)">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="block_booking_inr_div">
+                                        <div class="date_calendar_top_sec">
+                                            <span>Tuesday</span>
+                                        </div>
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Tue', event)">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="block_booking_inr_div">
+                                        <div class="date_calendar_top_sec">
+                                            <span>Wednesday</span>
+                                        </div>
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Wed', event)">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="block_booking_inr_div">
+                                        <div class="date_calendar_top_sec">
+                                            <span>Thursday</span>
+                                        </div>
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Thu', event)">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="block_booking_inr_div">
+                                        <div class="date_calendar_top_sec">
+                                            <span>Friday</span>
+                                        </div>
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Fri', event)">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="block_booking_inr_div">
+                                        <div class="date_calendar_top_sec">
+                                            <span>Saturday</span>
+                                        </div>
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Sat', event)" style="cursor: auto">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="block_booking_inr_div">
+                                        <div class="date_calendar_top_sec">
+                                            <span>Sunday</span>
+                                        </div>
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Sun', event)" style="cursor: auto">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div class="form-group calendar-form-filter">
                                     <label for="">Part Of Day</label>
                                     <select class="form-control field-validate-2" name="blockDayPart" id="blockDayPart">
@@ -269,14 +341,7 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-md-6 modal-form-right-sec">
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">End Date</label>
-                                    <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="blockEndDate"
-                                        id="blockEndDate" value="">
-                                </div>
-
                                 <div class="form-group modal-input-field" id="blockHourDiv" style="display: none;">
                                     <label class="form-check-label">Hours</label>
                                     <input type="text" class="form-control" name="blockHour" id="blockHour"
@@ -325,14 +390,14 @@
                             <div class="col-md-12">
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Start Date</label>
-                                    <input type="text" class="form-control datePickerPaste datepaste-validate-3" name="unblockStartDate"
-                                        id="unblockStartDate" value="">
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-3"
+                                        name="unblockStartDate" id="unblockStartDate" value="">
                                 </div>
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">End Date</label>
-                                    <input type="text" class="form-control datePickerPaste datepaste-validate-3" name="unblockEndDate"
-                                        id="unblockEndDate" value="">
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-3"
+                                        name="unblockEndDate" id="unblockEndDate" value="">
                                 </div>
                             </div>
                         </div>
@@ -1021,6 +1086,40 @@
                     }
                 });
             }
+        }
+
+        function selectWeekDay(day) {
+            if (day == 'Mon' || day == 'Tue' || day == 'Wed' || day == 'Thu' || day == 'Fri') {
+                var element = $(event.target).closest('.date_calendar_bottom_sec');
+
+                if (element.hasClass('date_calendar_bottom_sec_active')) {
+                    setDays(day, 'rm');
+                    element.removeClass('date_calendar_bottom_sec_active');
+                } else {
+                    setDays(day, 'add');
+                    element.addClass('date_calendar_bottom_sec_active');
+                }
+            }
+        }
+
+        function setDays(day, type) {
+            var ItemId = day;
+            var ids = '';
+            var idsArr = [];
+            var asnItemIds = $('#blockDays').val();
+            if (asnItemIds) {
+                idsArr = asnItemIds.split(',');
+            }
+            if (type == 'add') {
+                idsArr.push(ItemId);
+            }
+            if (type == 'rm') {
+                idsArr = jQuery.grep(idsArr, function(value) {
+                    return value != ItemId;
+                });
+            }
+            ids = idsArr.toString();
+            $('#blockDays').val(ids);
         }
     </script>
 @endsection

@@ -15,9 +15,9 @@
 
 <body style="-webkit-print-color-adjust: exact;">
 
-    <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 50px; ">
+    <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 20px; ">
         <tr style="padding: 15px;">
-            <th style="text-align:left; font-size: 50px; font-weight: bold; color: #fff; padding-left: 30px;">
+            <th style="text-align:left; font-size: 40px; font-weight: bold; color: #fff; padding-left: 30px;">
                 {{ $schoolInvoices->creditNote_status == '-1' ? 'Credit Note' : 'Invoice' }}
             </th>
             <th style="text-align:right;"><img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}"
@@ -26,7 +26,7 @@
         </tr>
     </table>
 
-    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 30px;">
+    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 10px;">
         <tr>
             <td style="vertical-align: top; width: 45%;">
                 <table>
@@ -233,7 +233,7 @@
         </tr>
     </table>
 
-    <table style="margin-top: 100px; margin-left: 40px;">
+    <table style="margin-top: 20px; margin-left: 40px;">
         <tr>
             <th style="text-align:left; color: #afabab; font-size: 12px; font-weight: 400;">By paying this invoice I
                 certify
@@ -275,7 +275,7 @@
         </tr>
     </table>
 
-    <table style="width: 70%; border-collapse: collapse; margin: 20px 0 50px 0;">
+    <table style="width: 70%; border-collapse: collapse; margin-left: 40px;">
         <tr>
             <td style="text-align:center; font-size: 14px; font-weight: 400;"><a
                     href="https://bumblebee-education.co.uk/"

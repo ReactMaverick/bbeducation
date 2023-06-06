@@ -1152,7 +1152,7 @@ table td {
 
 .calendar-section {
     display: flex;
-    align-items: flex-start;
+    /* align-items: flex-start; */
     justify-content: space-between;
     flex-wrap: wrap;
 }
@@ -4345,3 +4345,33 @@ td.fc-day-top {
   to{ bottom:0; opacity:1 }
 }
 /* loader */
+
+
+.block_booking {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.block_booking_inr_div {
+    width:14%;
+    margin-bottom: 10px;
+}
+.date_calendar_top_sec {
+    background-color: #e2e2e2;
+    text-align: center;
+    padding: 3px;
+}
+.date_calendar_top_sec span {
+    font-size: 14px;
+    color: #000;
+}
+.date_calendar_bottom_sec {
+    background-color: #afabab;
+    min-height: 80px;
+    padding: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+.date_calendar_bottom_sec_active {
+    background-color: #40A0ED;
+}
