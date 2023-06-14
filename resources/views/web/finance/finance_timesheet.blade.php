@@ -98,7 +98,11 @@
                                 <div class="finance-timesheet-contact-first-sec" style="width: 65%;">
 
                                     <div class="invoice-top-section mb-2">
-
+                                        <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" id="reloadBtn" title="Reload timesheets">
+                                                <i class="fa-solid fa-arrows-rotate"></i>
+                                            </a>
+                                        </div>
                                         <div class="invoice-top-btn-sec mr-3">
                                             <button id="selectNoneBtn">Select None</button>
                                         </div>
@@ -110,6 +114,12 @@
                                             <a style="cursor: pointer" class="disabled-link" id="timesheetEditBtn"
                                                 title="Edit timesheet">
                                                 <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                        </div>
+                                        <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer;" class="disabled-link" id="sendToSchoolBttn"
+                                                title="Send to school">
+                                                <i class="fa-sharp fa-solid fa-paper-plane"></i>
                                             </a>
                                         </div>
                                         <div class="finance-contact-icon-sec">
@@ -280,7 +290,7 @@
                                     <input type="hidden" name="" id="ajaxTimesheetAsnIds" value="">
                                 </div>
 
-                                <div class="finance-timesheet-contact-second-sec" style="width: 32%;">
+                                {{-- <div class="finance-timesheet-contact-second-sec" style="width: 32%;">
                                     <div class="contact-heading">
                                         <div class="contact-heading-text">
                                             <h2>Select a file</h2>
@@ -324,21 +334,21 @@
                                                 </table>
                                             </div>
 
-                                            <input type="hidden" name="teacherTimesheetId" id="teacherTimesheetId"
-                                                value="">
-                                            <input type="hidden" name="teacherTimesheetStatus"
-                                                id="teacherTimesheetStatus" value="">
-                                            <input type="hidden" name="teacherTimesheetMail" id="teacherTimesheetMail"
-                                                value="">
-                                            <input type="hidden" name="teacherTimesheetPath" id="teacherTimesheetPath"
-                                                value="">
-                                            <input type="hidden" name="docStartDate" id="docStartDate"
-                                                value="{{ $weekStartDate }}">
-                                            <input type="hidden" name="docEndDate" id="docEndDate"
-                                                value="{{ $weekEndDate }}">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
+
+                                <input type="hidden" name="teacherTimesheetId" id="teacherTimesheetId" value="">
+                                <input type="hidden" name="teacherTimesheetStatus" id="teacherTimesheetStatus"
+                                    value="">
+                                <input type="hidden" name="teacherTimesheetMail" id="teacherTimesheetMail"
+                                    value="">
+                                <input type="hidden" name="teacherTimesheetPath" id="teacherTimesheetPath"
+                                    value="">
+                                <input type="hidden" name="docStartDate" id="docStartDate"
+                                    value="{{ $weekStartDate }}">
+                                <input type="hidden" name="docEndDate" id="docEndDate" value="{{ $weekEndDate }}">
+
                             </div>
 
                             <div class="finance-timesheet-left-sec mt-5">
@@ -488,10 +498,7 @@
                                                 title="Remove days from assignment">
                                                 <i class="fa-solid fa-xmark"></i>
                                             </a> --}}
-                                            <a style="cursor: pointer;" class="disabled-link" id="sendToSchoolBttn"
-                                                title="Send to school">
-                                                <i class="fa-sharp fa-solid fa-paper-plane"></i>
-                                            </a>
+
                                             <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtn"
                                                 title="Log timesheet">
                                                 <i class="fa-solid fa-square-check"></i>
@@ -570,10 +577,12 @@
                 $('#timesheetApproveBtn').removeClass('disabled-link');
                 $('#timesheetRejectBtn').removeClass('disabled-link');
                 $('#timesheetEditBtn').removeClass('disabled-link');
+                $('#sendToSchoolBttn').removeClass('disabled-link');
             } else {
                 $('#timesheetApproveBtn').addClass('disabled-link');
                 $('#timesheetRejectBtn').addClass('disabled-link');
                 $('#timesheetEditBtn').addClass('disabled-link');
+                $('#sendToSchoolBttn').addClass('disabled-link');
             }
         }
 
@@ -619,8 +628,30 @@
                                         weekStartDate: "{{ $weekStartDate }}",
                                         weekEndDate: "{{ $plusFiveDate }}"
                                     },
+                                    // success: function(data) {
+                                    //     location.reload();
+                                    // }
                                     success: function(data) {
-                                        location.reload();
+                                        $('#fullLoader').hide();
+                                        if (data.add == 'Yes') {
+                                            $('#sendToSchoolBttn').addClass('disabled-link');
+                                            $('#timesheetEditBtn').addClass('disabled-link');
+                                            $('#timesheetApproveBtn').addClass('disabled-link');
+                                            $('#timesheetRejectBtn').addClass('disabled-link');
+                                            var arrAsnId = asnIds.split(',');
+                                            for (var i = 0; i < arrAsnId.length; i++) {
+                                                $('#editTimesheetDiv' + arrAsnId[i])
+                                                    .remove();
+                                            }
+                                            if (data.message) {
+                                                var popTxt =
+                                                    'You have just logged timesheet for ' + data
+                                                    .message;
+                                                swal("", popTxt);
+                                            }
+                                        } else {
+                                            location.reload();
+                                        }
                                     }
                                 });
                         }
@@ -763,10 +794,10 @@
             ids = idsArr.toString();
             $('#approveAsnId').val(ids);
             if (ids) {
-                $('#sendToSchoolBttn').removeClass('disabled-link');
+                // $('#sendToSchoolBttn').removeClass('disabled-link');
                 $('#logTimesheetBtn').removeClass('disabled-link');
             } else {
-                $('#sendToSchoolBttn').addClass('disabled-link');
+                // $('#sendToSchoolBttn').addClass('disabled-link');
                 $('#logTimesheetBtn').addClass('disabled-link');
             }
         }
@@ -857,6 +888,10 @@
             } else {
                 swal("", "Please select one timesheet.");
             }
+        });
+
+        $(document).on('click', '#reloadBtn', function() {
+            location.reload();
         });
     </script>
 @endsection
