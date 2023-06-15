@@ -123,6 +123,12 @@
                                             </a>
                                         </div>
                                         <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
+                                                title="Reject timesheet">
+                                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                            </a>
+                                        </div>
+                                        <div class="finance-contact-icon-sec">
                                             <a style="cursor: pointer" class="disabled-link" id="timesheetApproveBtn"
                                                 title="Approve timesheet">
                                                 <i class="fa-solid fa-square-check"></i>
@@ -195,6 +201,11 @@
                                                 $adminApprove = 0;
                                                 if ($calender->admin_approve1 == 2 || $calender->admin_approve2 == 2 || $calender->admin_approve3 == 2 || $calender->admin_approve4 == 2 || $calender->admin_approve5 == 2) {
                                                     $adminApprove = 1;
+                                                }
+                                                
+                                                $sendToSchool = 0;
+                                                if ($calender->send_to_school1 == 1 || $calender->send_to_school2 == 1 || $calender->send_to_school3 == 1 || $calender->send_to_school4 == 1 || $calender->send_to_school5 == 1) {
+                                                    $sendToSchool = 1;
                                                 }
                                                 ?>
                                                 <div class="calendar-outer-sec editTimesheetDiv"
@@ -273,6 +284,10 @@
                                                             @if ($adminApprove == 1)
                                                                 <div class="teacher-calendar-days-field3 rejectDiv">
                                                                     <p>Reject</p>
+                                                                </div>
+                                                            @elseif($sendToSchool == 1)
+                                                                <div class="teacher-calendar-days-field3">
+                                                                    <p>Send to school</p>
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3">
@@ -667,6 +682,13 @@
                 swal({
                         title: "",
                         text: "Are you sure you wish to reject all the selected timesheets?",
+                        content: {
+                            element: 'textarea',
+                            attributes: {
+                                placeholder: 'Remark',
+                                rows: 3
+                            }
+                        },
                         buttons: {
                             cancel: "No",
                             Yes: "Yes"
@@ -675,19 +697,21 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '{{ url('financeTimesheetReject') }}',
-                                    data: {
-                                        "_token": "{{ csrf_token() }}",
-                                        asnIds: asnIds,
-                                        weekStartDate: "{{ $weekStartDate }}",
-                                        weekEndDate: "{{ $plusFiveDate }}"
-                                    },
-                                    success: function(data) {
-                                        location.reload();
-                                    }
-                                });
+                                var remark = $('.swal-content textarea').val();
+                                // $.ajax({
+                                //     type: 'POST',
+                                //     url: '{{ url('financeTimesheetReject') }}',
+                                //     data: {
+                                //         "_token": "{{ csrf_token() }}",
+                                //         asnIds: asnIds,
+                                //         weekStartDate: "{{ $weekStartDate }}",
+                                //         weekEndDate: "{{ $plusFiveDate }}",
+                                //         remark: remark
+                                //     },
+                                //     success: function(data) {
+                                //         location.reload();
+                                //     }
+                                // });
                         }
                     });
             } else {
@@ -803,7 +827,7 @@
         }
 
         $(document).on('click', '#sendToSchoolBttn', function() {
-            var approveAsnId = $('#approveAsnId').val();
+            var approveAsnId = $('#ajaxTimesheetAsnIds').val();
             if (approveAsnId) {
                 swal({
                         title: "",

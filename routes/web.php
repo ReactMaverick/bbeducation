@@ -320,4 +320,8 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::get('/teacher-timesheet-approve/{asn_id}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDir']);
     Route::post('/logSchoolTimesheetRejectDir', [SchoolController::class, 'logSchoolTimesheetRejectDir']);
     Route::post('/logSchoolTimesheetLogDir', [SchoolController::class, 'logSchoolTimesheetLogDir']);
+
+    Route::get('/teacher-timesheet-approve-all/{asn_ids}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDirAll']);
+    Route::post('/logSchoolTimesheetRejectDirAll', [SchoolController::class, 'logSchoolTimesheetRejectDirAll']);
+    Route::post('/logSchoolTimesheetLogDirAll', [SchoolController::class, 'logSchoolTimesheetLogDirAll']);
 });

@@ -18,7 +18,7 @@
 
     <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 30px;">
         <tr>
-            <td style="vertical-align: top; width: 45%;">
+            <td style="vertical-align: top; width: 70%;">
                 <table>
                     {{-- <tr>
                         <td style="text-align:left; color: #333; font-size: 15px; font-weight: bold;">
@@ -40,6 +40,30 @@
                         </td>
                     </tr>
                 </table>
+            </td>
+
+            <?php
+            $appSchoolId = '';
+            if (count($mailData['itemList']) > 0) {
+                $appSchoolId = $mailData['itemList'][0]->school_id;
+            }
+            $asnIdsEnc = base64_encode($mailData['asnIds']);
+            $weekStartDateEnc1 = base64_encode($mailData['weekStartDate']);
+            $weekEndDateEnc1 = base64_encode($mailData['weekEndDate']);
+            $school_idEnc1 = base64_encode($appSchoolId);
+            $rUrl1 = url('/school/teacher-timesheet-approve-all') . '/' . $asnIdsEnc . '/' . $school_idEnc1 . '/' . $weekStartDateEnc1 . '/' . $weekEndDateEnc1;
+            ?>
+
+            <td style="text-align:right; width:15%">
+                <a href="{{ $rUrl1 . '?status=approve' }}"
+                    style="text-align:center; font-size: 15px; font-weight: 400;background: #40A0ED; padding: 10px 15px; border-radius: 10px; color: #fff; text-decoration: none;">Approve
+                    All</a>
+            </td>
+
+            <td style="text-align:right; width:15%">
+                <a href="{{ $rUrl1 . '?status=reject' }}"
+                    style="text-align:center; font-size: 15px; font-weight: 400;background: #40A0ED; padding: 10px 15px; border-radius: 10px; color: #fff; text-decoration: none;">Reject
+                    All</a>
             </td>
         </tr>
     </table>
