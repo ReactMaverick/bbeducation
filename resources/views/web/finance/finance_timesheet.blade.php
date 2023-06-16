@@ -207,6 +207,59 @@
                                                 if ($calender->send_to_school1 == 1 || $calender->send_to_school2 == 1 || $calender->send_to_school3 == 1 || $calender->send_to_school4 == 1 || $calender->send_to_school5 == 1) {
                                                     $sendToSchool = 1;
                                                 }
+                                                
+                                                $reject_by_admin = '';
+                                                $reject_by_school = '';
+                                                $reject_text = '';
+                                                if ($adminApprove == 1) {
+                                                    if ($reject_by_admin == '' && $calender->rejected_by_type1 == 'Admin') {
+                                                        $reject_by_admin = 'Admin';
+                                                    }
+                                                    if ($reject_by_admin == '' && $calender->rejected_by_type2 == 'Admin') {
+                                                        $reject_by_admin = 'Admin';
+                                                    }
+                                                    if ($reject_by_admin == '' && $calender->rejected_by_type3 == 'Admin') {
+                                                        $reject_by_admin = 'Admin';
+                                                    }
+                                                    if ($reject_by_admin == '' && $calender->rejected_by_type4 == 'Admin') {
+                                                        $reject_by_admin = 'Admin';
+                                                    }
+                                                    if ($reject_by_admin == '' && $calender->rejected_by_type5 == 'Admin') {
+                                                        $reject_by_admin = 'Admin';
+                                                    }
+                                                
+                                                    if ($reject_by_school == '' && $calender->rejected_by_type1 == 'School') {
+                                                        $reject_by_school = 'School';
+                                                    }
+                                                    if ($reject_by_school == '' && $calender->rejected_by_type2 == 'School') {
+                                                        $reject_by_school = 'School';
+                                                    }
+                                                    if ($reject_by_school == '' && $calender->rejected_by_type3 == 'School') {
+                                                        $reject_by_school = 'School';
+                                                    }
+                                                    if ($reject_by_school == '' && $calender->rejected_by_type4 == 'School') {
+                                                        $reject_by_school = 'School';
+                                                    }
+                                                    if ($reject_by_school == '' && $calender->rejected_by_type5 == 'School') {
+                                                        $reject_by_school = 'School';
+                                                    }
+                                                
+                                                    if ($reject_text == '' && $calender->rejected_text1) {
+                                                        $reject_text = $calender->rejected_text1;
+                                                    }
+                                                    if ($reject_text == '' && $calender->rejected_text2) {
+                                                        $reject_text = $calender->rejected_text2;
+                                                    }
+                                                    if ($reject_text == '' && $calender->rejected_text3) {
+                                                        $reject_text = $calender->rejected_text3;
+                                                    }
+                                                    if ($reject_text == '' && $calender->rejected_text4) {
+                                                        $reject_text = $calender->rejected_text4;
+                                                    }
+                                                    if ($reject_text == '' && $calender->rejected_text5) {
+                                                        $reject_text = $calender->rejected_text5;
+                                                    }
+                                                }
                                                 ?>
                                                 <div class="calendar-outer-sec editTimesheetDiv"
                                                     id="editTimesheetDiv{{ $calender->asn_id }}"
@@ -283,7 +336,12 @@
                                                         <div class="date-left-teacher-calendar" style="width: 12%;">
                                                             @if ($adminApprove == 1)
                                                                 <div class="teacher-calendar-days-field3 rejectDiv">
-                                                                    <p>Reject</p>
+                                                                    <p>
+                                                                        Reject
+                                                                        @if ($reject_text)
+                                                                            ({{ $reject_text }})
+                                                                        @endif
+                                                                    </p>
                                                                 </div>
                                                             @elseif($sendToSchool == 1)
                                                                 <div class="teacher-calendar-days-field3">
@@ -305,53 +363,44 @@
                                     <input type="hidden" name="" id="ajaxTimesheetAsnIds" value="">
                                 </div>
 
-                                {{-- <div class="finance-timesheet-contact-second-sec" style="width: 32%;">
+                                <div class="finance-timesheet-contact-second-sec" style="width: 32%;">
                                     <div class="contact-heading">
                                         <div class="contact-heading-text">
-                                            <h2>Select a file</h2>
+                                            <h2>School List</h2>
                                         </div>
-                                        <div class="contact-icon-sec">
-                                            <a style="cursor: pointer;" class="disabled-link" id="viewTimesheetBtn"
-                                                title="View timesheet">
+                                        {{-- <div class="contact-icon-sec">
+                                            <a style="cursor: pointer;" class="disabled-link" id=""
+                                                title="">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
-                                        </div>
+                                        </div> --}}
                                     </div>
-                                    <div class="finance-list-section">
-                                        <div class="finance-list-text-section">
-                                            <div class="finance-list-text">
-                                                <table class="table finance-timesheet-page-table" id="">
-                                                    <thead>
-                                                        <tr class="school-detail-table-heading">
-                                                            <th>Teacher</th>
-                                                            <th>School</th>
-                                                            <th>Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="table-body-sec">
-                                                        @foreach ($documentList as $key => $document)
-                                                            <tr class="school-detail-table-data selectDocumentRow"
-                                                                id="selectDocumentRow{{ $document->teacher_timesheet_id }}"
-                                                                onclick="selectDocumentRowSelect({{ $document->teacher_timesheet_id }}, '{{ $document->approve_by_school }}', '{{ $document->login_mail }}', '{{ $document->pdf_path }}')">
-                                                                <td>
-                                                                    @if ($document->knownAs_txt == null && $document->knownAs_txt == '')
-                                                                        {{ $document->firstName_txt . ' ' . $document->surname_txt }}
-                                                                    @else
-                                                                        {{ $document->knownAs_txt . ' ' . $document->surname_txt }}
-                                                                    @endif
-                                                                </td>
-                                                                <td>{{ $document->name_txt }}</td>
-                                                                <td>({{ date('d/m/Y', strtotime($weekStartDate)) . '-' . date('d/m/Y', strtotime($weekEndDate)) }})
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                    <div class="finance-timesheet-table-section">
+                                        <table class="table finance-timesheet-page-table" id="">
+                                            <thead>
+                                                <tr class="school-detail-table-heading">
+                                                    <th>School</th>
+                                                    <th>Days</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-body-sec">
+                                                @foreach ($timesheetSchoolList as $key => $timesheetSchool)
+                                                    <tr class="school-detail-table-data selectSchoolRow"
+                                                        id="selectSchoolRow{{ $timesheetSchool->school_id }}"
+                                                        school-id="{{ $timesheetSchool->school_id }}">
+                                                        <td>{{ $timesheetSchool->schoolName_txt }}</td>
+                                                        <td>{{ $timesheetSchool->timesheetDatesRequired_int }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="table-bottom-text">
+                                        <span>Double-click to open the school</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="" id="selectedSchoolId" value="">
 
-                                        </div>
-                                    </div>
-                                </div> --}}
 
                                 <input type="hidden" name="teacherTimesheetId" id="teacherTimesheetId" value="">
                                 <input type="hidden" name="teacherTimesheetStatus" id="teacherTimesheetStatus"
@@ -366,174 +415,66 @@
 
                             </div>
 
-                            <div class="finance-timesheet-left-sec mt-5">
+                            <div class="finance-timesheet-left-sec mt-4">
 
                                 <div class="finance-timesheet-contact-first-sec">
-                                    <?php
-                                    $day1Amount_total1 = 0;
-                                    $day2Amount_total1 = 0;
-                                    $day3Amount_total1 = 0;
-                                    $day4Amount_total1 = 0;
-                                    $day5Amount_total1 = 0;
-                                    foreach ($approvedList as $key => $cal) {
-                                        $day1Amount_total1 += $cal->day1Amount_dec;
-                                        $day2Amount_total1 += $cal->day2Amount_dec;
-                                        $day3Amount_total1 += $cal->day3Amount_dec;
-                                        $day4Amount_total1 += $cal->day4Amount_dec;
-                                        $day5Amount_total1 += $cal->day5Amount_dec;
-                                    }
-                                    ?>
-
-                                    <div class="teacher-calendar-days-sec">
-                                        <div class="teacher-calendar-days-text">
-                                            <p>School</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>Teacher</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>{{ date('d M Y', strtotime($weekStartDate)) }}</p>
-                                            <p>Monday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day1Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +1 days')) }}</p>
-                                            <p>Tuesday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day2Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +2 days')) }}</p>
-                                            <p>Wednesday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day3Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +3 days')) }}</p>
-                                            <p>Thursday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day4Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>{{ date('d M Y', strtotime($weekStartDate . ' +4 days')) }}</p>
-                                            <p>Friday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day5Amount_total1 }}</p>
+                                    <div class="contact-heading">
+                                        <div class="contact-heading-text">
+                                            <h2>Previous Timesheet list</h2>
                                         </div>
                                     </div>
-
-                                    <div class="finance-list-text-section">
-                                        <div class="teacher-calendar-table-section">
-
-                                            @foreach ($approvedList as $key1 => $calender)
-                                                <div class="calendar-outer-sec editApprovTimesheetDiv"
-                                                    id="editApprovTimesheetDiv{{ $calender->asn_id }}"
-                                                    onclick="timesheetApprovRow('{{ $calender->asn_id }}')">
-                                                    <div class="calendar-section">
-                                                        <div class="date-left-teacher-calendar">
-                                                            <div class="teacher-calendar-days-field3">
-                                                                <p>
-                                                                    {{ $calender->name_txt }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            <div class="teacher-calendar-days-field3">
-                                                                <p>
-                                                                    @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
-                                                                        {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
-                                                                    @else
-                                                                        {{ $calender->knownAs_txt . ' ' . $calender->surname_txt }}
-                                                                    @endif
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day1Avail_txt }}</p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day2Avail_txt }}</p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day3Avail_txt }}</p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day4Avail_txt }}</p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day5Avail_txt }}</p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-
-                                        </div>
-
-                                        <input type="hidden" name="" id="approveAsnId" value="">
+                                    <div class="finance-timesheet-table-section" style="margin-top: 30px;">
+                                        <table class="table finance-timesheet-page-table" id="myTable">
+                                            <thead>
+                                                <tr class="school-detail-table-heading">
+                                                    <th>Teacher</th>
+                                                    <th>Date</th>
+                                                    <th>Part</th>
+                                                    <th>Student</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-body-sec" id="teacherListDiv">
+                                            </tbody>
+                                        </table>
                                     </div>
-
                                     <div class="table-assignment-bottom-text-sec">
                                         <div class="table-bottom-text">
-                                            {{-- <span>Double-click to open the assignment</span> --}}
+                                            <span>Double-click to open the assignment</span>
                                         </div>
 
                                         <div class="finance-contact-icon-sec">
-                                            {{-- <a style="cursor: pointer" class="disabled-link" id="deleteDaysBttn"
+                                            <a style="cursor: pointer" class="disabled-link" id="deleteDaysBttn"
                                                 title="Remove days from assignment">
                                                 <i class="fa-solid fa-xmark"></i>
-                                            </a> --}}
-
-                                            <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtn"
-                                                title="Log timesheet">
+                                            </a>
+                                            <a style="cursor: pointer;" class="disabled-link" id="editDaysBttn"
+                                                title="Edit days from assignment">
+                                                <i class="fa-solid fa-pencil"></i>
+                                            </a>
+                                            <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtnNew"
+                                                title="Log timesheets">
                                                 <i class="fa-solid fa-square-check"></i>
                                             </a>
-                                            {{-- <a style="cursor: pointer" id="reloadTimesheetBtn" title="Reload timesheets">
+                                            <a style="cursor: pointer" id="reloadTimesheetBtn" title="Reload timesheets">
                                                 <i class="fa-solid fa-arrows-rotate"></i>
-                                            </a> --}}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="finance-timesheet-contact-second-sec" style="display: none;"
+                                <input type="hidden" name="" id="asnItemIds" value="">
+
+                                <div class="finance-timesheet-contact-second-sec" style="display: none"
                                     id="teacherTimesheetDiv">
-                                    <div class="finance-timesheet-table-section" style="margin-top: 0;">
+                                    <div class="finance-timesheet-table-section" style="margin-top: 30px;">
                                         <table class="table finance-timesheet-page-table" id="">
                                             <thead>
                                                 <tr class="school-detail-table-heading">
                                                     <th>Teacher</th>
                                                     <th>Date</th>
                                                     <th>Part</th>
+                                                    <th>Start Time</th>
+                                                    <th>End Time</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table-body-sec" id="teacherTimesheetTbody">
@@ -558,6 +499,45 @@
             </div>
         </div>
     </div>
+
+    <!-- Event Edit Modal -->
+    <div class="modal fade" id="eventEditModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Edit Working Day</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Edit Assignment Day</h2>
+                </div>
+
+                <form method="post" class="form-validate" id="ajaxAssignmentEventForm">
+                    @csrf
+                    <input type="hidden" name="editEventId" id="editEventId" value="">
+                    <input type="hidden" name="max_date" id="" value="{{ $p_maxDate }}">
+                    <input type="hidden" name="school_id" id="editSchoolId" value="">
+
+                    <div class="modal-input-field-section">
+                        <div id="AjaxEventEdit"></div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="ajaxAssignmentEventBtn">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- Event Edit Modal -->
 
     <script>
         function timesheetRow(asn_id) {
@@ -697,21 +677,22 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
+                                $('#fullLoader').show();
                                 var remark = $('.swal-content textarea').val();
-                                // $.ajax({
-                                //     type: 'POST',
-                                //     url: '{{ url('financeTimesheetReject') }}',
-                                //     data: {
-                                //         "_token": "{{ csrf_token() }}",
-                                //         asnIds: asnIds,
-                                //         weekStartDate: "{{ $weekStartDate }}",
-                                //         weekEndDate: "{{ $plusFiveDate }}",
-                                //         remark: remark
-                                //     },
-                                //     success: function(data) {
-                                //         location.reload();
-                                //     }
-                                // });
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('financeTimesheetReject') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnIds: asnIds,
+                                        weekStartDate: "{{ $weekStartDate }}",
+                                        weekEndDate: "{{ $plusFiveDate }}",
+                                        remark: remark
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
                         }
                     });
             } else {
@@ -916,6 +897,357 @@
 
         $(document).on('click', '#reloadBtn', function() {
             location.reload();
+        });
+
+        var DELAY = 200,
+            clicks = 0,
+            timer = null;
+
+        $(document).on('click', '.selectSchoolRow', function(e) {
+            clicks++; //count clicks
+            var schoolId = $(this).attr('school-id');
+            if (clicks === 1) {
+                timer = setTimeout(function() {
+                    // alert("Single Click=>"+teacherId); //perform single-click action
+                    $('#selectedSchoolId').val('');
+
+                    if ($('#selectSchoolRow' + schoolId).hasClass('tableRowActive')) {
+                        $('#selectedSchoolId').val('');
+                        $('#selectSchoolRow' + schoolId).removeClass('tableRowActive');
+                        fetchTecher('{{ $p_maxDate }}', '');
+                    } else {
+                        $('#selectedSchoolId').val(schoolId);
+                        $('.selectSchoolRow').removeClass('tableRowActive');
+                        $('#selectSchoolRow' + schoolId).addClass('tableRowActive');
+                        fetchTecher('{{ $p_maxDate }}', schoolId);
+                    }
+                    clicks = 0; //after action performed, reset counter
+                }, DELAY);
+            } else {
+                clearTimeout(timer); //prevent single-click action
+                // alert("Double Click=>" + teacherId); //perform double-click action
+                if ($('#selectSchoolRow' + schoolId).hasClass('tableRowActive')) {
+                    $('#selectedSchoolId').val('');
+                    $('#selectSchoolRow' + schoolId).removeClass('tableRowActive');
+                    fetchTecher('{{ $p_maxDate }}', '');
+                } else {
+                    $('#selectedSchoolId').val(schoolId);
+                    $('.selectSchoolRow').removeClass('tableRowActive');
+                    $('#selectSchoolRow' + schoolId).addClass('tableRowActive');
+                    fetchTecher('{{ $p_maxDate }}', schoolId);
+                }
+
+                clicks = 0; //after action performed, reset counter
+            }
+        }).on("dblclick", '.selectSchoolRow', function(e) {
+            e.preventDefault(); //cancel system double-click event
+            var schoolId = $(this).attr('school-id');
+            var location = "{{ url('/school-detail') }}" + '/' + schoolId;
+            window.open(location);
+        });
+
+        function fetchTecher(max_date, school_id) {
+            $('#teacherListDiv').html('');
+            $('#asnItemIds').val('');
+            $('#deleteDaysBttn').addClass('disabled-link');
+            $('#editDaysBttn').addClass('disabled-link');
+            $('#logTimesheetBtnNew').addClass('disabled-link');
+            if (school_id) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('fetchTeacherById') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        max_date: max_date,
+                        school_id: school_id
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#teacherListDiv').html(data.html);
+                    }
+                });
+
+                teacherSubmittedSheet(max_date, school_id);
+            }
+        }
+
+        function teacherSubmittedSheet(max_date, school_id) {
+            if (school_id && max_date) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('fetchTeacherSheetByIdNew') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        school_id: school_id,
+                        max_date: max_date
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#teacherTimesheetTbody').html('');
+                        $('#teacherTimesheetTbody').html(data.html);
+                        $('#teacherTimesheetDiv').css('display', 'block');
+                    }
+                });
+            }
+        }
+
+        var DELAY1 = 200,
+            clicks1 = 0,
+            timer1 = null;
+
+        $(document).on('click', '.selectTeacherRow', function(e1) {
+            clicks1++; //count clicks
+            var asnitemId = $(this).attr('asnitem-id');
+            var asnId = $(this).attr('asn-id');
+            var teacherId = $(this).attr('teacher-id');
+            // var schoolId = $(this).attr('school-id');
+            if (clicks1 === 1) {
+                timer1 = setTimeout(function() {
+                    // alert("Single Click=>"+teacherId); //perform single-click action
+                    if ($('#selectTeacherRow' + asnitemId).hasClass('tableRowActive')) {
+                        $('#selectTeacherRow' + asnitemId).removeClass('tableRowActive');
+                        setIdsNew(asnitemId, 'rm');
+                    } else {
+                        $('#selectTeacherRow' + asnitemId).addClass('tableRowActive');
+                        setIdsNew(asnitemId, 'add');
+                    }
+                    clicks1 = 0; //after action performed, reset counter
+                }, DELAY1);
+            } else {
+                clearTimeout(timer1); //prevent single-click action
+                // alert("Double Click=>" + teacherId); //perform double-click action
+                if ($('#selectTeacherRow' + asnitemId).hasClass('tableRowActive')) {
+                    $('#selectTeacherRow' + asnitemId).removeClass('tableRowActive');
+                    setIdsNew(asnitemId, 'rm');
+                } else {
+                    $('#selectTeacherRow' + asnitemId).addClass('tableRowActive');
+                    setIdsNew(asnitemId, 'add');
+                }
+
+                clicks1 = 0; //after action performed, reset counter
+
+                var location = "{{ url('/assignment-details') }}" + '/' + asnId;
+                window.open(location);
+            }
+        }).on("dblclick", '.selectTeacherRow', function(e1) {
+            e1.preventDefault(); //cancel system double-click event
+            var asnId = $(this).attr('asn-id');
+            var location = "{{ url('/assignment-details') }}" + '/' + asnId;
+            window.open(location);
+        });
+
+        function setIdsNew(asnitem_id, type) {
+            var ItemId = parseInt(asnitem_id);
+            var ids = '';
+            var idsArr = [];
+            var asnItemIds = $('#asnItemIds').val();
+            if (asnItemIds) {
+                idsArr = asnItemIds.split(',');
+            }
+            if (type == 'add') {
+                idsArr.push(ItemId);
+            }
+            if (type == 'rm') {
+                idsArr = jQuery.grep(idsArr, function(value) {
+                    return value != ItemId;
+                });
+            }
+            ids = idsArr.toString();
+            $('#asnItemIds').val(ids);
+            if (ids) {
+                $('#deleteDaysBttn').removeClass('disabled-link');
+                $('#editDaysBttn').removeClass('disabled-link');
+                $('#logTimesheetBtnNew').removeClass('disabled-link');
+            } else {
+                $('#deleteDaysBttn').addClass('disabled-link');
+                $('#editDaysBttn').addClass('disabled-link');
+                $('#logTimesheetBtnNew').addClass('disabled-link');
+            }
+        }
+
+        $(document).on('click', '#reloadTimesheetBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            if (schoolId) {
+                fetchTecher('{{ $p_maxDate }}', schoolId);
+            }
+        });
+
+        $(document).on('click', '#deleteDaysBttn', function() {
+            var asnItemIds = $('#asnItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "Alert",
+                        text: "This will remove the assignment items for any highlighted dates. Are you sure you wish to continue?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('timesheetAsnItemDelete') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds
+                                    },
+                                    async: false,
+                                    success: function(data) {
+                                        var idsArr = [];
+                                        if (asnItemIds) {
+                                            idsArr = asnItemIds.split(',');
+                                        }
+                                        for (var i = 0; i < idsArr.length; i++) {
+                                            $('#selectTeacherRow' + idsArr[i]).remove();
+                                        }
+                                        $('#asnItemIds').val('');
+                                        $('#deleteDaysBttn').addClass('disabled-link');
+                                        $('#editDaysBttn').addClass('disabled-link');
+                                        $('#logTimesheetBtnNew').addClass('disabled-link');
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one item.");
+            }
+        });
+
+        $(document).on('click', '#editDaysBttn', function() {
+            var asnItemIds = $('#asnItemIds').val();
+            var idsArr = [];
+            var SITEURL = "{{ url('/') }}";
+            if (asnItemIds) {
+                idsArr = asnItemIds.split(',');
+                if (idsArr.length == 1) {
+                    // alert(idsArr[0])
+                    var schoolId = $('#selectedSchoolId').val();
+                    $('#editSchoolId').val(schoolId);
+                    $.ajax({
+                        url: SITEURL + "/timesheetEditEvent",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            id: idsArr[0]
+                        },
+                        type: "POST",
+                        dataType: "json",
+                        success: function(data) {
+                            if (data) {
+                                if (data.exist == 'Yes') {
+                                    $('#editEventId').val(data.eventId)
+                                    $('#AjaxEventEdit').html(data.html);
+                                    $('#eventEditModal').modal("show");
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    swal("", "You cannot edit more then one item at a time.");
+                }
+            } else {
+                swal("", "Please select one item.");
+            }
+        });
+
+        $(document).on('click', '#logTimesheetBtnNew', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            var asnItemIds = $('#asnItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to log this timesheet?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('timesheetAsnItemLogNew') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        schoolId: schoolId
+                                    },
+                                    async: false,
+                                    dataType: "json",
+                                    success: function(data) {
+                                        $('#fullLoader').hide();
+                                        if (data.add == 'Yes') {
+                                            var idsArr = [];
+                                            if (asnItemIds) {
+                                                idsArr = asnItemIds.split(',');
+                                            }
+                                            for (var i = 0; i < idsArr.length; i++) {
+                                                $('#selectTeacherRow' + idsArr[i]).remove();
+                                            }
+                                            $('#asnItemIds').val('');
+                                            $('#deleteDaysBttn').addClass('disabled-link');
+                                            $('#editDaysBttn').addClass('disabled-link');
+                                            $('#logTimesheetBtnNew').addClass('disabled-link');
+                                            // $('#selectDocumentRow' + teacher_timesheet_id)
+                                            //     .remove();
+                                            var popTxt =
+                                                'You have just logged a timesheet for ' + data
+                                                .schoolName +
+                                                '. Timesheet ID : ' + data.timesheet_id;
+                                            swal("", popTxt);
+                                        }
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one item.");
+            }
+        });
+
+        $(document).on('click', '#ajaxAssignmentEventBtn', function() {
+            var error = "";
+            $(".field-validate").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            $(".number-validate").each(function() {
+                if (this.value == '' || isNaN(this.value)) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            if (error == "has error") {
+                return false;
+            } else {
+                var form = $("#ajaxAssignmentEventForm");
+                var SITEURL = "{{ url('/') }}";
+                var actionUrl = SITEURL + "/timesheetEventUpdate";
+                $.ajax({
+                    type: "POST",
+                    url: actionUrl,
+                    data: form.serialize(),
+                    dataType: "json",
+                    asynch: false,
+                    success: function(data) {
+                        $('#teacherListDiv').html('');
+                        $('#teacherListDiv').html(data.html);
+                        if (data.eventId) {
+                            $('#selectTeacherRow' + data.eventId).addClass('tableRowActive');
+                        }
+                        $('#eventEditModal').modal("hide");
+                    }
+                });
+            }
         });
     </script>
 @endsection

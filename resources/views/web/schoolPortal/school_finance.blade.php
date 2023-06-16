@@ -611,6 +611,13 @@
                 swal({
                         title: "",
                         text: "Are you sure you wish to reject the selected timesheet?",
+                        content: {
+                            element: 'textarea',
+                            attributes: {
+                                placeholder: 'Remark',
+                                rows: 3
+                            }
+                        },
                         buttons: {
                             cancel: "No",
                             Yes: "Yes"
@@ -619,6 +626,8 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
+                                $('#fullLoader').show();
+                                var remark = $('.swal-content textarea').val();
                                 $.ajax({
                                     type: 'POST',
                                     url: '{{ url('/school/logSchoolTimesheetReject') }}',
@@ -626,7 +635,8 @@
                                         "_token": "{{ csrf_token() }}",
                                         asnId: asnId,
                                         weekStartDate: "{{ $weekStartDate }}",
-                                        weekEndDate: "{{ $plusFiveDate }}"
+                                        weekEndDate: "{{ $plusFiveDate }}",
+                                        remark: remark
                                     },
                                     success: function(data) {
                                         location.reload();

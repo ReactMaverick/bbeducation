@@ -240,7 +240,7 @@
                                                     @endif
 
                                                     @if ($calender->teacher_timesheet_id)
-                                                        @if ($calender->submit_status)
+                                                        {{-- @if ($calender->submit_status)
                                                             <button type="button" class="btn btn-secondary mt-3"
                                                                 style="float: right; background-color: #acd6f1">Timesheet
                                                                 Submitted</button>
@@ -248,7 +248,10 @@
                                                             <button type="submit" class="btn btn-secondary mt-3"
                                                                 style="float: right; background-color: #48A0DC">Submit
                                                                 Timesheet</button>
-                                                        @endif
+                                                        @endif --}}
+                                                        <button type="submit" class="btn btn-secondary mt-3"
+                                                            style="float: right; background-color: #48A0DC">Submit
+                                                            Timesheet</button>
                                                     @else
                                                         <button type="button" class="btn btn-secondary mt-3"
                                                             style="float: right; background-color: #acd6f1">Submit
@@ -404,30 +407,30 @@
 
         function calDateClick(type, asnDate_dte, submit_status, reject_status, asn_id, timesheet_item_id) {
             // alert(reject_status)
-            if (submit_status && submit_status == 1) {
-                swal("",
-                    "You cannot edit day as timesheet already submitted."
-                );
-            } else {
-                var SITEURL = "{{ url('/') }}";
-                $.ajax({
-                    url: SITEURL + "/teacher/teacherTimesheetEdit",
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        asnDate_dte: asnDate_dte,
-                        timesheet_item_id: timesheet_item_id,
-                        asn_id: asn_id
-                    },
-                    type: "POST",
-                    dataType: "json",
-                    success: function(data) {
-                        if (data.exist == 'Yes') {
-                            $('#AjaxEventEdit').html(data.html);
-                            $('#eventEditModal').modal("show");
-                        }
+            // if (submit_status && submit_status == 1) {
+            //     swal("",
+            //         "You cannot edit day as timesheet already submitted."
+            //     );
+            // } else {
+            var SITEURL = "{{ url('/') }}";
+            $.ajax({
+                url: SITEURL + "/teacher/teacherTimesheetEdit",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    asnDate_dte: asnDate_dte,
+                    timesheet_item_id: timesheet_item_id,
+                    asn_id: asn_id
+                },
+                type: "POST",
+                dataType: "json",
+                success: function(data) {
+                    if (data.exist == 'Yes') {
+                        $('#AjaxEventEdit').html(data.html);
+                        $('#eventEditModal').modal("show");
                     }
-                });
-            }
+                }
+            });
+            // }
         }
 
         $(document).on('click', '#teacherTimesheetDelBtn', function() {
@@ -461,21 +464,21 @@
 
         function addNewItem(teacher_timesheet_id, teacher_id, school_id, asn_date, submit_status, asn_id, asnItem_id) {
             // alert(submit_status)
-            if (submit_status) {
-                swal("",
-                    "You cannot add day as timesheet already submitted."
-                );
-            } else {
-                $("#asnDateHtml").html(asn_date);
-                $("#addTeacherAsnId").val(asn_id);
-                $("#addTeacherAsnItemId").val(asnItem_id);
-                $("#addTeacherTimesheetId").val(teacher_timesheet_id);
-                $("#addSchoolId").val(school_id);
-                $("#addTeacherId").val(teacher_id);
-                $("#addAsnDate").val(asn_date);
+            // if (submit_status) {
+            //     swal("",
+            //         "You cannot add day as timesheet already submitted."
+            //     );
+            // } else {
+            $("#asnDateHtml").html(asn_date);
+            $("#addTeacherAsnId").val(asn_id);
+            $("#addTeacherAsnItemId").val(asnItem_id);
+            $("#addTeacherTimesheetId").val(teacher_timesheet_id);
+            $("#addSchoolId").val(school_id);
+            $("#addTeacherId").val(teacher_id);
+            $("#addAsnDate").val(asn_date);
 
-                $('#eventAddModal').modal('show');
-            }
+            $('#eventAddModal').modal('show');
+            // }
         }
 
         function timeToInt(time) {

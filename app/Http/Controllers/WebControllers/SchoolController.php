@@ -3388,7 +3388,8 @@ class SchoolController extends Controller
                     'send_to_school' => 0,
                     'admin_approve' => 2,
                     'rejected_by_type' => 'School',
-                    'rejected_by' => $school_id
+                    'rejected_by' => $school_id,
+                    'rejected_text' => $request->remark
                 ]);
 
             return true;

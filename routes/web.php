@@ -207,10 +207,12 @@ Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnI
 Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEvent']);
 Route::post('/timesheetEventUpdate', [FinanceController::class, 'timesheetEventUpdate']);
 Route::post('/fetchTeacherSheetById', [FinanceController::class, 'fetchTeacherSheetById']);
+Route::post('/fetchTeacherSheetByIdNew', [FinanceController::class, 'fetchTeacherSheetByIdNew']);
 // Route::get('/teacher-timesheet', [FinanceController::class, 'teacherTimesheetView']);
 Route::post('/rejectTeacherSheet', [FinanceController::class, 'rejectTeacherSheet']);
 Route::post('/sendTimesheetToApproval', [FinanceController::class, 'sendTimesheetToApproval']);
 Route::post('/timesheetAsnItemLog', [FinanceController::class, 'timesheetAsnItemLog']);
+Route::post('/timesheetAsnItemLogNew', [FinanceController::class, 'timesheetAsnItemLogNew']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::post('/timesheetEventEdit', [FinanceController::class, 'timesheetEventEdit']);
 Route::post('/timesheetEventUpdateAjax', [FinanceController::class, 'timesheetEventUpdateAjax']);
