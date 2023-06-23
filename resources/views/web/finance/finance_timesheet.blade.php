@@ -464,7 +464,7 @@
 
                                 <input type="hidden" name="" id="asnItemIds" value="">
 
-                                <div class="finance-timesheet-contact-second-sec" style="display: none"
+                                <div class="finance-timesheet-contact-second-sec" style="display: none;margin-top: 25px;"
                                     id="teacherTimesheetDiv">
                                     <div class="finance-timesheet-table-section" style="margin-top: 30px;">
                                         <table class="table finance-timesheet-page-table" id="">
@@ -480,6 +480,17 @@
                                             <tbody class="table-body-sec" id="teacherTimesheetTbody">
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <div class="table-assignment-bottom-text-sec">
+                                        <div class="table-bottom-text">
+                                            <span></span>
+                                        </div>
+                                        <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtnNew"
+                                                title="Log timesheets">
+                                                <i class="fa-solid fa-square-check"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1247,6 +1258,21 @@
                         $('#eventEditModal').modal("hide");
                     }
                 });
+            }
+        });
+
+        $(document).on('click', '.selectLogTeacherRow', function() {
+            var teacherId = $(this).attr('teacher-id');
+            var asnId = $(this).attr('asn-id');
+            var timesheetItemId = $(this).attr('timesheet-item-id');
+            var schoolId = $(this).attr('school-id');
+
+            if ($('#selectLogTeacherRow' + timesheetItemId).hasClass('tableRowActive')) {
+                $('#selectLogTeacherRow' + timesheetItemId).removeClass('tableRowActive');
+                // $('#viewTimesheetBtn').addClass('disabled-link');
+            } else {
+                $('#selectLogTeacherRow' + timesheetItemId).addClass('tableRowActive');
+                // $('#viewTimesheetBtn').removeClass('disabled-link');
             }
         });
     </script>

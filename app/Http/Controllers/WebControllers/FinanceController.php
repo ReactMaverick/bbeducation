@@ -801,7 +801,7 @@ class FinanceController extends Controller
             ->join('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
             ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
             ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
-            ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm')
+            ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id')
             ->whereDate('teacher_timesheet_item.asnDate_dte', '<=', $weekStartDate)
             ->where('teacher_timesheet_item.school_id', $school_id)
             ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
@@ -828,7 +828,7 @@ class FinanceController extends Controller
                     $endTime = date("h:i a", strtotime($teacher->t_end_tm));
                 }
 
-                $html .= "<tr class='school-detail-table-data'>
+                $html .= "<tr class='school-detail-table-data selectLogTeacherRow' id='selectLogTeacherRow$teacher->timesheet_item_id' teacher-id='$teacher->t_teacher_id' asn-id='$teacher->t_asn_id' timesheet-item-id='$teacher->timesheet_item_id' school-id='$teacher->t_school_id'>
                     <td>$name</td>
                     <td>$teacher->asnDate_dte</td>
                     <td>$teacher->datePart_txt</td>
