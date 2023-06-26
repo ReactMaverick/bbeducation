@@ -3809,6 +3809,38 @@ class SchoolController extends Controller
     }
     /*********/
 
+    /********/
+    public function logSchTeacherItemSheetDirAll(Request $request, $asn_id, $school_id)
+    {
+        $asnId = base64_decode($asn_id);
+        $schoolId = base64_decode($school_id);
+        $asnIdsArr = explode(",", $asnId);
+
+        $title = array('pageTitle' => "School Timesheet");
+        $headerTitle = "Schools";
+
+        $schoolDet = DB::table('tbl_school')
+            ->select('tbl_school.*')
+            ->where('school_id', $schoolId)
+            ->first();
+        if ($schoolDet) {
+            $company_id = $schoolDet->company_id;
+            $teacherList = DB::table('teacher_timesheet')
+                ->join('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
+                ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
+                ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text')
+                ->whereIn('teacher_timesheet_item.timesheet_item_id', $asnIdsArr)
+                ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
+                ->orderBy('teacher_timesheet.teacher_id', 'ASC')
+                ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
+                ->get();
+
+            return view("web.schoolPortal.school_teacheritemsheet_dir_all", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $schoolId, 'schoolDetail' => $schoolDet, 'teacherList' => $teacherList, 'asnId' => $asnId]);
+        }
+    }
+    /********/
+
     public function logSchoolInvoicePayMethod(Request $request)
     {
         $input = $request->all();

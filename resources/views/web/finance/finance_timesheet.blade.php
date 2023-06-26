@@ -430,7 +430,9 @@
                                                     <th>Teacher</th>
                                                     <th>Date</th>
                                                     <th>Part</th>
-                                                    <th>Student</th>
+                                                    {{-- <th>Student</th> --}}
+                                                    <th>Start Time</th>
+                                                    <th>End Time</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table-body-sec" id="teacherListDiv">
@@ -475,6 +477,7 @@
                                                     <th>Part</th>
                                                     <th>Start Time</th>
                                                     <th>End Time</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table-body-sec" id="teacherTimesheetTbody">
@@ -486,13 +489,22 @@
                                             <span></span>
                                         </div>
                                         <div class="finance-contact-icon-sec">
-                                            <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtnNew"
-                                                title="Log timesheets">
+                                            <a style="cursor: pointer" class="disabled-link" id="logteacherTimeRejectBtn"
+                                                title="Reject Timesheet">
+                                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                            </a>
+                                            <a style="cursor: pointer" class="disabled-link"
+                                                id="logteacherTimeApproveBtn" title="Approve Timesheet">
                                                 <i class="fa-solid fa-square-check"></i>
+                                            </a>
+                                            <a style="cursor: pointer" class="disabled-link" id="logteacherSendSchoolBtn"
+                                                title="Send to school">
+                                                <i class="fa-sharp fa-solid fa-paper-plane"></i>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="" id="logTeacherTimeItemIds" value="">
                             </div>
 
 
@@ -997,6 +1009,9 @@
                         $('#teacherTimesheetTbody').html('');
                         $('#teacherTimesheetTbody').html(data.html);
                         $('#teacherTimesheetDiv').css('display', 'block');
+                        $('#logteacherTimeApproveBtn').addClass('disabled-link');
+                        $('#logteacherSendSchoolBtn').addClass('disabled-link');
+                        $('#logTeacherTimeItemIds').val('');
                     }
                 });
             }
@@ -1269,10 +1284,180 @@
 
             if ($('#selectLogTeacherRow' + timesheetItemId).hasClass('tableRowActive')) {
                 $('#selectLogTeacherRow' + timesheetItemId).removeClass('tableRowActive');
-                // $('#viewTimesheetBtn').addClass('disabled-link');
+                setLogTeacherTimeIdsNew(timesheetItemId, 'rm');
             } else {
                 $('#selectLogTeacherRow' + timesheetItemId).addClass('tableRowActive');
-                // $('#viewTimesheetBtn').removeClass('disabled-link');
+                setLogTeacherTimeIdsNew(timesheetItemId, 'add');
+            }
+        });
+
+        function setLogTeacherTimeIdsNew(timesheetItemId, type) {
+            var ItemId = parseInt(timesheetItemId);
+            var ids = '';
+            var idsArr = [];
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                idsArr = asnItemIds.split(',');
+            }
+            if (type == 'add') {
+                idsArr.push(ItemId);
+            }
+            if (type == 'rm') {
+                idsArr = jQuery.grep(idsArr, function(value) {
+                    return value != ItemId;
+                });
+            }
+            ids = idsArr.toString();
+            $('#logTeacherTimeItemIds').val(ids);
+            if (ids) {
+                $('#logteacherTimeApproveBtn').removeClass('disabled-link');
+                $('#logteacherSendSchoolBtn').removeClass('disabled-link');
+                $('#logteacherTimeRejectBtn').removeClass('disabled-link');
+            } else {
+                $('#logteacherTimeApproveBtn').addClass('disabled-link');
+                $('#logteacherSendSchoolBtn').addClass('disabled-link');
+                $('#logteacherTimeRejectBtn').addClass('disabled-link');
+            }
+        }
+
+        $(document).on('click', '#logteacherTimeApproveBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to approve all the selected timesheet(s)?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('teacherItemSheetApprove') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        schoolId: schoolId
+                                    },
+                                    async: false,
+                                    dataType: "json",
+                                    success: function(data) {
+                                        if (schoolId) {
+                                            fetchTecher('{{ $p_maxDate }}', schoolId);
+                                        }
+                                        $('#fullLoader').hide();
+                                        if (data.add == 'Yes') {
+                                            var idsArr = [];
+                                            if (asnItemIds) {
+                                                idsArr = asnItemIds.split(',');
+                                            }
+                                            for (var i = 0; i < idsArr.length; i++) {
+                                                $('#selectLogTeacherRow' + idsArr[i]).remove();
+                                            }
+                                            $('#logTeacherTimeItemIds').val('');
+                                            $('#logteacherTimeApproveBtn').addClass(
+                                                'disabled-link');
+                                            $('#logteacherSendSchoolBtn').addClass('disabled-link');
+                                            var popTxt =
+                                                'You have just logged a timesheet for ' + data
+                                                .schoolName +
+                                                '. Timesheet ID : ' + data.timesheet_id;
+                                            swal("", popTxt);
+                                        }
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one item.");
+            }
+        });
+
+        $(document).on('click', '#logteacherSendSchoolBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to send all the selected timesheet(s) to school?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('sendteacherItemSheetToApproval') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        schoolId: schoolId
+                                    },
+                                    success: function(data) {
+                                        // location.reload();
+                                        teacherSubmittedSheet('{{ $p_maxDate }}', schoolId);
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#logteacherTimeRejectBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to reject all the selected timesheet(s)?",
+                        content: {
+                            element: 'textarea',
+                            attributes: {
+                                placeholder: 'Remark',
+                                rows: 3
+                            }
+                        },
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                var remark = $('.swal-content textarea').val();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('teacherItemSheetReject') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        schoolId: schoolId,
+                                        remark: remark
+                                    },
+                                    success: function(data) {
+                                        // location.reload();
+                                        teacherSubmittedSheet('{{ $p_maxDate }}', schoolId);
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
             }
         });
     </script>

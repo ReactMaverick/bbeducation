@@ -213,6 +213,9 @@ Route::post('/rejectTeacherSheet', [FinanceController::class, 'rejectTeacherShee
 Route::post('/sendTimesheetToApproval', [FinanceController::class, 'sendTimesheetToApproval']);
 Route::post('/timesheetAsnItemLog', [FinanceController::class, 'timesheetAsnItemLog']);
 Route::post('/timesheetAsnItemLogNew', [FinanceController::class, 'timesheetAsnItemLogNew']);
+Route::post('/teacherItemSheetApprove', [FinanceController::class, 'teacherItemSheetApprove']);
+Route::post('/sendteacherItemSheetToApproval', [FinanceController::class, 'sendteacherItemSheetToApproval']);
+Route::post('/teacherItemSheetReject', [FinanceController::class, 'teacherItemSheetReject']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::post('/timesheetEventEdit', [FinanceController::class, 'timesheetEventEdit']);
 Route::post('/timesheetEventUpdateAjax', [FinanceController::class, 'timesheetEventUpdateAjax']);
@@ -326,4 +329,8 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::get('/teacher-timesheet-approve-all/{asn_ids}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDirAll']);
     Route::post('/logSchoolTimesheetRejectDirAll', [SchoolController::class, 'logSchoolTimesheetRejectDirAll']);
     Route::post('/logSchoolTimesheetLogDirAll', [SchoolController::class, 'logSchoolTimesheetLogDirAll']);
+
+    Route::get('/teacher-itemsheet-approve-all/{asn_ids}/{school_id}', [SchoolController::class, 'logSchTeacherItemSheetDirAll']);
+    // Route::post('/logSchoolTimesheetRejectDirAll', [SchoolController::class, 'logSchoolTimesheetRejectDirAll']);
+    // Route::post('/logSchoolTimesheetLogDirAll', [SchoolController::class, 'logSchoolTimesheetLogDirAll']);
 });
