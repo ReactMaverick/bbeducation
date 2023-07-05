@@ -250,7 +250,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                ordering: false
+            });
         });
 
         $(document).on('change', '#callBackId', function() {

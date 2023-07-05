@@ -121,5 +121,57 @@
                 </div>
             </a>
         </div>
+
+        <div class="sidebar-pages-section">
+            <a style="cursor: pointer;" class="sidebar-pages"
+                onclick="teacherPasswordSendLink('{{ $teacherDetail->teacher_id }}')">
+                <div class="page-icon-sec">
+                    <i class="fa-sharp fa-solid fa-paper-plane"></i>
+                </div>
+                <div class="page-name-sec">
+                    <span>Send Reset Password Link</span>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+
+<script>
+    function teacherPasswordSendLink(teacher_id) {
+        if (teacher_id) {
+            swal({
+                    title: "",
+                    text: "Are you sure you wish to send password reset link to the user?",
+                    buttons: {
+                        cancel: "No",
+                        Yes: "Yes"
+                    },
+                })
+                .then((value) => {
+                    switch (value) {
+                        case "Yes":
+                            $('#fullLoader').show();
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url('resendTeacherPasswordLink') }}',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    teacher_id: teacher_id
+                                },
+                                success: function(data) {
+                                    $('#fullLoader').hide();
+                                    if (data) {
+                                        swal("",
+                                            "Password reset link has been send successfully to teacher's login email."
+                                        );
+                                    } else {
+                                        swal("",
+                                            "Something went wrong.");
+                                    }
+                                }
+                            });
+                    }
+                });
+        }
+    }
+</script>

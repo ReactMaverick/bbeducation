@@ -56,8 +56,8 @@
                                 <?php $dueCallCount = 0; ?>
                                 @foreach ($ContactHistory as $key => $History)
                                     <tr class="school-detail-table-data editContactHistoryRow"
-                                    id="editContactHistoryRow{{ $History->schoolContactLog_id }}"
-                                    onclick="contactHistoryRowSelect({{ $History->schoolContactLog_id }})">
+                                        id="editContactHistoryRow{{ $History->schoolContactLog_id }}"
+                                        onclick="contactHistoryRowSelect({{ $History->schoolContactLog_id }})">
                                         <td style="width: 40%">{{ $History->notes_txt }}</td>
                                         <td>{{ $History->spokeTo_txt }}</td>
                                         <td>{{ $History->firstName_txt . ' ' . $History->surname_txt }}</td>
@@ -217,7 +217,8 @@
                                     <div class="form-group calendar-form-filter col-md-12">
                                         <label for="">Quick Setting</label>
                                         <select class="form-control" name="quick_setting"
-                                            onchange="quickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))" id="quickSettingId">
+                                            onchange="quickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))"
+                                            id="quickSettingId">
                                             <option value="">Choose one</option>
                                             @foreach ($quickSettingList as $key3 => $quickSetting)
                                                 <option settingTxt="{{ $quickSetting->description_txt }}"
@@ -302,7 +303,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                ordering: false
+            });
         });
 
         function selectSpokeTo(contact_id, contact_name) {

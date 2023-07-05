@@ -287,7 +287,14 @@
                                                             @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day1Avail_txt }}</p>
+                                                                    <p>
+                                                                        {{ $calender->day1Avail_txt }}
+                                                                        @if ($calender->start_tm1 && $calender->end_tm1)
+                                                                            ({{ date('h:i a', strtotime($calender->start_tm1)) }}
+                                                                            -
+                                                                            {{ date('h:i a', strtotime($calender->end_tm1)) }})
+                                                                        @endif
+                                                                    </p>
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3"></div>
@@ -297,7 +304,14 @@
                                                             @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day2Avail_txt }}</p>
+                                                                    <p>
+                                                                        {{ $calender->day2Avail_txt }}
+                                                                        @if ($calender->start_tm2 && $calender->end_tm2)
+                                                                            ({{ date('h:i a', strtotime($calender->start_tm2)) }}
+                                                                            -
+                                                                            {{ date('h:i a', strtotime($calender->end_tm2)) }})
+                                                                        @endif
+                                                                    </p>
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3"></div>
@@ -307,7 +321,14 @@
                                                             @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day3Avail_txt }}</p>
+                                                                    <p>
+                                                                        {{ $calender->day3Avail_txt }}
+                                                                        @if ($calender->start_tm3 && $calender->end_tm3)
+                                                                            ({{ date('h:i a', strtotime($calender->start_tm3)) }}
+                                                                            -
+                                                                            {{ date('h:i a', strtotime($calender->end_tm3)) }})
+                                                                        @endif
+                                                                    </p>
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3"></div>
@@ -317,7 +338,14 @@
                                                             @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day4Avail_txt }}</p>
+                                                                    <p>
+                                                                        {{ $calender->day4Avail_txt }}
+                                                                        @if ($calender->start_tm4 && $calender->end_tm4)
+                                                                            ({{ date('h:i a', strtotime($calender->start_tm4)) }}
+                                                                            -
+                                                                            {{ date('h:i a', strtotime($calender->end_tm4)) }})
+                                                                        @endif
+                                                                    </p>
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3"></div>
@@ -327,7 +355,14 @@
                                                             @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
                                                                 <div
                                                                     class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>{{ $calender->day5Avail_txt }}</p>
+                                                                    <p>
+                                                                        {{ $calender->day5Avail_txt }}
+                                                                        @if ($calender->start_tm5 && $calender->end_tm5)
+                                                                            ({{ date('h:i a', strtotime($calender->start_tm5)) }}
+                                                                            -
+                                                                            {{ date('h:i a', strtotime($calender->end_tm5)) }})
+                                                                        @endif
+                                                                    </p>
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3"></div>

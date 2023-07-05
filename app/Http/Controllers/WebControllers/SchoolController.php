@@ -616,6 +616,36 @@ class SchoolController extends Controller
         return response()->json(['html' => $view]);
     }
 
+    public function getContactItemEmail(Request $request)
+    {
+        $input = $request->all();
+        $contactItemSch_id = $input['editContactItemId'];
+        $school_id = $input['contactItemSchoolId'];
+
+        $Detail = DB::table('tbl_contactItemSch')
+            ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_contactItemSch.school_id')
+            ->select('tbl_contactItemSch.*', 'tbl_school.name_txt')
+            ->where('contactItemSch_id', "=", $contactItemSch_id)
+            ->first();
+
+        return response()->json(['Detail' => $Detail]);
+    }
+
+    public function getContactItemPhone(Request $request)
+    {
+        $input = $request->all();
+        $contactItemSch_id = $input['editContactItemId'];
+        $school_id = $input['contactItemSchoolId'];
+
+        $Detail = DB::table('tbl_contactItemSch')
+            ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_contactItemSch.school_id')
+            ->select('tbl_contactItemSch.*', 'tbl_school.name_txt')
+            ->where('contactItemSch_id', "=", $contactItemSch_id)
+            ->first();
+
+        return response()->json(['Detail' => $Detail]);
+    }
+
     public function schoolContactItemUpdate(Request $request)
     {
         $contactItemSch_id = $request->editContactItemId;
@@ -1067,6 +1097,7 @@ class SchoolController extends Controller
                 $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
             }
             $schoolInvoices = $Invoices->groupBy('tbl_invoice.invoice_id')
+                ->orderBy('tbl_invoice.invoiceDate_dte', 'DESC')
                 ->get();
 
             $schoolTimesheet = DB::table('tbl_asn')
@@ -2957,7 +2988,7 @@ class SchoolController extends Controller
                                 ->where('tbl_asnItem5.asnDate_dte', '=', $weekStartDate5);
                         });
                 })
-                ->select('tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"))
+                ->select('tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem1.start_tm AS start_tm1', 'tbl_asnItem1.end_tm AS end_tm1', 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem2.start_tm AS start_tm2', 'tbl_asnItem2.end_tm AS end_tm2', 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem3.start_tm AS start_tm3', 'tbl_asnItem3.end_tm AS end_tm3', 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem4.start_tm AS start_tm4', 'tbl_asnItem4.end_tm AS end_tm4', 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), 'tbl_asnItem5.start_tm AS start_tm5', 'tbl_asnItem5.end_tm AS end_tm5')
                 ->whereIn('tbl_asn.asn_id', function ($query) use ($weekStartDate, $weekEndDate, $company_id, $school_id) {
                     $query->select('tbl_asn.asn_id')
                         ->from('tbl_asn')
@@ -2978,10 +3009,240 @@ class SchoolController extends Controller
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
 
-            return view("web.schoolPortal.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList, 'schoolPaidInvoices' => $schoolPaidInvoices]);
+            $teacherList = DB::table('teacher_timesheet')
+                ->join('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
+                ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
+                ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text')
+                ->where('teacher_timesheet_item.school_id', $school_id)
+                ->where('teacher_timesheet_item.send_to_school', 1)
+                ->where('teacher_timesheet_item.admin_approve', '!=', 1)
+                ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
+                ->orderBy('teacher_timesheet.teacher_id', 'ASC')
+                ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
+                ->get();
+
+            return view("web.schoolPortal.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList, 'schoolPaidInvoices' => $schoolPaidInvoices, 'teacherList' => $teacherList]);
         } else {
             return redirect()->intended('/school');
         }
+    }
+
+    public function logSchfetchTeacherSheetById(Request $request)
+    {
+        $input = $request->all();
+        $max_date = $input['max_date'];
+        $weekStartDate = Carbon::parse($max_date)->startOfWeek()->format('Y-m-d');
+        $weekEndDate = Carbon::parse($max_date)->endOfWeek()->format('Y-m-d');
+        $school_id = $input['school_id'];
+
+        $teacherList = DB::table('teacher_timesheet')
+            ->join('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
+            ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
+            ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
+            ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text')
+            // ->whereDate('teacher_timesheet_item.asnDate_dte', '<=', $max_date)
+            ->where('teacher_timesheet_item.school_id', $school_id)
+            ->where('teacher_timesheet_item.send_to_school', 1)
+            ->where('teacher_timesheet_item.admin_approve', '!=', 1)
+            ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
+            ->orderBy('teacher_timesheet.teacher_id', 'ASC')
+            ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
+            ->get();
+
+        $html = '';
+        if (count($teacherList) > 0) {
+            foreach ($teacherList as $key => $teacher) {
+                $name = '';
+                if ($teacher->knownAs_txt == null && $teacher->knownAs_txt == '') {
+                    $name = $teacher->firstName_txt . ' ' . $teacher->surname_txt;
+                } else {
+                    $name = $teacher->knownAs_txt . ' ' . $teacher->surname_txt;
+                }
+
+                $startTime = '';
+                if ($teacher->t_start_tm) {
+                    $startTime = date("h:i a", strtotime($teacher->t_start_tm));
+                }
+                $endTime = '';
+                if ($teacher->t_end_tm) {
+                    $endTime = date("h:i a", strtotime($teacher->t_end_tm));
+                }
+                $rejectText = '';
+                if ($teacher->t_rejected_text) {
+                    $rejectText = '( ' . $teacher->t_rejected_text . ' )';
+                }
+
+                if ($teacher->t_admin_approve == 2) {
+                    $tStatus = "Rejected" . $rejectText;
+                } else if ($teacher->t_send_to_school == 1) {
+                    $tStatus = "Send to school";
+                } else {
+                    $tStatus = "--";
+                }
+
+                $html .= "<tr class='school-detail-table-data selectLogTeacherRow' id='selectLogTeacherRow$teacher->timesheet_item_id' teacher-id='$teacher->t_teacher_id' asn-id='$teacher->t_asn_id' timesheet-item-id='$teacher->timesheet_item_id' school-id='$teacher->t_school_id'>
+                    <td>$name</td>
+                    <td>$teacher->asnDate_dte</td>
+                    <td>$teacher->datePart_txt</td>
+                    <td>$startTime</td>
+                    <td>$endTime</td>
+                    <td>$tStatus</td>
+                </tr>";
+            }
+        }
+
+        return response()->json(['html' => $html]);
+    }
+
+    public function logSchteacherItemSheetReject(Request $request)
+    {
+        $schoolLoginData = Session::get('schoolLoginData');
+        if ($schoolLoginData) {
+            $company_id = $schoolLoginData->company_id;
+            $school_id = $schoolLoginData->school_id;
+            $input = $request->all();
+            $asnId = $input['asnItemIds'];
+            $asnIdsArr = explode(",", $asnId);
+
+            DB::table('teacher_timesheet_item')
+                ->whereIn('timesheet_item_id', $asnIdsArr)
+                ->update([
+                    'admin_approve' => 2,
+                    'rejected_by_type' => 'School',
+                    'rejected_by' => $school_id,
+                    'rejected_text' => $request->remark
+                ]);
+
+            return true;
+        }
+        return true;
+    }
+
+    public function logSchTeacherItemSheetApprove(Request $request)
+    {
+        $schoolLoginData = Session::get('schoolLoginData');
+        $result['add'] = 'No';
+        if ($schoolLoginData) {
+            $company_id = $schoolLoginData->company_id;
+            $school_id = $schoolLoginData->school_id;
+
+            $asnItemIds = $request->asnItemIds;
+            $itemIdsArr = explode(",", $asnItemIds);
+            $idsArr = array();
+            foreach ($itemIdsArr as $key => $value) {
+                $tDet = DB::table('teacher_timesheet_item')
+                    ->where('timesheet_item_id', $value)
+                    ->first();
+
+                if ($tDet) {
+                    $asnDet = DB::table('tbl_asn')
+                        ->where('asn_id', $tDet->asn_id)
+                        ->first();
+                    $eventItemDetail = DB::table('tbl_asnItem')
+                        ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                        ->where('tbl_asnItem.asn_id', $tDet->asn_id)
+                        ->whereDate('tbl_asnItem.asnDate_dte', $tDet->asnDate_dte)
+                        ->where('tbl_asn.school_id', $tDet->school_id)
+                        ->where('tbl_asn.teacher_id', $tDet->teacher_id)
+                        ->first();
+                    if ($eventItemDetail) {
+                        $asnItem_id = $eventItemDetail->asnItem_id;
+                        DB::table('tbl_asnItem')
+                            ->where('asnItem_id', $eventItemDetail->asnItem_id)
+                            ->update([
+                                'dayPart_int' => $tDet->dayPart_int,
+                                'dayPercent_dec' => $tDet->dayPercent_dec,
+                                'hours_dec' => $tDet->hours_dec,
+                                'start_tm' => $tDet->start_tm,
+                                'end_tm' => $tDet->end_tm,
+                            ]);
+                    } else {
+                        $asnItem_id = DB::table('tbl_asnItem')
+                            ->insertGetId([
+                                'asn_id' => $tDet->asn_id,
+                                'asnDate_dte' => $tDet->asnDate_dte,
+                                'dayPart_int' => $tDet->dayPart_int,
+                                'dayPercent_dec' => $tDet->dayPercent_dec,
+                                'hours_dec' => $tDet->hours_dec,
+                                'start_tm' => $tDet->start_tm,
+                                'end_tm' => $tDet->end_tm,
+                                'charge_dec' => $asnDet->charge_dec,
+                                'cost_dec' => $asnDet->cost_dec,
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+                    }
+                    array_push($idsArr, $asnItem_id);
+
+                    DB::table('teacher_timesheet_item')
+                        ->where('timesheet_item_id', $tDet->timesheet_item_id)
+                        ->update([
+                            'asnItem_id' => $asnItem_id,
+                            'admin_approve' => 1,
+                            'approve_by' => $school_id,
+                            'approve_by_type' => 'School',
+                            'approve_by_dte' => date('Y-m-d H:i:s'),
+                        ]);
+                }
+            }
+
+            DB::table('tbl_asnItem')
+                ->whereIn('asnItem_id', $idsArr)
+                ->update([
+                    'admin_approve' => 1
+                ]);
+
+            $result['add'] = 'No';
+            $schoolDet = DB::table('tbl_school')
+                ->where('school_id', $school_id)
+                ->first();
+
+            if (count($idsArr) > 0) {
+                $itemList = DB::table('tbl_asnItem')
+                    ->LeftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                    ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                    ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                    ->groupBy('tbl_asnItem.asnItem_id')
+                    ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                    ->get();
+
+                $timesheet_id = DB::table('tbl_timesheet')
+                    ->insertGetId([
+                        'school_id' => $school_id,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+
+                $pdf = PDF::loadView("web.finance.timesheet_pdf", ['itemList' => $itemList]);
+                $pdfName = 'Timesheet_' . $timesheet_id . '.pdf';
+                // return $pdf->stream($pdfName);
+                // Save the PDF to the server
+                $pdf->save(public_path('pdfs/timesheet/' . $pdfName));
+
+                DB::table('tbl_timesheet')
+                    ->where('timesheet_id', $timesheet_id)
+                    ->update([
+                        'pdfLocation' => 'pdfs/timesheet/' . $pdfName,
+                        'pdfName' => $pdfName
+                    ]);
+
+                foreach ($idsArr as $key => $id) {
+                    DB::table('tbl_asnItem')
+                        ->where('asnItem_id', $id)
+                        ->update([
+                            'admin_approve' => 1,
+                            'timesheet_id' => $timesheet_id
+                        ]);
+                }
+                $result['add'] = 'Yes';
+                $result['timesheet_id'] = $timesheet_id;
+                $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
+                return $result;
+            }
+        }
+
+        return $result;
     }
 
     public function logSchoolInvoicePdf(Request $request, $id, $invoice_id)
@@ -3512,7 +3773,8 @@ class SchoolController extends Controller
                 'send_to_school' => 0,
                 'admin_approve' => 2,
                 'rejected_by_type' => 'School',
-                'rejected_by' => $school_id
+                'rejected_by' => $school_id,
+                'rejected_text' => $request->remark
             ]);
 
         if (count($idsArr) > 0) {
@@ -3718,7 +3980,8 @@ class SchoolController extends Controller
                 'send_to_school' => 0,
                 'admin_approve' => 2,
                 'rejected_by_type' => 'School',
-                'rejected_by' => $school_id
+                'rejected_by' => $school_id,
+                'rejected_text' => $request->remark
             ]);
 
         if (count($idsArr) > 0) {
@@ -3838,6 +4101,158 @@ class SchoolController extends Controller
 
             return view("web.schoolPortal.school_teacheritemsheet_dir_all", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $schoolId, 'schoolDetail' => $schoolDet, 'teacherList' => $teacherList, 'asnId' => $asnId]);
         }
+    }
+
+    public function logTeacherItemSheetApproveDir(Request $request)
+    {
+        $result['add'] = 'No';
+        $school_id = $request->school_id;
+        $asnId = $request->approveAsnId;
+        $itemIdsArr = explode(",", $asnId);
+        $idsArr = array();
+        foreach ($itemIdsArr as $key => $value) {
+            $tDet = DB::table('teacher_timesheet_item')
+                ->where('timesheet_item_id', $value)
+                ->where('admin_approve', '!=', 1)
+                ->first();
+
+            if ($tDet) {
+                $asnDet = DB::table('tbl_asn')
+                    ->where('asn_id', $tDet->asn_id)
+                    ->first();
+                $eventItemDetail = DB::table('tbl_asnItem')
+                    ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                    ->where('tbl_asnItem.asn_id', $tDet->asn_id)
+                    ->whereDate('tbl_asnItem.asnDate_dte', $tDet->asnDate_dte)
+                    ->where('tbl_asn.school_id', $tDet->school_id)
+                    ->where('tbl_asn.teacher_id', $tDet->teacher_id)
+                    ->first();
+                if ($eventItemDetail) {
+                    $asnItem_id = $eventItemDetail->asnItem_id;
+                    DB::table('tbl_asnItem')
+                        ->where('asnItem_id', $eventItemDetail->asnItem_id)
+                        ->update([
+                            'dayPart_int' => $tDet->dayPart_int,
+                            'dayPercent_dec' => $tDet->dayPercent_dec,
+                            'hours_dec' => $tDet->hours_dec,
+                            'start_tm' => $tDet->start_tm,
+                            'end_tm' => $tDet->end_tm,
+                        ]);
+                } else {
+                    $asnItem_id = DB::table('tbl_asnItem')
+                        ->insertGetId([
+                            'asn_id' => $tDet->asn_id,
+                            'asnDate_dte' => $tDet->asnDate_dte,
+                            'dayPart_int' => $tDet->dayPart_int,
+                            'dayPercent_dec' => $tDet->dayPercent_dec,
+                            'hours_dec' => $tDet->hours_dec,
+                            'start_tm' => $tDet->start_tm,
+                            'end_tm' => $tDet->end_tm,
+                            'charge_dec' => $asnDet->charge_dec,
+                            'cost_dec' => $asnDet->cost_dec,
+                            'timestamp_ts' => date('Y-m-d H:i:s')
+                        ]);
+                }
+                array_push($idsArr, $asnItem_id);
+
+                DB::table('teacher_timesheet_item')
+                    ->where('timesheet_item_id', $tDet->timesheet_item_id)
+                    ->update([
+                        'asnItem_id' => $asnItem_id,
+                        'admin_approve' => 1,
+                        'approve_by' => $school_id,
+                        'approve_by_type' => 'School',
+                        'approve_by_dte' => date('Y-m-d H:i:s'),
+                    ]);
+            }
+        }
+
+        DB::table('tbl_asnItem')
+            ->whereIn('asnItem_id', $idsArr)
+            ->update([
+                'admin_approve' => 1
+            ]);
+
+        $result['add'] = 'No';
+        $schoolDet = DB::table('tbl_school')
+            ->where('school_id', $school_id)
+            ->first();
+
+        if (count($idsArr) > 0) {
+            $itemList = DB::table('tbl_asnItem')
+                ->LeftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                ->groupBy('tbl_asnItem.asnItem_id')
+                ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                ->get();
+
+            $timesheet_id = DB::table('tbl_timesheet')
+                ->insertGetId([
+                    'school_id' => $schoolDet->school_id,
+                    'timestamp_ts' => date('Y-m-d H:i:s'),
+                    'log_by_type' => 'School',
+                    'log_by' => $school_id
+                ]);
+
+            $pdf = PDF::loadView("web.finance.timesheet_pdf", ['itemList' => $itemList]);
+            $pdfName = 'Timesheet_' . $timesheet_id . '.pdf';
+            // return $pdf->stream($pdfName);
+            // Save the PDF to the server
+            $pdf->save(public_path('pdfs/timesheet/' . $pdfName));
+
+            DB::table('tbl_timesheet')
+                ->where('timesheet_id', $timesheet_id)
+                ->update([
+                    'pdfLocation' => 'pdfs/timesheet/' . $pdfName,
+                    'pdfName' => $pdfName
+                ]);
+
+            foreach ($idsArr as $key => $id) {
+                DB::table('tbl_asnItem')
+                    ->where('asnItem_id', $id)
+                    ->update([
+                        'timesheet_id' => $timesheet_id
+                    ]);
+            }
+            $result['add'] = 'Yes';
+            $result['timesheet_id'] = $timesheet_id;
+            $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
+            return $result;
+        }
+        return $result;
+    }
+
+    public function logTeacherItemSheetRejectDir(Request $request)
+    {
+        $input = $request->all();
+        $school_id = $input['school_id'];
+        $asnId = $input['asnId'];
+        $asnIdsArr = explode(",", $asnId);
+
+        $tDet = DB::table('teacher_timesheet_item')
+            ->whereIn('timesheet_item_id', $asnIdsArr)
+            ->where('admin_approve', '=', 1)
+            ->get();
+
+        if (count($tDet) > 0) {
+            $result['add'] = 'No';
+        } else {
+            DB::table('teacher_timesheet_item')
+                ->whereIn('timesheet_item_id', $asnIdsArr)
+                ->update([
+                    'admin_approve' => 2,
+                    'rejected_by_type' => 'School',
+                    'rejected_by' => $school_id,
+                    'rejected_text' => $request->remark
+                ]);
+
+            $result['add'] = 'Yes';
+        }
+
+        return $result;
     }
     /********/
 

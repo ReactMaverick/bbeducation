@@ -84,8 +84,8 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                echo $e;
-                exit;
+                // echo $e;
+                // exit;
             }
         }
     }
@@ -98,6 +98,66 @@ class AlertController extends Controller
                     $m->to($mailData['mail'])
                         ->subject($mailData['subject'])
                         ->attach($mailData['invoice_path'], ['as' => $mailData['invoice_name']])
+                        ->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function sendVettingMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/candidate_vetting', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->cc($mailData['cc_mail'])
+                        ->subject($mailData['subject'])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject']])
+                        ->attach($mailData['invoice_path2'], ['as' => "Candidate Timesheet"])
+                        ->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function sendTeacherVettingMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/teacher_candidate_vetting', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->subject($mailData['subject'])
+                        ->attach($mailData['invoice_path'], ['as' => "Candidate Timesheet"])
+                        ->attach($mailData['invoice_path2'], ['as' => $mailData['subject']])
+                        ->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function sendSchFinanceInvoiceMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/sch_finance_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->subject($mailData['subject'])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject']])
                         ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');

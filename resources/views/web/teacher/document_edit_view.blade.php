@@ -1,9 +1,9 @@
 <input type="hidden" name="file_location" value="{{ $docDetail->file_location }}">
 <div class="col-md-12">
-    <div class="modal-input-field form-group" hidden>
+    <div class="modal-input-field form-group">
         <label class="form-check-label">Document Name</label>
-        <input type="text" class="form-control" name="file_name" id="docNameHiddenEdit"
-            value="{{ $docDetail->file_name }}">
+        <input type="text" class="form-control" name="file_name" id="fileNameEdit" value="{{ $docDetail->file_name }}">
+        <input type="hidden" class="form-control" name="file_name_hidden" id="docNameHiddenEdit" value="">
     </div>
 
     <div class="form-group calendar-form-filter">
@@ -36,6 +36,10 @@
     });
 
     function docTypeChangeEdit(desc_int, description_txt) {
+        var txt = $('#fileNameEdit').val()
         $('#docNameHiddenEdit').val(description_txt)
+        if (txt == null || txt == '') {
+            $('#fileNameEdit').val(description_txt)
+        }
     }
 </script>

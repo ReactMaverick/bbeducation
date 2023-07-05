@@ -202,7 +202,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable, #myTable1').DataTable();
+            $('#myTable').DataTable({
+                ordering: false
+            });
         });
 
         $(document).on('change', '#showAll', function() {

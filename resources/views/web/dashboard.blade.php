@@ -96,6 +96,7 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
+                ordering: false
                 // dom: 'Bfrtip',
                 // buttons: [
                 //     'copy',

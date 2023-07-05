@@ -117,8 +117,24 @@
                                                             $calender->timesheet_item_id1)
                                                         <div class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->day1asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id1 }}')">
-                                                            <p>{{ $calender->day1Avail_txt }}</p>
+                                                            onclick="calDateClick('edit', '{{ $calender->day1asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id1 }}','{{ $calender->admin_approve1 }}')">
+                                                            <p>
+                                                                {{ $calender->day1Avail_txt }}
+                                                                @if ($calender->start_tm1 && $calender->end_tm1)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm1)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm1)) }})
+                                                                @endif
+                                                                @if ($calender->admin_approve1 == 1)
+                                                                    <br>Approved
+                                                                @elseif ($calender->admin_approve1 == 2)
+                                                                    <br>Rejected
+                                                                    @if ($calender->rejected_text1)
+                                                                        ({{ $calender->rejected_text1 }})
+                                                                    @endif
+                                                                @else
+                                                                    <br>Submitted
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3" style="cursor: pointer;"
@@ -140,8 +156,24 @@
                                                             $calender->timesheet_item_id2)
                                                         <div class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->day2asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id2 }}')">
-                                                            <p>{{ $calender->day2Avail_txt }}</p>
+                                                            onclick="calDateClick('edit', '{{ $calender->day2asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id2 }}','{{ $calender->admin_approve2 }}')">
+                                                            <p>
+                                                                {{ $calender->day2Avail_txt }}
+                                                                @if ($calender->start_tm2 && $calender->end_tm2)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm2)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm2)) }})
+                                                                @endif
+                                                                @if ($calender->admin_approve2 == 1)
+                                                                    <br>Approved
+                                                                @elseif ($calender->admin_approve2 == 2)
+                                                                    <br>Rejected
+                                                                    @if ($calender->rejected_text2)
+                                                                        ({{ $calender->rejected_text2 }})
+                                                                    @endif
+                                                                @else
+                                                                    <br>Submitted
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3" style="cursor: pointer;"
@@ -163,8 +195,24 @@
                                                             $calender->timesheet_item_id3)
                                                         <div class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->day3asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id3 }}')">
-                                                            <p>{{ $calender->day3Avail_txt }}</p>
+                                                            onclick="calDateClick('edit', '{{ $calender->day3asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id3 }}','{{ $calender->admin_approve3 }}')">
+                                                            <p>
+                                                                {{ $calender->day3Avail_txt }}
+                                                                @if ($calender->start_tm3 && $calender->end_tm3)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm3)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm3)) }})
+                                                                @endif
+                                                                @if ($calender->admin_approve3 == 1)
+                                                                    <br>Approved
+                                                                @elseif ($calender->admin_approve3 == 2)
+                                                                    <br>Rejected
+                                                                    @if ($calender->rejected_text3)
+                                                                        ({{ $calender->rejected_text3 }})
+                                                                    @endif
+                                                                @else
+                                                                    <br>Submitted
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3" style="cursor: pointer;"
@@ -186,8 +234,24 @@
                                                             $calender->timesheet_item_id4)
                                                         <div class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->day4asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id4 }}')">
-                                                            <p>{{ $calender->day4Avail_txt }}</p>
+                                                            onclick="calDateClick('edit', '{{ $calender->day4asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id4 }}','{{ $calender->admin_approve4 }}')">
+                                                            <p>
+                                                                {{ $calender->day4Avail_txt }}
+                                                                @if ($calender->start_tm4 && $calender->end_tm4)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm4)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm4)) }})
+                                                                @endif
+                                                                @if ($calender->admin_approve4 == 1)
+                                                                    <br>Approved
+                                                                @elseif ($calender->admin_approve4 == 2)
+                                                                    <br>Rejected
+                                                                    @if ($calender->rejected_text4)
+                                                                        ({{ $calender->rejected_text4 }})
+                                                                    @endif
+                                                                @else
+                                                                    <br>Submitted
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3" style="cursor: pointer;"
@@ -209,8 +273,25 @@
                                                             $calender->timesheet_item_id5)
                                                         <div class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
-                                                            onclick="calDateClick('edit', '{{ $calender->day5asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id5 }}')">
-                                                            <p>{{ $calender->day5Avail_txt }}</p>
+                                                            onclick="calDateClick('edit', '{{ $calender->day5asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id5 }}','{{ $calender->admin_approve5 }}')">
+                                                            <p>
+                                                                {{ $calender->day5Avail_txt }}
+                                                                @if ($calender->start_tm5 && $calender->end_tm5)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm5)) }}
+                                                                    -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm5)) }})
+                                                                @endif
+                                                                @if ($calender->admin_approve5 == 1)
+                                                                    <br>Approved
+                                                                @elseif ($calender->admin_approve5 == 2)
+                                                                    <br>Rejected
+                                                                    @if ($calender->rejected_text5)
+                                                                        ({{ $calender->rejected_text5 }})
+                                                                    @endif
+                                                                @else
+                                                                    <br>Submitted
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3" style="cursor: pointer;"
@@ -400,37 +481,44 @@
 
             $('#workStartTime, #workEndTime').timepicker({
                 timeFormat: 'h:i a',
-                'step': 60,
+                'step': 30,
                 'forceRoundTime': true
             });
         });
 
-        function calDateClick(type, asnDate_dte, submit_status, reject_status, asn_id, timesheet_item_id) {
+        function calDateClick(type, asnDate_dte, submit_status, reject_status, asn_id, timesheet_item_id, approveStatus) {
             // alert(reject_status)
             // if (submit_status && submit_status == 1) {
             //     swal("",
             //         "You cannot edit day as timesheet already submitted."
             //     );
             // } else {
-            var SITEURL = "{{ url('/') }}";
-            $.ajax({
-                url: SITEURL + "/teacher/teacherTimesheetEdit",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    asnDate_dte: asnDate_dte,
-                    timesheet_item_id: timesheet_item_id,
-                    asn_id: asn_id
-                },
-                type: "POST",
-                dataType: "json",
-                success: function(data) {
-                    if (data.exist == 'Yes') {
-                        $('#AjaxEventEdit').html(data.html);
-                        $('#eventEditModal').modal("show");
-                    }
-                }
-            });
             // }
+            if (approveStatus == 1) {
+                swal("",
+                    "You cannot edit day as timesheet already approved."
+                );
+            } else {
+                var SITEURL = "{{ url('/') }}";
+                $.ajax({
+                    url: SITEURL + "/teacher/teacherTimesheetEdit",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        asnDate_dte: asnDate_dte,
+                        timesheet_item_id: timesheet_item_id,
+                        asn_id: asn_id
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.exist == 'Yes') {
+                            $('#AjaxEventEdit').html(data.html);
+                            $('#eventEditModal').modal("show");
+                        }
+                    }
+                });
+            }
+
         }
 
         $(document).on('click', '#teacherTimesheetDelBtn', function() {

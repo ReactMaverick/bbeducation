@@ -400,7 +400,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable, #myTable1').DataTable();
+            $('#myTable, #myTable1').DataTable({
+                ordering: false
+            });
         });
 
         $(document).on('change', '#includePaid', function() {
@@ -750,23 +752,26 @@
                         editInvoiceId: editInvoiceId
                     },
                     dataType: "json",
-                    async: false,
                     success: function(data) {
                         // console.log(data);
-                        if (data.exist == 'Yes' && data.invoice_path) {
-                            // window.location.href = data.invoice_path;
-                            // location.replace(data.invoice_path);
-                            const link = document.createElement('a');
-                            link.href = data.invoice_path;
-                            link.download = (data.invoice_path).split("/").pop();
-                            link.target = '_blank';
-                            link.click();
-                        }
-                        var subject = 'Finance Invoice';
-                        var body = "Hello";
-                        window.location = 'mailto:' + data.sendMail + '?subject=' +
-                            encodeURIComponent(subject) + '&body=' +
-                            encodeURIComponent(body);
+                        // if (data.exist == 'Yes' && data.invoice_path) {
+                        //     // window.location.href = data.invoice_path;
+                        //     // location.replace(data.invoice_path);
+                        //     const link = document.createElement('a');
+                        //     link.href = data.invoice_path;
+                        //     link.download = (data.invoice_path).split("/").pop();
+                        //     link.target = '_blank';
+                        //     link.click();
+                        // }
+                        // var subject = 'Finance Invoice';
+                        // var body = "Hello";
+                        // window.location = 'mailto:' + data.sendMail + '?subject=' +
+                        //     encodeURIComponent(subject) + '&body=' +
+                        //     encodeURIComponent(body);
+
+                        swal("",
+                            "Mail have been send successfully."
+                        );
 
                         $('#fullLoader').hide();
                     }

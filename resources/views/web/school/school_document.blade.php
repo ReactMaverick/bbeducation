@@ -202,7 +202,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                ordering: false
+            });
         });
 
         function documentRowSelect(schoolDocument_id) {

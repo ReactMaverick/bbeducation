@@ -97,6 +97,8 @@ Route::post('/teacherAddressUpdate', [TeacherController::class, 'teacherAddressU
 Route::post('/teacherEmergencyContactUpdate', [TeacherController::class, 'teacherEmergencyContactUpdate']);
 Route::post('/teacherContactItemInsert', [TeacherController::class, 'teacherContactItemInsert']);
 Route::post('/teacherContactItemEdit', [TeacherController::class, 'teacherContactItemEdit']);
+Route::post('/teacherContactItemEmail', [TeacherController::class, 'teacherContactItemEmail']);
+Route::post('/teacherContactItemPhone', [TeacherController::class, 'teacherContactItemPhone']);
 Route::post('/teacherContactItemUpdate', [TeacherController::class, 'teacherContactItemUpdate']);
 Route::post('/teacherProfessionUpdate', [TeacherController::class, 'teacherProfessionUpdate']);
 Route::post('/teacherInterviewUpdate', [TeacherController::class, 'teacherInterviewUpdate']);
@@ -140,6 +142,7 @@ Route::post('/teacherFabAdd', [TeacherController::class, 'teacherFabAdd']);
 Route::post('/teacherHeaderStatusUpdate', [TeacherController::class, 'teacherHeaderStatusUpdate']);
 Route::post('/teacherDocumentFetch', [TeacherController::class, 'teacherDocumentFetch']);
 Route::post('/teacherDocumentMail', [TeacherController::class, 'teacherDocumentMail']);
+Route::post('/resendTeacherPasswordLink', [TeacherController::class, 'resendTeacherPasswordLink']);
 // Teacher
 
 // School
@@ -156,6 +159,8 @@ Route::post('/schoolContactDelete', [SchoolController::class, 'schoolContactDele
 Route::post('/schoolContactItemInsert', [SchoolController::class, 'schoolContactItemInsert']);
 Route::post('/fetchContactItemList', [SchoolController::class, 'fetchContactItemList']);
 Route::post('/getContactItemDetail', [SchoolController::class, 'getContactItemDetail']);
+Route::post('/getContactItemEmail', [SchoolController::class, 'getContactItemEmail']);
+Route::post('/getContactItemPhone', [SchoolController::class, 'getContactItemPhone']);
 Route::post('/schoolContactItemUpdate', [SchoolController::class, 'schoolContactItemUpdate']);
 Route::post('/schoolContactItemDelete', [SchoolController::class, 'schoolContactItemDelete']);
 Route::get('/school-contact/{id}', [SchoolController::class, 'schoolContact']);
@@ -320,6 +325,9 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::post('/logSchoolTimesheetReject', [SchoolController::class, 'logSchoolTimesheetReject']);
     Route::post('/logSchoolInvoicePayMethod', [SchoolController::class, 'logSchoolInvoicePayMethod']);
     Route::post('/logSchoolInvoicePayMethodEdit', [SchoolController::class, 'logSchoolInvoicePayMethodEdit']);
+    Route::post('/logSchfetchTeacherSheetById', [SchoolController::class, 'logSchfetchTeacherSheetById']);
+    Route::post('/logSchteacherItemSheetReject', [SchoolController::class, 'logSchteacherItemSheetReject']);
+    Route::post('/logSchTeacherItemSheetApprove', [SchoolController::class, 'logSchTeacherItemSheetApprove']);
 
     // without login
     Route::get('/teacher-timesheet-approve/{asn_id}/{school_id}/{start}/{end}', [SchoolController::class, 'logSchTimesheetDir']);
@@ -331,6 +339,6 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::post('/logSchoolTimesheetLogDirAll', [SchoolController::class, 'logSchoolTimesheetLogDirAll']);
 
     Route::get('/teacher-itemsheet-approve-all/{asn_ids}/{school_id}', [SchoolController::class, 'logSchTeacherItemSheetDirAll']);
-    // Route::post('/logSchoolTimesheetRejectDirAll', [SchoolController::class, 'logSchoolTimesheetRejectDirAll']);
-    // Route::post('/logSchoolTimesheetLogDirAll', [SchoolController::class, 'logSchoolTimesheetLogDirAll']);
+    Route::post('/logTeacherItemSheetRejectDir', [SchoolController::class, 'logTeacherItemSheetRejectDir']);
+    Route::post('/logTeacherItemSheetApproveDir', [SchoolController::class, 'logTeacherItemSheetApproveDir']);
 });

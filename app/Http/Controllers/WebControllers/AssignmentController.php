@@ -222,6 +222,7 @@ class AssignmentController extends Controller
             $dayPartList = DB::table('tbl_description')
                 ->select('tbl_description.*')
                 ->where('tbl_description.descriptionGroup_int', 20)
+                ->whereIn('tbl_description.description_int', [1, 4])
                 ->get();
 
             $rateExist = DB::table('tbl_asnRatesSchool')
@@ -282,18 +283,22 @@ class AssignmentController extends Controller
             if ($eventItemDetail) {
                 $dayPart_int = '';
                 $dayPercent_dec = 1;
-                if ($eventItemDetail->dayPart_int == 1) {
-                    $dayPart_int = 2;
-                    $dayPercent_dec = 0.5;
-                } elseif ($eventItemDetail->dayPart_int == 2) {
-                    $dayPart_int = 3;
-                    $dayPercent_dec = 0.5;
-                } elseif ($eventItemDetail->dayPart_int == 4) {
+                // if ($eventItemDetail->dayPart_int == 1) {
+                //     $dayPart_int = 2;
+                //     $dayPercent_dec = 0.5;
+                // } elseif ($eventItemDetail->dayPart_int == 2) {
+                //     $dayPart_int = 3;
+                //     $dayPercent_dec = 0.5;
+                // } elseif ($eventItemDetail->dayPart_int == 4) {
+                //     $dayPart_int = 1;
+                // } else {
+                //     $dayPart_int = 4;
+                // }
+                if ($eventItemDetail->dayPart_int == 4) {
                     $dayPart_int = 1;
-                } else {
-                    $dayPart_int = 4;
                 }
-                if ($dayPart_int == 1 || $dayPart_int == 2 || $dayPart_int == 3) {
+                // if ($dayPart_int == 1 || $dayPart_int == 2 || $dayPart_int == 3) {
+                if ($dayPart_int == 1) {
                     DB::table('tbl_asnItem')
                         ->where('asnItem_id', $eventItemDetail->asnItem_id)
                         ->update([
@@ -378,18 +383,11 @@ class AssignmentController extends Controller
             if ($eventItemDetail) {
                 $dayPart_int = '';
                 $dayPercent_dec = 1;
-                if ($eventItemDetail->dayPart_int == 1) {
-                    $dayPart_int = 2;
-                    $dayPercent_dec = 0.5;
-                } elseif ($eventItemDetail->dayPart_int == 2) {
-                    $dayPart_int = 3;
-                    $dayPercent_dec = 0.5;
-                } elseif ($eventItemDetail->dayPart_int == 4) {
+                if ($eventItemDetail->dayPart_int == 4) {
                     $dayPart_int = 1;
-                } else {
-                    $dayPart_int = 4;
                 }
-                if ($dayPart_int == 1 || $dayPart_int == 2 || $dayPart_int == 3) {
+                // if ($dayPart_int == 1 || $dayPart_int == 2 || $dayPart_int == 3) {
+                if ($dayPart_int == 1) {
                     DB::table('tbl_asnItem')
                         ->where('asnItem_id', $eventItemDetail->asnItem_id)
                         ->update([
@@ -444,6 +442,7 @@ class AssignmentController extends Controller
                 $dayPartList = DB::table('tbl_description')
                     ->select('tbl_description.*')
                     ->where('tbl_description.descriptionGroup_int', 20)
+                    ->whereIn('tbl_description.description_int', [1, 4])
                     ->get();
 
                 $view = view("web.assignment.event_edit_view", ['eventItemDetail' => $eventItemDetail, 'dayPartList' => $dayPartList])->render();
@@ -475,6 +474,7 @@ class AssignmentController extends Controller
                 $dayPartList = DB::table('tbl_description')
                     ->select('tbl_description.*')
                     ->where('tbl_description.descriptionGroup_int', 20)
+                    ->whereIn('tbl_description.description_int', [1, 4])
                     ->get();
 
                 $view = view("web.assignment.event_edit_view", ['eventItemDetail' => $eventItemDetail, 'dayPartList' => $dayPartList])->render();
@@ -493,6 +493,24 @@ class AssignmentController extends Controller
     public function ajaxAssignmentEventUpdate(Request $request)
     {
         $editEventId = $request->editEventId;
+        $start_tm = NULL;
+        if ($request->start_tm) {
+            $start_tm = date("H:i:s", strtotime($request->start_tm));
+        }
+        $end_tm = NULL;
+        if ($request->end_tm) {
+            $end_tm = date("H:i:s", strtotime($request->end_tm));
+        }
+
+        $diff = NULL;
+        if ($request->start_tm && $request->end_tm) {
+            $start  = new Carbon($request->start_tm);
+            $end    = new Carbon($request->end_tm);
+            $totalDuration = $end->diffInSeconds($start);
+            // $diff = gmdate('H', $totalDuration);
+            $totalDurationInHours = $totalDuration / 3600;
+            $diff = round($totalDurationInHours, 1);
+        }
 
         DB::table('tbl_asnItem')
             ->where('asnItem_id', $editEventId)
@@ -501,8 +519,11 @@ class AssignmentController extends Controller
                 'asnDate_dte' => date("Y-m-d", strtotime($request->asnDate_dte)),
                 'charge_dec' => $request->charge_dec,
                 'dayPercent_dec' => $request->dayPercent_dec,
-                'hours_dec' => $request->hours_dec,
-                'cost_dec' => $request->cost_dec
+                // 'hours_dec' => $request->hours_dec,
+                'hours_dec' => $diff,
+                'cost_dec' => $request->cost_dec,
+                'start_tm' => $start_tm,
+                'end_tm' => $end_tm
             ]);
 
         $eventItem = DB::table('tbl_asnItem')
@@ -546,6 +567,25 @@ class AssignmentController extends Controller
             $blockHour = $request->blockHour;
         }
 
+        $start_tm = NULL;
+        if ($request->start_tm) {
+            $start_tm = date("H:i:s", strtotime($request->start_tm));
+        }
+        $end_tm = NULL;
+        if ($request->end_tm) {
+            $end_tm = date("H:i:s", strtotime($request->end_tm));
+        }
+
+        $diff = NULL;
+        if ($request->start_tm && $request->end_tm) {
+            $start  = new Carbon($request->start_tm);
+            $end    = new Carbon($request->end_tm);
+            $totalDuration = $end->diffInSeconds($start);
+            // $diff = gmdate('H', $totalDuration);
+            $totalDurationInHours = $totalDuration / 3600;
+            $diff = round($totalDurationInHours, 1);
+        }
+
         $Detail = DB::table('tbl_asn')
             ->where('tbl_asn.asn_id', $assignmentId)
             ->first();
@@ -569,7 +609,7 @@ class AssignmentController extends Controller
                 // echo $date->format('Y-m-d');
                 $day = date('D', strtotime($date->format('Y-m-d')));
                 if (count($weekDaysArr) > 0) {
-                    if (in_array($day, $weekDaysArr) && ($day == 'Mon' || $day == 'Tue' || $day == 'Wed' || $day == 'Thu' || $day == 'Fri')) {
+                    if (in_array($day, $weekDaysArr) && ($day == 'Mon' || $day == 'Tue' || $day == 'Wed' || $day == 'Thu' || $day == 'Fri' || $day == 'Sat' || $day == 'Sun')) {
                         if ($firstDate == '') {
                             $firstDate = $date->format('Y-m-d');
                         }
@@ -590,9 +630,11 @@ class AssignmentController extends Controller
                                 'asnDate_dte' => $date->format('Y-m-d'),
                                 'dayPart_int' => $blockDayPart,
                                 'dayPercent_dec' => $dayPercent_dec,
-                                'hours_dec' => $blockHour,
+                                'hours_dec' => $diff,
                                 'charge_dec' => $charge_dec,
                                 'cost_dec' => $cost_dec,
+                                'start_tm' => $start_tm,
+                                'end_tm' => $end_tm,
                                 'timestamp_ts' => date('Y-m-d H:i:s')
                             ]);
 
@@ -632,9 +674,11 @@ class AssignmentController extends Controller
                                 'asnDate_dte' => $date->format('Y-m-d'),
                                 'dayPart_int' => $blockDayPart,
                                 'dayPercent_dec' => $dayPercent_dec,
-                                'hours_dec' => $blockHour,
+                                'hours_dec' => $diff,
                                 'charge_dec' => $charge_dec,
                                 'cost_dec' => $cost_dec,
+                                'start_tm' => $start_tm,
+                                'end_tm' => $end_tm,
                                 'timestamp_ts' => date('Y-m-d H:i:s')
                             ]);
 
@@ -1272,7 +1316,14 @@ class AssignmentController extends Controller
             $user_id = $webUserLoginData->user_id;
             $input = $request->all();
             $vetting_id = $input['vetting_id'];
+            $faoMail = $input['faoMail'];
             $result['exist'] = 'No';
+
+            DB::table('tbl_asnVetting')
+                ->where('vetting_id', $vetting_id)
+                ->update([
+                    'faoEmail_txt' => $faoMail
+                ]);
 
             $vettingDetail = DB::table('tbl_asnVetting')
                 ->where('vetting_id', $vetting_id)
@@ -1302,13 +1353,95 @@ class AssignmentController extends Controller
                         'invoice_path' => $fPath
                     ]);
 
+                // candidate mail
+                $teacherMail = '';
+                $teacherCont = DB::table('tbl_contactItemTch')
+                    ->where('teacher_id', $vettingDetail->teacher_id)
+                    ->where('type_int', 1)
+                    ->first();
+                if ($teacherCont) {
+                    $teacherMail = $teacherCont->contactItem_txt;
+                }
+
+                $schoolDetail = DB::table('tbl_school')
+                    ->join('tbl_asn', 'tbl_school.school_id', '=', 'tbl_asn.school_id')
+                    ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                    ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                        $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                    })
+                    ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                    ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                        $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                            ->where(function ($query) {
+                                $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as religion', function ($join) {
+                        $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                            ->where(function ($query) {
+                                $query->where('religion.descriptionGroup_int', '=', 29);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                        $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                            ->where(function ($query) {
+                                $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                            });
+                    })
+                    ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                    ->where('tbl_asn.asn_id', $vettingDetail->asn_id)
+                    ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                    ->first();
+
+                $itemList = DB::table('tbl_asnItem')
+                    ->LeftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
+                    ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                    ->where('tbl_asnItem.asn_id', $vettingDetail->asn_id)
+                    ->groupBy('tbl_asnItem.asnItem_id')
+                    ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                    ->get();
+
+                $pdf = PDF::loadView('web.assignment.teacher_vetting_pdf', ['schoolDetail' => $schoolDetail, 'companyDetail' => $companyDetail, 'itemList' => $itemList]);
+                $pdfName1 = 'Teacher-vetting-' . $vettingDetail->vetting_id . '-' . str_replace(" ", "", $vettingDetail->candidateName_txt) . '.pdf';
+                $pdf->save(public_path('pdfs/vettings/teacher/' . $pdfName1));
+                $tfPath = 'pdfs/vettings/teacher/' . $pdfName1;
+
+                DB::table('tbl_asnVetting')
+                    ->where('vetting_id', $vetting_id)
+                    ->update([
+                        'teacher_invoice_path' => $tfPath
+                    ]);
+
                 if (file_exists(public_path($fPath))) {
                     $result['exist'] = 'Yes';
                     $result['pdfName'] = $pdfName;
                     $result['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
                     $result['invoice_path'] = asset($fPath);
+
+                    // $cc_mail = "dipankar.websadroit@gmail.com";
+                    $cc_mail = $webUserLoginData->user_name;
+                    $mailData['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
+                    $mailData['mail_description'] = "A pdf file of candidate vetting is attach with this mail. Please check it out.";
+                    $mailData['invoice_path'] = asset($fPath);
+                    $mailData['invoice_path2'] = asset($tfPath);
+                    $mailData['cc_mail'] = $cc_mail;
+                    $mailData['mail'] = $sendMail;
+                    $myVar = new AlertController();
+                    $myVar->sendVettingMail($mailData);
                 }
                 $result['sendMail'] = $sendMail;
+
+                if (file_exists(public_path($tfPath))) {
+                    $mailData['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
+                    $mailData['mail_description'] = "A pdf file of candidate vetting is attach with this mail. Please check it out.";
+                    $mailData['invoice_path'] = asset($tfPath);
+                    $mailData['invoice_path2'] = asset($fPath);
+                    $mailData['mail'] = $teacherMail;
+                    $myVar = new AlertController();
+                    $myVar->sendTeacherVettingMail($mailData);
+                }
             }
         } else {
             $result['exist'] = 'No';

@@ -59,7 +59,9 @@
                                         <th>School</th>
                                         <th>Teacher</th>
                                         <th>Date</th>
+                                        <th>Part</th>
                                         <th>Charge</th>
+                                        <th>Pay</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec" id="timesheetTbody">
@@ -76,7 +78,9 @@
                                                 @endif
                                             </td>
                                             <td>{{ date('d-m-Y', strtotime($timesheet->asnDate_dte)) }}</td>
+                                            <td>{{ $timesheet->datePart_txt }}</td>
                                             <td>{{ $timesheet->charge_dec }}</td>
+                                            <td>{{ $timesheet->cost_dec }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -250,7 +250,6 @@
                                 </div>
                             </div>
 
-
                             <?php
                             $day1Amount_total1 = 0;
                             $day2Amount_total1 = 0;
@@ -325,7 +324,14 @@
                                                     @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
                                                         <div
                                                             class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                            <p>{{ $calender->day1Avail_txt }}</p>
+                                                            <p>
+                                                                {{ $calender->day1Avail_txt }}
+                                                                @if ($calender->start_tm1 && $calender->end_tm1)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm1)) }}
+                                                                    -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm1)) }})
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3"></div>
@@ -335,7 +341,14 @@
                                                     @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
                                                         <div
                                                             class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                            <p>{{ $calender->day2Avail_txt }}</p>
+                                                            <p>
+                                                                {{ $calender->day2Avail_txt }}
+                                                                @if ($calender->start_tm2 && $calender->end_tm2)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm2)) }}
+                                                                    -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm2)) }})
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3"></div>
@@ -345,7 +358,14 @@
                                                     @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
                                                         <div
                                                             class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                            <p>{{ $calender->day3Avail_txt }}</p>
+                                                            <p>
+                                                                {{ $calender->day3Avail_txt }}
+                                                                @if ($calender->start_tm3 && $calender->end_tm3)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm3)) }}
+                                                                    -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm3)) }})
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3"></div>
@@ -355,7 +375,14 @@
                                                     @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
                                                         <div
                                                             class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                            <p>{{ $calender->day4Avail_txt }}</p>
+                                                            <p>
+                                                                {{ $calender->day4Avail_txt }}
+                                                                @if ($calender->start_tm4 && $calender->end_tm4)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm4)) }}
+                                                                    -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm4)) }})
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3"></div>
@@ -365,7 +392,14 @@
                                                     @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
                                                         <div
                                                             class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                            <p>{{ $calender->day5Avail_txt }}</p>
+                                                            <p>
+                                                                {{ $calender->day5Avail_txt }}
+                                                                @if ($calender->start_tm5 && $calender->end_tm5)
+                                                                    ({{ date('h:i a', strtotime($calender->start_tm5)) }}
+                                                                    -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm5)) }})
+                                                                @endif
+                                                            </p>
                                                         </div>
                                                     @else
                                                         <div class="teacher-calendar-days-field3"></div>
@@ -380,16 +414,90 @@
                                 <input type="hidden" name="" id="approveAsnId" value="">
                             </div>
 
-
-
-
                         </div>
                     </div>
-
-
                 </div>
 
+                <div class="school-finance-right-sec">
+                    <div class="school-finance-section">
+                        <div class="finance-timesheet-contact-first-sec" style="width: 100%">
+                            <div class="contact-heading mb-2">
+                                <div class="contact-heading-text">
+                                    <h2>Teacher Timesheets(Submitted by teacher)</h2>
+                                </div>
 
+                                <div class="contact-icon-sec">
+                                    <a style="cursor: pointer" class="disabled-link" id="itemSheetRejectBtn"
+                                        title="Reject timesheet">
+                                        <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                    </a>
+                                    <a style="cursor: pointer;" class="disabled-link" id="itemSheetApproveBtn"
+                                        title="Approve timesheet">
+                                        <i class="fa-solid fa-square-check"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <input type="hidden" name="" id="logTeacherTimeItemIds" value="">
+                            <table class="table finance-timesheet-page-table" id="">
+                                <thead>
+                                    <tr class="school-detail-table-heading">
+                                        <th>Teacher</th>
+                                        <th>Date</th>
+                                        <th>Part</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body-sec" id="teacherTimesheetTbody">
+                                    @foreach ($teacherList as $key => $teacher)
+                                        <?php
+                                        $name = '';
+                                        if ($teacher->knownAs_txt == null && $teacher->knownAs_txt == '') {
+                                            $name = $teacher->firstName_txt . ' ' . $teacher->surname_txt;
+                                        } else {
+                                            $name = $teacher->knownAs_txt . ' ' . $teacher->surname_txt;
+                                        }
+                                        
+                                        $startTime = '';
+                                        if ($teacher->t_start_tm) {
+                                            $startTime = date('h:i a', strtotime($teacher->t_start_tm));
+                                        }
+                                        $endTime = '';
+                                        if ($teacher->t_end_tm) {
+                                            $endTime = date('h:i a', strtotime($teacher->t_end_tm));
+                                        }
+                                        $rejectText = '';
+                                        if ($teacher->t_rejected_text) {
+                                            $rejectText = '( ' . $teacher->t_rejected_text . ' )';
+                                        }
+                                        
+                                        if ($teacher->t_admin_approve == 2) {
+                                            $tStatus = 'Rejected' . $rejectText;
+                                        } elseif ($teacher->t_send_to_school == 1) {
+                                            $tStatus = 'Send to school';
+                                        } else {
+                                            $tStatus = '--';
+                                        }
+                                        ?>
+                                        <tr class="school-detail-table-data selectLogTeacherRow"
+                                            id="selectLogTeacherRow{{ $teacher->timesheet_item_id }}"
+                                            teacher-id="{{ $teacher->t_teacher_id }}" asn-id="{{ $teacher->t_asn_id }}"
+                                            timesheet-item-id="{{ $teacher->timesheet_item_id }}"
+                                            school-id="{{ $teacher->t_school_id }}">
+                                            <td>{{ $name }}</td>
+                                            <td>{{ $teacher->asnDate_dte }}</td>
+                                            <td>{{ $teacher->datePart_txt }}</td>
+                                            <td>{{ $startTime }}</td>
+                                            <td>{{ $endTime }}</td>
+                                            <td>{{ $tStatus }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -646,6 +754,169 @@
                     });
             } else {
                 swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '.selectLogTeacherRow', function() {
+            var teacherId = $(this).attr('teacher-id');
+            var asnId = $(this).attr('asn-id');
+            var timesheetItemId = $(this).attr('timesheet-item-id');
+            var schoolId = $(this).attr('school-id');
+
+            if ($('#selectLogTeacherRow' + timesheetItemId).hasClass('tableRowActive')) {
+                $('#selectLogTeacherRow' + timesheetItemId).removeClass('tableRowActive');
+                setLogTeacherTimeIdsNew(timesheetItemId, 'rm');
+            } else {
+                $('#selectLogTeacherRow' + timesheetItemId).addClass('tableRowActive');
+                setLogTeacherTimeIdsNew(timesheetItemId, 'add');
+            }
+        });
+
+        function setLogTeacherTimeIdsNew(timesheetItemId, type) {
+            var ItemId = parseInt(timesheetItemId);
+            var ids = '';
+            var idsArr = [];
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                idsArr = asnItemIds.split(',');
+            }
+            if (type == 'add') {
+                idsArr.push(ItemId);
+            }
+            if (type == 'rm') {
+                idsArr = jQuery.grep(idsArr, function(value) {
+                    return value != ItemId;
+                });
+            }
+            ids = idsArr.toString();
+            $('#logTeacherTimeItemIds').val(ids);
+            if (ids) {
+                $('#itemSheetRejectBtn').removeClass('disabled-link');
+                $('#itemSheetApproveBtn').removeClass('disabled-link');
+            } else {
+                $('#itemSheetRejectBtn').addClass('disabled-link');
+                $('#itemSheetApproveBtn').addClass('disabled-link');
+            }
+        }
+
+        function teacherSubmittedSheet() {
+            var school_id = "{{ $school_id }}";
+            var max_date = "{{ $plusFiveDate }}";
+            if (school_id && max_date) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('school/logSchfetchTeacherSheetById') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        school_id: school_id,
+                        max_date: max_date
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#teacherTimesheetTbody').html('');
+                        $('#teacherTimesheetTbody').html(data.html);
+                        $('#teacherTimesheetDiv').css('display', 'block');
+                        $('#logteacherTimeApproveBtn').addClass('disabled-link');
+                        $('#logteacherSendSchoolBtn').addClass('disabled-link');
+                        $('#logTeacherTimeItemIds').val('');
+                    }
+                });
+            }
+        }
+
+        $(document).on('click', '#itemSheetRejectBtn', function() {
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to reject all the selected timesheet(s)?",
+                        content: {
+                            element: 'textarea',
+                            attributes: {
+                                placeholder: 'Remark',
+                                rows: 3
+                            }
+                        },
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                var remark = $('.swal-content textarea').val();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "{{ url('school/logSchteacherItemSheetReject') }}",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        remark: remark
+                                    },
+                                    success: function(data) {
+                                        teacherSubmittedSheet();
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#itemSheetApproveBtn', function() {
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to approve all the selected timesheet(s)?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "{{ url('school/logSchTeacherItemSheetApprove') }}",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds
+                                    },
+                                    async: false,
+                                    dataType: "json",
+                                    success: function(data) {
+                                        $('#fullLoader').hide();
+                                        if (data.add == 'Yes') {
+                                            var idsArr = [];
+                                            if (asnItemIds) {
+                                                idsArr = asnItemIds.split(',');
+                                            }
+                                            for (var i = 0; i < idsArr.length; i++) {
+                                                $('#selectLogTeacherRow' + idsArr[i]).remove();
+                                            }
+                                            $('#logTeacherTimeItemIds').val('');
+                                            $('#logteacherTimeApproveBtn').addClass(
+                                                'disabled-link');
+                                            $('#logteacherSendSchoolBtn').addClass('disabled-link');
+                                            var popTxt =
+                                                'You have just logged a timesheet for ' + data
+                                                .schoolName +
+                                                '. Timesheet ID : ' + data.timesheet_id;
+                                            swal("", popTxt);
+                                        }
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one item.");
             }
         });
     </script>

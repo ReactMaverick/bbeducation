@@ -942,10 +942,12 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="modal-input-field form-group" hidden>
+                                <div class="modal-input-field form-group">
                                     <label class="form-check-label">Document Name</label>
-                                    <input type="text" class="form-control" name="file_name" id="docNameHidden"
+                                    <input type="text" class="form-control" name="file_name" id="fileName"
                                         value="">
+                                    <input type="hidden" class="form-control" name="file_name_hidden"
+                                        id="docNameHidden" value="">
                                 </div>
 
                                 <div class="form-group calendar-form-filter">
@@ -1331,7 +1333,11 @@
 
 
         function docTypeChange(desc_int, description_txt) {
+            var txt = $('#fileName').val()
             $('#docNameHidden').val(description_txt)
+            if (txt == null || txt == '') {
+                $('#fileName').val(description_txt)
+            }
         }
     </script>
 @endsection

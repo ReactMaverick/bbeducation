@@ -125,19 +125,49 @@
                     </td>
                     <td
                         style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 0 4px 15px; border-left: 2px solid #000;">
-                        {{ $item->day1Avail_txt }} </td>
+                        {{ $item->day1Avail_txt }}
+                        @if ($item->start_tm1 && $item->end_tm1)
+                            ({{ date('h:i a', strtotime($item->start_tm1)) }}
+                            -
+                            {{ date('h:i a', strtotime($item->end_tm1)) }})
+                        @endif
+                    </td>
                     <td
                         style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 0 4px 15px; border-left: 2px solid #000;">
-                        {{ $item->day2Avail_txt }} </td>
+                        {{ $item->day2Avail_txt }}
+                        @if ($item->start_tm2 && $item->end_tm2)
+                            ({{ date('h:i a', strtotime($item->start_tm2)) }}
+                            -
+                            {{ date('h:i a', strtotime($item->end_tm2)) }})
+                        @endif
+                    </td>
                     <td
                         style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 0 4px 15px; border-left: 2px solid #000;">
-                        {{ $item->day3Avail_txt }} </td>
+                        {{ $item->day3Avail_txt }}
+                        @if ($item->start_tm3 && $item->end_tm3)
+                            ({{ date('h:i a', strtotime($item->start_tm3)) }}
+                            -
+                            {{ date('h:i a', strtotime($item->end_tm3)) }})
+                        @endif
+                    </td>
                     <td
                         style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 0 4px 15px; border-left: 2px solid #000;">
-                        {{ $item->day4Avail_txt }} </td>
+                        {{ $item->day4Avail_txt }}
+                        @if ($item->start_tm4 && $item->end_tm4)
+                            ({{ date('h:i a', strtotime($item->start_tm4)) }}
+                            -
+                            {{ date('h:i a', strtotime($item->end_tm4)) }})
+                        @endif
+                    </td>
                     <td
                         style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 0 4px 15px; border-left: 2px solid #000;">
-                        {{ $item->day5Avail_txt }} </td>
+                        {{ $item->day5Avail_txt }}
+                        @if ($item->start_tm5 && $item->end_tm5)
+                            ({{ date('h:i a', strtotime($item->start_tm5)) }}
+                            -
+                            {{ date('h:i a', strtotime($item->end_tm5)) }})
+                        @endif
+                    </td>
                     <td
                         style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 15px 4px 0; border-left: 2px solid #000;">
                         <a href="{{ $rUrl . '?status=approve' }}">Click Here</a>

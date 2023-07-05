@@ -25,7 +25,7 @@
     $(document).ready(function() {
         $('#workStartTimeEdit, #workEndTimeEdit').timepicker({
             timeFormat: 'h:i a',
-            'step': 60,
+            'step': 30,
             'forceRoundTime': true
         });
     });

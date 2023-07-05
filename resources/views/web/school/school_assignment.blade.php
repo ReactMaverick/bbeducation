@@ -170,7 +170,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                ordering: false
+            });
         });
 
         function assignmentRowSelect(asn_id) {

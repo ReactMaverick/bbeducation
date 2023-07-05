@@ -19,6 +19,14 @@
             </select>
         </div>
 
+        <div class="form-group modal-input-field"
+            style="display: {{ $eventItemDetail->dayPart_int == 4 ? 'block' : 'none' }}" id="workStartTimeEditAjaxDiv">
+            <label class="form-check-label">Start Time</label>
+            <input type="text" class="form-control {{ $eventItemDetail->dayPart_int == 4 ? 'field-validate' : '' }}"
+                name="start_tm" id="workStartTimeEditAjax"
+                value="{{ $eventItemDetail->dayPart_int == 4 && $eventItemDetail->start_tm ? $eventItemDetail->start_tm : '' }}">
+        </div>
+
         <div class="form-group modal-input-field">
             <label class="form-check-label">Charge</label>
             <input type="text" class="form-control number-validate" name="charge_dec" id=""
@@ -39,6 +47,14 @@
                 value="{{ $eventItemDetail->hours_dec }}">
         </div>
 
+        <div class="form-group modal-input-field"
+            style="display: {{ $eventItemDetail->dayPart_int == 4 ? 'block' : 'none' }}" id="workEndTimeEditAjaxDiv">
+            <label class="form-check-label">End Time</label>
+            <input type="text" class="form-control {{ $eventItemDetail->dayPart_int == 4 ? 'field-validate' : '' }}"
+                name="end_tm" id="workEndTimeEditAjax"
+                value="{{ $eventItemDetail->dayPart_int == 4 && $eventItemDetail->end_tm ? $eventItemDetail->end_tm : '' }}">
+        </div>
+
         <div class="form-group modal-input-field">
             <label class="form-check-label">Pay</label>
             <input type="text" class="form-control number-validate" name="cost_dec" id=""
@@ -48,14 +64,48 @@
 </div>
 
 <script>
+    $(document).ready(function() {
+        $('#workStartTimeEditAjax, #workEndTimeEditAjax').timepicker({
+            timeFormat: 'h:i a',
+            'step': 30,
+            'forceRoundTime': true
+        });
+    });
+
     $(document).on('change', '#dayPart_int_ajx', function() {
         var dayPart_int = this.value;
+        $('#workStartTimeEditAjax').val('');
+        $('#workEndTimeEditAjax').val('');
         if (dayPart_int == 4) {
             $('#hours_dec_ajx').addClass('number-validate');
+
+            $('#workStartTimeEditAjaxDiv').css('display', 'block');
+            $('#workEndTimeEditAjaxDiv').css('display', 'block');
+            $('#workStartTimeEditAjax').addClass('field-validate');
+            $('#workEndTimeEditAjax').addClass('field-validate');
         } else {
             $('#hours_dec_ajx').removeClass('number-validate');
+            $('#hours_dec_ajx').val('');
             $('#hours_dec_ajx').closest(".form-group").removeClass('has-error');
+
+            $('#workStartTimeEditAjaxDiv').css('display', 'none');
+            $('#workEndTimeEditAjaxDiv').css('display', 'none');
+            $('#workStartTimeEditAjax').removeClass('field-validate');
+            $('#workEndTimeEditAjax').removeClass('field-validate');
+        }
+    });
+
+    $(document).on('change', '#workStartTimeEditAjax, #workEndTimeEditAjax', function() {
+        var startTime = $('#workStartTimeEditAjax').val();
+        var endTime = $('#workEndTimeEditAjax').val();
+        $('#hours_dec_ajx').val('');
+        if (startTime, endTime) {
+            var currentDate = new Date();
+            var startDate = new Date(currentDate.toDateString() + ' ' + startTime);
+            var endDate = new Date(currentDate.toDateString() + ' ' + endTime);
+            var timeDiff = endDate - startDate;
+            var hoursDiff = timeDiff / (1000 * 60 * 60);
+            $('#hours_dec_ajx').val(hoursDiff);
         }
     });
 </script>
-

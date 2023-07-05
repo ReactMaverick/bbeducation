@@ -114,25 +114,48 @@
 <script>
     var asnId = "{{ $asnId }}";
     var school_id = "{{ $school_id }}";
-    $.ajax({
-        type: 'POST',
-        url: '{{ url('/school/logSchoolTimesheetRejectDir') }}',
-        data: {
-            "_token": "{{ csrf_token() }}",
-            asnId: asnId,
-            school_id: school_id,
-            weekStartDate: "{{ $weekStartDate }}",
-            weekEndDate: "{{ $plusFiveDate }}"
-        },
-        success: function(data) {
-            if (data.add == 'Yes') {
-                swal("", "Timesheet rejected successfully");
-            } else {
-                swal("", "Action has been already taken.");
-            }
+    swal({
+            title: "",
+            text: "Are you sure you wish to reject the timesheet(s)?",
+            content: {
+                element: 'textarea',
+                attributes: {
+                    placeholder: 'Remark',
+                    rows: 3
+                }
+            },
+            buttons: {
+                cancel: "No",
+                Yes: "Yes"
+            },
+        })
+        .then((value) => {
+            switch (value) {
+                case "Yes":
+                    $('#fullLoader').show();
+                    var remark = $('.swal-content textarea').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ url('/school/logSchoolTimesheetRejectDir') }}',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            asnId: asnId,
+                            school_id: school_id,
+                            weekStartDate: "{{ $weekStartDate }}",
+                            weekEndDate: "{{ $plusFiveDate }}",
+                            remark: remark
+                        },
+                        success: function(data) {
+                            if (data.add == 'Yes') {
+                                swal("", "Timesheet rejected successfully");
+                            } else {
+                                swal("", "Action has been already taken.");
+                            }
 
-        }
-    });
+                        }
+                    });
+            }
+        });
 </script>
 <?php } ?>
 

@@ -650,6 +650,8 @@
                 $('#editContactItemId').val('');
                 $('#deleteContactItemBttn').addClass('disabled-link');
                 $('#editContactItemBttn').addClass('disabled-link');
+                $('#phoneContactItemBttn').addClass('disabled-link');
+                $('#mailContactItemBttn').addClass('disabled-link');
 
                 var selectStat = 'No';
                 fetchContactItem(school_id, contact_id, selectStat);
@@ -773,6 +775,8 @@
                 $('#editContactItemRow' + contactItemSch_id).removeClass('tableRowActive');
                 $('#deleteContactItemBttn').addClass('disabled-link');
                 $('#editContactItemBttn').addClass('disabled-link');
+                $('#phoneContactItemBttn').addClass('disabled-link');
+                $('#mailContactItemBttn').addClass('disabled-link');
             } else {
                 $('#editContactItemId').val(contactItemSch_id);
                 $('#editContactItemName').val(name);
@@ -780,6 +784,8 @@
                 $('#editContactItemRow' + contactItemSch_id).addClass('tableRowActive');
                 $('#deleteContactItemBttn').removeClass('disabled-link');
                 $('#editContactItemBttn').removeClass('disabled-link');
+                $('#phoneContactItemBttn').removeClass('disabled-link');
+                $('#mailContactItemBttn').removeClass('disabled-link');
             }
         }
 
@@ -801,6 +807,60 @@
                     }
                 });
                 $('#ContactItemEditModal').modal("show");
+            } else {
+                swal("", "Please select one contact item.");
+            }
+        });
+
+        $(document).on('click', '#mailContactItemBttn', function() {
+            var editContactItemId = $('#editContactItemId').val();
+            var contactItemSchoolId = $('#contactItemSchoolId').val();
+            if (editContactItemId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('getContactItemEmail') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editContactItemId: editContactItemId,
+                        contactItemSchoolId: contactItemSchoolId
+                    },
+                    success: function(data) {
+                        if (data.Detail.type_int == 1) {
+                            if (data.Detail.contactItem_txt) {
+                                window.location = 'mailto:' + data.Detail.contactItem_txt;
+                            }
+                        } else {
+                            swal("", "That contact item is not set as email address.");
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please select one contact item.");
+            }
+        });
+
+        $(document).on('click', '#phoneContactItemBttn', function() {
+            var editContactItemId = $('#editContactItemId').val();
+            var contactItemSchoolId = $('#contactItemSchoolId').val();
+            if (editContactItemId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('getContactItemPhone') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editContactItemId: editContactItemId,
+                        contactItemSchoolId: contactItemSchoolId
+                    },
+                    success: function(data) {
+                        if (data.Detail.type_int == 1) {
+                            swal("", "That contact item is not set as phone number.");
+                        } else {
+                            if (data.Detail.contactItem_txt) {
+                                window.location = 'tel:' + data.Detail.contactItem_txt;
+                            }
+                        }
+                    }
+                });
             } else {
                 swal("", "Please select one contact item.");
             }

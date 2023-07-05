@@ -687,6 +687,64 @@
             }
         });
 
+        $(document).on('click', '#mailContactItemBttn', function() {
+            var teacherContactItemId = $('#teacherContactItemId').val();
+            if (teacherContactItemId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('teacherContactItemEmail') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        teacherContactItemId: teacherContactItemId
+                    },
+                    success: function(data) {
+                        if (data) {
+                            if (data.Detail.type_int == 1) {
+                                if (data.Detail.contactItem_txt) {
+                                    var body = "Dear " + data.Detail.firstName_txt +
+                                        " " + data.Detail.surname_txt;
+                                    window.location = 'mailto:' + data.Detail.contactItem_txt +
+                                        '?body=' +
+                                        encodeURIComponent(body);
+                                }
+                            } else {
+                                swal("", "That contact item is not set as email address.");
+                            }
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please select one contact.");
+            }
+        });
+
+        $(document).on('click', '#phoneContactItemBttn', function() {
+            var teacherContactItemId = $('#teacherContactItemId').val();
+            if (teacherContactItemId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('teacherContactItemPhone') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        teacherContactItemId: teacherContactItemId
+                    },
+                    success: function(data) {
+                        if (data) {
+                            if (data.Detail.type_int == 1) {
+                                swal("", "That contact item is not set as phone number.");
+                            } else {
+                                if (data.Detail.contactItem_txt) {
+                                    window.location = 'tel:' + data.Detail.contactItem_txt;
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please select one contact.");
+            }
+        });
+
         $(document).on('click', '#gridReference', function() {
             var postcodeTxt = $('#postcodeTxt').val();
             if (postcodeTxt) {

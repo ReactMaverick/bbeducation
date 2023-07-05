@@ -220,7 +220,7 @@
                             Block Booking
                         </button>
 
-                        <button type="submit" class="btn btn-primary button-3">Submit</button>
+                        <button type="submit" class="btn btn-primary button-3">Save</button>
                     </div>
                 </form>
             </div>
@@ -313,7 +313,7 @@
                                         <div class="date_calendar_top_sec">
                                             <span>Saturday</span>
                                         </div>
-                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Sat', event)" style="cursor: auto">
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Sat', event)">
                                             <span></span>
                                         </div>
                                     </div>
@@ -321,7 +321,7 @@
                                         <div class="date_calendar_top_sec">
                                             <span>Sunday</span>
                                         </div>
-                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Sun', event)" style="cursor: auto">
+                                        <div class="date_calendar_bottom_sec" onclick="selectWeekDay('Sun', event)">
                                             <span></span>
                                         </div>
                                     </div>
@@ -345,6 +345,23 @@
                                 <div class="form-group modal-input-field" id="blockHourDiv" style="display: none;">
                                     <label class="form-check-label">Hours</label>
                                     <input type="text" class="form-control" name="blockHour" id="blockHour"
+                                        value="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group modal-input-field" id="blockBookingStartTimeDiv"
+                                    style="display: none;">
+                                    <label class="form-check-label">Start Time</label>
+                                    <input type="text" class="form-control" name="start_tm"
+                                        id="blockBookingStartTime" value="">
+                                </div>
+                            </div>
+                            <div class="col-md-6 modal-form-right-sec">
+                                <div class="form-group modal-input-field" id="blockBookingEndTimeDiv"
+                                    style="display: none;">
+                                    <label class="form-check-label">End Time</label>
+                                    <input type="text" class="form-control" name="end_tm" id="blockBookingEndTime"
                                         value="">
                                 </div>
                             </div>
@@ -473,6 +490,14 @@
     <!-- Candidate Vetting Modal -->
 
     <script>
+        $(document).ready(function() {
+            $('#blockBookingStartTime, #blockBookingEndTime').timepicker({
+                timeFormat: 'h:i a',
+                'step': 30,
+                'forceRoundTime': true
+            });
+        });
+
         $(document).ready(function() {
             var SITEURL = "{{ url('/') }}";
             var asn_id = "{{ $asn_id }}";
@@ -762,13 +787,42 @@
 
         $(document).on('change', '#blockDayPart', function() {
             var blockDayPart = this.value;
+            $('#blockBookingStartTime').val('');
+            $('#blockBookingEndTime').val('');
             if (blockDayPart == 4) {
                 $('#blockHour').addClass('number-validate-2');
                 $('#blockHourDiv').show();
+
+                $('#blockBookingStartTime').addClass('field-validate-2');
+                $('#blockBookingStartTimeDiv').show();
+                $('#blockBookingEndTime').addClass('field-validate-2');
+                $('#blockBookingEndTimeDiv').show();
             } else {
+                $('#blockHour').val('');
                 $('#blockHour').removeClass('number-validate-2');
                 $('#blockHour').closest(".form-group").removeClass('has-error');
                 $('#blockHourDiv').hide();
+
+                $('#blockBookingStartTime').removeClass('field-validate-2');
+                $('#blockBookingStartTime').closest(".form-group").removeClass('has-error');
+                $('#blockBookingStartTimeDiv').hide();
+                $('#blockBookingEndTime').removeClass('field-validate-2');
+                $('#blockBookingEndTime').closest(".form-group").removeClass('has-error');
+                $('#blockBookingEndTimeDiv').hide();
+            }
+        });
+
+        $(document).on('change', '#blockBookingStartTime, #blockBookingEndTime', function() {
+            var startTime = $('#blockBookingStartTime').val();
+            var endTime = $('#blockBookingEndTime').val();
+            $('#blockHour').val('');
+            if (startTime, endTime) {
+                var currentDate = new Date();
+                var startDate = new Date(currentDate.toDateString() + ' ' + startTime);
+                var endDate = new Date(currentDate.toDateString() + ' ' + endTime);
+                var timeDiff = endDate - startDate;
+                var hoursDiff = timeDiff / (1000 * 60 * 60);
+                $('#blockHour').val(hoursDiff);
             }
         });
 
@@ -791,6 +845,15 @@
             });
             $(".number-validate-2").each(function() {
                 if (this.value == '' || isNaN(this.value)) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            $(".datepaste-validate-2").each(function() {
+                var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+                if (this.value == '' || !dateRegex.test(this.value)) {
                     $(this).closest(".form-group").addClass('has-error');
                     error = "has error";
                 } else {
@@ -865,6 +928,15 @@
             var error = "";
             $(".field-validate-3").each(function() {
                 if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            $(".datepaste-validate-3").each(function() {
+                var dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/\d{4}$/;
+                if (this.value == '' || !dateRegex.test(this.value)) {
                     $(this).closest(".form-group").addClass('has-error');
                     error = "has error";
                 } else {
@@ -1041,33 +1113,33 @@
         }
 
         $(document).on('click', '#candVettingEditBtn', function() {
-            var error = "";
-            $(".vetting-field-validate").each(function() {
-                if (this.value == '') {
-                    $(this).closest(".form-group").addClass('has-error');
-                    error = "has error";
-                } else {
-                    $(this).closest(".form-group").removeClass('has-error');
+            // var error = "";
+            // $(".vetting-field-validate").each(function() {
+            //     if (this.value == '') {
+            //         $(this).closest(".form-group").addClass('has-error');
+            //         error = "has error";
+            //     } else {
+            //         $(this).closest(".form-group").removeClass('has-error');
+            //     }
+            // });
+            // if (error == "has error") {
+            //     return false;
+            // } else {
+            var form = $("#candVettingEditForm");
+            var actionUrl = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: actionUrl,
+                data: form.serialize(),
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    if (data) {
+                        $('#candidateVetAjax').html(data.html);
+                    }
                 }
             });
-            if (error == "has error") {
-                return false;
-            } else {
-                var form = $("#candVettingEditForm");
-                var actionUrl = form.attr('action');
-                $.ajax({
-                    type: "POST",
-                    url: actionUrl,
-                    data: form.serialize(),
-                    dataType: "json",
-                    async: false,
-                    success: function(data) {
-                        if (data) {
-                            $('#candidateVetAjax').html(data.html);
-                        }
-                    }
-                });
-            }
+            // }
         });
 
         function changeProfType(school_id, type) {
@@ -1089,7 +1161,8 @@
         }
 
         function selectWeekDay(day) {
-            if (day == 'Mon' || day == 'Tue' || day == 'Wed' || day == 'Thu' || day == 'Fri') {
+            if (day == 'Mon' || day == 'Tue' || day == 'Wed' || day == 'Thu' || day == 'Fri' || day == 'Sat' || day ==
+                'Sun') {
                 var element = $(event.target).closest('.date_calendar_bottom_sec');
 
                 if (element.hasClass('date_calendar_bottom_sec_active')) {

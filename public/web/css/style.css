@@ -2855,7 +2855,7 @@ table td {
 .calendar_first_sec img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 .calendar_right_sec {
     display: flex;

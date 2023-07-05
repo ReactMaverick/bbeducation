@@ -177,32 +177,32 @@
     }
 
     $(document).on('click', '#candVettingEditBtnSidebar', function() {
-        var error = "";
-        $(".vetting-field-validate").each(function() {
-            if (this.value == '') {
-                $(this).closest(".form-group").addClass('has-error');
-                error = "has error";
-            } else {
-                $(this).closest(".form-group").removeClass('has-error');
+        // var error = "";
+        // $(".vetting-field-validate").each(function() {
+        //     if (this.value == '') {
+        //         $(this).closest(".form-group").addClass('has-error');
+        //         error = "has error";
+        //     } else {
+        //         $(this).closest(".form-group").removeClass('has-error');
+        //     }
+        // });
+        // if (error == "has error") {
+        //     return false;
+        // } else {
+        var form = $("#candVettingEditForm");
+        var actionUrl = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(),
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                if (data) {
+                    $('#candidateVetAjaxSidebar').html(data.html);
+                }
             }
         });
-        if (error == "has error") {
-            return false;
-        } else {
-            var form = $("#candVettingEditForm");
-            var actionUrl = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: actionUrl,
-                data: form.serialize(),
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    if (data) {
-                        $('#candidateVetAjaxSidebar').html(data.html);
-                    }
-                }
-            });
-        }
+        // }
     });
 </script>

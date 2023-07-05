@@ -36,7 +36,7 @@
                     <div class="col-md-12">
                         <div class="form-group cand-vetting-modal-input-field">
                             <label for="">FAO Email</label>
-                            <select class="form-control vetting-field-validate" id="" name="faoEmail_txt">
+                            <select class="form-control vetting-field-validate" id="faoMailAjaxNew" name="faoEmail_txt">
                                 <option value="">Choose one</option>
                                 @foreach ($contactItems as $key1 => $contact)
                                     <option value="{{ $contact->contactItem_txt }}"
@@ -572,12 +572,12 @@
             <button type="button" class="btn btn-secondary" id="candVettingEditBtn">Update</button>
         @endif
 
-        @if ($emailExist == 'Yes')
-            <button type="button" class="btn btn-warning"
-                onclick="vettingSend('{{ $vettingDetail->vetting_id }}')">Approve and Send</button>
-        @else
+        {{-- @if ($emailExist == 'Yes') --}}
+        <button type="button" class="btn btn-warning"
+            onclick="vettingSend('{{ $vettingDetail->vetting_id }}')">Approve and Send</button>
+        {{-- @else
             <button type="button" class="btn btn-warning cand-vetting-approve-disable-btn">Approve and Send</button>
-        @endif
+        @endif --}}
 
         <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
     </div>
@@ -585,35 +585,59 @@
 
 <script>
     function vettingSend(vetting_id) {
-        if (vetting_id) {
-            $('#fullLoader').show();
-            $.ajax({
-                type: 'POST',
-                url: '{{ url('approveVettingSend') }}',
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    vetting_id: vetting_id
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    // console.log(data);
-                    if (data.exist == 'Yes' && data.invoice_path) {
-                        const link = document.createElement('a');
-                        link.href = data.invoice_path;
-                        link.download = data.pdfName;
-                        link.target = '_blank';
-                        link.click();
-                    }
-                    var subject = data.subject;
-                    var body = "Hello";
-                    window.location = 'mailto:' + data.sendMail + '?subject=' +
-                        encodeURIComponent(subject) + '&body=' +
-                        encodeURIComponent(body);
-
-                    $('#fullLoader').hide();
-                }
-            });
+        // var eMailExist = "{{ $emailExist }}";
+        var eMailExist = $("#faoMailAjaxNew").val();
+        if (eMailExist) {
+            if (vetting_id) {
+                swal({
+                        title: "",
+                        text: "One copy will send to admin and assignment details send to candidate.",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('approveVettingSend') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        vetting_id: vetting_id,
+                                        faoMail: eMailExist
+                                    },
+                                    dataType: "json",
+                                    success: function(data) {
+                                        // console.log(data);
+                                        // if (data.exist == 'Yes' && data.invoice_path) {
+                                        //     const link = document.createElement('a');
+                                        //     link.href = data.invoice_path;
+                                        //     link.download = data.pdfName;
+                                        //     link.target = '_blank';
+                                        //     link.click();
+                                        // }
+                                        // var subject = data.subject;
+                                        // var body = "Hello";
+                                        // window.location = 'mailto:' + data.sendMail + '?subject=' +
+                                        //     encodeURIComponent(subject) + '&body=' +
+                                        //     encodeURIComponent(body);
+                                        $('#candidateVettingModal').modal("hide");
+                                        swal("",
+                                            "Mail have been send successfully."
+                                        );
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
+            }
+        } else {
+            swal("",
+                "Please update 'FAO Email'."
+            );
         }
     }
 </script>
