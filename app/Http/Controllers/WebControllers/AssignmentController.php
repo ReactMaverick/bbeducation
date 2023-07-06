@@ -212,6 +212,7 @@ class AssignmentController extends Controller
             $studentList = DB::table('tbl_student')
                 ->select('tbl_student.*')
                 ->where('tbl_student.isCurrent_ysn', -1)
+                ->where('tbl_student.is_delete', 0)
                 ->get();
 
             $assignmentStatusList = DB::table('tbl_description')
@@ -258,6 +259,32 @@ class AssignmentController extends Controller
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function checkAsssignmentUsed(Request $request)
+    {
+        $asn_id = $request->asn_id;
+        $result['exist'] = "No";
+        $Detail = DB::table('tbl_asnItem')
+            ->where('tbl_asnItem.asn_id', $asn_id)
+            ->where('tbl_asnItem.timesheet_id', '!=', NULL)
+            ->first();
+        if ($Detail) {
+            $result['exist'] = "Yes";
+        }
+        return response()->json($result);
+    }
+
+    public function delete_assignment(Request $request)
+    {
+        $asn_id = $request->asn_id;
+        DB::table('tbl_asnItem')
+            ->where('tbl_asnItem.asn_id', $asn_id)
+            ->delete();
+        DB::table('tbl_asn')
+            ->where('tbl_asn.asn_id', $asn_id)
+            ->delete();
+        return true;
     }
 
     public function insertAssignmentEvent(Request $request, $id)

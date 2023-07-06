@@ -11,12 +11,7 @@
             @include('web.assignment.assignment_sidebar')
 
             <div class="col-md-10 topbar-sec">
-                <div class="topbar-Section">
-                    <i class="fa-solid fa-crown"></i>
-                    <a href="#"> <i class="fa-solid fa-trash trash-icon"></i></a>
-                </div>
-
-
+                @include('web.assignment.assignment_header')
 
                 <div class="school-assignment-sec">
                     <div class="school-assignment-section">
@@ -313,7 +308,7 @@
                 <form action="{{ url('/asnTeacherContactLogUpdate') }}" method="post" class="form-validate-3">
                     @csrf
                     <div class="modal-input-field-section">
-                        
+
                         <input type="hidden" name="editContactLogId" id="editContactLogId" value="">
 
                         <div class="row" id="editContactLogAjax"></div>

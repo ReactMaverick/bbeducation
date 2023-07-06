@@ -80,6 +80,14 @@
                                     <p>{{ $schoolDetail->website_txt }}</p>
                                 </div>
                             </div>
+                            <div class="school-name-section">
+                                <div class="school-heading-text">
+                                    <h2>Main Contact Number</h2>
+                                </div>
+                                <div class="school-name-text">
+                                    <p>{{ $schoolDetail->main_contact_no }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -315,6 +323,11 @@
                                         <label class="form-check-label">Postcode</label>
                                         <input type="text" class="form-control" name="postcode_txt" id="postcodeTxt"
                                             value="{{ $schoolDetail->postcode_txt }}">
+                                    </div>
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Main Contact Number</label>
+                                        <input type="text" class="form-control" name="main_contact_no" id=""
+                                            value="{{ $schoolDetail->main_contact_no }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6 modal-form-right-sec">

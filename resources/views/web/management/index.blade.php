@@ -1,5 +1,10 @@
 @extends('web.layout')
 @section('content')
+    <style>
+        .disabled-link {
+            pointer-events: none;
+        }
+    </style>
     <div class="assignment-section-col">
 
         <div class="teacher-all-section">
@@ -84,8 +89,14 @@
                 <div class="modal-input-field-section">
                     <div class="row">
                         <div class="col-md-6">
+                            <div style="text-align: right">
+                                <a style="cursor: pointer;" id="studentDeleteBtn">
+                                    <i class="fa-solid fa-trash trash-icon"></i>
+                                </a>
+                            </div>
+
                             <div class="finance-list-section mb-2">
-                                <div class="finance-list-text-section" style="max-height: 350px; min-height: 350px;">
+                                <div class="finance-list-text-section" style="max-height: 400px; min-height: 400px;">
                                     <div class="finance-list-text">
                                         <table class="table finance-timesheet-page-table" id="">
                                             <thead>
@@ -361,7 +372,7 @@
 
                 clicks = 0; //after action performed, reset counter
             }
-        }).on("dblclick", function(e) {
+        }).on("dblclick", '.selectStudentRow', function(e) {
             e.preventDefault(); //cancel system double-click event
             $('#studentEditModal').modal("show");
         });
@@ -399,6 +410,41 @@
                         swal("", "Student updated successfully.");
                     }
                 });
+            }
+        });
+
+        $(document).on('click', '#studentDeleteBtn', function(e) {
+            // e.preventDefault();
+            var studentId = $('#editStudentId').val();
+            if (studentId) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to delete the selected student?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('studentDelete') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        studentId: studentId
+                                    },
+                                    success: function(data) {
+                                        $("#studentTbody").html('');
+                                        $("#studentTbody").html(data.html);
+                                        swal("", "Student deleted successfully.");
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one student.");
             }
         });
 

@@ -73,6 +73,8 @@ Route::post('/updateAssignmentTeacher', [AssignmentController::class, 'updateAss
 Route::get('/assignment-school/{id}', [AssignmentController::class, 'assignmentSchool']);
 Route::get('/assignment-finance/{id}', [AssignmentController::class, 'assignmentFinance']);
 Route::post('/changeAsnProfType', [AssignmentController::class, 'changeAsnProfType']);
+Route::post('/checkAsssignmentUsed', [AssignmentController::class, 'checkAsssignmentUsed']);
+Route::post('/delete_assignment', [AssignmentController::class, 'delete_assignment']);
 // Assignment
 
 // Teacher
@@ -253,6 +255,7 @@ Route::get('/management-user', [ManagementController::class, 'managementUser']);
 Route::get('/management-mailshot', [ManagementController::class, 'managementMailshot']);
 Route::post('/studentInsert', [ManagementController::class, 'studentInsert']);
 Route::post('/studentUpdate', [ManagementController::class, 'studentUpdate']);
+Route::post('/studentDelete', [ManagementController::class, 'studentDelete']);
 Route::post('/viewMetricsAjax', [ManagementController::class, 'viewMetricsAjax']);
 Route::post('/viewMetricsExport', [ManagementController::class, 'viewMetricsExport']);
 // Management

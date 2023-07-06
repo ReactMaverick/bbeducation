@@ -113,6 +113,12 @@
                                         id="postcodeTxt" value="">
                                 </div>
 
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Main Contact Number</label>
+                                    <input type="text" class="form-control" name="main_contact_no" id=""
+                                        value="">
+                                </div>
+
                                 <div class="modal-grid-reference-text">
                                     <a style="cursor: pointer" id="gridReference">Get Grid References</a>
                                 </div>

@@ -23,6 +23,7 @@ class ManagementController extends Controller
 
             $studentList = DB::table('tbl_student')
                 ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
+                ->where('tbl_student.is_delete', 0)
                 ->orderBy('student_id', 'DESC')
                 ->get();
 
@@ -178,6 +179,7 @@ class ManagementController extends Controller
 
         $studentList = DB::table('tbl_student')
             ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
+            ->where('tbl_student.is_delete', 0)
             ->orderBy('student_id', 'DESC')
             ->get();
 
@@ -211,6 +213,35 @@ class ManagementController extends Controller
 
         $studentList = DB::table('tbl_student')
             ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
+            ->where('tbl_student.is_delete', 0)
+            ->orderBy('student_id', 'DESC')
+            ->get();
+
+        $html = '';
+        if (count($studentList) > 0) {
+            foreach ($studentList as $key => $student) {
+                $html .= "<tr class='school-detail-table-data selectStudentRow'
+                            id='selectStudentRow$student->student_id' studentId='$student->student_id' firstName='$student->firstName_txt' surname='$student->surname_txt' isCurrent='$student->isCurrent_ysn'>
+                            <td>$student->studentName_txt</td>
+                            <td>$student->isCurrent_txt</td>
+                        </tr>";
+            }
+        }
+
+        return response()->json(['html' => $html]);
+    }
+
+    public function studentDelete(Request $request)
+    {
+        DB::table('tbl_student')
+            ->where('student_id', $request->studentId)
+            ->update([
+                'is_delete' => 1
+            ]);
+
+        $studentList = DB::table('tbl_student')
+            ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
+            ->where('tbl_student.is_delete', 0)
             ->orderBy('student_id', 'DESC')
             ->get();
 

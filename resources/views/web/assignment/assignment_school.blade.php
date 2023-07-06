@@ -11,10 +11,8 @@
             @include('web.assignment.assignment_sidebar')
 
             <div class="col-md-10 topbar-sec">
-                <div class="topbar-Section">
-                    <i class="fa-solid fa-crown"></i>
-                    <a href="#"> <i class="fa-solid fa-trash trash-icon"></i></a>
-                </div>
+                @include('web.assignment.assignment_header')
+
                 <div class="assignment-school-detail-right-sec">
                     <div class="assignment-school-details-first-sec">
                         <div class="details-heading">

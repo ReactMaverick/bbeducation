@@ -20,9 +20,9 @@
         </i>
     </a>
 
-    <a href="#">
+    {{-- <a href="#">
         <i class="fa-solid fa-trash trash-icon"></i>
-    </a>
+    </a> --}}
 </div>
 
 <!-- Detail Edit Modal -->

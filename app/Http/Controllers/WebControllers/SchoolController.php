@@ -107,6 +107,7 @@ class SchoolController extends Controller
                     'address3_txt' => $request->address3_txt,
                     'address4_txt' => $request->address4_txt,
                     'postcode_txt' => $request->postcode_txt,
+                    'main_contact_no' => $request->main_contact_no,
                     'lat_txt' => $lat_txt,
                     'lon_txt' => $lon_txt,
                     'la_id' => $request->la_id,
@@ -378,6 +379,7 @@ class SchoolController extends Controller
                 'postcode_txt' =>    $request->postcode_txt,
                 'baseRate_dec' =>    $request->baseRate_dec,
                 'website_txt' =>    $request->website_txt,
+                'main_contact_no' =>    $request->main_contact_no,
                 'lat_txt' => $lat_txt,
                 'lon_txt' => $lon_txt
             ]);
