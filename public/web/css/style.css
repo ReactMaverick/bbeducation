@@ -4388,7 +4388,7 @@ td.fc-day-top {
 .mode_check_inner .add_days_btn {
     background-color: #91d250;
     text-align: center;
-    width: 60%;
+    width: 73%;
     padding: 10px;
     font-size: 13px;
     color: #fff;
@@ -4399,7 +4399,7 @@ td.fc-day-top {
 .mode_check_inner .edit_days_btn {
     background-color: #ee7e34;
     text-align: center;
-    width: 60%;
+    width: 73%;
     padding: 10px;
     font-size: 13px;
     color: #fff;
@@ -4410,7 +4410,7 @@ td.fc-day-top {
 .mode_check_inner .unblock_days_btn {
     background-color: #fc0000;
     text-align: center;
-    width: 60%;
+    width: 73%;
     padding: 10px;
     font-size: 13px;
     color: #fff;
@@ -4426,7 +4426,7 @@ td.fc-day-top {
 .button-section .block_days_btn {
     background-color: #00aff0;
     text-align: center;
-    width: 60%;
+    width: 73%;
     padding: 10px;
     font-size: 13px;
     color: #fff;
@@ -4436,7 +4436,7 @@ td.fc-day-top {
 .button-section .candidate_vetting_days_btn {
     background-color: #712faa;
     text-align: center;
-    width: 60%;
+    width: 73%;
     padding: 10px;
     font-size: 13px;
     color: #fff;
@@ -4446,7 +4446,7 @@ td.fc-day-top {
 .button-section .check_save_btn {
     background-color: #ffb90e;
     text-align: center;
-    width: 60%;
+    width: 73%;
     padding: 10px;
     font-size: 13px;
     color: #fff;
