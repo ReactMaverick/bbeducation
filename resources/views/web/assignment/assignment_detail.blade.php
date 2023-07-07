@@ -176,21 +176,49 @@
                             </div>
                         </div>
                         <div class="mode-section">
-                            <div class="mode-text-sec">
+                            <div class="mode-text-sec mode_text_outer">
                                 <p>Mode</p>
-                                <div class="form-check mode-check">
-                                    <label for="addMode"><i class="fa-solid fa-plus"></i></label>
+                                <div class="form-check mode-check mode_check_inner">
+                                    <label for="addMode" class="add_days_btn check_btn_active">
+                                        Add Days
+                                    <!-- <i class="fa-solid fa-plus"></i> -->
+                                    </label>
                                     <input type="radio" id="addMode" name="assignment_mode" value="add" checked>
                                 </div>
-                                <div class="form-check mode-check">
-                                    <label for="editMode"><i class="fa-solid fa-pencil"></i></label>
+                                <div class="form-check mode-check mode_check_inner">
+                                    <label for="editMode" class="edit_days_btn">
+                                        Edit Days
+                                        <!-- <i class="fa-solid fa-pencil"></i> -->
+                                    </label>
                                     <input type="radio" id="editMode" name="assignment_mode" value="edit">
                                 </div>
-                                <div class="form-check mode-check">
-                                    <label for="enterMode" id="unblockLabel"> <i
-                                            class="fa-solid fa-right-long next-arrow-icon"></i></label>
+                                <div class="form-check mode-check mode_check_inner">
+                                    <label for="enterMode" id="unblockLabel" class="unblock_days_btn">
+                                        Unblock Booking
+                                        <!-- <i class="fa-solid fa-right-long next-arrow-icon"></i> -->
+                                    </label>
                                     <input type="radio" id="enterMode" name="assignment_mode" value="unblock">
                                 </div>
+
+                                <div class="button-section btn_sec_outer">
+
+                                    <button type="button" class="btn btn-primary button-2 block_days_btn" id="blockBookingBtnId">
+                                        Block Booking
+                                    </button>
+                                    
+                                    <button type="button"
+                                        class="button-1 candidate_vetting_days_btn {{ $assignmentDetail->teacher_id ? '' : 'disableCandVetting' }}"
+                                        {{ $assignmentDetail->teacher_id ? '' : 'disabled' }}
+                                        onclick="candidateVetting({{ $asn_id }}, '{{ $assignmentDetail->teacher_id }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">Candidate
+                                        Vetting</button>
+
+                                    <button type="submit" class="btn btn-primary button-3 check_save_btn">
+                                        Save
+                                        <img src="../../public/web/images/checkmark.png" alt="" class="checkmark_img"/>
+                                    </button>
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
