@@ -220,7 +220,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <button type="submit" class="btn btn-secondary" id="referenceAddBtn">Submit</button>
 
                         <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
                     </div>
@@ -329,7 +329,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                ordering: false
+            });
         });
 
         function editReferenceRowSelect(teacherReference_id, receivedOn_dtm) {
@@ -431,6 +433,52 @@
                     });
                     $('#receiveTeacherReferenceModal').modal("show");
                 }
+            } else {
+                swal("", "Please select one reference.");
+            }
+        });
+
+        $(document).on('click', '#referenceAddBtn', function() {
+            $('#fullLoader').show();
+        });
+
+        $(document).on('click', '#sendReferenceBttn', function() {
+            var teacherReferenceId = $('#teacherReferenceId').val();
+            if (teacherReferenceId) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to send reference request?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('teacherReferenceResend') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        teacherReferenceId: teacherReferenceId
+                                    },
+                                    success: function(data) {
+                                        //console.log(data);
+                                        if (data.add == 'Yes') {
+                                            swal("",
+                                                "Reference request mail has been send successfully."
+                                            );
+                                        } else {
+                                            swal("",
+                                                "Somthing went wrong.");
+                                        }
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
             } else {
                 swal("", "Please select one reference.");
             }

@@ -2021,8 +2021,8 @@ class TeacherController extends Controller
                 $employedUntil_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->employedUntil_dte)));
             }
 
-            DB::table('tbl_teacherReference')
-                ->insert([
+            $teacherReference_id = DB::table('tbl_teacherReference')
+                ->insertGetId([
                     'teacher_id' => $teacher_id,
                     'referenceType_id' => $request->referenceType_id,
                     'employer_txt' => $request->employer_txt,
@@ -2038,10 +2038,96 @@ class TeacherController extends Controller
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
 
+            $teacherDet = DB::table('tbl_teacher')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->first();
+            $teacherName = '';
+            if ($teacherDet) {
+                $subject = 'Reference Request for ' . $teacherDet->firstName_txt . ' ' . $teacherDet->surname_txt;
+                $teacherName = $teacherDet->firstName_txt . ' ' . $teacherDet->surname_txt;
+            } else {
+                $subject = 'Reference Request';
+                $teacherName = '';
+            }
+
+            if ($request->refereeEmail_txt) {
+                DB::table('tbl_teacherReferenceRequest')
+                    ->insertGetId([
+                        'teacherReference_id' => $teacherReference_id,
+                        'sendMethod_int' => 1,
+                        'sentOn_dtm' => date('Y-m-d H:i:s'),
+                        'sentBy_id' => $user_id,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+
+                $refID = base64_encode($teacherReference_id);
+                $mailData['subject'] = $subject;
+                $mailData['teacherName'] = $teacherName;
+                $mailData['refereeName'] = $request->refereeName_txt;
+                $mailData['mail'] = $request->refereeEmail_txt;
+                $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID;
+                $myVar = new AlertController();
+                $myVar->referenceRequestMail($mailData);
+            }
+
             return redirect()->back()->with('success', "Teacher reference added successfully.");
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function teacherReferenceResend(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        $result['add'] = 'No';
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $teacherReferenceId = $input['teacherReferenceId'];
+
+            $refDetails = DB::table('tbl_teacherReference')
+                ->where('teacherReference_id', $teacherReferenceId)
+                ->first();
+            if ($refDetails) {
+                $teacherDet = DB::table('tbl_teacher')
+                    ->where('tbl_teacher.teacher_id', $refDetails->teacher_id)
+                    ->first();
+                $teacherName = '';
+                if ($teacherDet) {
+                    $subject = 'Reference Request for ' . $teacherDet->firstName_txt . ' ' . $teacherDet->surname_txt;
+                    $teacherName = $teacherDet->firstName_txt . ' ' . $teacherDet->surname_txt;
+                } else {
+                    $subject = 'Reference Request';
+                    $teacherName = '';
+                }
+
+                if ($refDetails->refereeEmail_txt) {
+                    DB::table('tbl_teacherReferenceRequest')
+                        ->insertGetId([
+                            'teacherReference_id' => $teacherReferenceId,
+                            'sendMethod_int' => 1,
+                            'sentOn_dtm' => date('Y-m-d H:i:s'),
+                            'sentBy_id' => $user_id,
+                            'timestamp_ts' => date('Y-m-d H:i:s')
+                        ]);
+
+                    $refID = base64_encode($teacherReferenceId);
+                    $mailData['subject'] = $subject;
+                    $mailData['teacherName'] = $teacherName;
+                    $mailData['refereeName'] = $refDetails->refereeName_txt;
+                    $mailData['mail'] = $refDetails->refereeEmail_txt;
+                    $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID;
+                    $myVar = new AlertController();
+                    $myVar->referenceRequestMail($mailData);
+
+                    $result['add'] = 'Yes';
+                }
+            }
+
+            return $result;
+        }
+        return $result;
     }
 
     public function teacherReferenceEdit(Request $request)
@@ -3575,6 +3661,68 @@ class TeacherController extends Controller
             return redirect()->back()->with('success', "Details updated successfully.");
         } else {
             return redirect()->intended('/');
+        }
+    }
+
+    public function teacherReferenceRequest(Request $request, $id)
+    {
+        $teacherReference_id = base64_decode($id);
+        $refDetail = DB::table('tbl_teacherReference')
+            ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_teacherReference.teacher_id')
+            ->select('tbl_teacherReference.*', 'tbl_teacher.company_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt')
+            ->where('tbl_teacherReference.teacherReference_id', $teacherReference_id)
+            ->first();
+        $companyDetail = array();
+        if ($refDetail) {
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $refDetail->company_id)
+                ->get();
+
+            return view("web.teacher.reference_request", ['teacherReference_id' => $teacherReference_id, 'refDetail' => $refDetail, 'companyDetail' => $companyDetail]);
+        }
+    }
+
+    public function addReferenceRequest(Request $request)
+    {
+        if ($request->teacherReference_id) {
+            $teacherReference_id = $request->teacherReference_id;
+
+            $iData['ref_request_firstname'] = $request->ref_request_firstname ? $request->ref_request_firstname : NULL;
+            $iData['ref_request_lastname'] = $request->ref_request_lastname ? $request->ref_request_lastname : NULL;
+            $iData['your_firstname'] = $request->your_firstname ? $request->your_firstname : NULL;
+            $iData['your_lastname'] = $request->your_lastname ? $request->your_lastname : NULL;
+            $iData['your_location'] = $request->your_location ? $request->your_location : NULL;
+            $iData['institute_name'] = $request->institute_name ? $request->institute_name : NULL;
+            $iData['employed_from'] = $request->employed_from ? date("Y-m-d", strtotime($request->employed_from)) : NULL;
+            $iData['employed_to'] = $request->employed_to ? date("Y-m-d", strtotime($request->employed_to)) : NULL;
+            $iData['job_title'] = $request->job_title ? $request->job_title : NULL;
+            $iData['professional_conduct'] = $request->professional_conduct ? $request->professional_conduct : NULL;
+            $iData['timekeeping'] = $request->timekeeping ? $request->timekeeping : NULL;
+            $iData['relationship_colleagues'] = $request->relationship_colleagues ? $request->relationship_colleagues : NULL;
+            $iData['outstanding_disciplnary'] = $request->outstanding_disciplnary ? $request->outstanding_disciplnary : NULL;
+            $iData['work_with_children'] = $request->work_with_children ? $request->work_with_children : NULL;
+            $iData['signature_date'] = $request->signature_date ? $request->signature_date : NULL;
+
+            $refReqDetail = DB::table('reference_request_new')
+                ->where('teacherReference_id', $teacherReference_id)
+                ->first();
+
+            if ($refReqDetail) {
+                $iData['updated_at'] = date('Y-m-d H:i:s');
+                DB::table('reference_request_new')
+                    ->where('reference_request_new_id', '=', $refReqDetail->reference_request_new_id)
+                    ->update($iData);
+            } else {
+                $iData['teacherReference_id'] = $teacherReference_id;
+                $iData['created_at'] = date('Y-m-d H:i:s');
+                DB::table('reference_request_new')
+                    ->insert($iData);
+            }
+
+            return redirect()->back()->with('success', "Form has been send successfully.");
+        } else {
+            return redirect()->back()->with('error', "Something went wrong.");
         }
     }
 

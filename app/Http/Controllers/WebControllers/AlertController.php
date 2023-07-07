@@ -168,4 +168,20 @@ class AlertController extends Controller
             }
         }
     }
+
+    public function referenceRequestMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/reference_request', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject($mailData['subject'])->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
 }

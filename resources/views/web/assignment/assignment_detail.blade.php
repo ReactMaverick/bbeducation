@@ -181,7 +181,7 @@
                                 <div class="form-check mode-check mode_check_inner">
                                     <label for="addMode" class="add_days_btn check_btn_active">
                                         Add Days
-                                    <!-- <i class="fa-solid fa-plus"></i> -->
+                                        <!-- <i class="fa-solid fa-plus"></i> -->
                                     </label>
                                     <input type="radio" id="addMode" name="assignment_mode" value="add" checked>
                                 </div>
@@ -202,10 +202,11 @@
 
                                 <div class="button-section btn_sec_outer">
 
-                                    <button type="button" class="btn btn-primary button-2 block_days_btn" id="blockBookingBtnId">
+                                    <button type="button" class="btn btn-primary button-2 block_days_btn"
+                                        id="blockBookingBtnId">
                                         Block Booking
                                     </button>
-                                    
+
                                     <button type="button"
                                         class="button-1 candidate_vetting_days_btn {{ $assignmentDetail->teacher_id ? '' : 'disableCandVetting' }}"
                                         {{ $assignmentDetail->teacher_id ? '' : 'disabled' }}
@@ -214,7 +215,8 @@
 
                                     <button type="submit" class="btn btn-primary button-3 check_save_btn">
                                         Save
-                                        <img src="../../public/web/images/checkmark.png" alt="" class="checkmark_img"/>
+                                        <img src="{{ asset('web/images/checkmark.png') }}" alt=""
+                                            class="checkmark_img" />
                                     </button>
                                 </div>
 
@@ -234,7 +236,7 @@
                         </div>
                     </div>
 
-                    <div class="button-section">
+                    {{-- <div class="button-section">
                         <button type="button"
                             class="button-1 {{ $assignmentDetail->teacher_id ? '' : 'disableCandVetting' }}"
                             {{ $assignmentDetail->teacher_id ? '' : 'disabled' }}
@@ -246,7 +248,7 @@
                         </button>
 
                         <button type="submit" class="btn btn-primary button-3">Save</button>
-                    </div>
+                    </div> --}}
                 </form>
             </div>
         </div>
@@ -515,6 +517,19 @@
     <!-- Candidate Vetting Modal -->
 
     <script>
+        $(document).ready(function() {
+            $('input[name="assignment_mode"]').change(function() {
+                // Remove the class from all labels
+                $('.mode-check label').removeClass('check_btn_active');
+
+                // Add the class to the label of the checked radio button
+                if ($(this).is(':checked')) {
+                    $(this).siblings('label').addClass('check_btn_active');
+                }
+            });
+        });
+
+
         $(document).ready(function() {
             $('#blockBookingStartTime, #blockBookingEndTime').timepicker({
                 timeFormat: 'h:i a',
