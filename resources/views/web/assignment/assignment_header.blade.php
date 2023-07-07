@@ -30,7 +30,7 @@
     function assignmentDeleteAjax(asn_id) {
         swal({
                 title: "",
-                text: "You wish to delete this assignment?",
+                text: "Are you sure you want to completely delete this assignment?",
                 buttons: {
                     Yes: "Yes",
                     cancel: "No"
