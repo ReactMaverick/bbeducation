@@ -4467,3 +4467,6 @@ td.fc-day-top {
     font-weight: 600 !important;
     margin-bottom: 5px;
 }
+.reference_form_outer {
+    width: 60% !important;
+}

@@ -5,6 +5,13 @@
         width: 60%;
     }
 
+    .reference_form_outer {
+        width: 100% !important;
+    }
+
+    .canvas_outer {
+        width: 277px !important;
+    }
 
     /* =======DASHBOARD========= */
 
@@ -543,6 +550,12 @@
         width: 100%;
     }
 
+    .reference_form_outer {
+        width: 100% !important;
+    }
+    .canvas_outer {
+        width: 100% !important;
+    }
     /* ===========DASHBOARD========== */
 
     /* .dashboard-tab-section {
