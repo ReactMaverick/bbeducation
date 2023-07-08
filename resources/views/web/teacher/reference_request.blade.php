@@ -20,6 +20,22 @@
         .form-group.has-error {
             border-color: #dd4b39 !important;
         }
+        .clear_btn_outer {
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 120px;
+            margin-top: 10px;
+        }
+        button#clearButton {
+            background-color: #fff;
+            border: 2px solid #40A0ED;
+            padding: 5px 25px;
+            border-radius: 5px;
+            color: #40A0ED;
+        }
+        .reset-password-form-outer {
+            margin: 50px 0 100px 0;
+        }
     </style>
 </head>
 
@@ -34,7 +50,7 @@
                 @csrf
                 <input type="hidden" name="teacherReference_id" value="{{ $teacherReference_id }}">
                 <div class="row">
-                    <label class="form-check-label  col-md-12">REFERENCE REQUEST FOR<span
+                    <label class="form-check-label reference_form_label  col-md-12">REFERENCE REQUEST FOR<span
                             style="color: red;">*</span></label>
                     <div class="modal-input-field form-group col-md-6">
                         <input type="text" class="form-control field-validate" name="ref_request_firstname"
@@ -45,7 +61,7 @@
                             id="" value="{{ $refDetail->surname_txt }}" placeholder="Last Name">
                     </div>
 
-                    <label class="form-check-label  col-md-12">Your Name<span style="color: red;">*</span></label>
+                    <label class="form-check-label reference_form_label  col-md-12">Your Name<span style="color: red;">*</span></label>
                     <div class="modal-input-field form-group col-md-6">
                         <input type="text" class="form-control field-validate" name="your_firstname" id=""
                             value="" placeholder="First Name">
@@ -56,32 +72,32 @@
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Your Position<span style="color: red;">*</span></label>
+                        <label class="form-check-label reference_form_label">Your Position<span style="color: red;">*</span></label>
                         <input type="text" class="form-control field-validate" name="your_location" id=""
                             value="">
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Name of Company / Educational Institution<span
+                        <label class="form-check-label reference_form_label">Name of Company / Educational Institution<span
                                 style="color: red;">*</span></label>
                         <input type="text" class="form-control field-validate" name="institute_name" id=""
                             value="">
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Date Employed From<span style="color: red;">*</span></label>
+                        <label class="form-check-label reference_form_label">Date Employed From<span style="color: red;">*</span></label>
                         <input type="date" class="form-control field-validate" name="employed_from" id=""
                             value="">
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Date Employed To<span style="color: red;">*</span></label>
+                        <label class="form-check-label reference_form_label">Date Employed To<span style="color: red;">*</span></label>
                         <input type="date" class="form-control field-validate" name="employed_to" id=""
                             value="">
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Candidate's Job Title<span style="color: red;">*</span></label>
+                        <label class="form-check-label reference_form_label">Candidate's Job Title<span style="color: red;">*</span></label>
                         <input type="text" class="form-control field-validate" name="job_title" id=""
                             value="">
                     </div>
@@ -89,78 +105,153 @@
                     <div class="col-md-6"></div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Professional Conduct<span
+                        <label class="form-check-label reference_form_label">Professional Conduct<span
                                 style="color: red;">*</span></label><br>
-                        <input type="radio" id="professionalConduct1" name="professional_conduct"
+                        <!-- <input type="radio" id="professionalConduct1" name="professional_conduct"
                             value="Excellent">
                         <label for="professionalConduct1">Excellent</label><br>
+
                         <input type="radio" id="professionalConduct2" name="professional_conduct" value="Good">
                         <label for="professionalConduct2">Good</label><br>
+
                         <input type="radio" id="professionalConduct3" name="professional_conduct"
                             value="Satisfactory">
-                        <label for="professionalConduct3">Satisfactory</label>
+                        <label for="professionalConduct3">Satisfactory</label> -->
+
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="professionalConduct1" name="professional_conduct" value="Excellent" style="margin-right: 5px;">
+                            <label for="professionalConduct1" style="margin-bottom: 0;">Excellent</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="professionalConduct2" name="professional_conduct" value="Good" style="margin-right: 5px;">
+                            <label for="professionalConduct2" style="margin-bottom: 0;">Good</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="professionalConduct3" name="professional_conduct" value="Satisfactory" style="margin-right: 5px;">
+                            <label for="professionalConduct3" style="margin-bottom: 0;">Satisfactory</label>
+                        </div>
+
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Timekeeping<span style="color: red;">*</span></label><br>
-                        <input type="radio" id="timekeep1" name="timekeeping" value="Excellent">
+                        <label class="form-check-label reference_form_label">Timekeeping<span style="color: red;">*</span></label><br>
+
+                        <!-- <input type="radio" id="timekeep1" name="timekeeping" value="Excellent">
                         <label for="timekeep1">Excellent</label><br>
+
                         <input type="radio" id="timekeep2" name="timekeeping" value="Good">
                         <label for="timekeep2">Good</label><br>
+
                         <input type="radio" id="timekeep3" name="timekeeping" value="Satisfactory">
-                        <label for="timekeep3">Satisfactory</label>
+                        <label for="timekeep3">Satisfactory</label> -->
+
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="timekeep1" name="timekeeping" value="Excellent" style="margin-right: 5px;">
+                            <label for="timekeep1" style="margin-bottom: 0;">Excellent</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="timekeep2" name="timekeeping" value="Good" style="margin-right: 5px;">
+                            <label for="timekeep2" style="margin-bottom: 0;">Good</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="timekeep3" name="timekeeping" value="Satisfactory" style="margin-right: 5px;">
+                            <label for="timekeep3" style="margin-bottom: 0;">Satisfactory</label>
+                        </div>
+
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Relationship with colleagues<span
+                        <label class="form-check-label reference_form_label">Relationship with colleagues<span
                                 style="color: red;">*</span></label><br>
-                        <input type="radio" id="colleageRelation1" name="relationship_colleagues"
+                        <!-- <input type="radio" id="colleageRelation1" name="relationship_colleagues"
                             value="Excellent">
                         <label for="colleageRelation1">Excellent</label><br>
+
                         <input type="radio" id="colleageRelation2" name="relationship_colleagues" value="Good">
                         <label for="colleageRelation2">Good</label><br>
+
                         <input type="radio" id="colleageRelation3" name="relationship_colleagues"
                             value="Satisfactory">
-                        <label for="colleageRelation3">Satisfactory</label>
+                        <label for="colleageRelation3">Satisfactory</label> -->
+
+
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="colleageRelation1" name="relationship_colleagues" value="Excellent" style="margin-right: 5px;">
+                            <label for="colleageRelation1" style="margin-bottom: 0;">Excellent</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="colleageRelation2" name="relationship_colleagues" value="Good" style="margin-right: 5px;">
+                            <label for="colleageRelation2" style="margin-bottom: 0;">Good</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="colleageRelation3" name="relationship_colleagues" value="Satisfactory" style="margin-right: 5px;">
+                            <label for="colleageRelation3" style="margin-bottom: 0;">Satisfactory</label>
+                        </div>
                     </div>
 
                     <div class="col-md-6"></div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Are there any substantiated or outstanding disciplinary
+                        <label class="form-check-label reference_form_label">Are there any substantiated or outstanding disciplinary
                             proceedings against this candidate?<span style="color: red;">*</span></label><br>
-                        <input type="radio" id="substaiated1" name="outstanding_disciplnary" value="Yes">
+                        <!-- <input type="radio" id="substaiated1" name="outstanding_disciplnary" value="Yes">
                         <label for="substaiated1">Yes</label><br>
                         <input type="radio" id="substaiated2" name="outstanding_disciplnary" value="No">
-                        <label for="substaiated2">No</label>
+                        <label for="substaiated2">No</label> -->
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="suitability1" name="outstanding_disciplnary" value="Yes" style="margin-right: 5px;">
+                            <label for="suitability1" style="margin-bottom: 0;">Yes</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="suitability2" name="outstanding_disciplnary" value="No" style="margin-right: 5px;">
+                            <label for="suitability2" style="margin-bottom: 0;">No</label>
+                        </div>
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Do you have any safeguarding concerns about the candidate's
+                        <label class="form-check-label reference_form_label">Do you have any safeguarding concerns about the candidate's
                             suitability to work with children?<span style="color: red;">*</span></label><br>
-                        <input type="radio" id="suitability1" name="work_with_children" value="Yes">
-                        <label for="suitability1">Yes</label><br>
-                        <input type="radio" id="suitability2" name="work_with_children" value="No">
-                        <label for="suitability2">No</label>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="suitability1" name="work_with_children" value="Yes" style="margin-right: 5px;">
+                            <label for="suitability1" style="margin-bottom: 0;">Yes</label>
+                        </div>
+                        <br>
+                        <div style="display: flex;align-items: center;">
+                            <input type="radio" id="suitability2" name="work_with_children" value="No" style="margin-right: 5px;">
+                            <label for="suitability2" style="margin-bottom: 0;">No</label>
+                        </div>
                     </div>
 
                     <div class="modal-input-field form-group col-md-12">
-                        <label class="form-check-label">I declare that to the best of my knowledge that the information
+                        <label class="form-check-label reference_form_label">I declare that to the best of my knowledge that the information
                             I have given in this reference is correct and I agree to share this information with a
                             future employer<span style="color: red;">*</span></label>
-                        <input type="checkbox" class="" name="agree_chk" id="agreeid" value="1">
-                        <label class="form-check-label" for="agreeid">I Agree</label>
+                        <div style="display: flex;align-items: center;">
+                            <input type="checkbox" class="" name="agree_chk" id="agreeid" value="1" style="margin-right: 5px;">
+                            <label class="form-check-label" for="agreeid" style="margin-bottom: 0;">I Agree</label>
+                        </div>
+                    </div>
+
+                    <label class="form-check-label reference_form_label col-md-12">Signature</label>
+                    <div class="modal-input-field form-group col-md-6">
+                        <canvas id="signatureCanvas" name="signature" width="400" height="150"
+                            style="border: 2px solid #40A0ED;border-radius: 5px;background-color: #fff;">
+                        </canvas>
+                        <div class="clear_btn_outer">
+                            <button id="clearButton">Clear</button>
+                        </div>
+                        
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Signature</label>
-                        <canvas id="signatureCanvas" name="signature" width="400" height="200"
-                            style="border: 1px solid #584b4b"></canvas>
-                        <button id="clearButton">Clear</button>
-                    </div>
-
-                    <div class="modal-input-field form-group col-md-6">
-                        <label class="form-check-label">Date<span style="color: red;">*</span></label>
+                        <label class="form-check-label reference_form_label">Date<span style="color: red;">*</span></label>
                         <input type="date" class="form-control field-validate" name="signature_date"
                             id="" value="{{ date('Y-m-d') }}">
                     </div>

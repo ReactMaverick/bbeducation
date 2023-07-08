@@ -4461,3 +4461,9 @@ td.fc-day-top {
 .check_btn_active {
     border: 4px solid #40A0ED;
 }
+.reference_form_label {
+    font-size: 15px !important;
+    color: #3a3a3a;
+    font-weight: 600 !important;
+    margin-bottom: 5px;
+}
