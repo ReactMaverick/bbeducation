@@ -181,9 +181,10 @@
                                                         style="padding:10px;text-align: left; width: 55%;font-weight: 600; font-size: 14px;">
                                                         Signature : </td>
                                                     <td style="padding:10px;text-align: right;">
-                                                        <span>
-                                                            Lorem ipsum
-                                                        </span>
+                                                        @if ($refReqDetail->signature)
+                                                            <img src="{{ asset($refReqDetail->signature) }}"
+                                                                alt="" style="width: 50px">
+                                                        @endif
                                                     </td>
                                                 </tr>
 

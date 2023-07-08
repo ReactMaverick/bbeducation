@@ -118,6 +118,7 @@ Route::get('/preference-health/{id}', [TeacherController::class, 'teacherHealth'
 Route::get('/teacher-references/{id}', [TeacherController::class, 'teacherReference']);
 Route::post('/newTeacherReferenceInsert', [TeacherController::class, 'newTeacherReferenceInsert']);
 Route::post('/teacherReferenceResend', [TeacherController::class, 'teacherReferenceResend']);
+Route::post('/teacherReferencePreview', [TeacherController::class, 'teacherReferencePreview']);
 Route::post('/teacherReferenceEdit', [TeacherController::class, 'teacherReferenceEdit']);
 Route::post('/newTeacherReferenceUpdate', [TeacherController::class, 'newTeacherReferenceUpdate']);
 Route::post('/getTeacherReceiveReference', [TeacherController::class, 'getTeacherReceiveReference']);

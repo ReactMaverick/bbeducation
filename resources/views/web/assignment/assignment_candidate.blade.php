@@ -27,6 +27,13 @@
                                 echo app('request')->input('showall') == 1 ? 'checked' : ''; ?>><br>
                                 <label for="showAll">Show All</label>
                             </div>
+                            <div style="text-align: right; width: 58%">
+                                <div class="finance-contact-icon-sec" style="display: block">
+                                    <a style="cursor: pointer;" id="seeGoogleDistance" title="View Distance">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="assignment-candidate-table-section">
@@ -46,7 +53,9 @@
                                     @foreach ($candidateList as $key => $candidate)
                                         <tr class="school-detail-table-data selectTeacherRow"
                                             id="selectCandidate{{ $candidate->teacher_id }}"
-                                            teacher-id="{{ $candidate->teacher_id }}" isContinuity="1">
+                                            teacher-id="{{ $candidate->teacher_id }}"
+                                            teacher-lat="{{ $candidate->lat_txt }}" teacher-long="{{ $candidate->lon_txt }}"
+                                            isContinuity="1">
                                             <td>
                                                 @if ($candidate->knownAs_txt == '' || $candidate->knownAs_txt == null)
                                                     {{ $candidate->firstName_txt }} {{ $candidate->surname_txt }}
@@ -116,7 +125,9 @@
                                     @foreach ($continuityList as $key => $continuity)
                                         <tr class="school-detail-table-data selectTeacherRow"
                                             id="selectContinuity{{ $continuity->teacher_id }}"
-                                            teacher-id="{{ $continuity->teacher_id }}" isContinuity="2">
+                                            teacher-id="{{ $continuity->teacher_id }}"
+                                            teacher-lat="{{ $continuity->lat_txt }}"
+                                            teacher-long="{{ $continuity->lon_txt }}" isContinuity="2">
                                             <td>
                                                 @if ($continuity->knownAs_txt == null || $continuity->knownAs_txt == '')
                                                     {{ $continuity->firstName_txt . ' ' . $continuity->surname_txt }}
@@ -159,7 +170,9 @@
                                     @foreach ($preferedList as $key => $prefered)
                                         <tr class="school-detail-table-data selectTeacherRow"
                                             id="selectPreferred{{ $prefered->teacher_id }}"
-                                            teacher-id="{{ $prefered->teacher_id }}" isContinuity="3">
+                                            teacher-id="{{ $prefered->teacher_id }}"
+                                            teacher-lat="{{ $prefered->lat_txt }}" teacher-long="{{ $prefered->lon_txt }}"
+                                            isContinuity="3">
                                             <td>
                                                 @if ($prefered->knownAs_txt == null || $prefered->knownAs_txt == '')
                                                     {{ $prefered->firstName_txt . ' ' . $prefered->surname_txt }}
@@ -184,6 +197,8 @@
 
                         <input type="hidden" name="" id="assignTeacherId" value="">
                         <input type="hidden" name="" id="preferTeacherId" value="">
+                        <input type="hidden" name="" id="candidateLatId" value="">
+                        <input type="hidden" name="" id="candidateLongId" value="">
 
                         <div class="assignment-candidate-check-icon">
                             <a style="cursor: pointer" class="disabled-link" id="teacherAssignBtn" title="Assign Teacher">
@@ -197,6 +212,18 @@
         </div>
     </div>
 
+    <div id="distanceModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="mapContainer" style="height: 400px;"></div>
+            <div id="drivingDistance"></div>
+            <div id="transitDistance"></div>
+        </div>
+    </div>
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnb0OgWwplLJkMhPK0JheuRBY-Nw2IyBg&libraries=places">
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -245,6 +272,8 @@
             $(document).on("click", ".selectTeacherRow", function(e) {
                     clicks++; //count clicks
                     var teacherId = $(this).attr('teacher-id');
+                    var candidateLatId = $(this).attr('teacher-lat');
+                    var candidateLongId = $(this).attr('teacher-long');
                     var isContinuity = $(this).attr('isContinuity');
                     // alert(teacherId)
                     if (clicks === 1) {
@@ -258,10 +287,14 @@
                             if (isContinuity == 1) {
                                 if ($('#selectCandidate' + teacherId).hasClass('tableRowActive')) {
                                     $('#assignTeacherId').val('');
+                                    $('#candidateLatId').val('');
+                                    $('#candidateLongId').val('');
                                     $('#selectCandidate' + teacherId).removeClass('tableRowActive');
                                     $('#teacherAssignBtn').addClass('disabled-link');
                                 } else {
                                     $('#assignTeacherId').val(teacherId);
+                                    $('#candidateLatId').val(candidateLatId);
+                                    $('#candidateLongId').val(candidateLongId);
                                     $('.selectTeacherRow').removeClass('tableRowActive');
                                     $('#selectCandidate' + teacherId).addClass('tableRowActive');
                                     $('#teacherAssignBtn').removeClass('disabled-link');
@@ -271,12 +304,16 @@
                                 if ($('#selectContinuity' + teacherId).hasClass('tableRowActive')) {
                                     $('#assignTeacherId').val('');
                                     $('#preferTeacherId').val('');
+                                    $('#candidateLatId').val('');
+                                    $('#candidateLongId').val('');
                                     $('#selectContinuity' + teacherId).removeClass('tableRowActive');
                                     $('#teacherAssignBtn').addClass('disabled-link');
                                     $('#addPreferredBtn').addClass('disabled-link');
                                 } else {
                                     $('#assignTeacherId').val(teacherId);
                                     $('#preferTeacherId').val(teacherId);
+                                    $('#candidateLatId').val(candidateLatId);
+                                    $('#candidateLongId').val(candidateLongId);
                                     $('.selectTeacherRow').removeClass('tableRowActive');
                                     $('#selectContinuity' + teacherId).addClass('tableRowActive');
                                     $('#teacherAssignBtn').removeClass('disabled-link');
@@ -286,10 +323,14 @@
                             if (isContinuity == 3) {
                                 if ($('#selectPreferred' + teacherId).hasClass('tableRowActive')) {
                                     $('#assignTeacherId').val('');
+                                    $('#candidateLatId').val('');
+                                    $('#candidateLongId').val('');
                                     $('#selectPreferred' + teacherId).removeClass('tableRowActive');
                                     $('#teacherAssignBtn').addClass('disabled-link');
                                 } else {
                                     $('#assignTeacherId').val(teacherId);
+                                    $('#candidateLatId').val(candidateLatId);
+                                    $('#candidateLongId').val(candidateLongId);
                                     $('.selectTeacherRow').removeClass('tableRowActive');
                                     $('#selectPreferred' + teacherId).addClass('tableRowActive');
                                     $('#teacherAssignBtn').removeClass('disabled-link');
@@ -302,14 +343,20 @@
                         clearTimeout(timer); //prevent single-click action
                         // alert("Double Click=>" + teacherId); //perform double-click action
                         var teacherId = $(this).attr('teacher-id');
+                        var candidateLatId = $(this).attr('teacher-lat');
+                        var candidateLongId = $(this).attr('teacher-long');
                         var isContinuity = $(this).attr('isContinuity');
                         if (isContinuity == 1) {
                             if ($('#selectCandidate' + teacherId).hasClass('tableRowActive')) {
                                 $('#assignTeacherId').val('');
+                                $('#candidateLatId').val('');
+                                $('#candidateLongId').val('');
                                 $('#selectCandidate' + teacherId).removeClass('tableRowActive');
                                 $('#teacherAssignBtn').addClass('disabled-link');
                             } else {
                                 $('#assignTeacherId').val(teacherId);
+                                $('#candidateLatId').val(candidateLatId);
+                                $('#candidateLongId').val(candidateLongId);
                                 $('.selectTeacherRow').removeClass('tableRowActive');
                                 $('#selectCandidate' + teacherId).addClass('tableRowActive');
                                 $('#teacherAssignBtn').removeClass('disabled-link');
@@ -319,12 +366,16 @@
                             if ($('#selectContinuity' + teacherId).hasClass('tableRowActive')) {
                                 $('#assignTeacherId').val('');
                                 $('#preferTeacherId').val('');
+                                $('#candidateLatId').val('');
+                                $('#candidateLongId').val('');
                                 $('#selectContinuity' + teacherId).removeClass('tableRowActive');
                                 $('#teacherAssignBtn').addClass('disabled-link');
                                 $('#addPreferredBtn').addClass('disabled-link');
                             } else {
                                 $('#assignTeacherId').val(teacherId);
                                 $('#preferTeacherId').val(teacherId);
+                                $('#candidateLatId').val(candidateLatId);
+                                $('#candidateLongId').val(candidateLongId);
                                 $('.selectTeacherRow').removeClass('tableRowActive');
                                 $('#selectContinuity' + teacherId).addClass('tableRowActive');
                                 $('#teacherAssignBtn').removeClass('disabled-link');
@@ -334,10 +385,14 @@
                         if (isContinuity == 3) {
                             if ($('#selectPreferred' + teacherId).hasClass('tableRowActive')) {
                                 $('#assignTeacherId').val('');
+                                $('#candidateLatId').val('');
+                                $('#candidateLongId').val('');
                                 $('#selectPreferred' + teacherId).removeClass('tableRowActive');
                                 $('#teacherAssignBtn').addClass('disabled-link');
                             } else {
                                 $('#assignTeacherId').val(teacherId);
+                                $('#candidateLatId').val(candidateLatId);
+                                $('#candidateLongId').val(candidateLongId);
                                 $('.selectTeacherRow').removeClass('tableRowActive');
                                 $('#selectPreferred' + teacherId).addClass('tableRowActive');
                                 $('#teacherAssignBtn').removeClass('disabled-link');
@@ -350,6 +405,10 @@
                 .on("dblclick", ".selectTeacherRow", function(e) {
                     e.preventDefault(); //cancel system double-click event
                     var teacherId = $(this).attr('teacher-id');
+                    var candidateLatId = $(this).attr('teacher-lat');
+                    var candidateLongId = $(this).attr('teacher-long');
+                    $('#candidateLatId').val(candidateLatId);
+                    $('#candidateLongId').val(candidateLongId);
                     var location = "{{ url('/teacher-detail') }}" + '/' + teacherId;
                     window.open(location);
                 });
@@ -412,6 +471,97 @@
             } else {
                 swal("", "Please select one teacher.");
             }
+        });
+
+        $(document).on('click', '#seeGoogleDistance', function() {
+
+            // Get latitude and longitude values
+            // var lat1 = parseFloat($('#latitude1').val());
+            // var lng1 = parseFloat($('#longitude1').val());
+            // var lat2 = parseFloat($('#latitude2').val());
+            // var lng2 = parseFloat($('#longitude2').val());
+            var lat1 = parseFloat('51.6174503');
+            var lng1 = parseFloat('-0.1798758');
+            var lat2 = parseFloat('51.6248806');
+            var lng2 = parseFloat('-0.1771997');
+
+            // Create LatLng objects for start and end locations
+            var startLatLng = new google.maps.LatLng(lat1, lng1);
+            var endLatLng = new google.maps.LatLng(lat2, lng2);
+
+            // Create a map instance and center it on the start location
+            var map = new google.maps.Map(document.getElementById('mapContainer'), {
+                center: startLatLng,
+                zoom: 10
+            });
+
+            // Create a directions service object
+            var directionsService = new google.maps.DirectionsService();
+
+            // Create a directions renderer object
+            var directionsRenderer = new google.maps.DirectionsRenderer({
+                map: map,
+                suppressMarkers: true
+            });
+
+            // Configure the request for driving directions
+            var drivingRequest = {
+                origin: startLatLng,
+                destination: endLatLng,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+
+            // Configure the request for public transport directions
+            var transitRequest = {
+                origin: startLatLng,
+                destination: endLatLng,
+                travelMode: google.maps.TravelMode.TRANSIT
+            };
+
+            // Send the requests to the directions service
+            directionsService.route(drivingRequest, function(drivingResponse,
+                drivingStatus) {
+                if (drivingStatus === google.maps.DirectionsStatus.OK) {
+                    // Display the driving route on the map
+                    directionsRenderer.setDirections(drivingResponse);
+
+                    // Get the total driving distance
+                    var drivingDistance = drivingResponse.routes[0].legs[0].distance
+                        .text;
+
+                    // Display the driving distance in the modal
+                    $('#drivingDistance').text('Driving Distance: ' +
+                        drivingDistance);
+                }
+            });
+
+            directionsService.route(transitRequest, function(transitResponse,
+                transitStatus) {
+                if (transitStatus === google.maps.DirectionsStatus.OK) {
+                    // Display the public transport route on the map
+                    directionsRenderer.setDirections(transitResponse);
+
+                    // Get the total public transport distance
+                    var transitDistance = transitResponse.routes[0].legs[0].distance
+                        .text;
+
+                    // Display the public transport distance in the modal
+                    $('#transitDistance').text('Public Transport Distance: ' +
+                        transitDistance);
+                }
+            });
+
+            // Show the modal
+            $('#distanceModal').show();
+
+
+
+        });
+
+        $(document).ready(function() {
+            $('.close').click(function() {
+                $('#distanceModal').hide();
+            });
         });
     </script>
 @endsection

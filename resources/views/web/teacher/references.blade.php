@@ -23,6 +23,10 @@
                                     title="Receive reference">
                                     <i class="fa-solid fa-square-check"></i>
                                 </a>
+                                <a style="cursor: pointer;" class="disabled-link" id="saveReferenceBttn"
+                                    title="Save receive reference">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                </a>
                                 <a style="cursor: pointer;" class="disabled-link" id="previewReferenceBttn"
                                     title="Preview receive reference">
                                     <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
@@ -51,6 +55,7 @@
                                         <th>Date Until</th>
                                         <th>Ref. Sent</th>
                                         <th>No.</th>
+                                        <th>Feedback Recieved</th>
                                         <th>Recieved</th>
                                         <th>Valid?</th>
                                     </tr>
@@ -69,6 +74,17 @@
                                             <td>{{ $reference->lastSent_dte != null ? date('d-m-Y', strtotime($reference->lastSent_dte)) : '' }}
                                             </td>
                                             <td>{{ $reference->totalSent_int }}</td>
+                                            <td>
+                                                @if ($reference->req_reference_receive == 1)
+                                                    Yes
+                                                    @if ($reference->req_reference_receive_dte)
+                                                        <br>
+                                                        {{ date('d-m-Y', strtotime($reference->req_reference_receive_dte)) }}
+                                                    @endif
+                                                @else
+                                                    No
+                                                @endif
+                                            </td>
                                             <td>{{ $reference->receivedOn_dtm != null ? date('d-m-Y', strtotime($reference->receivedOn_dtm)) : '' }}
                                             </td>
                                             <td>
@@ -343,6 +359,7 @@
                 $('#previewReferenceBttn').addClass('disabled-link');
                 $('#sendReferenceBttn').addClass('disabled-link');
                 $('#editReferenceBttn').addClass('disabled-link');
+                $('#saveReferenceBttn').addClass('disabled-link');
             } else {
                 $('#teacherReferenceId').val(teacherReference_id);
                 $('#referenceReceiveDate').val(receivedOn_dtm);
@@ -352,6 +369,7 @@
                 $('#previewReferenceBttn').removeClass('disabled-link');
                 $('#sendReferenceBttn').removeClass('disabled-link');
                 $('#editReferenceBttn').removeClass('disabled-link');
+                $('#saveReferenceBttn').removeClass('disabled-link');
             }
         }
 
@@ -479,6 +497,56 @@
                                 });
                         }
                     });
+            } else {
+                swal("", "Please select one reference.");
+            }
+        });
+
+        $(document).on('click', '#previewReferenceBttn', function() {
+            var teacherReferenceId = $('#teacherReferenceId').val();
+            if (teacherReferenceId) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('teacherReferencePreview') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        teacherReferenceId: teacherReferenceId
+                    },
+                    success: function(data) {
+                        if (data.exist == 'Yes' && data.receive == 'Yes' && data.pdf_path) {
+                            window.open(data.pdf_path, '_blank');
+                        } else {
+                            swal("", "Reference feedback not yet recevied.");
+                        }
+                    }
+                });
+            } else {
+                swal("", "Please select one reference.");
+            }
+        });
+
+        $(document).on('click', '#saveReferenceBttn', function() {
+            var teacherReferenceId = $('#teacherReferenceId').val();
+            if (teacherReferenceId) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('teacherReferencePreview') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        teacherReferenceId: teacherReferenceId
+                    },
+                    success: function(data) {
+                        if (data.exist == 'Yes' && data.receive == 'Yes' && data.pdf_path) {
+                            const link = document.createElement('a');
+                            link.href = data.pdf_path;
+                            link.download = (data.pdf_path).split("/").pop();
+                            link.target = '_blank';
+                            link.click();
+                        } else {
+                            swal("", "Reference feedback not yet recevied.");
+                        }
+                    }
+                });
             } else {
                 swal("", "Please select one reference.");
             }

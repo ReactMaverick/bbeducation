@@ -1900,7 +1900,7 @@ class AssignmentController extends Controller
                             $query->where('professionalType.descriptionGroup_int', '=', 7);
                         });
                 })
-                ->select('tbl_teacher.teacher_id', 'tbl_teacher.knownAs_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'statusTbl.description_txt as status_txt', DB::raw('(CAST(((ACOS(SIN(tbl_teacher.lat_txt * PI() / 180) * SIN(' . $v_schoolLat . ' * PI() / 180) + COS(tbl_teacher.lat_txt * PI() / 180) * COS(' . $v_schoolLat . ' * PI() / 180) * COS((tbl_teacher.lon_txt - ' . $v_schoolLon . ') * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS DECIMAL(7, 1))) AS distance_dec'), DB::raw('CAST(IF(daysBlocked_int + daysBooked_int >= ' . $v_asnDatesCount . ', 0, IF((IFNULL(daysBlocked_int, 0) + IFNULL(daysBooked_int, 0)) / ' . $v_asnDatesCount . ' < 0, 0, (1 - ((IFNULL(daysBlocked_int, 0) + IFNULL(daysBooked_int, 0)) / ' . $v_asnDatesCount . ')) * 100)) AS DECIMAL(5, 1)) AS availability_dec'), 'tbl_teacher.prefYearGroup_int', 't_subject.teacher_id as subjectTeacherId', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt');
+                ->select('tbl_teacher.teacher_id', 'tbl_teacher.knownAs_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'statusTbl.description_txt as status_txt', DB::raw('(CAST(((ACOS(SIN(tbl_teacher.lat_txt * PI() / 180) * SIN(' . $v_schoolLat . ' * PI() / 180) + COS(tbl_teacher.lat_txt * PI() / 180) * COS(' . $v_schoolLat . ' * PI() / 180) * COS((tbl_teacher.lon_txt - ' . $v_schoolLon . ') * PI() / 180)) * 180 / PI()) * 60 * 1.1515) AS DECIMAL(7, 1))) AS distance_dec'), DB::raw('CAST(IF(daysBlocked_int + daysBooked_int >= ' . $v_asnDatesCount . ', 0, IF((IFNULL(daysBlocked_int, 0) + IFNULL(daysBooked_int, 0)) / ' . $v_asnDatesCount . ' < 0, 0, (1 - ((IFNULL(daysBlocked_int, 0) + IFNULL(daysBooked_int, 0)) / ' . $v_asnDatesCount . ')) * 100)) AS DECIMAL(5, 1)) AS availability_dec'), 'tbl_teacher.prefYearGroup_int', 't_subject.teacher_id as subjectTeacherId', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'tbl_teacher.lat_txt', 'tbl_teacher.lon_txt');
 
             if ($request->showall) {
                 // $candidate->whereIn('applicationStatus_int', array('1', '2'));
@@ -1931,7 +1931,7 @@ class AssignmentController extends Controller
                                 ->where('tbl_schoolTeacherList.rejectOrPreferred_int', '!=', 2);
                         });
                 })
-                ->select('tbl_asn.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'applicationStatus.description_txt as status_txt', DB::raw('SUM(dayPercent_dec) AS daysWorked_dec'), 'tbl_schoolTeacherList.rejectOrPreferred_int')
+                ->select('tbl_asn.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'tbl_teacher.lat_txt', 'tbl_teacher.lon_txt', 'applicationStatus.description_txt as status_txt', DB::raw('SUM(dayPercent_dec) AS daysWorked_dec'), 'tbl_schoolTeacherList.rejectOrPreferred_int')
                 ->where('tbl_asn.school_id', '=', $schoolId)
                 ->where('tbl_asn.status_int', '=', 3)
                 ->where('tbl_teacher.continuityStatus', '=', 1)
@@ -1947,13 +1947,13 @@ class AssignmentController extends Controller
                             $query->where('applicationStatus.descriptionGroup_int', '=', 3);
                         });
                 })
-                ->select('tbl_schoolTeacherList.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'applicationStatus.description_txt as status_txt')
+                ->select('tbl_schoolTeacherList.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'tbl_teacher.lat_txt', 'tbl_teacher.lon_txt', 'applicationStatus.description_txt as status_txt')
                 ->where('tbl_schoolTeacherList.school_id', $schoolId)
                 ->where('tbl_schoolTeacherList.rejectOrPreferred_int', 1)
                 ->groupBy('tbl_schoolTeacherList.teacher_id')
                 ->get();
 
-            return view("web.assignment.assignment_candidate", ['title' => $title, 'headerTitle' => $headerTitle, 'asn_id' => $id, 'assignmentDetail' => $assignmentDetail, 'asnDet' => $asnDet, 'candidateList' => $candidateList, 'continuityList' => $continuityList, 'preferedList' => $preferedList]);
+            return view("web.assignment.assignment_candidate", ['title' => $title, 'headerTitle' => $headerTitle, 'asn_id' => $id, 'assignmentDetail' => $assignmentDetail, 'asnDet' => $asnDet, 'candidateList' => $candidateList, 'continuityList' => $continuityList, 'preferedList' => $preferedList, 'v_schoolLat' => $v_schoolLat, 'v_schoolLon' => $v_schoolLon]);
         } else {
             return redirect()->intended('/');
         }
