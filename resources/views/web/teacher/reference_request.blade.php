@@ -23,7 +23,7 @@
         .clear_btn_outer {
             display: flex;
             justify-content: flex-end;
-            margin-right: 120px;
+            /* margin-right: 120px; */
             margin-top: 10px;
         }
         button#clearButton {
@@ -36,12 +36,15 @@
         .reset-password-form-outer {
             margin: 50px 0 100px 0;
         }
+        .canvas_outer {
+            width: 280px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container-fluid reset-password-section" style="height: fit-content;">
-        <div class="reset-password-form-outer" style="width: 60%;">
+        <div class="reset-password-form-outer reference_form_outer">
             <img src="{{ count($companyDetail) > 0 ? asset($companyDetail[0]->company_logo) : '' }}" alt="">
             <h1>{{ count($companyDetail) > 0 ? $companyDetail[0]->company_name : '' }}</h1>
             <span>Reference Request</span>
@@ -122,12 +125,10 @@
                             <input type="radio" id="professionalConduct1" name="professional_conduct" value="Excellent" style="margin-right: 5px;">
                             <label for="professionalConduct1" style="margin-bottom: 0;">Excellent</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="professionalConduct2" name="professional_conduct" value="Good" style="margin-right: 5px;">
                             <label for="professionalConduct2" style="margin-bottom: 0;">Good</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="professionalConduct3" name="professional_conduct" value="Satisfactory" style="margin-right: 5px;">
                             <label for="professionalConduct3" style="margin-bottom: 0;">Satisfactory</label>
@@ -151,12 +152,10 @@
                             <input type="radio" id="timekeep1" name="timekeeping" value="Excellent" style="margin-right: 5px;">
                             <label for="timekeep1" style="margin-bottom: 0;">Excellent</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="timekeep2" name="timekeeping" value="Good" style="margin-right: 5px;">
                             <label for="timekeep2" style="margin-bottom: 0;">Good</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="timekeep3" name="timekeeping" value="Satisfactory" style="margin-right: 5px;">
                             <label for="timekeep3" style="margin-bottom: 0;">Satisfactory</label>
@@ -183,12 +182,10 @@
                             <input type="radio" id="colleageRelation1" name="relationship_colleagues" value="Excellent" style="margin-right: 5px;">
                             <label for="colleageRelation1" style="margin-bottom: 0;">Excellent</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="colleageRelation2" name="relationship_colleagues" value="Good" style="margin-right: 5px;">
                             <label for="colleageRelation2" style="margin-bottom: 0;">Good</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="colleageRelation3" name="relationship_colleagues" value="Satisfactory" style="margin-right: 5px;">
                             <label for="colleageRelation3" style="margin-bottom: 0;">Satisfactory</label>
@@ -208,7 +205,6 @@
                             <input type="radio" id="suitability1" name="outstanding_disciplnary" value="Yes" style="margin-right: 5px;">
                             <label for="suitability1" style="margin-bottom: 0;">Yes</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="suitability2" name="outstanding_disciplnary" value="No" style="margin-right: 5px;">
                             <label for="suitability2" style="margin-bottom: 0;">No</label>
@@ -222,7 +218,6 @@
                             <input type="radio" id="suitability1" name="work_with_children" value="Yes" style="margin-right: 5px;">
                             <label for="suitability1" style="margin-bottom: 0;">Yes</label>
                         </div>
-                        <br>
                         <div style="display: flex;align-items: center;">
                             <input type="radio" id="suitability2" name="work_with_children" value="No" style="margin-right: 5px;">
                             <label for="suitability2" style="margin-bottom: 0;">No</label>
@@ -241,13 +236,14 @@
 
                     <label class="form-check-label reference_form_label col-md-12">Signature</label>
                     <div class="modal-input-field form-group col-md-6">
-                        <canvas id="signatureCanvas" name="signature" width="400" height="150"
-                            style="border: 2px solid #40A0ED;border-radius: 5px;background-color: #fff;">
-                        </canvas>
-                        <div class="clear_btn_outer">
-                            <button id="clearButton">Clear</button>
+                        <div class="canvas_outer">
+                            <canvas id="signatureCanvas" name="signature" width="275" height="150"
+                                style="border: 2px solid #40A0ED;border-radius: 5px;background-color: #fff;">
+                            </canvas>
+                            <div class="clear_btn_outer">
+                                <button id="clearButton">Clear</button>
+                            </div>
                         </div>
-                        
                     </div>
 
                     <div class="modal-input-field form-group col-md-6">
