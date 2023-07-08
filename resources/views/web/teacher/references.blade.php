@@ -459,7 +459,7 @@
                                 $('#fullLoader').show();
                                 $.ajax({
                                     type: 'POST',
-                                    url: '{{ url('teacherReferenceResend') }}',
+                                    url: "{{ url('teacherReferenceResend') }}",
                                     data: {
                                         "_token": "{{ csrf_token() }}",
                                         teacherReferenceId: teacherReferenceId
