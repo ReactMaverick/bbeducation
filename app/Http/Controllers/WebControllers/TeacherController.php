@@ -3704,11 +3704,13 @@ class TeacherController extends Controller
             $iData['work_with_children'] = $request->work_with_children ? $request->work_with_children : NULL;
             $iData['signature_date'] = $request->signature_date ? $request->signature_date : NULL;
 
+            $reference_request_new_id = '';
             $refReqDetail = DB::table('reference_request_new')
                 ->where('teacherReference_id', $teacherReference_id)
                 ->first();
 
             if ($refReqDetail) {
+                $reference_request_new_id = $refReqDetail->reference_request_new_id;
                 $iData['updated_at'] = date('Y-m-d H:i:s');
                 DB::table('reference_request_new')
                     ->where('reference_request_new_id', '=', $refReqDetail->reference_request_new_id)
@@ -3716,8 +3718,8 @@ class TeacherController extends Controller
             } else {
                 $iData['teacherReference_id'] = $teacherReference_id;
                 $iData['created_at'] = date('Y-m-d H:i:s');
-                DB::table('reference_request_new')
-                    ->insert($iData);
+                $reference_request_new_id = DB::table('reference_request_new')
+                    ->insertGetId($iData);
             }
 
             DB::table('tbl_teacherReference')
@@ -3725,6 +3727,34 @@ class TeacherController extends Controller
                 ->update([
                     'req_reference_receive' => 1,
                     'req_reference_receive_dte' => date('Y-m-d H:i:s')
+                ]);
+
+            // save pdf
+            $refReqDetail = DB::table('reference_request_new')
+                ->where('reference_request_new_id', $reference_request_new_id)
+                ->first();
+
+            $refDetail = DB::table('tbl_teacherReference')
+                ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_teacherReference.teacher_id')
+                ->select('tbl_teacherReference.*', 'tbl_teacher.company_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt')
+                ->where('tbl_teacherReference.teacherReference_id', $teacherReference_id)
+                ->first();
+            $companyDetail = array();
+            if ($refDetail) {
+                $companyDetail = DB::table('company')
+                    ->select('company.*')
+                    ->where('company.company_id', $refDetail->company_id)
+                    ->get();
+            }
+
+            $pdf = PDF::loadView("web.teacher.reference_request_pdf", ['refReqDetail' => $refReqDetail, 'refDetail' => $refDetail, 'companyDetail' => $companyDetail]);
+            $pdfName = 'Receive_reference_' . $teacherReference_id . '.pdf';
+            $pdf->save(public_path('pdfs/reference/' . $pdfName));
+
+            DB::table('reference_request_new')
+                ->where('reference_request_new_id', $reference_request_new_id)
+                ->update([
+                    'pdf_path' => 'pdfs/reference/' . $pdfName
                 ]);
 
             return redirect()->back()->with('success', "Form has been send successfully.");
