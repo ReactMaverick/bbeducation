@@ -3720,6 +3720,13 @@ class TeacherController extends Controller
                     ->insert($iData);
             }
 
+            DB::table('tbl_teacherReference')
+                ->where('teacherReference_id', '=', $teacherReference_id)
+                ->update([
+                    'req_reference_receive' => 1,
+                    'req_reference_receive_dte' => date('Y-m-d H:i:s')
+                ]);
+
             return redirect()->back()->with('success', "Form has been send successfully.");
         } else {
             return redirect()->back()->with('error', "Something went wrong.");
