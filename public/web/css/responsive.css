@@ -13,6 +13,10 @@
         width: 277px !important;
     }
 
+    .reference_form_label {
+        font-size: 14px !important;
+    }
+
     /* =======DASHBOARD========= */
 
     .assignment-status-table {
