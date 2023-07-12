@@ -97,7 +97,7 @@ class AlertController extends Controller
                 Mail::send('/mail/school_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
                     $m->to($mailData['mail'])
                         ->subject($mailData['subject'])
-                        ->attach($mailData['invoice_path'], ['as' => $mailData['invoice_name']])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['invoice_name'] . ".pdf"])
                         ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
@@ -117,8 +117,8 @@ class AlertController extends Controller
                     $m->to($mailData['mail'])
                         ->cc($mailData['cc_mail'])
                         ->subject($mailData['subject'])
-                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject']])
-                        ->attach($mailData['invoice_path2'], ['as' => "Candidate Timesheet"])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject'] . ".pdf"])
+                        ->attach($mailData['invoice_path2'], ['as' => "Candidate Timesheet.pdf"])
                         ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
@@ -137,8 +137,8 @@ class AlertController extends Controller
                 Mail::send('/mail/teacher_candidate_vetting', ['mailData' => $mailData], function ($m) use ($mailData) {
                     $m->to($mailData['mail'])
                         ->subject($mailData['subject'])
-                        ->attach($mailData['invoice_path'], ['as' => "Candidate Timesheet"])
-                        ->attach($mailData['invoice_path2'], ['as' => $mailData['subject']])
+                        ->attach($mailData['invoice_path'], ['as' => "Candidate Timesheet.pdf"])
+                        ->attach($mailData['invoice_path2'], ['as' => $mailData['subject'] . ".pdf"])
                         ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
@@ -157,7 +157,7 @@ class AlertController extends Controller
                 Mail::send('/mail/sch_finance_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
                     $m->to($mailData['mail'])
                         ->subject($mailData['subject'])
-                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject']])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject'] . ".pdf"])
                         ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
@@ -175,6 +175,25 @@ class AlertController extends Controller
             try {
                 Mail::send('/mail/reference_request', ['mailData' => $mailData], function ($m) use ($mailData) {
                     $m->to($mailData['mail'])->subject($mailData['subject'])->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function referenceReceivedToAdmin($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_ref_received', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->subject($mailData['subject'])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject'] . ".pdf"])
+                        ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });

@@ -47,7 +47,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Assignments Candidate') sidebar-active @endif">
-            <a href="{{ URL::to('/assignment-candidate/' . $assignmentDetail->asn_id . '?showall=') }}"
+            <a href="{{ URL::to('/assignment-candidate/' . $assignmentDetail->asn_id . '?showall=1') }}"
                 class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-clipboard-list"></i>

@@ -25,7 +25,7 @@
                                         {{-- <p style="color:#489628;font-size:18px">company name</p> --}}
                                     </td>
                                     <td style="padding:10px 20px;text-align:right">
-                                        <p style="color:#489628;font-size:25px">Reference Receive</p>
+                                        <p style="color:#489628;font-size:25px">Reference Received</p>
                                     </td>
                                 </tr>
                             </tbody>

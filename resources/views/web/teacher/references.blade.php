@@ -19,10 +19,14 @@
                         <div class="assignment-finance-heading-section">
                             <h2>References</h2>
                             <div class="assignment-finance-icon-section">
-                                <a style="cursor: pointer;" class="disabled-link" id="receiveReferenceBttn"
+                                <a style="cursor: pointer;" class="disabled-link" id="deleteReferenceBttn"
+                                    title="Delete reference">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                                {{-- <a style="cursor: pointer;" class="disabled-link" id="receiveReferenceBttn"
                                     title="Receive reference">
                                     <i class="fa-solid fa-square-check"></i>
-                                </a>
+                                </a> --}}
                                 <a style="cursor: pointer;" class="disabled-link" id="saveReferenceBttn"
                                     title="Save receive reference">
                                     <i class="fa-solid fa-file-arrow-down"></i>
@@ -32,8 +36,9 @@
                                     <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                                 </a>
                                 <a style="cursor: pointer;" class="disabled-link" id="sendReferenceBttn"
-                                    title="Send reference request">
-                                    <i class="fa-solid fa-envelope"></i>
+                                    title="Resend reference request">
+                                    {{-- <i class="fa-solid fa-envelope"></i> --}}
+                                    <i class="fa-solid fa-bell"></i>
                                 </a>
                                 <a data-toggle="modal" data-target="#addTeacherReferenceModal" style="cursor: pointer;"
                                     title="Add new reference">
@@ -55,9 +60,9 @@
                                         <th>Date Until</th>
                                         <th>Ref. Sent</th>
                                         <th>No.</th>
-                                        <th>Feedback Recieved</th>
-                                        <th>Recieved</th>
-                                        <th>Valid?</th>
+                                        <th>Reference Recieved</th>
+                                        {{-- <th>Recieved</th>
+                                        <th>Valid?</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -78,25 +83,30 @@
                                                 @if ($reference->req_reference_receive == 1)
                                                     Yes
                                                     @if ($reference->req_reference_receive_dte)
-                                                        <br>
-                                                        {{ date('d-m-Y', strtotime($reference->req_reference_receive_dte)) }}
+                                                        {{ ' ( ' . date('d-m-Y', strtotime($reference->req_reference_receive_dte)) . ' )' }}
                                                     @endif
                                                 @else
                                                     No
                                                 @endif
                                             </td>
-                                            <td>{{ $reference->receivedOn_dtm != null ? date('d-m-Y', strtotime($reference->receivedOn_dtm)) : '' }}
+                                            {{-- <td>{{ $reference->receivedOn_dtm != null ? date('d-m-Y', strtotime($reference->receivedOn_dtm)) : '' }}
                                             </td>
                                             <td>
                                                 @if ($reference->receivedOn_dtm != null)
-                                                    <?php $pendingReference += 1; ?>
+                                                    <?php //$pendingReference += 1;
+                                                    ?>
                                                     @if ($reference->isValid_status == 0)
                                                         {{ 'N' }}
                                                     @else
                                                         {{ 'Y' }}
                                                     @endif
                                                 @endif
-                                            </td>
+                                            </td> --}}
+                                            <?php
+                                            if ($reference->receivedOn_dtm != null) {
+                                                $pendingReference += 1;
+                                            }
+                                            ?>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -360,6 +370,7 @@
                 $('#sendReferenceBttn').addClass('disabled-link');
                 $('#editReferenceBttn').addClass('disabled-link');
                 $('#saveReferenceBttn').addClass('disabled-link');
+                $('#deleteReferenceBttn').addClass('disabled-link');
             } else {
                 $('#teacherReferenceId').val(teacherReference_id);
                 $('#referenceReceiveDate').val(receivedOn_dtm);
@@ -370,6 +381,7 @@
                 $('#sendReferenceBttn').removeClass('disabled-link');
                 $('#editReferenceBttn').removeClass('disabled-link');
                 $('#saveReferenceBttn').removeClass('disabled-link');
+                $('#deleteReferenceBttn').removeClass('disabled-link');
             }
         }
 
@@ -377,27 +389,27 @@
             var teacherReferenceId = $('#teacherReferenceId').val();
             var referenceReceiveDate = $('#referenceReceiveDate').val();
             if (teacherReferenceId) {
-                if (referenceReceiveDate) {
-                    swal("",
-                        "You cannot edit the core details for this reference as it has been received and logged."
-                    );
-                } else {
-                    $('#editTeacherReferenceId').val(teacherReferenceId);
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ url('teacherReferenceEdit') }}',
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            teacherReferenceId: teacherReferenceId
-                        },
-                        success: function(data) {
-                            //console.log(data);
-                            $('#editReferenceAjax').html(data.html);
-                        }
-                    });
-                    $('#editTeacherReferenceModal').modal("show");
+                // if (referenceReceiveDate) {
+                //     swal("",
+                //         "You cannot edit the core details for this reference as it has been received and logged."
+                //     );
+                // } else {
+                $('#editTeacherReferenceId').val(teacherReferenceId);
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('teacherReferenceEdit') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        teacherReferenceId: teacherReferenceId
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#editReferenceAjax').html(data.html);
+                    }
+                });
+                $('#editTeacherReferenceModal').modal("show");
 
-                }
+                // }
             } else {
                 swal("", "Please select one reference.");
             }
@@ -547,6 +559,39 @@
                         }
                     }
                 });
+            } else {
+                swal("", "Please select one reference.");
+            }
+        });
+
+        $(document).on('click', '#deleteReferenceBttn', function() {
+            var teacherReferenceId = $('#teacherReferenceId').val();
+            if (teacherReferenceId) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to remove the selected reference?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "{{ url('teacherReferenceDelete') }}",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        teacherReferenceId: teacherReferenceId
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                        }
+                    });
             } else {
                 swal("", "Please select one reference.");
             }

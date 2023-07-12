@@ -492,50 +492,152 @@ class TeacherController extends Controller
         if ($request->ajax()) {
             $startDate = $request->start;
             $endDate = $request->end;
-            $calEventItem1 = DB::table('tbl_asn')
-                ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
-                ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
-                ->leftJoin(
-                    DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
-                    function ($join) {
-                        $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
-                    }
-                )
-                ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
-                ->where('tbl_asn.teacher_id', $id)
-                ->where('tbl_asn.status_int', 3)
-                ->whereDate('tbl_asnItem.asnDate_dte', '>=', $startDate)
-                ->whereDate('tbl_asnItem.asnDate_dte', '<=', $endDate)
-                ->groupBy('tbl_asnItem.asnDate_dte')
-                ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
-                ->get()
-                ->toArray();
+            // $calEventItem1 = DB::table('tbl_asn')
+            //     ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            //     ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+            //     ->leftJoin(
+            //         DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
+            //         function ($join) {
+            //             $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
+            //         }
+            //     )
+            //     ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
+            //     ->where('tbl_asn.teacher_id', $id)
+            //     ->where('tbl_asn.status_int', 3)
+            //     ->whereDate('tbl_asnItem.asnDate_dte', '>=', $startDate)
+            //     ->whereDate('tbl_asnItem.asnDate_dte', '<=', $endDate)
+            //     ->groupBy('tbl_asnItem.asnDate_dte')
+            //     ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+            //     ->get()
+            //     ->toArray();
 
-            $calEventItem2 = DB::table('tbl_teacherCalendar')
-                ->leftJoin(
-                    DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
-                    function ($join) {
-                        $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
-                    }
-                )
-                ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
-                ->where('tbl_teacherCalendar.teacher_id', $id)
-                ->whereBetween('tbl_teacherCalendar.date_dte', [$startDate, $endDate])
-                ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
-                    $query->select('asnDate_dte')
-                        ->from('tbl_asn')
-                        ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
-                        ->where('status_int', 3)
-                        ->where('teacher_id', $id)
-                        ->get();
-                })
-                ->groupBy('tbl_teacherCalendar.date_dte')
-                ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
-                ->get()
-                ->toArray();
-            $calEventItem = array_merge($calEventItem1, $calEventItem2);
+            // $calEventItem2 = DB::table('tbl_teacherCalendar')
+            //     ->leftJoin(
+            //         DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
+            //         function ($join) {
+            //             $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
+            //         }
+            //     )
+            //     ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, NULL, IF(COUNT(asnItem_id) > 1, 6, 1)), reason_int) AS reason_int'), DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", IF(COUNT(asnItem_id) > 1, "Multiple BB Bookings", reason_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, IF(COUNT(asnItem_id) > 1, -1, asn_id)) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
+            //     ->where('tbl_teacherCalendar.teacher_id', $id)
+            //     ->whereBetween('tbl_teacherCalendar.date_dte', [$startDate, $endDate])
+            //     ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
+            //         $query->select('asnDate_dte')
+            //             ->from('tbl_asn')
+            //             ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            //             ->where('status_int', 3)
+            //             ->where('teacher_id', $id)
+            //             ->get();
+            //     })
+            //     ->groupBy('tbl_teacherCalendar.date_dte')
+            //     ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
+            //     ->get()
+            //     ->toArray();
+            // // $calEventItem = array_merge($calEventItem1, $calEventItem2);
+            // $calEventItem = array_merge($calEventItem2, $calEventItem1);
 
-            return response()->json($calEventItem);
+            $teacherID = $id;
+            $calendarDates = collect([]);
+            $currentDate = $startDate;
+
+            while ($currentDate <= $endDate) {
+                $calendarDates->push([
+                    'calendarDate_dte' => $currentDate,
+                ]);
+                $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+            }
+
+            $teacherCalendar = $calendarDates->map(function ($date) use ($teacherID) {
+                $calendarDate = $date['calendarDate_dte'];
+
+                $tchDates = DB::table('tbl_teacherCalendar')
+                    ->leftJoin(
+                        DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$teacherID') AS t_tchAsn"),
+                        function ($join) {
+                            $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
+                        }
+                    )
+                    ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, NULL, IF(COUNT(asnItem_id) > 1, 6, 1)), reason_int) AS reason_int'), DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", IF(COUNT(asnItem_id) > 1, "Multiple BB Bookings", reason_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, IF(COUNT(asnItem_id) > 1, -1, asn_id)) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
+                    ->where('tbl_teacherCalendar.teacher_id', $teacherID)
+                    ->where('date_dte', $calendarDate)
+                    ->groupBy('tbl_teacherCalendar.date_dte')
+                    ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
+                    ->get();
+
+                $tchAsn = DB::table('tbl_asn')
+                    ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->leftJoin(
+                        DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$teacherID') AS t_tchDates"),
+                        function ($join) {
+                            $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
+                        }
+                    )
+                    ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
+                    ->where('tbl_asn.teacher_id', $teacherID)
+                    ->where('tbl_asn.status_int', 3)
+                    ->where('tbl_asnItem.asnDate_dte', $calendarDate)
+                    ->groupBy('tbl_asnItem.asnDate_dte')
+                    ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                    ->get();
+
+                $tchAsnNew = DB::table('tbl_asn')
+                    ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                    ->where('tbl_asnItem.asnDate_dte', $calendarDate)
+                    ->where('tbl_asn.status_int', 3)
+                    ->where('tbl_asn.teacher_id', $teacherID)
+                    ->get();
+
+                $asnItem_id = null;
+                $calendarItem_id = null;
+                $start = null;
+                $reason_int = null;
+                $title = null;
+                $linkType_int = 0;
+                $link_id = 0;
+                $tc_start_tm = null;
+                $tc_end_tm = null;
+                $tc_notes_txt = null;
+
+                if ($tchDates->isNotEmpty()) {
+                    $asnItem_id = $tchDates[0]->asnItem_id;
+                    $calendarItem_id = $tchDates[0]->calendarItem_id;
+                    $start = $tchDates[0]->start;
+                    $reason_int = $tchDates[0]->reason_int;
+                    $title = $tchDates[0]->title;
+                    $linkType_int = $tchDates[0]->linkType_int;
+                    $link_id = $tchDates[0]->link_id;
+                    $tc_start_tm = $tchDates[0]->tc_start_tm;
+                    $tc_end_tm = $tchDates[0]->tc_end_tm;
+                    $tc_notes_txt = $tchDates[0]->tc_notes_txt;
+                } elseif ($tchAsn->isNotEmpty()) {
+                    $asnItem_id = $tchAsn[0]->asnItem_id;
+                    $calendarItem_id = $tchAsn[0]->calendarItem_id;
+                    $start = $tchAsn[0]->start;
+                    $reason_int = count($tchAsnNew) > 1 ? 6 : $tchAsn[0]->reason_int;
+                    $title = count($tchAsnNew) > 1 ? "Multiple BB Bookings" : $tchAsn[0]->title;
+                    $linkType_int = $tchAsn[0]->linkType_int;
+                    $link_id = $tchAsn[0]->link_id;
+                    $tc_start_tm = $tchAsn[0]->tc_start_tm;
+                    $tc_end_tm = $tchAsn[0]->tc_end_tm;
+                    $tc_notes_txt = $tchAsn[0]->tc_notes_txt;
+                }
+
+                return [
+                    'asnItem_id' => $asnItem_id,
+                    'calendarItem_id' => $calendarItem_id,
+                    'start' => $start,
+                    'reason_int' => $reason_int,
+                    'title' => $title,
+                    'linkType_int' => $linkType_int,
+                    'link_id' => $link_id,
+                    'tc_start_tm' => $tc_start_tm,
+                    'tc_end_tm' => $tc_end_tm,
+                    'tc_notes_txt' => $tc_notes_txt
+                ];
+            })->values();
+
+            return response()->json($teacherCalendar);
         }
     }
 
@@ -849,50 +951,108 @@ class TeacherController extends Controller
             if ($request->ajax()) {
                 $startDate = $request->start;
                 $endDate = $request->end;
-                $calEventItem1 = DB::table('tbl_asn')
-                    ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
-                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
-                    ->leftJoin(
-                        DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$id') AS t_tchDates"),
-                        function ($join) {
-                            $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
-                        }
-                    )
-                    ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
-                    ->where('tbl_asn.teacher_id', $id)
-                    ->where('tbl_asn.status_int', 3)
-                    ->whereDate('tbl_asnItem.asnDate_dte', '>=', $startDate)
-                    ->whereDate('tbl_asnItem.asnDate_dte', '<=', $endDate)
-                    ->groupBy('tbl_asnItem.asnDate_dte')
-                    ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
-                    ->get()
-                    ->toArray();
+                $teacherID = $id;
+                $calendarDates = collect([]);
+                $currentDate = $startDate;
 
-                $calEventItem2 = DB::table('tbl_teacherCalendar')
-                    ->leftJoin(
-                        DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$id') AS t_tchAsn"),
-                        function ($join) {
-                            $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
-                        }
-                    )
-                    ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", reason_txt), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, asn_id) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
-                    ->where('tbl_teacherCalendar.teacher_id', $id)
-                    ->whereBetween('tbl_teacherCalendar.date_dte', [$startDate, $endDate])
-                    ->whereNotIn('tbl_teacherCalendar.date_dte', function ($query) use ($id) {
-                        $query->select('asnDate_dte')
-                            ->from('tbl_asn')
-                            ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
-                            ->where('status_int', 3)
-                            ->where('teacher_id', $id)
-                            ->get();
-                    })
-                    ->groupBy('tbl_teacherCalendar.date_dte')
-                    ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
-                    ->get()
-                    ->toArray();
-                $calEventItem = array_merge($calEventItem1, $calEventItem2);
+                while ($currentDate <= $endDate) {
+                    $calendarDates->push([
+                        'calendarDate_dte' => $currentDate,
+                    ]);
+                    $currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+                }
 
-                return response()->json($calEventItem);
+                $teacherCalendar = $calendarDates->map(function ($date) use ($teacherID) {
+                    $calendarDate = $date['calendarDate_dte'];
+
+                    $tchDates = DB::table('tbl_teacherCalendar')
+                        ->leftJoin(
+                            DB::raw("(SELECT tbl_asn.asn_id, asnDate_dte, CONCAT('Work: ', tbl_school.name_txt) AS reason_txt, tbl_asnItem.asnItem_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE status_int = 3 AND teacher_id = '$teacherID') AS t_tchAsn"),
+                            function ($join) {
+                                $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
+                            }
+                        )
+                        ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, NULL, IF(COUNT(asnItem_id) > 1, 6, 1)), reason_int) AS reason_int'), DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", IF(COUNT(asnItem_id) > 1, "Multiple BB Bookings", reason_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, IF(COUNT(asnItem_id) > 1, -1, asn_id)) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
+                        ->where('tbl_teacherCalendar.teacher_id', $teacherID)
+                        ->where('date_dte', $calendarDate)
+                        ->groupBy('tbl_teacherCalendar.date_dte')
+                        ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
+                        ->get();
+
+                    $tchAsn = DB::table('tbl_asn')
+                        ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                        ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                        ->leftJoin(
+                            DB::raw("(SELECT tbl_teacherCalendar.calendarItem_id, tbl_teacherCalendar.date_dte, tbl_teacherCalendar.part_int, tbl_teacherCalendar.start_tm as tc_start_tm, tbl_teacherCalendar.end_tm as tc_end_tm, tbl_teacherCalendar.reason_int, tbl_teacherCalendar.notes_txt as tc_notes_txt FROM tbl_teacherCalendar WHERE teacher_id = '$teacherID') AS t_tchDates"),
+                            function ($join) {
+                                $join->on('tbl_asnItem.asnDate_dte', '=', 't_tchDates.date_dte');
+                            }
+                        )
+                        ->select('tbl_asnItem.asnItem_id', 'calendarItem_id', 'tbl_asnItem.asnDate_dte as start', 'reason_int', DB::raw('IF(reason_int IS NULL, IF((CONCAT("Work: ", tbl_school.name_txt)) IS NULL, "", CONCAT("Work: ", tbl_school.name_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(tbl_asn.asn_id IS NULL, 0, tbl_asn.asn_id) AS link_id'), 'tc_start_tm', 'tc_end_tm', 'tc_notes_txt')
+                        ->where('tbl_asn.teacher_id', $teacherID)
+                        ->where('tbl_asn.status_int', 3)
+                        ->where('tbl_asnItem.asnDate_dte', $calendarDate)
+                        ->groupBy('tbl_asnItem.asnDate_dte')
+                        ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
+                        ->get();
+
+                    $tchAsnNew = DB::table('tbl_asn')
+                        ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                        ->where('tbl_asnItem.asnDate_dte', $calendarDate)
+                        ->where('tbl_asn.status_int', 3)
+                        ->where('tbl_asn.teacher_id', $teacherID)
+                        ->get();
+
+                    $asnItem_id = null;
+                    $calendarItem_id = null;
+                    $start = null;
+                    $reason_int = null;
+                    $title = null;
+                    $linkType_int = 0;
+                    $link_id = 0;
+                    $tc_start_tm = null;
+                    $tc_end_tm = null;
+                    $tc_notes_txt = null;
+
+                    if ($tchDates->isNotEmpty()) {
+                        $asnItem_id = $tchDates[0]->asnItem_id;
+                        $calendarItem_id = $tchDates[0]->calendarItem_id;
+                        $start = $tchDates[0]->start;
+                        $reason_int = $tchDates[0]->reason_int;
+                        $title = $tchDates[0]->title;
+                        $linkType_int = $tchDates[0]->linkType_int;
+                        $link_id = $tchDates[0]->link_id;
+                        $tc_start_tm = $tchDates[0]->tc_start_tm;
+                        $tc_end_tm = $tchDates[0]->tc_end_tm;
+                        $tc_notes_txt = $tchDates[0]->tc_notes_txt;
+                    } elseif ($tchAsn->isNotEmpty()) {
+                        $asnItem_id = $tchAsn[0]->asnItem_id;
+                        $calendarItem_id = $tchAsn[0]->calendarItem_id;
+                        $start = $tchAsn[0]->start;
+                        $reason_int = count($tchAsnNew) > 1 ? 6 : $tchAsn[0]->reason_int;
+                        $title = count($tchAsnNew) > 1 ? "Multiple BB Bookings" : $tchAsn[0]->title;
+                        $linkType_int = $tchAsn[0]->linkType_int;
+                        $link_id = $tchAsn[0]->link_id;
+                        $tc_start_tm = $tchAsn[0]->tc_start_tm;
+                        $tc_end_tm = $tchAsn[0]->tc_end_tm;
+                        $tc_notes_txt = $tchAsn[0]->tc_notes_txt;
+                    }
+
+                    return [
+                        'asnItem_id' => $asnItem_id,
+                        'calendarItem_id' => $calendarItem_id,
+                        'start' => $start,
+                        'reason_int' => $reason_int,
+                        'title' => $title,
+                        'linkType_int' => $linkType_int,
+                        'link_id' => $link_id,
+                        'tc_start_tm' => $tc_start_tm,
+                        'tc_end_tm' => $tc_end_tm,
+                        'tc_notes_txt' => $tc_notes_txt
+                    ];
+                })->values();
+
+                return response()->json($teacherCalendar);
             }
 
             $quickList = DB::table('tbl_description')
@@ -2001,6 +2161,8 @@ class TeacherController extends Controller
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
+            // $admin_mail = $webUserLoginData->user_name;
+            $admin_mail = 'sanjoy.websadroit@gmail.com';
             $teacher_id = $request->teacher_id;
             $validator = Validator::make($request->all(), [
                 'referenceType_id' => 'required',
@@ -2061,11 +2223,12 @@ class TeacherController extends Controller
                     ]);
 
                 $refID = base64_encode($teacherReference_id);
+                $adminMailEnc = base64_encode($admin_mail);
                 $mailData['subject'] = $subject;
                 $mailData['teacherName'] = $teacherName;
                 $mailData['refereeName'] = $request->refereeName_txt;
                 $mailData['mail'] = $request->refereeEmail_txt;
-                $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID;
+                $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID . '/' . $adminMailEnc;
                 $myVar = new AlertController();
                 $myVar->referenceRequestMail($mailData);
             }
@@ -2083,6 +2246,8 @@ class TeacherController extends Controller
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
+            // $admin_mail = $webUserLoginData->user_name;
+            $admin_mail = 'sanjoy.websadroit@gmail.com';
             $input = $request->all();
             $teacherReferenceId = $input['teacherReferenceId'];
 
@@ -2113,11 +2278,12 @@ class TeacherController extends Controller
                         ]);
 
                     $refID = base64_encode($teacherReferenceId);
+                    $adminMailEnc = base64_encode($admin_mail);
                     $mailData['subject'] = $subject;
                     $mailData['teacherName'] = $teacherName;
                     $mailData['refereeName'] = $refDetails->refereeName_txt;
                     $mailData['mail'] = $refDetails->refereeEmail_txt;
-                    $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID;
+                    $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID . '/' . $adminMailEnc;
                     $myVar = new AlertController();
                     $myVar->referenceRequestMail($mailData);
 
@@ -2128,6 +2294,36 @@ class TeacherController extends Controller
             return $result;
         }
         return $result;
+    }
+
+    public function teacherReferenceDelete(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $teacherReferenceId = $input['teacherReferenceId'];
+
+            DB::table('tbl_teacherReferenceQuestion')
+                ->where('teacherReference_id', "=", $teacherReferenceId)
+                ->delete();
+
+            DB::table('tbl_teacherReferenceRequest')
+                ->where('teacherReference_id', "=", $teacherReferenceId)
+                ->delete();
+
+            DB::table('tbl_teacherReference')
+                ->where('teacherReference_id', "=", $teacherReferenceId)
+                ->delete();
+
+            DB::table('reference_request_new')
+                ->where('teacherReference_id', "=", $teacherReferenceId)
+                ->delete();
+
+            return true;
+        }
+        return false;
     }
 
     public function teacherReferencePreview(Request $request)
@@ -3120,87 +3316,90 @@ class TeacherController extends Controller
             $editDocumentId = $request->editDocumentId;
             $file_location = $request->file_location;
 
-            $fPath = '';
-            $fType = '';
-            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
-            if ($image = $request->file('file')) {
-                $extension = $image->getClientOriginalExtension();
-                $file_name = $image->getClientOriginalName();
-                if (in_array(strtolower($extension), $allowed_types)) {
-                    $rand = mt_rand(100000, 999999);
-                    $name = time() . "_" . $rand . "_" . $file_name;
-                    if ($image->move(public_path('images/teacher'), $name)) {
-                        $fPath = 'images/teacher/' . $name;
-                        $fType = $extension;
-                        if (file_exists($file_location)) {
-                            unlink($file_location);
-                        }
-                    }
-                } else {
-                    return redirect()->back()->with('error', "Please upload valid file.");
-                }
-            } else {
-                return redirect()->back()->with('error', "Please upload valid file.");
-            }
-
-            DB::table('tbl_teacherDocument')
+            $docDetail = DB::table('tbl_teacherDocument')
                 ->where('teacherDocument_id', '=', $editDocumentId)
-                ->update([
-                    'file_location' => $fPath,
-                    'file_name' => $request->file_name ? $request->file_name : $request->file_name_hidden,
-                    'type_int' => $request->type_int,
-                    'file_type' => $fType,
-                    'uploadOn_dtm' => date('Y-m-d H:i:s'),
-                    'loggedOn_dtm' => date('Y-m-d H:i:s'),
-                    'loggedBy_id' => $user_id
-                ]);
-
-            if ($fPath) {
-                $eData = array();
-                if ($request->type_int == 3) {
-                    $eData['docPassport_status'] = -1;
-                }
-                if ($request->type_int == 4) {
-                    $eData['docDriversLicence_status'] = -1;
-                }
-                if ($request->type_int == 5) {
-                    $eData['docBankStatement_status'] = -1;
-                }
-                if ($request->type_int == 6) {
-                    $eData['docDBS_status'] = -1;
-                }
-                if ($request->type_int == 8) {
-                    $eData['docDisqualForm_status'] = -1;
-                }
-                if ($request->type_int == 9) {
-                    $eData['docHealthDec_status'] = -1;
-                }
-                if ($request->type_int == 10) {
-                    $eData['docEUCard_status'] = -1;
-                }
-                if ($request->type_int == 11) {
-                    $eData['docUtilityBill_status'] = -1;
-                }
-                if ($request->type_int == 12) {
-                    $eData['docTelephoneBill_status'] = -1;
-                }
-                if ($request->type_int == 13) {
-                    $eData['docBenefitStatement_status'] = -1;
-                }
-                if ($request->type_int == 14) {
-                    $eData['docCreditCardBill_status'] = -1;
-                }
-                if ($request->type_int == 15 || $request->type_int == 17) {
-                    $eData['docP45P60_status'] = -1;
-                }
-                if ($request->type_int == 16) {
-                    $eData['docCouncilTax_status'] = -1;
+                ->first();
+            if ($docDetail) {
+                $fPath = $docDetail->file_location;
+                $fType = $docDetail->file_type;
+                $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
+                if ($image = $request->file('file')) {
+                    $extension = $image->getClientOriginalExtension();
+                    $file_name = $image->getClientOriginalName();
+                    if (in_array(strtolower($extension), $allowed_types)) {
+                        $rand = mt_rand(100000, 999999);
+                        $name = time() . "_" . $rand . "_" . $file_name;
+                        if ($image->move(public_path('images/teacher'), $name)) {
+                            $fPath = 'images/teacher/' . $name;
+                            $fType = $extension;
+                            if (file_exists($file_location)) {
+                                unlink($file_location);
+                            }
+                        }
+                    } else {
+                        return redirect()->back()->with('error', "Please upload valid file.");
+                    }
                 }
 
-                if ($eData) {
-                    DB::table('tbl_teacher')
-                        ->where('teacher_id', '=', $teacher_id)
-                        ->update($eData);
+                DB::table('tbl_teacherDocument')
+                    ->where('teacherDocument_id', '=', $editDocumentId)
+                    ->update([
+                        'file_location' => $fPath,
+                        'file_name' => $request->file_name ? $request->file_name : $request->file_name_hidden,
+                        'type_int' => $request->type_int,
+                        'file_type' => $fType,
+                        'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                        'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                        'loggedBy_id' => $user_id
+                    ]);
+
+                if ($fPath) {
+                    $eData = array();
+                    if ($request->type_int == 3) {
+                        $eData['docPassport_status'] = -1;
+                    }
+                    if ($request->type_int == 4) {
+                        $eData['docDriversLicence_status'] = -1;
+                    }
+                    if ($request->type_int == 5) {
+                        $eData['docBankStatement_status'] = -1;
+                    }
+                    if ($request->type_int == 6) {
+                        $eData['docDBS_status'] = -1;
+                    }
+                    if ($request->type_int == 8) {
+                        $eData['docDisqualForm_status'] = -1;
+                    }
+                    if ($request->type_int == 9) {
+                        $eData['docHealthDec_status'] = -1;
+                    }
+                    if ($request->type_int == 10) {
+                        $eData['docEUCard_status'] = -1;
+                    }
+                    if ($request->type_int == 11) {
+                        $eData['docUtilityBill_status'] = -1;
+                    }
+                    if ($request->type_int == 12) {
+                        $eData['docTelephoneBill_status'] = -1;
+                    }
+                    if ($request->type_int == 13) {
+                        $eData['docBenefitStatement_status'] = -1;
+                    }
+                    if ($request->type_int == 14) {
+                        $eData['docCreditCardBill_status'] = -1;
+                    }
+                    if ($request->type_int == 15 || $request->type_int == 17) {
+                        $eData['docP45P60_status'] = -1;
+                    }
+                    if ($request->type_int == 16) {
+                        $eData['docCouncilTax_status'] = -1;
+                    }
+
+                    if ($eData) {
+                        DB::table('tbl_teacher')
+                            ->where('teacher_id', '=', $teacher_id)
+                            ->update($eData);
+                    }
                 }
             }
 
@@ -3695,9 +3894,10 @@ class TeacherController extends Controller
         }
     }
 
-    public function teacherReferenceRequest(Request $request, $id)
+    public function teacherReferenceRequest(Request $request, $id, $mail)
     {
         $teacherReference_id = base64_decode($id);
+        $adminMail = base64_decode($mail);
         $refDetail = DB::table('tbl_teacherReference')
             ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_teacherReference.teacher_id')
             ->select('tbl_teacherReference.*', 'tbl_teacher.company_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt')
@@ -3710,7 +3910,7 @@ class TeacherController extends Controller
                 ->where('company.company_id', $refDetail->company_id)
                 ->get();
 
-            return view("web.teacher.reference_request", ['teacherReference_id' => $teacherReference_id, 'refDetail' => $refDetail, 'companyDetail' => $companyDetail]);
+            return view("web.teacher.reference_request", ['teacherReference_id' => $teacherReference_id, 'refDetail' => $refDetail, 'companyDetail' => $companyDetail, 'adminMail' => $adminMail]);
         }
     }
 
@@ -3718,6 +3918,7 @@ class TeacherController extends Controller
     {
         if ($request->teacherReference_id) {
             $teacherReference_id = $request->teacherReference_id;
+            $adminMail = $request->adminMail;
 
             $refExist = DB::table('tbl_teacherReference')
                 ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_teacherReference.teacher_id')
@@ -3776,9 +3977,14 @@ class TeacherController extends Controller
                         ->insertGetId($iData);
                 }
 
+                $isValid_status = -1;
+                $receivedOn_dtm = date("Y-m-d H:i:s");
+
                 DB::table('tbl_teacherReference')
                     ->where('teacherReference_id', '=', $teacherReference_id)
                     ->update([
+                        'isValid_status' => $isValid_status,
+                        'receivedOn_dtm' => $receivedOn_dtm,
                         'req_reference_receive' => 1,
                         'req_reference_receive_dte' => date('Y-m-d H:i:s')
                     ]);
@@ -3804,12 +4010,22 @@ class TeacherController extends Controller
                 $pdf = PDF::loadView("web.teacher.reference_request_pdf", ['refReqDetail' => $refReqDetail, 'refDetail' => $refDetail, 'companyDetail' => $companyDetail]);
                 $pdfName = 'Receive_reference_' . $teacherReference_id . '.pdf';
                 $pdf->save(public_path('pdfs/reference/' . $pdfName));
+                $fPath = 'pdfs/reference/' . $pdfName;
 
                 DB::table('reference_request_new')
                     ->where('reference_request_new_id', $reference_request_new_id)
                     ->update([
                         'pdf_path' => 'pdfs/reference/' . $pdfName
                     ]);
+
+                if ($adminMail && file_exists(public_path($fPath))) {
+                    $mailData['subject'] = 'Reference Received (' . $refReqDetail->ref_request_firstname . ' ' . $refReqDetail->ref_request_lastname . ')';
+                    $mailData['mail_description'] = "Reference receieved for " . $refReqDetail->ref_request_firstname . ' ' . $refReqDetail->ref_request_lastname . ". Please find attachment.";
+                    $mailData['invoice_path'] = asset($fPath);
+                    $mailData['mail'] = $adminMail;
+                    $myVar = new AlertController();
+                    $myVar->referenceReceivedToAdmin($mailData);
+                }
 
                 return redirect()->back()->with('success', "Form has been send successfully.");
             }
@@ -4804,87 +5020,90 @@ class TeacherController extends Controller
             $editDocumentId = $request->editDocumentId;
             $file_location = $request->file_location;
 
-            $fPath = '';
-            $fType = '';
-            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
-            if ($image = $request->file('file')) {
-                $extension = $image->getClientOriginalExtension();
-                $file_name = $image->getClientOriginalName();
-                if (in_array(strtolower($extension), $allowed_types)) {
-                    $rand = mt_rand(100000, 999999);
-                    $name = time() . "_" . $rand . "_" . $file_name;
-                    if ($image->move('public/images/teacher', $name)) {
-                        $fPath = 'public/images/teacher/' . $name;
-                        $fType = $extension;
-                        if (file_exists($file_location)) {
-                            unlink($file_location);
-                        }
-                    }
-                } else {
-                    return redirect()->back()->with('error', "Please upload valid file.");
-                }
-            } else {
-                return redirect()->back()->with('error', "Please upload valid file.");
-            }
-
-            DB::table('tbl_teacherDocument')
+            $docDetail = DB::table('tbl_teacherDocument')
                 ->where('teacherDocument_id', '=', $editDocumentId)
-                ->update([
-                    'file_location' => $fPath,
-                    'file_name' => $request->file_name,
-                    'type_int' => $request->type_int,
-                    'file_type' => $fType,
-                    'uploadOn_dtm' => date('Y-m-d H:i:s'),
-                    'loggedOn_dtm' => date('Y-m-d H:i:s'),
-                    // 'loggedBy_id' => $user_id
-                ]);
-
-            if ($fPath) {
-                $eData = array();
-                if ($request->type_int == 3) {
-                    $eData['docPassport_status'] = -1;
-                }
-                if ($request->type_int == 4) {
-                    $eData['docDriversLicence_status'] = -1;
-                }
-                if ($request->type_int == 5) {
-                    $eData['docBankStatement_status'] = -1;
-                }
-                if ($request->type_int == 6) {
-                    $eData['docDBS_status'] = -1;
-                }
-                if ($request->type_int == 8) {
-                    $eData['docDisqualForm_status'] = -1;
-                }
-                if ($request->type_int == 9) {
-                    $eData['docHealthDec_status'] = -1;
-                }
-                if ($request->type_int == 10) {
-                    $eData['docEUCard_status'] = -1;
-                }
-                if ($request->type_int == 11) {
-                    $eData['docUtilityBill_status'] = -1;
-                }
-                if ($request->type_int == 12) {
-                    $eData['docTelephoneBill_status'] = -1;
-                }
-                if ($request->type_int == 13) {
-                    $eData['docBenefitStatement_status'] = -1;
-                }
-                if ($request->type_int == 14) {
-                    $eData['docCreditCardBill_status'] = -1;
-                }
-                if ($request->type_int == 15 || $request->type_int == 17) {
-                    $eData['docP45P60_status'] = -1;
-                }
-                if ($request->type_int == 16) {
-                    $eData['docCouncilTax_status'] = -1;
+                ->first();
+            if ($docDetail) {
+                $fPath = $docDetail->file_location;
+                $fType = $docDetail->file_type;
+                $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx');
+                if ($image = $request->file('file')) {
+                    $extension = $image->getClientOriginalExtension();
+                    $file_name = $image->getClientOriginalName();
+                    if (in_array(strtolower($extension), $allowed_types)) {
+                        $rand = mt_rand(100000, 999999);
+                        $name = time() . "_" . $rand . "_" . $file_name;
+                        if ($image->move('public/images/teacher', $name)) {
+                            $fPath = 'public/images/teacher/' . $name;
+                            $fType = $extension;
+                            if (file_exists($file_location)) {
+                                unlink($file_location);
+                            }
+                        }
+                    } else {
+                        return redirect()->back()->with('error', "Please upload valid file.");
+                    }
                 }
 
-                if ($eData) {
-                    DB::table('tbl_teacher')
-                        ->where('teacher_id', '=', $teacher_id)
-                        ->update($eData);
+                DB::table('tbl_teacherDocument')
+                    ->where('teacherDocument_id', '=', $editDocumentId)
+                    ->update([
+                        'file_location' => $fPath,
+                        'file_name' => $request->file_name,
+                        'type_int' => $request->type_int,
+                        'file_type' => $fType,
+                        'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                        'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                        // 'loggedBy_id' => $user_id
+                    ]);
+
+                if ($fPath) {
+                    $eData = array();
+                    if ($request->type_int == 3) {
+                        $eData['docPassport_status'] = -1;
+                    }
+                    if ($request->type_int == 4) {
+                        $eData['docDriversLicence_status'] = -1;
+                    }
+                    if ($request->type_int == 5) {
+                        $eData['docBankStatement_status'] = -1;
+                    }
+                    if ($request->type_int == 6) {
+                        $eData['docDBS_status'] = -1;
+                    }
+                    if ($request->type_int == 8) {
+                        $eData['docDisqualForm_status'] = -1;
+                    }
+                    if ($request->type_int == 9) {
+                        $eData['docHealthDec_status'] = -1;
+                    }
+                    if ($request->type_int == 10) {
+                        $eData['docEUCard_status'] = -1;
+                    }
+                    if ($request->type_int == 11) {
+                        $eData['docUtilityBill_status'] = -1;
+                    }
+                    if ($request->type_int == 12) {
+                        $eData['docTelephoneBill_status'] = -1;
+                    }
+                    if ($request->type_int == 13) {
+                        $eData['docBenefitStatement_status'] = -1;
+                    }
+                    if ($request->type_int == 14) {
+                        $eData['docCreditCardBill_status'] = -1;
+                    }
+                    if ($request->type_int == 15 || $request->type_int == 17) {
+                        $eData['docP45P60_status'] = -1;
+                    }
+                    if ($request->type_int == 16) {
+                        $eData['docCouncilTax_status'] = -1;
+                    }
+
+                    if ($eData) {
+                        DB::table('tbl_teacher')
+                            ->where('teacher_id', '=', $teacher_id)
+                            ->update($eData);
+                    }
                 }
             }
 
@@ -5815,7 +6034,7 @@ class TeacherController extends Controller
 
     public function testMail(Request $request)
     {
-        $mail = 'sudip.websadroit@gmail.com';
+        $mail = 'sanjoy.websadroit@gmail.com';
         $myVar = new AlertController();
         $alertSetting = $myVar->test_mail($mail);
     }

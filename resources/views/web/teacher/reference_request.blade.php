@@ -56,16 +56,17 @@
                 class="reset-password-form-sec form-validate" id="reqRefForm">
                 @csrf
                 <input type="hidden" name="teacherReference_id" value="{{ $teacherReference_id }}">
+                <input type="hidden" name="adminMail" value="{{ $adminMail }}">
                 <div class="row">
                     <label class="form-check-label reference_form_label  col-md-12">REFERENCE REQUEST FOR<span
                             style="color: red;">*</span></label>
                     <div class="modal-input-field form-group col-md-6">
                         <input type="text" class="form-control field-validate" name="ref_request_firstname"
-                            id="" value="{{ $refDetail->firstName_txt }}" placeholder="First Name">
+                            id="" value="{{ $refDetail->firstName_txt }}" placeholder="First Name" readonly>
                     </div>
                     <div class="modal-input-field form-group col-md-6">
                         <input type="text" class="form-control field-validate" name="ref_request_lastname"
-                            id="" value="{{ $refDetail->surname_txt }}" placeholder="Last Name">
+                            id="" value="{{ $refDetail->surname_txt }}" placeholder="Last Name" readonly>
                     </div>
 
                     <label class="form-check-label reference_form_label  col-md-12">Your Name<span
@@ -249,7 +250,7 @@
                     </div>
                 </div>
 
-                <input type="submit" value="Send">
+                <input type="submit" id="reqSendBtn" value="Send">
 
             </form>
         </div>
@@ -277,6 +278,9 @@
                 'Success!',
                 '<?php echo session('success'); ?>'
             );
+            setTimeout(function() {
+                window.close();
+            }, 3000);
         });
     </script>
     <?php } ?>
@@ -359,6 +363,7 @@
                     $('#signatureInput').val(imageData);
 
                     this.submit();
+                    $("#reqSendBtn").prop('disabled', true);
                 }
             });
 

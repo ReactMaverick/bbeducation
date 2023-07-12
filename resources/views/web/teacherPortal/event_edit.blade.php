@@ -24,9 +24,10 @@
 <script>
     $(document).ready(function() {
         $('#workStartTimeEdit, #workEndTimeEdit').timepicker({
-            timeFormat: 'h:i a',
-            'step': 30,
-            'forceRoundTime': true
+            // timeFormat: 'h:i a',
+            // 'step': 30,
+            // 'forceRoundTime': true,
+            autocomplete: true
         });
     });
 </script>

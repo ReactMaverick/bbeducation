@@ -75,6 +75,7 @@ Route::get('/assignment-finance/{id}', [AssignmentController::class, 'assignment
 Route::post('/changeAsnProfType', [AssignmentController::class, 'changeAsnProfType']);
 Route::post('/checkAsssignmentUsed', [AssignmentController::class, 'checkAsssignmentUsed']);
 Route::post('/delete_assignment', [AssignmentController::class, 'delete_assignment']);
+Route::post('/fetchSchNTeacherAddress', [AssignmentController::class, 'fetchSchNTeacherAddress']);
 // Assignment
 
 // Teacher
@@ -118,6 +119,7 @@ Route::get('/preference-health/{id}', [TeacherController::class, 'teacherHealth'
 Route::get('/teacher-references/{id}', [TeacherController::class, 'teacherReference']);
 Route::post('/newTeacherReferenceInsert', [TeacherController::class, 'newTeacherReferenceInsert']);
 Route::post('/teacherReferenceResend', [TeacherController::class, 'teacherReferenceResend']);
+Route::post('/teacherReferenceDelete', [TeacherController::class, 'teacherReferenceDelete']);
 Route::post('/teacherReferencePreview', [TeacherController::class, 'teacherReferencePreview']);
 Route::post('/teacherReferenceEdit', [TeacherController::class, 'teacherReferenceEdit']);
 Route::post('/newTeacherReferenceUpdate', [TeacherController::class, 'newTeacherReferenceUpdate']);
@@ -148,7 +150,7 @@ Route::post('/teacherDocumentFetch', [TeacherController::class, 'teacherDocument
 Route::post('/teacherDocumentMail', [TeacherController::class, 'teacherDocumentMail']);
 Route::post('/resendTeacherPasswordLink', [TeacherController::class, 'resendTeacherPasswordLink']);
 
-Route::get('/teacher/reference-request/{id}', [TeacherController::class, 'teacherReferenceRequest']);
+Route::get('/teacher/reference-request/{id}/{mail}', [TeacherController::class, 'teacherReferenceRequest']);
 Route::post('/addReferenceRequest', [TeacherController::class, 'addReferenceRequest']);
 // Teacher
 
@@ -241,6 +243,7 @@ Route::post('/financeInvoiceItemEdit', [FinanceController::class, 'financeInvoic
 Route::post('/financeInvoiceItemUpdate', [FinanceController::class, 'financeInvoiceItemUpdate']);
 Route::post('/financeInvoiceItemDelete', [FinanceController::class, 'financeInvoiceItemDelete']);
 Route::post('/financeInvoiceSave', [FinanceController::class, 'financeInvoiceSave']);
+Route::post('/financeInvoiceSaveNew', [FinanceController::class, 'financeInvoiceSaveNew']);
 Route::post('/financeInvoiceMail', [FinanceController::class, 'financeInvoiceMail']);
 Route::post('/financeInvoiceAllMail', [FinanceController::class, 'financeInvoiceAllMail']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);

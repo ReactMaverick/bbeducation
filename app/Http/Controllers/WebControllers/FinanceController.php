@@ -1302,6 +1302,11 @@ class FinanceController extends Controller
 
     public function financeProcessInvoice(Request $request)
     {
+        $user_id = '';
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $user_id = $webUserLoginData->user_id;
+        }
         $p_maxDate = $request->p_maxDate;
         $timesheetAsnItemIds = $request->timesheetAsnItemIds;
         $idsArr = explode(",", $timesheetAsnItemIds);
@@ -1330,6 +1335,7 @@ class FinanceController extends Controller
                 $invoice_id = DB::table('tbl_invoice')
                     ->insertGetId([
                         'school_id' => $key1,
+                        'created_by' => $user_id,
                         'invoiceDate_dte' => date('Y-m-d'),
                         'timestamp_ts' => date('Y-m-d H:i:s')
                     ]);
@@ -1410,6 +1416,7 @@ class FinanceController extends Controller
         $invoice_id = DB::table('tbl_invoice')
             ->insertGetId([
                 'school_id' => $school_id,
+                'created_by' => $user_id,
                 'invoiceDate_dte' => date('Y-m-d')
             ]);
         $splitInvoiceSelectedItems = $request->splitInvoiceSelectedItems;
@@ -1630,7 +1637,8 @@ class FinanceController extends Controller
 
             $schoolInvoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                 ->where('tbl_invoice.invoice_id', $invoice_id)
@@ -1760,7 +1768,8 @@ class FinanceController extends Controller
 
             $schoolInvoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                 ->where('tbl_invoice.invoice_id', $editInvoiceId)
@@ -1787,6 +1796,127 @@ class FinanceController extends Controller
                         $fileExist = 'Yes';
                     }
                 }
+
+                if ($fileExist == 'Yes') {
+                    $result['exist'] = 'Yes';
+                    $result['sendMail'] = $sendMail;
+                    $result['invoice_path'] = asset($schoolInvoices->invoice_path);
+                    $fPath = $schoolInvoices->invoice_path;
+                } else {
+                    $invoiceItemList = DB::table('tbl_invoiceItem')
+                        ->select('tbl_invoiceItem.*')
+                        ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+                        ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+                        ->get();
+
+                    $companyDetail = DB::table('company')
+                        ->select('company.*')
+                        ->where('company.company_id', $company_id)
+                        ->first();
+
+                    $schoolDetail = DB::table('tbl_school')
+                        ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                        ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                            $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                        })
+                        ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                        ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                            $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                                ->where(function ($query) {
+                                    $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as religion', function ($join) {
+                            $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                                ->where(function ($query) {
+                                    $query->where('religion.descriptionGroup_int', '=', 29);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                            $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                                ->where(function ($query) {
+                                    $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                                });
+                        })
+                        ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                        ->where('tbl_school.school_id', $schoolInvoices->school_id)
+                        ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                        ->first();
+
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+                    $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
+                    $pdf->save(public_path('pdfs/invoice/' . $pdfName));
+                    $fPath = 'pdfs/invoice/' . $pdfName;
+
+                    DB::table('tbl_invoice')
+                        ->where('invoice_id', '=', $editInvoiceId)
+                        ->update([
+                            'invoice_path' => $fPath
+                        ]);
+
+                    if (file_exists(public_path($fPath))) {
+                        $result['exist'] = 'Yes';
+                        $result['invoice_path'] = asset($fPath);
+                    }
+                    $result['sendMail'] = $sendMail;
+                }
+
+                // if (file_exists(public_path($fPath))) {
+                //     $mailData['subject'] = 'Finance Invoice';
+                //     $mailData['mail_description'] = "A pdf file of finance invoice is attach with this mail. Please check it out.";
+                //     $mailData['invoice_path'] = asset($fPath);
+                //     $mailData['contactDet'] = $contactDet;
+                //     $mailData['mail'] = $sendMail;
+                //     $myVar = new AlertController();
+                //     $myVar->sendSchFinanceInvoiceMail($mailData);
+                // }
+            }
+        } else {
+            $result['exist'] = 'No';
+        }
+        return response()->json($result);
+    }
+
+    public function financeInvoiceSaveNew(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $editInvoiceId = $input['editInvoiceId'];
+            $result['exist'] = 'No';
+
+            $schoolInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+                ->where('tbl_invoice.invoice_id', $editInvoiceId)
+                ->groupBy('tbl_invoice.invoice_id')
+                ->first();
+            if ($schoolInvoices) {
+                $contactDet = DB::table('tbl_schoolContact')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                    ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                    ->where('tbl_schoolContact.isCurrent_status', '-1')
+                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                    ->where('tbl_contactItemSch.type_int', 1)
+                    ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                    ->first();
+                $sendMail = '';
+                if ($contactDet && $contactDet->contactItem_txt) {
+                    $sendMail = $contactDet->contactItem_txt;
+                }
+
+                $fileExist = 'No';
+                // if ($schoolInvoices->invoice_path) {
+                //     if (file_exists(public_path($schoolInvoices->invoice_path))) {
+                //         $fileExist = 'Yes';
+                //     }
+                // }
 
                 if ($fileExist == 'Yes') {
                     $result['exist'] = 'Yes';
@@ -1881,7 +2011,8 @@ class FinanceController extends Controller
 
             $schoolInvoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                 ->where('tbl_invoice.invoice_id', $editInvoiceId)
@@ -2038,7 +2169,8 @@ class FinanceController extends Controller
             foreach ($invoiceList as $key => $value) {
                 $schoolInvoices = DB::table('tbl_invoice')
                     ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                    ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                    ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                    ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                     ->where('tbl_invoice.invoice_id', $value->invoice_id)
@@ -2451,7 +2583,8 @@ class FinanceController extends Controller
 
             $schoolInvoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
                 ->where('tbl_invoice.invoice_id', $invoice_id)

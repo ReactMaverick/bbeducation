@@ -152,6 +152,14 @@
                                                             style="font-weight: 600; font-size: 18px; margin-bottom: 10px; opacity: 0.5;">
                                                             Invoice Date:
                                                         </h2>
+                                                        <h2
+                                                            style="font-weight: 600; font-size: 18px; margin-bottom: 10px; opacity: 0.5;">
+                                                            Authorized By(Name):
+                                                        </h2>
+                                                        <h2
+                                                            style="font-weight: 600; font-size: 18px; margin-bottom: 10px; opacity: 0.5;">
+                                                            Authorized By(Email):
+                                                        </h2>
                                                     </td>
                                                     <td style="width: 20%; vertical-align: top; text-align: right;">
                                                         <h2
@@ -170,6 +178,14 @@
                                                         <h2
                                                             style="font-weight: 600; font-size: 18px; margin-bottom: 10px; opacity: 0.5;">
                                                             {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
+                                                        </h2>
+                                                        <h2
+                                                            style="font-weight: 600; font-size: 18px; margin-bottom: 10px; opacity: 0.5;">
+                                                            {{ $schoolInvoices->admin_fname . ' ' . $schoolInvoices->admin_sname }}
+                                                        </h2>
+                                                        <h2
+                                                            style="font-weight: 600; font-size: 18px; margin-bottom: 10px; opacity: 0.5;">
+                                                            {{ $schoolInvoices->admin_email }}
                                                         </h2>
                                                     </td>
                                                 </tr>

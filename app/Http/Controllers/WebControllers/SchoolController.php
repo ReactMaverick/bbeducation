@@ -1168,6 +1168,7 @@ class SchoolController extends Controller
                 'paymentLoggedBy_id' => $user_id,
                 'sentOn_dte' => date('Y-m-d'),
                 'sentBy_int' => $user_id,
+                'created_by' => $user_id,
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
 
@@ -1360,6 +1361,7 @@ class SchoolController extends Controller
                 'sentOn_dte' => date('Y-m-d'),
                 'sentBy_int' => $user_id,
                 'creditNote_status' => -1,
+                'created_by' => $user_id,
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
         if (count($invoiceItemList) > 0) {
@@ -1428,6 +1430,7 @@ class SchoolController extends Controller
                 'paymentLoggedBy_id' => $user_id,
                 'sentOn_dte' => date('Y-m-d'),
                 'sentBy_int' => $user_id,
+                'created_by' => $user_id,
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
         $splitInvoiceSelectedItems = $request->splitInvoiceSelectedItems;
@@ -2120,38 +2123,42 @@ class SchoolController extends Controller
             $editDocumentId = $request->editDocumentId;
             $file_location = $request->file_location;
 
-            $fPath = '';
-            $fType = '';
-            $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
-            if ($image = $request->file('file')) {
-                $extension = $image->getClientOriginalExtension();
-                $file_name = $image->getClientOriginalName();
-                if (in_array(strtolower($extension), $allowed_types)) {
-                    $rand = mt_rand(100000, 999999);
-                    $name = time() . "_" . $rand . "_" . $file_name;
-                    $image->move(public_path('images/school'), $name);
-                    $fPath = 'images/school/' . $name;
-                    $fType = $extension;
-                    if (file_exists($file_location)) {
-                        unlink($file_location);
-                    }
-                } else {
-                    return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
-                }
-            } else {
-                return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
-            }
-
-            DB::table('tbl_schooldocument')
+            $docDetail = DB::table('tbl_schooldocument')
                 ->where('schoolDocument_id', '=', $editDocumentId)
-                ->update([
-                    'file_location' => $fPath,
-                    'file_name' => $request->file_name ? $request->file_name : $request->file_name_hidden,
-                    'documentType' => $request->documentType,
-                    'othersText' => $request->othersText,
-                    'file_type' => $fType,
-                    'timestamp_ts' => date('Y-m-d H:i:s')
-                ]);
+                ->first();
+
+            if ($docDetail) {
+                $fPath = $docDetail->file_location;
+                $fType = $docDetail->file_type;
+                $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
+                if ($image = $request->file('file')) {
+                    $extension = $image->getClientOriginalExtension();
+                    $file_name = $image->getClientOriginalName();
+                    if (in_array(strtolower($extension), $allowed_types)) {
+                        $rand = mt_rand(100000, 999999);
+                        $name = time() . "_" . $rand . "_" . $file_name;
+                        $image->move(public_path('images/school'), $name);
+                        $fPath = 'images/school/' . $name;
+                        $fType = $extension;
+                        if (file_exists($file_location)) {
+                            unlink($file_location);
+                        }
+                    } else {
+                        return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
+                    }
+                }
+
+                DB::table('tbl_schooldocument')
+                    ->where('schoolDocument_id', '=', $editDocumentId)
+                    ->update([
+                        'file_location' => $fPath,
+                        'file_name' => $request->file_name ? $request->file_name : $request->file_name_hidden,
+                        'documentType' => $request->documentType,
+                        'othersText' => $request->othersText,
+                        'file_type' => $fType,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+            }
 
             return redirect('/school-document/' . $school_id)->with('success', "Document updated successfully.");
         } else {

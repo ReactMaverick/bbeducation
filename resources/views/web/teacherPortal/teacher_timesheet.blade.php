@@ -480,9 +480,10 @@
             });
 
             $('#workStartTime, #workEndTime').timepicker({
-                timeFormat: 'h:i a',
-                'step': 30,
-                'forceRoundTime': true
+                // timeFormat: 'h:i a',
+                // 'step': 30,
+                // 'forceRoundTime': true,
+                autocomplete: true
             });
         });
 
@@ -570,11 +571,12 @@
         }
 
         function timeToInt(time) {
-            var arr = time.match(/^(0?[1-9]|1[012]):([0-5][0-9])( )([APap][mM])$/);
+            var arr = time.match(/(\d+):(\d+)(am|pm)/);
+            // var arr = time.match(/^(0?[1-9]|1[012]):([0-5][0-9])( )([APap][mM])$/);
             // console.log(arr)
             if (arr == null) return -1;
 
-            if (arr[4].toUpperCase() == 'PM') {
+            if (arr[3].toUpperCase() == 'PM') {
                 arr[1] = parseInt(arr[1]) + 12;
             }
             // return parseInt(arr[1] * 100) + parseInt(arr[2]);

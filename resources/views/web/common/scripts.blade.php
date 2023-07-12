@@ -26,7 +26,7 @@
         swal(
             'Failed!',
             '<?php echo session('error'); ?>',
-            'danger'
+            'warning'
         );
     });
 </script>

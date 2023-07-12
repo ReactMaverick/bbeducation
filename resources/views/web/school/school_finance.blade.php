@@ -746,7 +746,7 @@
                 $('#fullLoader').show();
                 $.ajax({
                     type: 'POST',
-                    url: '{{ url('financeInvoiceSave') }}',
+                    url: '{{ url('financeInvoiceSaveNew') }}',
                     data: {
                         "_token": "{{ csrf_token() }}",
                         editInvoiceId: editInvoiceId

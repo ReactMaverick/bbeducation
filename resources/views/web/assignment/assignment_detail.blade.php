@@ -392,6 +392,13 @@
                                         value="">
                                 </div>
                             </div>
+
+                            <div class="col-md-12 modal-form-right-sec">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Note</label>
+                                    <textarea class="form-control" rows="2" id="" name="event_note"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -532,9 +539,10 @@
 
         $(document).ready(function() {
             $('#blockBookingStartTime, #blockBookingEndTime').timepicker({
-                timeFormat: 'h:i a',
-                'step': 30,
-                'forceRoundTime': true
+                // timeFormat: 'h:i a',
+                // 'step': 30,
+                // 'forceRoundTime': true,
+                autocomplete: true
             });
         });
 
@@ -857,14 +865,32 @@
             var endTime = $('#blockBookingEndTime').val();
             $('#blockHour').val('');
             if (startTime, endTime) {
-                var currentDate = new Date();
-                var startDate = new Date(currentDate.toDateString() + ' ' + startTime);
-                var endDate = new Date(currentDate.toDateString() + ' ' + endTime);
-                var timeDiff = endDate - startDate;
-                var hoursDiff = timeDiff / (1000 * 60 * 60);
+                // var currentDate = new Date();
+                // var startDate = new Date(currentDate.toDateString() + ' ' + startTime);
+                // var endDate = new Date(currentDate.toDateString() + ' ' + endTime);
+                // var timeDiff = endDate - startDate;
+                // var hoursDiff = timeDiff / (1000 * 60 * 60);
+                var start = parseTime(startTime);
+                var end = parseTime(endTime);
+                // Calculate the time difference in hours
+                var hoursDiff = (end - start) / 1000 / 60 / 60;
+
                 $('#blockHour').val(hoursDiff);
             }
         });
+
+        function parseTime(time) {
+            var parts = time.match(/(\d+):(\d+)(am|pm)/);
+            var hours = parseInt(parts[1]);
+            var minutes = parseInt(parts[2]);
+
+            if (parts[3] === "pm" && hours !== 12) {
+                hours += 12;
+            } else if (parts[3] === "am" && hours === 12) {
+                hours = 0;
+            }
+            return new Date(0, 0, 0, hours, minutes);
+        }
 
         $(document).on('click', '#blockBookingBtnId', function() {
             var CurrentDateObj = new Date();

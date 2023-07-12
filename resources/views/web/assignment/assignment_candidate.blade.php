@@ -112,7 +112,7 @@
                         </div>
 
                         <div class="assignment-candidate-table-section">
-                            <table class="table school-detail-page-table" id="myTable">
+                            <table class="table school-detail-page-table" id="myTable1">
                                 <thead>
                                     <tr class="school-detail-table-heading">
                                         <th>Name</th>
@@ -159,7 +159,7 @@
                         </div>
 
                         <div class="assignment-candidate-table-section">
-                            <table class="table school-detail-page-table" id="myTable">
+                            <table class="table school-detail-page-table" id="myTable2">
                                 <thead>
                                     <tr class="school-detail-table-heading">
                                         <th>Name</th>
@@ -199,6 +199,8 @@
                         <input type="hidden" name="" id="preferTeacherId" value="">
                         <input type="hidden" name="" id="candidateLatId" value="">
                         <input type="hidden" name="" id="candidateLongId" value="">
+                        <input type="hidden" name="" id="schoolLatId" value="{{ $v_schoolLat }}">
+                        <input type="hidden" name="" id="schoolLongId" value="{{ $v_schoolLon }}">
 
                         <div class="assignment-candidate-check-icon">
                             <a style="cursor: pointer" class="disabled-link" id="teacherAssignBtn" title="Assign Teacher">
@@ -212,12 +214,25 @@
         </div>
     </div>
 
-    <div id="distanceModal" class="modal">
+    {{-- <div id="distanceModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <div id="mapContainer" style="height: 400px;"></div>
             <div id="drivingDistance"></div>
             <div id="transitDistance"></div>
+        </div>
+    </div> --}}
+    <div class="modal" id="distanceModal" style="background: #02020287;">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">View Distance</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="mapContainer" style="height: 450px;"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -228,6 +243,17 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
+                scrollY: '500px', // Set the desired height for the scrolling area
+                paging: false, // Disable pagination
+                // footer: false, // Remove footer
+                info: false, // Disable the info footer
+                ordering: false
+            });
+            $('#myTable1, #myTable2').DataTable({
+                scrollY: '150px', // Set the desired height for the scrolling area
+                paging: false, // Disable pagination
+                // footer: false, // Remove footer
+                info: false, // Disable the info footer
                 ordering: false
             });
         });
@@ -474,88 +500,54 @@
         });
 
         $(document).on('click', '#seeGoogleDistance', function() {
+            var assignTeacherId = $('#assignTeacherId').val();
+            var schoolId = "{{ $schoolId }}";
+            if (assignTeacherId) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('fetchSchNTeacherAddress') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        schoolId: schoolId,
+                        assignTeacherId: assignTeacherId
+                    },
+                    success: function(data) {
+                        // console.log(data);
+                        var startAddress = data.schAddress;
+                        var destAddress = data.teacherAddress;
+                        // Encode addresses for URL
+                        var encodedStartAddress = encodeURIComponent(startAddress);
+                        var encodedDestAddress = encodeURIComponent(destAddress);
+                        // Construct the URL with the parameters
+                        var mapUrl = 'https://www.google.com/maps/dir/' + encodedStartAddress + '/' +
+                            encodedDestAddress;
 
-            // Get latitude and longitude values
-            // var lat1 = parseFloat($('#latitude1').val());
-            // var lng1 = parseFloat($('#longitude1').val());
-            // var lat2 = parseFloat($('#latitude2').val());
-            // var lng2 = parseFloat($('#longitude2').val());
-            var lat1 = parseFloat('51.6174503');
-            var lng1 = parseFloat('-0.1798758');
-            var lat2 = parseFloat('51.6248806');
-            var lng2 = parseFloat('-0.1771997');
+                        // Open Google Maps in a new window or tab
+                        window.open(mapUrl);
+                    }
+                });
+            } else {
+                swal("", "Please select one teacher.");
+            }
+            // var startLat = parseFloat($('#schoolLatId').val());
+            // var startLng = parseFloat($('#schoolLongId').val());
+            // var destLat = parseFloat($('#candidateLatId').val());
+            // var destLng = parseFloat($('#candidateLongId').val());
 
-            // Create LatLng objects for start and end locations
-            var startLatLng = new google.maps.LatLng(lat1, lng1);
-            var endLatLng = new google.maps.LatLng(lat2, lng2);
+            // if (startLat == NaN && startLng == NaN) {
+            //     swal("", "Please update school latitude and longitude.");
+            // } else if (assignTeacherId == null || assignTeacherId == '') {
+            //     swal("", "Please select one teacher.");
+            // } else if (destLat == 0 && destLng == 0) {
+            //     swal("", "Please update teacher latitude and longitude.");
+            // } else {
+            //     // Construct the URL with the parameters
+            //     var mapUrl = 'https://www.google.com/maps/dir/' + startLat + ',' + startLng + '/' + destLat + ',' +
+            //         destLng;
 
-            // Create a map instance and center it on the start location
-            var map = new google.maps.Map(document.getElementById('mapContainer'), {
-                center: startLatLng,
-                zoom: 10
-            });
-
-            // Create a directions service object
-            var directionsService = new google.maps.DirectionsService();
-
-            // Create a directions renderer object
-            var directionsRenderer = new google.maps.DirectionsRenderer({
-                map: map,
-                suppressMarkers: true
-            });
-
-            // Configure the request for driving directions
-            var drivingRequest = {
-                origin: startLatLng,
-                destination: endLatLng,
-                travelMode: google.maps.TravelMode.DRIVING
-            };
-
-            // Configure the request for public transport directions
-            var transitRequest = {
-                origin: startLatLng,
-                destination: endLatLng,
-                travelMode: google.maps.TravelMode.TRANSIT
-            };
-
-            // Send the requests to the directions service
-            directionsService.route(drivingRequest, function(drivingResponse,
-                drivingStatus) {
-                if (drivingStatus === google.maps.DirectionsStatus.OK) {
-                    // Display the driving route on the map
-                    directionsRenderer.setDirections(drivingResponse);
-
-                    // Get the total driving distance
-                    var drivingDistance = drivingResponse.routes[0].legs[0].distance
-                        .text;
-
-                    // Display the driving distance in the modal
-                    $('#drivingDistance').text('Driving Distance: ' +
-                        drivingDistance);
-                }
-            });
-
-            directionsService.route(transitRequest, function(transitResponse,
-                transitStatus) {
-                if (transitStatus === google.maps.DirectionsStatus.OK) {
-                    // Display the public transport route on the map
-                    directionsRenderer.setDirections(transitResponse);
-
-                    // Get the total public transport distance
-                    var transitDistance = transitResponse.routes[0].legs[0].distance
-                        .text;
-
-                    // Display the public transport distance in the modal
-                    $('#transitDistance').text('Public Transport Distance: ' +
-                        transitDistance);
-                }
-            });
-
-            // Show the modal
-            $('#distanceModal').show();
-
-
-
+            //     // Open Google Maps in a new window or tab
+            //     window.open(mapUrl);
+            // }
         });
 
         $(document).ready(function() {

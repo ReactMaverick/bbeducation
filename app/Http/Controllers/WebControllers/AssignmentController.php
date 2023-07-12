@@ -546,8 +546,8 @@ class AssignmentController extends Controller
                 'asnDate_dte' => date("Y-m-d", strtotime($request->asnDate_dte)),
                 'charge_dec' => $request->charge_dec,
                 'dayPercent_dec' => $request->dayPercent_dec,
-                // 'hours_dec' => $request->hours_dec,
-                'hours_dec' => $diff,
+                'event_note' => $request->event_note,
+                'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
                 'cost_dec' => $request->cost_dec,
                 'start_tm' => $start_tm,
                 'end_tm' => $end_tm
@@ -657,11 +657,12 @@ class AssignmentController extends Controller
                                 'asnDate_dte' => $date->format('Y-m-d'),
                                 'dayPart_int' => $blockDayPart,
                                 'dayPercent_dec' => $dayPercent_dec,
-                                'hours_dec' => $diff,
+                                'hours_dec' => $request->blockHour ? $request->blockHour : $diff,
                                 'charge_dec' => $charge_dec,
                                 'cost_dec' => $cost_dec,
                                 'start_tm' => $start_tm,
                                 'end_tm' => $end_tm,
+                                'event_note' => $request->event_note,
                                 'timestamp_ts' => date('Y-m-d H:i:s')
                             ]);
 
@@ -701,11 +702,12 @@ class AssignmentController extends Controller
                                 'asnDate_dte' => $date->format('Y-m-d'),
                                 'dayPart_int' => $blockDayPart,
                                 'dayPercent_dec' => $dayPercent_dec,
-                                'hours_dec' => $diff,
+                                'hours_dec' => $request->blockHour ? $request->blockHour : $diff,
                                 'charge_dec' => $charge_dec,
                                 'cost_dec' => $cost_dec,
                                 'start_tm' => $start_tm,
                                 'end_tm' => $end_tm,
+                                'event_note' => $request->event_note,
                                 'timestamp_ts' => date('Y-m-d H:i:s')
                             ]);
 
@@ -1953,9 +1955,103 @@ class AssignmentController extends Controller
                 ->groupBy('tbl_schoolTeacherList.teacher_id')
                 ->get();
 
-            return view("web.assignment.assignment_candidate", ['title' => $title, 'headerTitle' => $headerTitle, 'asn_id' => $id, 'assignmentDetail' => $assignmentDetail, 'asnDet' => $asnDet, 'candidateList' => $candidateList, 'continuityList' => $continuityList, 'preferedList' => $preferedList, 'v_schoolLat' => $v_schoolLat, 'v_schoolLon' => $v_schoolLon]);
+            return view("web.assignment.assignment_candidate", ['title' => $title, 'headerTitle' => $headerTitle, 'asn_id' => $id, 'assignmentDetail' => $assignmentDetail, 'asnDet' => $asnDet, 'candidateList' => $candidateList, 'continuityList' => $continuityList, 'preferedList' => $preferedList, 'v_schoolLat' => $v_schoolLat, 'v_schoolLon' => $v_schoolLon, 'schoolId' => $schoolId]);
         } else {
             return redirect()->intended('/');
+        }
+    }
+
+    public function fetchSchNTeacherAddress(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $schoolId = $request->schoolId;
+            $assignTeacherId = $request->assignTeacherId;
+            $schAddress = "";
+            $teacherAddress = "";
+
+            $schDet = DB::table('tbl_school')
+                ->where('school_id', $schoolId)
+                ->first();
+            if ($schDet) {
+                if ($schDet->address1_txt) {
+                    if ($schAddress != '') {
+                        $schAddress .= ", ";
+                    }
+                    $schAddress .= $schDet->address1_txt;
+                }
+                if ($schDet->address2_txt) {
+                    if ($schAddress != '') {
+                        $schAddress .= ", ";
+                    }
+                    $schAddress .= $schDet->address2_txt;
+                }
+                if ($schDet->address3_txt) {
+                    if ($schAddress != '') {
+                        $schAddress .= ", ";
+                    }
+                    $schAddress .= $schDet->address3_txt;
+                }
+                if ($schDet->address4_txt) {
+                    if ($schAddress != '') {
+                        $schAddress .= ", ";
+                    }
+                    $schAddress .= $schDet->address4_txt;
+                }
+                if ($schDet->address5_txt) {
+                    if ($schAddress != '') {
+                        $schAddress .= ", ";
+                    }
+                    $schAddress .= $schDet->address5_txt;
+                }
+                if ($schDet->postcode_txt) {
+                    if ($schAddress != '') {
+                        $schAddress .= ", ";
+                    }
+                    $schAddress .= $schDet->postcode_txt;
+                }
+            }
+
+            $teacherDet = DB::table('tbl_teacher')
+                ->where('teacher_id', $assignTeacherId)
+                ->first();
+            if ($teacherDet) {
+                if ($teacherDet->address1_txt) {
+                    if ($teacherAddress != '') {
+                        $teacherAddress .= ", ";
+                    }
+                    $teacherAddress .= $teacherDet->address1_txt;
+                }
+                if ($teacherDet->address2_txt) {
+                    if ($teacherAddress != '') {
+                        $teacherAddress .= ", ";
+                    }
+                    $teacherAddress .= $teacherDet->address2_txt;
+                }
+                if ($teacherDet->address3_txt) {
+                    if ($teacherAddress != '') {
+                        $teacherAddress .= ", ";
+                    }
+                    $teacherAddress .= $teacherDet->address3_txt;
+                }
+                if ($teacherDet->address4_txt) {
+                    if ($teacherAddress != '') {
+                        $teacherAddress .= ", ";
+                    }
+                    $teacherAddress .= $teacherDet->address4_txt;
+                }
+                if ($teacherDet->postcode_txt) {
+                    if ($teacherAddress != '') {
+                        $teacherAddress .= ", ";
+                    }
+                    $teacherAddress .= $teacherDet->postcode_txt;
+                }
+            }
+            return response()->json(['schAddress' => $schAddress, 'teacherAddress' => $teacherAddress]);
+        } else {
+            return false;
         }
     }
 
