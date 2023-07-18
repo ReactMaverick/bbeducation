@@ -124,8 +124,8 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                // echo $e;
-                // exit;
+                echo $e;
+                exit;
             }
         }
     }
@@ -144,8 +144,8 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                // echo $e;
-                // exit;
+                echo $e;
+                exit;
             }
         }
     }

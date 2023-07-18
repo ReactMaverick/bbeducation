@@ -173,8 +173,14 @@ class TeacherController extends Controller
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
 
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
             if ($request->passwordReset && $request->login_mail) {
                 $uID = base64_encode($teacher_id);
+                $mailData['companyDetail'] = $companyDetail;
                 $mailData['firstName_txt'] = $request->firstName_txt;
                 $mailData['surname_txt'] = $request->surname_txt;
                 $mailData['mail'] = $request->login_mail;
@@ -583,10 +589,34 @@ class TeacherController extends Controller
 
                 $tchAsnNew = DB::table('tbl_asn')
                     ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                    ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_description as yearDescription', function ($join) {
+                        $join->on('yearDescription.description_int', '=', 'tbl_asn.ageRange_int')
+                            ->where(function ($query) {
+                                $query->where('yearDescription.descriptionGroup_int', '=', 5);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as dayPartDesc', function ($join) {
+                        $join->on('dayPartDesc.description_int', '=', 'tbl_asnItem.dayPart_int')
+                            ->where(function ($query) {
+                                $query->where('dayPartDesc.descriptionGroup_int', '=', 20);
+                            });
+                    })
+                    ->select('tbl_asn.*', 'tbl_asnItem.*', 'tbl_school.name_txt', 'yearDescription.description_txt as yearGroup', DB::raw('IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), dayPartDesc.description_txt) AS title'))
                     ->where('tbl_asnItem.asnDate_dte', $calendarDate)
                     ->where('tbl_asn.status_int', 3)
                     ->where('tbl_asn.teacher_id', $teacherID)
                     ->get();
+
+                $newNote = '';
+                if (count($tchAsnNew) > 1) {
+                    foreach ($tchAsnNew as $key => $value) {
+                        if ($key > 0) {
+                            $newNote .= ', ';
+                        }
+                        $newNote .= $value->name_txt;
+                    }
+                }
 
                 $asnItem_id = null;
                 $calendarItem_id = null;
@@ -598,6 +628,7 @@ class TeacherController extends Controller
                 $tc_start_tm = null;
                 $tc_end_tm = null;
                 $tc_notes_txt = null;
+                $e_asn_list = [];
 
                 if ($tchDates->isNotEmpty()) {
                     $asnItem_id = $tchDates[0]->asnItem_id;
@@ -620,7 +651,8 @@ class TeacherController extends Controller
                     $link_id = $tchAsn[0]->link_id;
                     $tc_start_tm = $tchAsn[0]->tc_start_tm;
                     $tc_end_tm = $tchAsn[0]->tc_end_tm;
-                    $tc_notes_txt = $tchAsn[0]->tc_notes_txt;
+                    $tc_notes_txt = count($tchAsnNew) > 1 ? $newNote : $tchAsn[0]->tc_notes_txt;
+                    $e_asn_list = count($tchAsnNew) > 1 ? $tchAsnNew : [];
                 }
 
                 return [
@@ -633,7 +665,8 @@ class TeacherController extends Controller
                     'link_id' => $link_id,
                     'tc_start_tm' => $tc_start_tm,
                     'tc_end_tm' => $tc_end_tm,
-                    'tc_notes_txt' => $tc_notes_txt
+                    'tc_notes_txt' => $tc_notes_txt,
+                    'e_asn_list' => $e_asn_list
                 ];
             })->values();
 
@@ -661,9 +694,44 @@ class TeacherController extends Controller
             ->groupBy('tbl_asnItem.asnDate_dte')
             ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
             ->first();
+
+        $tchAsnNew = DB::table('tbl_asn')
+            ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+            ->LeftJoin('tbl_description as yearDescription', function ($join) {
+                $join->on('yearDescription.description_int', '=', 'tbl_asn.ageRange_int')
+                    ->where(function ($query) {
+                        $query->where('yearDescription.descriptionGroup_int', '=', 5);
+                    });
+            })
+            ->LeftJoin('tbl_description as dayPartDesc', function ($join) {
+                $join->on('dayPartDesc.description_int', '=', 'tbl_asnItem.dayPart_int')
+                    ->where(function ($query) {
+                        $query->where('dayPartDesc.descriptionGroup_int', '=', 20);
+                    });
+            })
+            ->select('tbl_asn.*', 'tbl_asnItem.*', 'tbl_school.name_txt', 'yearDescription.description_txt as yearGroup', DB::raw('IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), dayPartDesc.description_txt) AS title'))
+            ->where('tbl_asnItem.asnDate_dte', $startDate)
+            ->where('tbl_asn.status_int', 3)
+            ->where('tbl_asn.teacher_id', $id)
+            ->get();
+
         $result['status'] = false;
         $result['date'] = date("D d M Y", strtotime($startDate));
         if ($calEventItem) {
+            $newNote = '';
+            if (count($tchAsnNew) > 1) {
+                foreach ($tchAsnNew as $key => $value) {
+                    if ($key > 0) {
+                        $newNote .= ', ';
+                    }
+                    $newNote .= $value->name_txt;
+                }
+                $calEventItem->tc_notes_txt = $newNote;
+                $calEventItem->reason_int = 6;
+                $calEventItem->e_asn_list = $tchAsnNew;
+            }
+
             $result['status'] = true;
             $result['calEventItem'] = $calEventItem;
         } else {
@@ -689,6 +757,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_teacherCalendar.date_dte', 'ASC')
                 ->first();
             if ($calEventItem2) {
+                $calEventItem2->e_asn_list = [];
                 $result['status'] = true;
                 $result['calEventItem'] = $calEventItem2;
             }
@@ -1212,6 +1281,31 @@ class TeacherController extends Controller
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function checkTeacherUsed(Request $request)
+    {
+        $teacher_id = $request->teacher_id;
+        $result['exist'] = "No";
+        $Detail = DB::table('tbl_asn')
+            ->where('tbl_asn.teacher_id', $teacher_id)
+            ->first();
+        if ($Detail) {
+            $result['exist'] = "Yes";
+        }
+        return response()->json($result);
+    }
+
+    public function delete_teacher(Request $request)
+    {
+        $teacher_id = $request->teacher_id;
+        DB::table('tbl_asnVetting')
+            ->where('tbl_asnVetting.teacher_id', $teacher_id)
+            ->delete();
+        DB::table('tbl_teacher')
+            ->where('tbl_teacher.teacher_id', $teacher_id)
+            ->delete();
+        return true;
     }
 
     public function teacherDetailUpdate(Request $request)
@@ -2949,63 +3043,119 @@ class TeacherController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
             $teacher_id = $request->teacher_id;
+            $historyArr = array();
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->where('tbl_teacher.teacher_id', $teacher_id)
+                ->first();
+
             $vetUpdateService_status = 0;
-            $vetUpdateServiceChecked_dte = NULL;
+            $vetUpdateServiceChecked_dte = $teacherDetail->vetUpdateServiceChecked_dte;
             if ($request->vetUpdateService_status) {
                 $vetUpdateService_status = -1;
-                $vetUpdateServiceChecked_dte = date("Y-m-d");
+                $vetUpdateServiceChecked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetUpdateServiceChecked_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
-            $vetUpdateServiceReg_dte = NULL;
+            $vetUpdateServiceReg_dte = $teacherDetail->vetUpdateServiceReg_dte;
             if ($request->vetUpdateServiceReg_dte != '') {
                 $vetUpdateServiceReg_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetUpdateServiceReg_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
-            $vetList99Checked_dte = NULL;
+            $vetList99Checked_dte = $teacherDetail->vetList99Checked_dte;
             if ($request->vetList99Checked_dte) {
-                $vetList99Checked_dte = date("Y-m-d");
+                $vetList99Checked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetList99Checked_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
-            $vetNctlExempt_dte = NULL;
+            $vetNctlExempt_dte = $teacherDetail->vetNctlExempt_dte;
             if ($request->vetNctlExempt_dte) {
-                $vetNctlExempt_dte = date("Y-m-d");
+                $vetNctlExempt_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetNctlExempt_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
-            $vetNCTLChecked_dte = NULL;
+            $vetNCTLChecked_dte = $teacherDetail->vetNCTLChecked_dte;
             if ($request->vetNCTLChecked_dte) {
-                $vetNCTLChecked_dte = date("Y-m-d");
+                $vetNCTLChecked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetNCTLChecked_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
             $vetDisqualAssociation_status = 0;
-            $vetDisqualAssociation_dte = NULL;
+            $vetDisqualAssociation_dte = $teacherDetail->vetDisqualAssociation_dte;
             if ($request->vetDisqualAssociation_status) {
                 $vetDisqualAssociation_status = -1;
-                $vetDisqualAssociation_dte = date("Y-m-d");
+                $vetDisqualAssociation_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetDisqualAssociation_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
             $safeguardingInduction_status = 0;
-            $safeguardingInduction_dte = NULL;
+            $safeguardingInduction_dte = $teacherDetail->safeguardingInduction_dte;
             if ($request->safeguardingInduction_status) {
                 $safeguardingInduction_status = -1;
-                $safeguardingInduction_dte = date("Y-m-d");
+                $safeguardingInduction_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'safeguardingInduction_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
             $vets128_status = 0;
-            $vets128_dte = NULL;
+            $vets128_dte = $teacherDetail->vets128_dte;
             if ($request->vets128_status) {
                 $vets128_status = -1;
-                $vets128_dte = date("Y-m-d");
+                $vets128_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vets128_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
             $vetEEARestriction_status = 0;
-            $vetEEARestriction_dte = NULL;
+            $vetEEARestriction_dte = $teacherDetail->vetEEARestriction_dte;
             if ($request->vetEEARestriction_status) {
                 $vetEEARestriction_status = -1;
-                $vetEEARestriction_dte = date("Y-m-d");
+                $vetEEARestriction_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetEEARestriction_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
             $vetRadical_status = 0;
-            $vetRadical_dte = NULL;
+            $vetRadical_dte = $teacherDetail->vetRadical_dte;
             if ($request->vetRadical_status) {
                 $vetRadical_status = -1;
-                $vetRadical_dte = date("Y-m-d");
+                $vetRadical_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetRadical_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
             $vetQualification_status = 0;
-            $vetQualification_dte = NULL;
+            $vetQualification_dte = $teacherDetail->vetQualification_dte;
             if ($request->vetQualification_status) {
                 $vetQualification_status = -1;
-                $vetQualification_dte = date("Y-m-d");
+                $vetQualification_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'vetQualification_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
+            }
+
+            if ($request->rightToWork_int) {
+                $nArr['field_name'] = 'rightToWork_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
             }
 
             DB::table('tbl_teacher')->where('teacher_id', '=', $teacher_id)
@@ -3031,7 +3181,151 @@ class TeacherController extends Controller
                     'vetQualification_dte' => $vetQualification_dte
                 ]);
 
+            foreach ($historyArr as $key => $value) {
+                $historyDetail = DB::table('vetting_check_history')
+                    ->where('teacher_id', $teacher_id)
+                    ->where('field_name', $value['field_name'])
+                    ->whereDate('check_date', $value['check_date'])
+                    ->first();
+                if (!$historyDetail) {
+                    DB::table('vetting_check_history')
+                        ->insert([
+                            'teacher_id' => $teacher_id,
+                            'field_name' => $value['field_name'],
+                            'check_date' => $value['check_date'],
+                            'created_by' => $user_id,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                }
+            }
+
             return redirect()->back()->with('success', "Teacher vetting updated successfully.");
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function teacherVettingHistory(Request $request, $id)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Teacher Vetting History");
+            $headerTitle = "Teachers";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            $teacherDetail = DB::table('tbl_teacher')
+                ->LeftJoin('tbl_contactItemTch', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
+                ->leftJoin(
+                    DB::raw('(SELECT teacher_id, SUM(dayPercent_dec) AS daysWorked_dec FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id WHERE status_int = 3 GROUP BY teacher_id) AS t_days'),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_days.teacher_id');
+                    }
+                )
+                ->leftJoin(
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    function ($join) {
+                        $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
+                    }
+                )
+                ->LeftJoin('tbl_description as ageRangeSpecialism', function ($join) {
+                    $join->on('ageRangeSpecialism.description_int', '=', 'tbl_teacher.ageRangeSpecialism_int')
+                        ->where(function ($query) {
+                            $query->where('ageRangeSpecialism.descriptionGroup_int', '=', 5);
+                        });
+                })
+                ->LeftJoin('tbl_description as professionalType', function ($join) {
+                    $join->on('professionalType.description_int', '=', 'tbl_teacher.professionalType_int')
+                        ->where(function ($query) {
+                            $query->where('professionalType.descriptionGroup_int', '=', 7);
+                        });
+                })
+                ->LeftJoin('tbl_description as applicationStatus', function ($join) {
+                    $join->on('applicationStatus.description_int', '=', 'tbl_teacher.applicationStatus_int')
+                        ->where(function ($query) {
+                            $query->where('applicationStatus.descriptionGroup_int', '=', 3);
+                        });
+                })
+                ->LeftJoin('tbl_teacherContactLog', 'tbl_teacherContactLog.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->LeftJoin('tbl_description as titleTable', function ($join) {
+                    $join->on('titleTable.description_int', '=', 'tbl_teacher.title_int')
+                        ->where(function ($query) {
+                            $query->where('titleTable.descriptionGroup_int', '=', 1);
+                        });
+                })
+                ->LeftJoin('tbl_description as nationalityTbl', function ($join) {
+                    $join->on('nationalityTbl.description_int', '=', 'tbl_teacher.nationality_int')
+                        ->where(function ($query) {
+                            $query->where('nationalityTbl.descriptionGroup_int', '=', 8);
+                        });
+                })
+                ->LeftJoin('tbl_description as emergencyContactRelation', function ($join) {
+                    $join->on('emergencyContactRelation.description_int', '=', 'tbl_teacher.emergencyContactRelation_int')
+                        ->where(function ($query) {
+                            $query->where('emergencyContactRelation.descriptionGroup_int', '=', 10);
+                        });
+                })
+                ->LeftJoin('tbl_description as bankTbl', function ($join) {
+                    $join->on('bankTbl.description_int', '=', 'tbl_teacher.bank_int')
+                        ->where(function ($query) {
+                            $query->where('bankTbl.descriptionGroup_int', '=', 36);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewQuality', function ($join) {
+                    $join->on('interviewQuality.description_int', '=', 'tbl_teacher.interviewQuality_int')
+                        ->where(function ($query) {
+                            $query->where('interviewQuality.descriptionGroup_int', '=', 22);
+                        });
+                })
+                ->LeftJoin('tbl_description as interviewLanguageSkills', function ($join) {
+                    $join->on('interviewLanguageSkills.description_int', '=', 'tbl_teacher.interviewLanguageSkills_int')
+                        ->where(function ($query) {
+                            $query->where('interviewLanguageSkills.descriptionGroup_int', '=', 23);
+                        });
+                })
+                ->LeftJoin('tbl_description as rightToWork', function ($join) {
+                    $join->on('rightToWork.description_int', '=', 'tbl_teacher.rightToWork_int')
+                        ->where(function ($query) {
+                            $query->where('rightToWork.descriptionGroup_int', '=', 39);
+                        });
+                })
+                ->LeftJoin('tbl_userFavourite', function ($join) {
+                    $join->on('tbl_userFavourite.link_id', '=', 'tbl_teacher.teacher_id')
+                        ->where(function ($query) {
+                            $query->where('tbl_userFavourite.type_int', '=', 1);
+                        });
+                })
+                ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
+                ->where('tbl_teacher.teacher_id', $id)
+                ->groupBy('tbl_teacher.teacher_id')
+                ->first();
+
+            $headerStatusList = DB::table('tbl_description')
+                ->select('tbl_description.*')
+                ->where('tbl_description.descriptionGroup_int', 3)
+                ->orderBy('tbl_description.description_int', 'ASC')
+                ->get();
+
+            $fieldNames = DB::table('vetting_check_history')
+                ->select('field_name')
+                ->where('teacher_id', $id)
+                ->distinct()
+                ->pluck('field_name')
+                ->toArray();
+            $vettingHistory = [];
+            foreach ($fieldNames as $fieldName) {
+                $dates = DB::table('vetting_check_history')
+                    ->where('field_name', $fieldName)
+                    ->where('teacher_id', $id)
+                    ->orderBy('check_date', 'ASC')
+                    ->get();
+
+                $vettingHistory[$fieldName] = $dates;
+            }
+
+            // dd($vettingHistory);
+
+            return view("web.teacher.teacher_vetting_history", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList, 'vettingHistory' => $vettingHistory]);
         } else {
             return redirect()->intended('/');
         }
@@ -5561,54 +5855,39 @@ class TeacherController extends Controller
                 ->LeftJoin('tbl_asnItem as tbl_asnItem1', function ($join) use ($weekStartDate) {
                     $join->on('tbl_asnItem1.asn_id', '=', 'tbl_asn.asn_id')
                         ->where(function ($query) use ($weekStartDate) {
-                            $query->where(
-                                'tbl_asnItem1.timesheet_id',
-                                NULL
-                            )
+                            $query->where('tbl_asnItem1.timesheet_id', NULL)
                                 ->where('tbl_asnItem1.asnDate_dte', '=', $weekStartDate);
                         });
                 })
                 ->LeftJoin('tbl_asnItem as tbl_asnItem2', function ($join) use ($weekStartDate2) {
                     $join->on('tbl_asnItem2.asn_id', '=', 'tbl_asn.asn_id')
                         ->where(function ($query) use ($weekStartDate2) {
-                            $query->where(
-                                'tbl_asnItem2.timesheet_id',
-                                NULL
-                            )
+                            $query->where('tbl_asnItem2.timesheet_id', NULL)
                                 ->where('tbl_asnItem2.asnDate_dte', '=', $weekStartDate2);
                         });
                 })
                 ->LeftJoin('tbl_asnItem as tbl_asnItem3', function ($join) use ($weekStartDate3) {
                     $join->on('tbl_asnItem3.asn_id', '=', 'tbl_asn.asn_id')
                         ->where(function ($query) use ($weekStartDate3) {
-                            $query->where(
-                                'tbl_asnItem3.timesheet_id',
-                                NULL
-                            )
+                            $query->where('tbl_asnItem3.timesheet_id', NULL)
                                 ->where('tbl_asnItem3.asnDate_dte', '=', $weekStartDate3);
                         });
                 })
                 ->LeftJoin('tbl_asnItem as tbl_asnItem4', function ($join) use ($weekStartDate4) {
                     $join->on('tbl_asnItem4.asn_id', '=', 'tbl_asn.asn_id')
                         ->where(function ($query) use ($weekStartDate4) {
-                            $query->where(
-                                'tbl_asnItem4.timesheet_id',
-                                NULL
-                            )
+                            $query->where('tbl_asnItem4.timesheet_id', NULL)
                                 ->where('tbl_asnItem4.asnDate_dte', '=', $weekStartDate4);
                         });
                 })
                 ->LeftJoin('tbl_asnItem as tbl_asnItem5', function ($join) use ($weekStartDate5) {
                     $join->on('tbl_asnItem5.asn_id', '=', 'tbl_asn.asn_id')
                         ->where(function ($query) use ($weekStartDate5) {
-                            $query->where(
-                                'tbl_asnItem5.timesheet_id',
-                                NULL
-                            )
+                            $query->where('tbl_asnItem5.timesheet_id', NULL)
                                 ->where('tbl_asnItem5.asnDate_dte', '=', $weekStartDate5);
                         });
                 })
-                ->select(DB::raw("NULL AS teacher_timesheet_id"), 'tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("NULL AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), DB::raw("0 AS admin_approve1"), DB::raw("NULL AS rejected_text1"), DB::raw("NULL AS start_tm1"), DB::raw("NULL AS end_tm1"), 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("NULL AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), DB::raw("0 AS admin_approve2"), DB::raw("NULL AS rejected_text2"), DB::raw("NULL AS start_tm2"), DB::raw("NULL AS end_tm2"), 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("NULL AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), DB::raw("0 AS admin_approve3"), DB::raw("NULL AS rejected_text3"), DB::raw("NULL AS start_tm3"), DB::raw("NULL AS end_tm3"), 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("NULL AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), DB::raw("0 AS admin_approve4"), DB::raw("NULL AS rejected_text4"), DB::raw("NULL AS start_tm4"), DB::raw("NULL AS end_tm4"), 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("NULL AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), DB::raw("0 AS admin_approve5"), DB::raw("NULL AS rejected_text5"), DB::raw("NULL AS start_tm5"), DB::raw("NULL AS end_tm5"), DB::raw("NULL AS timesheet_item_id1"), DB::raw("NULL AS timesheet_item_id2"), DB::raw("NULL AS timesheet_item_id3"), DB::raw("NULL AS timesheet_item_id4"), DB::raw("NULL AS timesheet_item_id5"))
+                ->select(DB::raw("NULL AS teacher_timesheet_id"), 'tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), DB::raw("0 AS admin_approve1"), DB::raw("NULL AS rejected_text1"), DB::raw("NULL AS start_tm1"), DB::raw("NULL AS end_tm1"), 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), DB::raw("0 AS admin_approve2"), DB::raw("NULL AS rejected_text2"), DB::raw("NULL AS start_tm2"), DB::raw("NULL AS end_tm2"), 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), DB::raw("0 AS admin_approve3"), DB::raw("NULL AS rejected_text3"), DB::raw("NULL AS start_tm3"), DB::raw("NULL AS end_tm3"), 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), DB::raw("0 AS admin_approve4"), DB::raw("NULL AS rejected_text4"), DB::raw("NULL AS start_tm4"), DB::raw("NULL AS end_tm4"), 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), DB::raw("0 AS admin_approve5"), DB::raw("NULL AS rejected_text5"), DB::raw("NULL AS start_tm5"), DB::raw("NULL AS end_tm5"), DB::raw("NULL AS timesheet_item_id1"), DB::raw("NULL AS timesheet_item_id2"), DB::raw("NULL AS timesheet_item_id3"), DB::raw("NULL AS timesheet_item_id4"), DB::raw("NULL AS timesheet_item_id5"))
                 ->whereIn('tbl_asn.asn_id', function ($query) use ($weekStartDate, $plusFiveDate, $company_id, $teacher_id) {
                     $query->select('tbl_asn.asn_id')
                         ->from('tbl_asn')
@@ -5626,19 +5905,46 @@ class TeacherController extends Controller
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
 
-            $timesheetExist = DB::table('teacher_timesheet')
-                ->whereDate('teacher_timesheet.start_date', '=', $weekStartDate)
-                ->whereDate('teacher_timesheet.end_date', '=', $weekEndDate)
-                ->where('teacher_timesheet.teacher_id', $teacher_id)
-                ->get();
-            if (count($timesheetExist) > 0) {
-                // $calenderList = $calenderList1;
-                $calenderList = $calenderList2->merge($calenderList1)->keyBy('asn_id');
-            } else {
-                $calenderList = $calenderList2;
+            // $timesheetExist = DB::table('teacher_timesheet')
+            //     ->whereDate('teacher_timesheet.start_date', '=', $weekStartDate)
+            //     ->whereDate('teacher_timesheet.end_date', '=', $weekEndDate)
+            //     ->where('teacher_timesheet.teacher_id', $teacher_id)
+            //     ->get();
+            // if (count($timesheetExist) > 0) {
+            //     // $calenderList = $calenderList1;
+            //     $calenderList = $calenderList2->merge($calenderList1)->keyBy('asn_id');
+            // } else {
+            //     $calenderList = $calenderList2;
+            // }
+            // Merge calenderList2 into calenderList1
+            foreach ($calenderList2 as $obj) {
+                $found = false;
+                // Check if object already exists in calenderList1 by 'asn_id'
+                foreach ($calenderList1 as $key => $item) {
+                    if ($item->asn_id == $obj->asn_id) {
+                        $found = true;
+                        // Merge values from calenderList2 into calenderList1 if conditions are met
+                        foreach ($obj as $prop => $value) {
+                            if (empty($item->$prop) || $item->$prop === 0 || is_null($item->$prop)) {
+                                // Specify the keys you want to replace
+                                $replaceKeys = ['day1asnItem_id', 'day1asnDate_dte', 'day1LinkType_int', 'day1Avail_txt', 'day1Amount_dec', 'day1Link_id', 'day1school_id', 'day2asnItem_id', 'day2asnDate_dte', 'day2LinkType_int', 'day2Avail_txt', 'day2Amount_dec', 'day2Link_id', 'day2school_id', 'day3asnItem_id', 'day3asnDate_dte', 'day3LinkType_int', 'day3Avail_txt', 'day3Amount_dec', 'day3Link_id', 'day3school_id', 'day4asnItem_id', 'day4asnDate_dte', 'day4LinkType_int', 'day4Avail_txt', 'day4Amount_dec', 'day4Link_id', 'day4school_id', 'day5asnItem_id', 'day5asnDate_dte', 'day5LinkType_int', 'day5Avail_txt', 'day5Amount_dec', 'day5Link_id', 'day5school_id'];
+
+                                // Replace specific key values
+                                if (in_array($prop, $replaceKeys)) {
+                                    $calenderList1[$key]->$prop = $value;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+                // If object not found in calenderList1, add it
+                if (!$found) {
+                    $calenderList1[] = $obj;
+                }
             }
             // echo "<pre>";
-            // print_r($calenderList);
+            // print_r($calenderList1);
             // exit;
             $dayPartList = DB::table('tbl_description')
                 ->select('tbl_description.*')
@@ -5652,7 +5958,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_timesheet", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList, 'weekEndDate' => $weekEndDate, 'plusFiveDate' => $plusFiveDate, 'dayPartList' => $dayPartList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_timesheet", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList1, 'weekEndDate' => $weekEndDate, 'plusFiveDate' => $plusFiveDate, 'dayPartList' => $dayPartList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/teacher');
         }
@@ -5660,16 +5966,66 @@ class TeacherController extends Controller
 
     public function logTeacherTimesheetAdd(Request $request)
     {
-        $timesheetExist = DB::table('teacher_timesheet')
-            ->where('teacher_timesheet_id', $request->teacher_timesheet_id)
-            ->first();
-        if ($request->teacher_timesheet_id && $timesheetExist) {
+        if ($request->teacher_timesheet_id) {
             $teacher_timesheet_id = $request->teacher_timesheet_id;
+            $timesheetExist = DB::table('teacher_timesheet')
+                ->where('teacher_timesheet_id', $request->teacher_timesheet_id)
+                ->first();
+        } else {
+            $teacher_timesheet_id = DB::table('teacher_timesheet')
+                ->insertGetId([
+                    'asn_id' => $request->asnId,
+                    'school_id' => $request->school_id,
+                    'teacher_id' => $request->teacher_id,
+                    'start_date' => $request->weekStartDate,
+                    'end_date' => $request->weekEndDate,
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+
+            $timesheetExist = DB::table('teacher_timesheet')
+                ->where('teacher_timesheet_id', $teacher_timesheet_id)
+                ->first();
+        }
+
+        if ($timesheetExist) {
             DB::table('teacher_timesheet')
                 ->where('teacher_timesheet_id', $teacher_timesheet_id)
                 ->update([
                     'submit_status' => 1,
                     'reject_status' => 0
+                ]);
+
+            foreach ($request->asnDate_dte as $key => $value) {
+                if (($request->timesheet_item_id[$key] == '' || $request->timesheet_item_id[$key] == null) && $request->asnItem_id[$key]) {
+                    $asnItem_id = $request->asnItem_id[$key];
+                    $asnItemExist = DB::table('tbl_asnItem')
+                        ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                        ->select('tbl_asnItem.*', 'tbl_asn.school_id', 'tbl_asn.teacher_id')
+                        ->where('tbl_asnItem.asnItem_id', $asnItem_id)
+                        ->first();
+                    if ($asnItemExist) {
+                        DB::table('teacher_timesheet_item')
+                            ->insertGetId([
+                                'teacher_timesheet_id' => $teacher_timesheet_id,
+                                'asn_id' => $asnItemExist->asn_id,
+                                'asnItem_id' => $asnItemExist->asnItem_id,
+                                'school_id' => $asnItemExist->school_id,
+                                'teacher_id' => $asnItemExist->teacher_id,
+                                'asnDate_dte' => date('Y-m-d', strtotime($asnItemExist->asnDate_dte)),
+                                'dayPart_int' => $asnItemExist->dayPart_int,
+                                'hours_dec' => $asnItemExist->hours_dec,
+                                'start_tm' => $asnItemExist->start_tm,
+                                'end_tm' => $asnItemExist->end_tm,
+                                'timestamp_ts' => date('Y-m-d H:i:s')
+                            ]);
+                    }
+                }
+            }
+
+            DB::table('teacher_timesheet_item')
+                ->where('teacher_timesheet_id', $teacher_timesheet_id)
+                ->update([
+                    'admin_approve' => 3
                 ]);
 
             $timesheetDet = DB::table('teacher_timesheet')
@@ -5781,17 +6137,30 @@ class TeacherController extends Controller
     public function teacherTimesheetEdit(Request $request)
     {
         $result['exist'] = "No";
+        $timesheet_item_id = $request->timesheet_item_id;
+        $asnItem_id = $request->asnItem_id;
         $timesheetExist = DB::table('teacher_timesheet_item')
             ->select('teacher_timesheet_item.*')
             ->where('timesheet_item_id', $request->timesheet_item_id)
             ->first();
+
+        $asnItemExist = DB::table('tbl_asnItem')
+            ->select('tbl_asnItem.*')
+            ->where('asnItem_id', $request->asnItem_id)
+            ->first();
+
+        $dayPartList = DB::table('tbl_description')
+            ->select('tbl_description.*')
+            ->where('tbl_description.descriptionGroup_int', 20)
+            ->whereIn('tbl_description.description_int', [1, 4])
+            ->get();
         if ($timesheetExist) {
-            $dayPartList = DB::table('tbl_description')
-                ->select('tbl_description.*')
-                ->where('tbl_description.descriptionGroup_int', 20)
-                ->whereIn('tbl_description.description_int', [1, 4])
-                ->get();
-            $view = view("web.teacherPortal.event_edit", ['eventItemDetail' => $timesheetExist, 'dayPartList' => $dayPartList])->render();
+            $view = view("web.teacherPortal.event_edit", ['eventItemDetail' => $timesheetExist, 'dayPartList' => $dayPartList, 'timesheet_item_id' => $timesheet_item_id, 'asnItem_id' => $asnItem_id])->render();
+            $result['exist'] = "Yes";
+            $result['html'] = $view;
+            return response()->json($result);
+        } else if ($asnItemExist) {
+            $view = view("web.teacherPortal.event_edit", ['eventItemDetail' => $asnItemExist, 'dayPartList' => $dayPartList, 'timesheet_item_id' => $timesheet_item_id, 'asnItem_id' => $asnItem_id])->render();
             $result['exist'] = "Yes";
             $result['html'] = $view;
             return response()->json($result);
@@ -5804,7 +6173,6 @@ class TeacherController extends Controller
 
     public function teacherTimesheetUpdate(Request $request)
     {
-        $timesheet_item_id = $request->timesheet_item_id;
         $start  = new Carbon($request->start_tm);
         $end    = new Carbon($request->end_tm);
         $totalDuration = $end->diffInSeconds($start);
@@ -5812,13 +6180,50 @@ class TeacherController extends Controller
         $totalDurationInHours = $totalDuration / 3600;
         $diff = round($totalDurationInHours, 1);
 
-        DB::table('teacher_timesheet_item')
-            ->where('timesheet_item_id', $timesheet_item_id)
-            ->update([
-                'hours_dec' => $diff,
-                'start_tm' => date("H:i:s", strtotime($request->start_tm)),
-                'end_tm' => date("H:i:s", strtotime($request->end_tm)),
-            ]);
+        if ($request->timesheet_item_id) {
+            $timesheet_item_id = $request->timesheet_item_id;
+            DB::table('teacher_timesheet_item')
+                ->where('timesheet_item_id', $timesheet_item_id)
+                ->update([
+                    'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
+                    'start_tm' => date("H:i:s", strtotime($request->start_tm)),
+                    'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                ]);
+        } else if ($request->asnItem_id) {
+            $asnItem_id = $request->asnItem_id;
+            $asnItemExist = DB::table('tbl_asnItem')
+                ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->select('tbl_asnItem.*', 'tbl_asn.school_id', 'tbl_asn.teacher_id')
+                ->where('tbl_asnItem.asnItem_id', $asnItem_id)
+                ->first();
+            if ($asnItemExist) {
+                $timesheetExist = DB::table('teacher_timesheet')
+                    ->select('teacher_timesheet.*')
+                    ->where('asn_id', $asnItemExist->asn_id)
+                    ->where('school_id', $asnItemExist->school_id)
+                    ->where('teacher_id', $asnItemExist->teacher_id)
+                    ->where('start_date', '<=', $asnItemExist->asnDate_dte)
+                    ->where('end_date', '>=', $asnItemExist->asnDate_dte)
+                    ->first();
+                if ($timesheetExist) {
+                    DB::table('teacher_timesheet_item')
+                        ->insertGetId([
+                            'teacher_timesheet_id' => $timesheetExist->teacher_timesheet_id,
+                            'asn_id' => $asnItemExist->asn_id,
+                            'asnItem_id' => $asnItemExist->asnItem_id,
+                            'school_id' => $asnItemExist->school_id,
+                            'teacher_id' => $asnItemExist->teacher_id,
+                            'asnDate_dte' => date('Y-m-d', strtotime($asnItemExist->asnDate_dte)),
+                            'dayPart_int' => 4,
+                            'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
+                            'start_tm' => date("H:i:s", strtotime($request->start_tm)),
+                            'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                            'timestamp_ts' => date('Y-m-d H:i:s')
+                        ]);
+                }
+            }
+        }
+
         return redirect()->back()->with('success', "Record updated successfully.");
     }
 
@@ -5868,7 +6273,7 @@ class TeacherController extends Controller
                     'teacher_id' => $request->teacher_id,
                     'asnDate_dte' => date('Y-m-d', strtotime($request->asnDate_dte)),
                     'dayPart_int' => 4,
-                    'hours_dec' => $diff,
+                    'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
                     'start_tm' => date("H:i:s", strtotime($request->start_tm)),
                     'end_tm' => date("H:i:s", strtotime($request->end_tm)),
                     'timestamp_ts' => date('Y-m-d H:i:s')

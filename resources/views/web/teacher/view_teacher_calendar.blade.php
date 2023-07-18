@@ -51,6 +51,37 @@
     </div>
 </div>
 
+<!-- multiple asn Modal -->
+<div class="modal fade" id="multipleTeacherAsnModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 50%;">
+        <div class="modal-content calendar-modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header calendar-modal-header">
+                <h4 class="modal-title">Multiple Teacher Assignment Dates</h4>
+                <button type="button" class="close" id="multipleTeacherAsnClose">&times;</button>
+            </div>
+
+            <div class="col-md-10 mt-4">
+                <table class="table assignment-page-table add-school-teacher-page-table">
+                    <thead>
+                        <tr class="table-heading add-school-teacher-table">
+                            <th>School</th>
+                            <th>Day Part</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body-sec" id="multipleTeacherAsnTable">
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- multiple asn Modal -->
+
 <script>
     $(document).ready(function() {
         var SITEURL = "{{ url('/') }}";
@@ -110,6 +141,7 @@
                     var viewEventId = '';
                     var asnItem_id = '';
                     var calendarItem_id = '';
+                    var eAsnList = [];
                     $.ajax({
                         url: SITEURL + "/teacherEventExist",
                         data: {
@@ -124,14 +156,19 @@
                             if (data) {
                                 viewDate = data.date;
                                 if (data.status == true) {
-                                    if (data.calEventItem.calendarItem_id) {
+                                    if (data.calEventItem.reason_int == 6) {
                                         viewNote = data.calEventItem.tc_notes_txt;
                                     } else {
-                                        viewNote = data.calEventItem.title;
+                                        if (data.calEventItem.calendarItem_id) {
+                                            viewNote = data.calEventItem.tc_notes_txt;
+                                        } else {
+                                            viewNote = data.calEventItem.title;
+                                        }
                                     }
                                     viewEventId = data.calEventItem.link_id;
                                     asnItem_id = data.calEventItem.asnItem_id;
                                     calendarItem_id = data.calEventItem.calendarItem_id;
+                                    eAsnList = data.calEventItem.e_asn_list;
                                 }
                             }
                         }
@@ -172,12 +209,28 @@
                     }
 
                     if (calendar_mode1 == 'asnEdit') {
-                        if (viewEventId) {
-                            var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + viewEventId;
-                            window.open(rUrl2, '_blank');
-                        } else if (defAsnId) {
-                            var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + defAsnId;
-                            window.open(rUrl2, '_blank');
+                        if ((eAsnList).length > 1) {
+                            var tableHtml = '';
+                            $.each(eAsnList, function(index, value) {
+                                var tUrl = "{{ url('/assignment-details') }}" + "/" + value
+                                    .asn_id;
+                                tableHtml +=
+                                    '<tr class="table-data clickable-row" data-url=' +
+                                    tUrl +
+                                    '> <td>' + value
+                                    .name_txt + '</td> <td>' + value.title + '</td> <td>' +
+                                    value.yearGroup + '</td> </tr>';
+                            });
+                            $('#multipleTeacherAsnTable').html(tableHtml);
+                            $('#multipleTeacherAsnModal').modal("show");
+                        } else {
+                            if (viewEventId) {
+                                var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + viewEventId;
+                                window.open(rUrl2, '_blank');
+                            } else if (defAsnId) {
+                                var rUrl2 = '<?php echo url('/assignment-details/'); ?>' + '/' + defAsnId;
+                                window.open(rUrl2, '_blank');
+                            }
                         }
                     }
 
@@ -210,10 +263,14 @@
                     $('#calNotes').html('');
                     $('#calItemFor').html(moment(eDate).format("ddd DD MMM YYYY"));
                     var viewNote = '';
-                    if (event.calendarItem_id) {
+                    if (event.reason_int == 6) {
                         viewNote = event.tc_notes_txt;
                     } else {
-                        viewNote = event.title;
+                        if (event.calendarItem_id) {
+                            viewNote = event.tc_notes_txt;
+                        } else {
+                            viewNote = event.title;
+                        }
                     }
                     if (viewNote) {
                         $('#calNotes').html(viewNote.split(':')[1] ? viewNote.split(':')[1] :
@@ -224,12 +281,27 @@
                 }
 
                 if (calendar_mode1 == 'asnEdit') {
-                    if (event.link_id) {
-                        var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + event.link_id;
-                        window.open(rUrl3, '_blank');
-                    } else if (defAsnId) {
-                        var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + defAsnId;
-                        window.open(rUrl3, '_blank');
+                    if ((event.e_asn_list).length > 1) {
+                        var tableHtml = '';
+                        $.each(event.e_asn_list, function(index, value) {
+                            var tUrl = "{{ url('/assignment-details') }}" + "/" + value
+                                .asn_id;
+                            tableHtml +=
+                                '<tr class="table-data clickable-row" data-url=' + tUrl +
+                                '> <td>' + value
+                                .name_txt + '</td> <td>' + value.title + '</td> <td>' +
+                                value.yearGroup + '</td> </tr>';
+                        });
+                        $('#multipleTeacherAsnTable').html(tableHtml);
+                        $('#multipleTeacherAsnModal').modal("show");
+                    } else {
+                        if (event.link_id) {
+                            var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + event.link_id;
+                            window.open(rUrl3, '_blank');
+                        } else if (defAsnId) {
+                            var rUrl3 = '<?php echo url('/assignment-details/'); ?>' + '/' + defAsnId;
+                            window.open(rUrl3, '_blank');
+                        }
                     }
                 }
 
@@ -273,6 +345,18 @@
                     });
                 }
             }
+        });
+    });
+
+    $(document).on('click', '#multipleTeacherAsnClose', function() {
+        $('#multipleTeacherAsnModal').modal("hide");
+        $('body').addClass('modal-open');
+    });
+
+    $(document).ready(function() {
+        $('#multipleTeacherAsnTable').on('click', '.clickable-row', function() {
+            var url = $(this).data('url');
+            window.open(url, '_blank');
         });
     });
 </script>

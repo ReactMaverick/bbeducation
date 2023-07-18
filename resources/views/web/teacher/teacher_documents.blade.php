@@ -159,6 +159,8 @@
                     <div class="teacher-health-second-sec">
                         <div class="details-heading">
                             <h2>Vetting Details</h2>
+                            <a href="{{ URL::to('/vetting-check-history/' . $teacherDetail->teacher_id) }}"
+                                target="_blank">Vetting Check History</a>
                             <a data-toggle="modal" data-target="#editVettingDetModal" style="cursor: pointer;"><i
                                     class="fa-solid fa-pencil"></i></a>
                         </div>
@@ -622,7 +624,8 @@
                                     <label class="form-check-label">Date Register On Update</label>
                                     <input type="text" class="form-control datePickerPaste"
                                         name="vetUpdateServiceReg_dte" id=""
-                                        value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('d/m/Y', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}">
+                                        value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('d/m/Y', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}"
+                                        required>
                                 </div>
 
                                 <div class="modal-side-field mb-2">

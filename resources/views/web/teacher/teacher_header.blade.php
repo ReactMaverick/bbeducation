@@ -20,7 +20,7 @@
         </i>
     </a>
 
-    <a href="#">
+    <a style="cursor: pointer;" onclick="teacherDeleteHeader('{{ $teacherDetail->teacher_id }}')">
         <i class="fa-solid fa-trash trash-icon"></i>
     </a>
 </div>
@@ -97,5 +97,56 @@
                 location.reload();
             }
         });
+    }
+
+    function teacherDeleteHeader(teacher_id) {
+        $.ajax({
+            type: 'POST',
+            url: '{{ url('checkTeacherUsed') }}',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                teacher_id: teacher_id
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data.exist == 'Yes') {
+                    swal("",
+                        "You cannot delete this teacher because he/she is assigned for some assignment.",
+                        "warning"
+                    );
+                } else {
+                    teacherDeleteAjax(teacher_id)
+                }
+            }
+        });
+    }
+
+    function teacherDeleteAjax(teacher_id) {
+        swal({
+                title: "",
+                text: "Are you sure you want to completely delete this teacher?",
+                buttons: {
+                    Yes: "Yes",
+                    cancel: "No"
+                },
+            })
+            .then((value) => {
+                switch (value) {
+                    case "Yes":
+                        $('#fullLoader').show();
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ url('delete_teacher') }}',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                teacher_id: teacher_id
+                            },
+                            dataType: "json",
+                            success: function(data) {
+                                window.location.href = "{{ URL::to('/teachers') }}";
+                            }
+                        });
+                }
+            });
     }
 </script>
