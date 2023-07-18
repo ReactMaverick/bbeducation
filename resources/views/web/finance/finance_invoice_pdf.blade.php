@@ -71,6 +71,7 @@
             padding-left: 6px;
             border-left: 6px solid #392319;
             float: left;
+            width: 40%;
         }
 
         #client .to {
@@ -88,6 +89,7 @@
         #invoice {
             float: right;
             text-align: right;
+            /* width: 55%; */
         }
 
         #invoice h2 {
@@ -204,10 +206,11 @@
 
         #notices {
             padding-left: 6px;
+            /* padding-right: 10px; */
             border-left: 6px solid #392319;
             margin-bottom: 20px;
             font-size: 14px;
-            width: 50%;
+            width: 55%;
             float: left;
         }
 
@@ -293,39 +296,26 @@
         <div id="details" class="clearfix">
             <div id="client">
                 <div class="to">{{ $companyDetail ? $companyDetail->company_name : '' }}</div>
-                @if ($companyDetail && $companyDetail->address1_txt)
-                    <div>
+                <div style="text-align: justify;">
+                    @if ($companyDetail && $companyDetail->address1_txt)
                         {{ $companyDetail->address1_txt }}
-                    </div>
-                @endif
-                @if ($companyDetail && $companyDetail->address2_txt)
-                    <div>
-                        {{ $companyDetail->address2_txt }}
-                    </div>
-                @endif
-                @if ($companyDetail && $companyDetail->address3_txt)
-                    <div>
-                        {{ $companyDetail->address3_txt }}
-                    </div>
-                @endif
-                @if ($companyDetail && $companyDetail->address4_txt)
-                    <div>
-                        {{ $companyDetail->address4_txt }}
-                    </div>
-                @endif
-                @if ($companyDetail && $companyDetail->address5_txt)
-                    <div>
-                        {{ $companyDetail->address5_txt }}
-                    </div>
-                @endif
-                @if ($companyDetail && $companyDetail->postcode_txt)
-                    <div>
-                        {{ $companyDetail->address1_txt }}
-                    </div>
-                @endif
-
-                <div><b>Company Number:</b> {{ $companyDetail ? $companyDetail->company_phone : '' }}</div>
-                <div><b>VAT Registration Number:</b> {{ $companyDetail ? $companyDetail->vat_registration : '' }}</div>
+                    @endif
+                    @if ($companyDetail && $companyDetail->address2_txt)
+                        {{ ', ' . $companyDetail->address2_txt }}
+                    @endif
+                    @if ($companyDetail && $companyDetail->address3_txt)
+                        {{ ', ' . $companyDetail->address3_txt }}
+                    @endif
+                    @if ($companyDetail && $companyDetail->address4_txt)
+                        {{ ', ' . $companyDetail->address4_txt }}
+                    @endif
+                    @if ($companyDetail && $companyDetail->address5_txt)
+                        {{ ', ' . $companyDetail->address5_txt }}
+                    @endif
+                    @if ($companyDetail && $companyDetail->postcode_txt)
+                        {{ ', ' . $companyDetail->postcode_txt }}
+                    @endif
+                </div>
             </div>
             <div id="invoice">
                 <table cellspacing="2" cellpadding="0"
@@ -347,7 +337,7 @@
                                 Date
                             </th>
                             <th style="background-color: #fff; margin-left: 5px; color: #392319;">
-                                {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
+                                {{ date('d-m-Y') }}
                             </th>
                         </tr>
                     </thead>
@@ -368,6 +358,16 @@
                             </th>
                             <th style="background-color: #fff; margin-left: 5px; color: #392319;">
                                 {{ $schoolInvoices->admin_email }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th>
+                                Approved Date
+                            </th>
+                            <th style="background-color: #fff; margin-left: 5px; color: #392319;">
+                                {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
                             </th>
                         </tr>
                     </thead>
@@ -439,15 +439,15 @@
 
         <div id="payment-details" class="clearfix">
             <div id="notices">
-                <div class="notice">By paying this invoice I certify that I have read and agree to be bound to the TC’s
+                <div class="notice">By paying this invoice i certify that i have read and agree to be bound to the TC’s
                     of
                     BumbleBee Education</div>
-                <div> <b>Payment Terms:</b> Payment within 14 Days of Invoice Date </div>
+                <div> <b>Payment Terms:</b> Payment within 14 days of invoice date </div>
 
                 <div style="font-size: 18px; font-weight: 700; margin-top: 20px;">THANK YOU!</div>
                 <div><b>Payee Details:</b></div>
-                <div>Payment by BACS: BumbleBee Education</div>
-                <div>Account Name: LTD</div>
+                <div>Payment by BACS:</div>
+                <div>Account Name: BumbleBee Education LTD</div>
                 <div>Account Number: 90009687</div>
                 <div>Sort Code: 209561</div>
             </div>
@@ -474,6 +474,13 @@
             <img src="{{ asset('web/images/pdf_img_3.jpg') }}" alt="" width="100px;">
             <img src="{{ asset('web/images/pdf_img_2.png') }}" alt="" width="100px;">
             <img src="{{ asset('web/images/pdf_img_1.jpg') }}" alt="" width="100px;">
+        </div>
+
+        <div id="details" class="clearfix">
+            <div id="client">
+                <div><b>Company Number:</b> {{ $companyDetail ? $companyDetail->company_phone : '' }}</div>
+                <div><b>VAT Registration Number:</b> {{ $companyDetail ? $companyDetail->vat_registration : '' }}</div>
+            </div>
         </div>
 
     </main>

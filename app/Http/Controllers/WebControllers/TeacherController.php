@@ -42,6 +42,7 @@ class TeacherController extends Controller
                         ->where('tbl_userFavourite.type_int', 1)
                         ->get();
                 })
+                ->where('tbl_teacher.is_delete', 0)
                 ->where('tbl_teacher.company_id', $company_id)
                 ->get();
             // dd($fabTeacherList);
@@ -77,6 +78,7 @@ class TeacherController extends Controller
         $loginMail = $request->loginMail;
         $teacherDet = DB::table('tbl_teacher')
             ->select('tbl_teacher.*')
+            ->where('tbl_teacher.is_delete', 0)
             ->where('login_mail', $loginMail)
             ->get();
         if (count($teacherDet) > 0) {
@@ -284,7 +286,8 @@ class TeacherController extends Controller
                     })
                     ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
                     ->where('tbl_teacher.company_id', $company_id)
-                    ->where('tbl_teacher.isCurrent_status', '<>', 0);
+                    ->where('tbl_teacher.isCurrent_status', '<>', 0)
+                    ->where('tbl_teacher.is_delete', 0);
 
                 if ($request->search_input) {
                     $srchCnt = 1;
@@ -392,6 +395,7 @@ class TeacherController extends Controller
                 ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherReference.teacherReference_id', DB::raw("IF(tbl_teacherReference.teacherReference_id IS NULL, 'No References Listed', employer_txt) AS employer_txt"), 'tbl_teacherReference.employedFrom_dte', 'tbl_teacherReference.employedUntil_dte', DB::raw("IF(lastSent_dte IS NULL, 'Not Sent', lastSent_dte) AS lastSent_txt"), DB::raw("IF(totalSent_int IS NULL, 0, totalSent_int) AS totalSent_int"), DB::raw("IF(lastSent_dte IS NULL, '', IF(DATEDIFF(CURDATE(), lastSent_dte) < '$v_overdueDays', '', DATEDIFF(CURDATE(), lastSent_dte) -'$v_overdueDays')) AS overDueDays_int"))
                 ->whereIn('applicationStatus_int', array(1, 2, 7))
                 ->where('receivedOn_dtm', NULL)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacherReference.teacherReference_id')
                 ->orderBy('lastSent_dte', 'ASC')
                 ->get();
@@ -463,6 +467,7 @@ class TeacherController extends Controller
                 )
                 ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherDocument.file_location', 'day1Avail_txt', 'day1Link_id', 'day1LinkType_int', 'day1School_id', 'day1Amount_dec', 'day2Avail_txt', 'day2Link_id', 'day2LinkType_int', 'day2School_id', 'day2Amount_dec', 'day3Avail_txt', 'day3Link_id', 'day3LinkType_int', 'day3School_id', 'day3Amount_dec', 'day4Avail_txt', 'day4Link_id', 'day4LinkType_int', 'day4School_id', 'day4Amount_dec', 'day5Avail_txt', 'day5Link_id', 'day5LinkType_int', 'day5School_id', 'day5Amount_dec', DB::raw("CAST((IFNULL(day1Amount_dec, 0) + IFNULL(day2Amount_dec, 0) + IFNULL(day3Amount_dec, 0) + IFNULL(day4Amount_dec, 0) + IFNULL(day5Amount_dec, 0)) AS DECIMAL(3, 1)) AS totalDays"))
                 ->whereRaw("(t_day1.teacher_id IS NOT NULL OR t_day2.teacher_id IS NOT NULL OR t_day3.teacher_id IS NOT NULL OR t_day4.teacher_id IS NOT NULL OR t_day5.teacher_id IS NOT NULL)")
+                ->where('tbl_teacher.is_delete', 0)
                 ->where('tbl_teacher.company_id', $company_id)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->orderBy(DB::raw("IF(knownAs_txt IS NULL OR knownAs_txt = '', CONCAT(firstName_txt, ' ',  IFNULL(surname_txt, '')), CONCAT(firstName_txt, ' (', knownAs_txt, ') ',  IFNULL(surname_txt, '')))"), 'ASC')
@@ -1014,6 +1019,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -1235,6 +1241,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -1305,6 +1312,11 @@ class TeacherController extends Controller
         DB::table('tbl_teacher')
             ->where('tbl_teacher.teacher_id', $teacher_id)
             ->delete();
+        // DB::table('tbl_teacher')
+        //     ->where('tbl_teacher.teacher_id', $teacher_id)
+        //     ->update([
+        //         'is_delete' => 1
+        //     ]);
         return true;
     }
 
@@ -1463,6 +1475,7 @@ class TeacherController extends Controller
             ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
             ->select('tbl_contactItemTch.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt')
             ->where('contactItemTch_id', "=", $teacherContactItemId)
+            ->where('tbl_teacher.is_delete', 0)
             ->first();
 
         return response()->json(['Detail' => $Detail]);
@@ -1477,6 +1490,7 @@ class TeacherController extends Controller
             ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
             ->select('tbl_contactItemTch.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt')
             ->where('contactItemTch_id', "=", $teacherContactItemId)
+            ->where('tbl_teacher.is_delete', 0)
             ->first();
 
         return response()->json(['Detail' => $Detail]);
@@ -1604,6 +1618,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'interviewer.firstName_txt as int_firstName_txt', 'interviewer.surname_txt as int_surname_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -2033,6 +2048,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -2219,6 +2235,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -2876,6 +2893,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -3297,6 +3315,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -3329,6 +3348,38 @@ class TeacherController extends Controller
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function fetchVettingHistory(Request $request)
+    {
+        $input = $request->all();
+        $vetting_check_history_id = $input['vetting_check_history_id'];
+
+        $Detail = DB::table('vetting_check_history')
+            ->where('vetting_check_history_id', "=", $vetting_check_history_id)
+            ->first();
+
+        $view = view("web.teacher.edit_teacher_vet_history", ['Detail' => $Detail])->render();
+        return response()->json(['html' => $view]);
+    }
+
+    public function teacherVettingHistoryUpdate(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $vetting_check_history_id = $request->vetting_check_history_id;
+
+            DB::table('vetting_check_history')
+                ->where('vetting_check_history_id', $vetting_check_history_id)
+                ->update([
+                    'check_date' => date("Y-m-d", strtotime(str_replace('/', '-', $request->check_date)))
+                ]);
+
+            return redirect()->back()->with('success', "Record updated successfully.");
+        }
+        return redirect()->back()->with('success', "Record updated successfully.");
     }
 
     public function newTeacherDbsInsert(Request $request)
@@ -3864,6 +3915,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -4086,6 +4138,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -4393,6 +4446,7 @@ class TeacherController extends Controller
                 ->LeftJoin('company', 'company.company_id', '=', 'tbl_teacher.company_id')
                 ->select('tbl_teacher.*', 'company.company_name', 'company.company_logo')
                 ->where('tbl_teacher.login_mail', $request->user_name)
+                ->where('tbl_teacher.is_delete', 0)
                 ->get();
             if (count($user_exist) > 0) {
                 if (!Hash::check($request->password, $user_exist[0]->password)) {
@@ -4509,6 +4563,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $teacher_id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
             // dd($teacherDetail);
@@ -4793,6 +4848,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'interviewer.firstName_txt as int_firstName_txt', 'interviewer.surname_txt as int_surname_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $teacher_id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -4962,6 +5018,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $teacher_id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -5146,6 +5203,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $teacher_id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -5564,6 +5622,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $teacher_id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -5787,6 +5846,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $teacher_id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 
@@ -6375,6 +6435,7 @@ class TeacherController extends Controller
                 })
                 ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt', 'nationalityTbl.description_txt as nationality_txt', 'emergencyContactRelation.description_txt as emergencyContactRelation_txt', 'bankTbl.description_txt as bank_txt', 'interviewQuality.description_txt as interviewQuality_txt', 'interviewLanguageSkills.description_txt as interviewLanguageSkills_txt', 'rightToWork.description_txt as rightToWork_txt', 'file_location', 'teacherDocument_id', 'tbl_userFavourite.favourite_id')
                 ->where('tbl_teacher.teacher_id', $teacher_id)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
 

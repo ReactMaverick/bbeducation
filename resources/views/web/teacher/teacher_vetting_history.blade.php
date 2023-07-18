@@ -39,9 +39,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -63,9 +63,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -87,9 +87,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -112,9 +112,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -137,9 +137,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -162,9 +162,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -187,9 +187,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -211,9 +211,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -236,9 +236,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -261,9 +261,9 @@
                                                         {{ ', ' }}
                                                     @endif
                                                     {{ date('d-m-Y', strtotime($val->check_date)) }}
-                                                    {{-- <a style="cursor: pointer;"
+                                                    <a style="cursor: pointer;"
                                                         onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
-                                                            class="fa-solid fa-pencil"></i></a> --}}
+                                                            class="fa-solid fa-pencil"></i></a>
                                                 @endforeach
                                             @endif
                                         </p>
@@ -277,4 +277,61 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="vettingHistoryEditModal">
+        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content" style="width:65%;">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Edit Date</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Edit Date</h2>
+                </div>
+
+                <form action="{{ url('/teacherVettingHistoryUpdate') }}" method="post" class="form-validate"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-input-field-section">
+                        <input type="hidden" name="vetting_check_history_id" id="vettingCheckHistoryId" value="">
+
+                        <div class="row" id="vettingHistoryEditDiv"></div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function historyEdit(vetting_check_history_id) {
+            if (vetting_check_history_id) {
+                $('#vettingCheckHistoryId').val(vetting_check_history_id);
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('fetchVettingHistory') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        vetting_check_history_id: vetting_check_history_id
+                    },
+                    success: function(data) {
+                        //console.log(data);
+                        $('#vettingHistoryEditDiv').html(data.html);
+                    }
+                });
+                $('#vettingHistoryEditModal').modal("show");
+            }
+        }
+    </script>
 @endsection

@@ -127,6 +127,8 @@ Route::post('/getTeacherReceiveReference', [TeacherController::class, 'getTeache
 Route::post('/receiveReferenceUpdate', [TeacherController::class, 'receiveReferenceUpdate']);
 Route::get('/teacher-documents/{id}', [TeacherController::class, 'teacherDocuments']);
 Route::get('/vetting-check-history/{id}', [TeacherController::class, 'teacherVettingHistory']);
+Route::post('/fetchVettingHistory', [TeacherController::class, 'fetchVettingHistory']);
+Route::post('/teacherVettingHistoryUpdate', [TeacherController::class, 'teacherVettingHistoryUpdate']);
 Route::post('/teacherDocumentListUpdate', [TeacherController::class, 'teacherDocumentListUpdate']);
 Route::post('/teacherVettingUpdate', [TeacherController::class, 'teacherVettingUpdate']);
 Route::post('/newTeacherDbsInsert', [TeacherController::class, 'newTeacherDbsInsert']);

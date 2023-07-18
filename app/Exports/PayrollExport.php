@@ -26,6 +26,7 @@ class PayrollExport implements FromCollection, WithHeadings
             ->select('RACSnumber_txt', DB::raw("IF(knownAs_txt IS NULL OR knownAs_txt = '', firstName_txt, CONCAT(firstName_txt, ' (', knownAs_txt, ') ')) AS 'FirstName'"), 'surname_txt AS Surname', DB::raw("SUM(dayPercent_dec) AS Items"), 'tbl_asnItem.cost_dec AS Rate')
             // ->select('RACSnumber_txt', DB::raw("IF(knownAs_txt IS NULL OR knownAs_txt = '', firstName_txt, CONCAT(firstName_txt, ' (', knownAs_txt, ') ')) AS 'FirstName'"), 'surname_txt AS Surname', DB::raw("CAST(SUM(dayPercent_dec) * 6 AS DECIMAL(6,2)) AS Items"), DB::raw("CAST(tbl_asnItem.cost_dec / 6 AS DECIMAL(6,2)) AS Rate"))
             ->where('tbl_asnItem.payroll_id', '!=', NULL)
+            ->where('tbl_teacher.is_delete', 0)
             ->whereDate('tbl_payrollRun.payDate_dte', '=', $this->date)
             ->groupBy('tbl_teacher.teacher_id')
             ->groupBy('tbl_asnItem.cost_dec')

@@ -437,8 +437,13 @@ class FinanceController extends Controller
                         ->where('tbl_schoolContact.school_id', $schoolDet->school_id)
                         ->first();
 
+                    $companyDetail = DB::table('company')
+                        ->select('company.*')
+                        ->where('company.company_id', $company_id)
+                        ->first();
                     if ($contactDet && $contactDet->contactItem_txt) {
                         $mailData['asnIds'] = $asnId;
+                        $mailData['companyDetail'] = $companyDetail;
                         $mailData['weekStartDate'] = $weekStartDate;
                         $mailData['weekEndDate'] = $weekEndDate;
                         $mailData['contactDet'] = $contactDet;
@@ -487,6 +492,10 @@ class FinanceController extends Controller
                 ->where('tbl_schoolContact.school_id', $schoolId)
                 ->first();
 
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
             if (count($teacherList) > 0 && $contactDet && $contactDet->contactItem_txt) {
                 DB::table('teacher_timesheet_item')
                     ->whereIn('timesheet_item_id', $asnIdsArr)
@@ -495,6 +504,7 @@ class FinanceController extends Controller
                     ]);
 
                 $mailData['asnIds'] = $asnId;
+                $mailData['companyDetail'] = $companyDetail;
                 $mailData['schoolId'] = $schoolId;
                 $mailData['contactDet'] = $contactDet;
                 $mailData['teacherList'] = $teacherList;

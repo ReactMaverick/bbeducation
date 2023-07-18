@@ -119,9 +119,14 @@ class SchoolController extends Controller
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
 
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
             if ($request->passwordReset && $request->login_mail) {
                 // $mail = 'sudip.websadroit@gmail.com';
                 $uID = base64_encode($school_id);
+                $mailData['companyDetail'] = $companyDetail;
                 $mailData['name_txt'] = $request->name_txt;
                 $mailData['mail'] = $request->login_mail;
                 $mailData['rUrl'] = url('/school/set-password') . '/' . $uID;
@@ -1011,7 +1016,8 @@ class SchoolController extends Controller
                         });
                 })
                 ->select('tbl_asn.*', 'yearGroupType.description_txt as yearGroupTxt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'assType.description_txt as assignmentType', 'subjectType.description_txt as subjectTxt', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), 'teacherProff.description_txt as teacherProfession', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', DB::raw('MIN(asnDate_dte) AS firstDate_dte'), 'tbl_student.firstName_txt as studentfirstName', 'tbl_student.surname_txt as studentsurname_txt', DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'))
-                ->where('tbl_asn.school_id', $id);
+                ->where('tbl_asn.school_id', $id)
+                ->where('tbl_teacher.is_delete', 0);
             if ($request->include != 1 && $request->status) {
                 $assignment->where('tbl_asn.status_int', $request->status);
             }
@@ -1110,6 +1116,7 @@ class SchoolController extends Controller
                 ->whereDate('tbl_asnItem.asnDate_dte', '<', date('Y-m-d'))
                 ->where('tbl_asn.status_int', 3)
                 ->where('timesheet_id', null)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.teacher_id')
                 ->orderBy(DB::raw('COUNT(asnItem_id)'), 'DESC')
                 ->get();
@@ -1626,7 +1633,8 @@ class SchoolController extends Controller
                         });
                 })
                 ->select('tbl_schoolTeacherList.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'applicationStatus.description_txt as status_txt', 'daysWorked_dec')
-                ->where('tbl_schoolTeacherList.school_id', $id);
+                ->where('tbl_schoolTeacherList.school_id', $id)
+                ->where('tbl_teacher.is_delete', 0);
             if ($tStatus != 'all') {
                 if ($tStatus == 'preferred') {
                     $teacher->where('tbl_schoolTeacherList.rejectOrPreferred_int', 1);
@@ -1691,6 +1699,7 @@ class SchoolController extends Controller
                     })
                     ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
                     ->where('tbl_teacher.company_id', $company_id)
+                    ->where('tbl_teacher.is_delete', 0)
                     ->where('tbl_teacher.isCurrent_status', '<>', 0)
                     ->whereNotIn('tbl_teacher.teacher_id', function ($query) use ($school_id) {
                         $query->select('teacher_id')
@@ -1890,6 +1899,7 @@ class SchoolController extends Controller
                     })
                     ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
                     ->where('tbl_teacher.company_id', $company_id)
+                    ->where('tbl_teacher.is_delete', 0)
                     ->where('tbl_teacher.isCurrent_status', '<>', 0);
 
                 if ($searchTeacherKey) {
@@ -2328,6 +2338,7 @@ class SchoolController extends Controller
                 ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherDocument.file_location', 'day1Avail_txt', 'day1Link_id', 'day1LinkType_int', 'day1School_id', 'day2Avail_txt', 'day2Link_id', 'day2LinkType_int', 'day2School_id', 'day3Avail_txt', 'day3Link_id', 'day3LinkType_int', 'day3School_id', 'day4Avail_txt', 'day4Link_id', 'day4LinkType_int', 'day4School_id', 'day5Avail_txt', 'day5Link_id', 'day5LinkType_int', 'day5School_id', 'day6Avail_txt', 'day6Link_id', 'day6LinkType_int', 'day6School_id', 'day7Avail_txt', 'day7Link_id', 'day7LinkType_int', 'day7School_id', DB::raw("CAST((IFNULL(day1Amount_dec, 0) + IFNULL(day2Amount_dec, 0) + IFNULL(day3Amount_dec, 0) + IFNULL(day4Amount_dec, 0) + IFNULL(day5Amount_dec, 0) + IFNULL(day6Amount_dec, 0) + IFNULL(day7Amount_dec, 0)) AS DECIMAL(3, 1)) AS totalDays"))
                 ->whereRaw("(t_day1.teacher_id IS NOT NULL OR t_day2.teacher_id IS NOT NULL OR t_day3.teacher_id IS NOT NULL OR t_day4.teacher_id IS NOT NULL OR t_day5.teacher_id IS NOT NULL OR t_day6.teacher_id IS NOT NULL OR t_day7.teacher_id IS NOT NULL) AND (day1School_id = '$id' OR day2School_id = '$id' OR day3School_id = '$id' OR day4School_id = '$id' OR day5School_id = '$id' OR day6School_id = '$id' OR day7School_id = '$id')")
                 ->where('tbl_teacher.company_id', $company_id)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->orderBy(DB::raw("(day1Amount_dec + day2Amount_dec + day3Amount_dec + day4Amount_dec + day5Amount_dec + day6Amount_dec + day7Amount_dec)"), 'DESC')
                 ->get();
@@ -2950,6 +2961,7 @@ class SchoolController extends Controller
                 ->where('teacher_timesheet.reject_status', 0)
                 ->where('teacher_timesheet.approve_by_school', '=', 1)
                 ->where('teacher_timesheet.school_id', '=', $school_id)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('teacher_timesheet.teacher_timesheet_id')
                 ->orderBy('teacher_timesheet.start_date', 'ASC')
                 ->get();
@@ -3014,6 +3026,7 @@ class SchoolController extends Controller
                         ->get();
                 })
                 ->where('tbl_asn.school_id', $school_id)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
@@ -3026,6 +3039,7 @@ class SchoolController extends Controller
                 ->where('teacher_timesheet_item.school_id', $school_id)
                 ->where('teacher_timesheet_item.send_to_school', 1)
                 ->where('teacher_timesheet_item.admin_approve', '!=', 1)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
                 ->orderBy('teacher_timesheet.teacher_id', 'ASC')
                 ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
@@ -3054,6 +3068,7 @@ class SchoolController extends Controller
             ->where('teacher_timesheet_item.school_id', $school_id)
             ->where('teacher_timesheet_item.send_to_school', 1)
             ->where('teacher_timesheet_item.admin_approve', '!=', 1)
+            ->where('tbl_teacher.is_delete', 0)
             ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
             ->orderBy('teacher_timesheet.teacher_id', 'ASC')
             ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
@@ -3212,6 +3227,7 @@ class SchoolController extends Controller
                     ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
                     ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                     ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                    ->where('tbl_teacher.is_delete', 0)
                     ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
                     ->groupBy('tbl_asnItem.asnItem_id')
                     ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
@@ -3347,6 +3363,7 @@ class SchoolController extends Controller
             ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
             ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"))
             ->where('teacher_timesheet.teacher_timesheet_id', $teacher_timesheet_id)
+            ->where('tbl_teacher.is_delete', 0)
             ->groupBy('teacher_timesheet_item.asnDate_dte')
             ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
             ->get();
@@ -3580,6 +3597,7 @@ class SchoolController extends Controller
                     ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                     ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
                     ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                    ->where('tbl_teacher.is_delete', 0)
                     ->groupBy('tbl_asnItem.asnItem_id')
                     ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                     ->get();
@@ -3746,6 +3764,7 @@ class SchoolController extends Controller
                         ->get();
                 })
                 ->where('tbl_asn.school_id', $schoolId)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
@@ -3832,6 +3851,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
                 ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                 ->get();
@@ -3952,6 +3972,7 @@ class SchoolController extends Controller
                         ->get();
                 })
                 ->where('tbl_asn.school_id', $schoolId)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
@@ -4040,6 +4061,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
                 ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                 ->get();
@@ -4103,6 +4125,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text')
                 ->whereIn('teacher_timesheet_item.timesheet_item_id', $asnIdsArr)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
                 ->orderBy('teacher_timesheet.teacher_id', 'ASC')
                 ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
@@ -4194,6 +4217,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
                 ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
+                ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                 ->get();
