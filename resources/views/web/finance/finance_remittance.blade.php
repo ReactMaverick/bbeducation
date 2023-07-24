@@ -250,10 +250,24 @@
 
         $(document).on('click', '#remitInvoiceBtn', function() {
             var editInvoiceId = $('#editInvoiceId').val();
+            var payMethodArr = {!! json_encode($paymentMethodList) !!};
             if (editInvoiceId) {
+                var dropdownHtml = '<select id="paymentDropdown" class="form-control">';
+                $.each(payMethodArr, function(index, element) {
+                    dropdownHtml += '<option value="' + element.description_int + '">' + element
+                        .description_txt + '</option>';
+                });
+                dropdownHtml += '</select>';
+
                 swal({
                         title: "",
-                        text: "You currently have an invoice selected. Do you want to remit that invoice?",
+                        text: "You currently have an invoice selected. Do you want to remit that invoice? Then please select payment method.",
+                        content: {
+                            element: 'div',
+                            attributes: {
+                                innerHTML: dropdownHtml,
+                            }
+                        },
                         buttons: {
                             cancel: "No",
                             Yes: "Yes"
@@ -262,12 +276,14 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
+                                var paymentInt = $('#paymentDropdown').val();
                                 $.ajax({
                                     type: 'POST',
                                     url: '{{ url('schoolInvoiceRemit') }}',
                                     data: {
                                         "_token": "{{ csrf_token() }}",
-                                        editInvoiceId: editInvoiceId
+                                        editInvoiceId: editInvoiceId,
+                                        paymentInt: paymentInt
                                     },
                                     success: function(data) {
                                         location.reload();

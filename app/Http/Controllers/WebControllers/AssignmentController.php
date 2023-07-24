@@ -1392,7 +1392,44 @@ class AssignmentController extends Controller
                 if ($teacherCont) {
                     $teacherMail = $teacherCont->contactItem_txt;
                 }
+                $teacherAddress = "";
+                $teacherDet = DB::table('tbl_teacher')
+                    ->where('teacher_id', $vettingDetail->teacher_id)
+                    ->first();
+                if ($teacherDet) {
+                    if ($teacherDet->address1_txt) {
+                        if ($teacherAddress != '') {
+                            $teacherAddress .= ", ";
+                        }
+                        $teacherAddress .= $teacherDet->address1_txt;
+                    }
+                    if ($teacherDet->address2_txt) {
+                        if ($teacherAddress != '') {
+                            $teacherAddress .= ", ";
+                        }
+                        $teacherAddress .= $teacherDet->address2_txt;
+                    }
+                    if ($teacherDet->address3_txt) {
+                        if ($teacherAddress != '') {
+                            $teacherAddress .= ", ";
+                        }
+                        $teacherAddress .= $teacherDet->address3_txt;
+                    }
+                    if ($teacherDet->address4_txt) {
+                        if ($teacherAddress != '') {
+                            $teacherAddress .= ", ";
+                        }
+                        $teacherAddress .= $teacherDet->address4_txt;
+                    }
+                    if ($teacherDet->postcode_txt) {
+                        if ($teacherAddress != '') {
+                            $teacherAddress .= ", ";
+                        }
+                        $teacherAddress .= $teacherDet->postcode_txt;
+                    }
+                }
 
+                $schAddress = "";
                 $schoolDetail = DB::table('tbl_school')
                     ->join('tbl_asn', 'tbl_school.school_id', '=', 'tbl_asn.school_id')
                     ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
@@ -1422,21 +1459,59 @@ class AssignmentController extends Controller
                     ->where('tbl_asn.asn_id', $vettingDetail->asn_id)
                     ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                     ->first();
+                if ($schoolDetail) {
+                    if ($schoolDetail->address1_txt) {
+                        if ($schAddress != '') {
+                            $schAddress .= ", ";
+                        }
+                        $schAddress .= $schoolDetail->address1_txt;
+                    }
+                    if ($schoolDetail->address2_txt) {
+                        if ($schAddress != '') {
+                            $schAddress .= ", ";
+                        }
+                        $schAddress .= $schoolDetail->address2_txt;
+                    }
+                    if ($schoolDetail->address3_txt) {
+                        if ($schAddress != '') {
+                            $schAddress .= ", ";
+                        }
+                        $schAddress .= $schoolDetail->address3_txt;
+                    }
+                    if ($schoolDetail->address4_txt) {
+                        if ($schAddress != '') {
+                            $schAddress .= ", ";
+                        }
+                        $schAddress .= $schoolDetail->address4_txt;
+                    }
+                    if ($schoolDetail->address5_txt) {
+                        if ($schAddress != '') {
+                            $schAddress .= ", ";
+                        }
+                        $schAddress .= $schoolDetail->address5_txt;
+                    }
+                    if ($schoolDetail->postcode_txt) {
+                        if ($schAddress != '') {
+                            $schAddress .= ", ";
+                        }
+                        $schAddress .= $schoolDetail->postcode_txt;
+                    }
+                }
 
                 $itemList = DB::table('tbl_asnItem')
                     ->LeftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
                     ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
                     ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
-                    ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
+                    ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("MIN(asnDate_dte) AS minDate"), DB::raw("MAX(asnDate_dte) AS maxDate"))
                     ->where('tbl_asnItem.asn_id', $vettingDetail->asn_id)
                     ->where('tbl_teacher.is_delete', 0)
                     ->groupBy('tbl_asnItem.asnItem_id')
                     ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                     ->get();
 
-                $pdf = PDF::loadView('web.assignment.teacher_vetting_pdf', ['schoolDetail' => $schoolDetail, 'companyDetail' => $companyDetail, 'itemList' => $itemList]);
+                $pdf1 = PDF::loadView('web.assignment.teacher_vetting_pdf', ['schoolDetail' => $schoolDetail, 'companyDetail' => $companyDetail, 'itemList' => $itemList]);
                 $pdfName1 = 'Teacher-vetting-' . $vettingDetail->vetting_id . '-' . str_replace(" ", "", $vettingDetail->candidateName_txt) . '.pdf';
-                $pdf->save(public_path('pdfs/vettings/teacher/' . $pdfName1));
+                $pdf1->save(public_path('pdfs/vettings/teacher/' . $pdfName1));
                 $tfPath = 'pdfs/vettings/teacher/' . $pdfName1;
 
                 DB::table('tbl_asnVetting')
@@ -1451,10 +1526,11 @@ class AssignmentController extends Controller
                     $result['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
                     $result['invoice_path'] = asset($fPath);
 
+                    // $cc_mail = "kumarbarun137@gmail.com";
                     // $cc_mail = "dipankar.websadroit@gmail.com";
                     $cc_mail = $webUserLoginData->user_name;
                     $mailData['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
-                    $mailData['mail_description'] = "A pdf file of candidate vetting is attach with this mail. Please check it out.";
+                    $mailData['mail_description'] = "Please find attached two PDF file containing the candidate vetting information and candidate timesheet information. Kindly review it at your earliest convenience.";
                     $mailData['invoice_path'] = asset($fPath);
                     $mailData['invoice_path2'] = asset($tfPath);
                     $mailData['cc_mail'] = $cc_mail;
@@ -1464,15 +1540,71 @@ class AssignmentController extends Controller
                 }
                 $result['sendMail'] = $sendMail;
 
-                if (file_exists(public_path($tfPath))) {
-                    $mailData['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
-                    $mailData['mail_description'] = "A pdf file of candidate vetting is attach with this mail. Please check it out.";
-                    $mailData['invoice_path'] = asset($tfPath);
-                    $mailData['invoice_path2'] = asset($fPath);
-                    $mailData['mail'] = $teacherMail;
-                    $myVar = new AlertController();
-                    $myVar->sendTeacherVettingMail($mailData);
+                // if (file_exists(public_path($tfPath))) {
+                //     $mailData['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
+                //     $mailData['mail_description'] = "Please find attached a PDF file containing the candidate timesheet information. Kindly review it at your earliest convenience.";
+                //     $mailData['invoice_path'] = asset($tfPath);
+                //     $mailData['invoice_path2'] = asset($fPath);
+                //     $mailData['mail'] = $teacherMail;
+                //     $myVar1 = new AlertController();
+                //     $myVar1->sendTeacherVettingMail($mailData);
+                // }
+                $mailData['subject'] = 'Bumblebee Education: Confirmation of Work';
+                $mailData['companyDetail'] = $companyDetail;
+                $mailData['teacherDet'] = $teacherDet;
+                $mailData['schoolDetail'] = $schoolDetail;
+                $mailData['itemList'] = $itemList;
+                $mailData['teacherAddress'] = $teacherAddress;
+                $mailData['schAddress'] = $schAddress;
+                $mailData['mail'] = $teacherMail;
+                $myVar1 = new AlertController();
+                $myVar1->sendTeacherVettingMail($mailData);
+            }
+        } else {
+            $result['exist'] = 'No';
+        }
+        return response()->json($result);
+    }
+
+    public function approveVettingDownload(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $vetting_id = $input['vetting_id'];
+            $result['exist'] = 'No';
+
+            $vettingDetail = DB::table('tbl_asnVetting')
+                ->where('vetting_id', $vetting_id)
+                ->first();
+            if ($vettingDetail) {
+                $sendMail = $vettingDetail->faoEmail_txt;
+
+                $companyDetail = DB::table('company')
+                    ->select('company.*')
+                    ->where('company.company_id', $company_id)
+                    ->first();
+
+                $pdf = PDF::loadView('web.assignment.candidate_vetting_pdf', ['vettingDetail' => $vettingDetail, 'companyDetail' => $companyDetail]);
+                $pdfName = 'Vetting-' . $vettingDetail->vetting_id . '-' . str_replace(" ", "", $vettingDetail->candidateName_txt) . '.pdf';
+                $pdf->save(public_path('pdfs/vettings/' . $pdfName));
+                $fPath = 'pdfs/vettings/' . $pdfName;
+
+                DB::table('tbl_asnVetting')
+                    ->where('vetting_id', $vetting_id)
+                    ->update([
+                        'invoice_path' => $fPath
+                    ]);
+
+                if (file_exists(public_path($fPath))) {
+                    $result['exist'] = 'Yes';
+                    $result['pdfName'] = $pdfName;
+                    $result['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
+                    $result['invoice_path'] = asset($fPath);
                 }
+                $result['sendMail'] = $sendMail;
             }
         } else {
             $result['exist'] = 'No';

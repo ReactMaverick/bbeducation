@@ -84,17 +84,17 @@
     var asnId = "{{ $asnId }}";
     var school_id = "{{ $school_id }}";
     if (asnId) {
+        $('#fullLoader').show();
         $.ajax({
             type: 'POST',
-            url: '{{ url('/school/logSchoolTimesheetLogDir') }}',
+            url: '{{ url('/school/teacherTimeSheetApproveDir') }}',
             data: {
                 "_token": "{{ csrf_token() }}",
                 approveAsnId: asnId,
-                school_id: school_id,
-                weekStartDate: "{{ $weekStartDate }}",
-                weekEndDate: "{{ $plusFiveDate }}"
+                school_id: school_id
             },
             success: function(data) {
+                $('#fullLoader').hide();
                 if (data.add == 'Yes') {
                     var popTxt =
                         'You have just logged a timesheet for ' + data
@@ -139,16 +139,15 @@
                     var remark = $('.swal-content textarea').val();
                     $.ajax({
                         type: 'POST',
-                        url: '{{ url('/school/logSchoolTimesheetRejectDir') }}',
+                        url: '{{ url('/school/teacherTimeSheetRejectDir') }}',
                         data: {
                             "_token": "{{ csrf_token() }}",
                             asnId: asnId,
                             school_id: school_id,
-                            weekStartDate: "{{ $weekStartDate }}",
-                            weekEndDate: "{{ $plusFiveDate }}",
                             remark: remark
                         },
                         success: function(data) {
+                            $('#fullLoader').hide();
                             if (data.add == 'Yes') {
                                 swal("", "Timesheet rejected successfully");
                             } else {

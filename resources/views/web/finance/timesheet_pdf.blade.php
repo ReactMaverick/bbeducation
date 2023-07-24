@@ -1,84 +1,377 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>Teacher Timesheet</title>
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"> -->
-    {{-- <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet"> --}}
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap');
+
+        * {
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .clearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        a {
+            color: #5b9cd7;
+            text-decoration: none;
+        }
+
+        body {
+            position: relative;
+            /* width: 21cm;
+            height: 29.7cm; */
+            size: letter;
+            margin: 0;
+            /* margin: 0 auto; */
+            color: #555555;
+            background: #FFFFFF;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-family: SourceSansPro;
+            border: 2px solid #5b9cd7;
+            padding: 20px 20px 0 20px;
+        }
+
+        header {
+            padding: 5px 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #AAAAAA;
+            position: relative;
+            background-color: #5b9cd7;
+            padding: 10px 20px;
+        }
+
+        #logo {
+            float: right;
+            margin-top: 8px;
+            width: 33.33%;
+            text-align: right;
+        }
+
+        #logo img {
+            height: 50px;
+        }
+
+        #company {
+            float: left;
+            width: 33.33%;
+            text-align: left;
+            font-size: 24px;
+            color: #fff;
+            margin-top: 15px;
+        }
+
+        #company-name {
+            float: left;
+            width: 33.33%;
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            margin-top: 15px;
+        }
+
+
+        /* #details {
+            margin-bottom: 20px;
+        } */
+
+        #client {
+            /* padding-left: 6px;
+            border-left: 6px solid #5b9cd7; */
+            float: left;
+            width: 40%;
+        }
+
+        #client .to {
+            color: #000;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        h2.name {
+            font-size: 1.4em;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        #invoice {
+            float: right;
+            text-align: right;
+            width: 55%;
+        }
+
+        #invoice h2 {
+            color: #5b9cd7;
+            font-size: 14px;
+            line-height: 1em;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        #invoice .date {
+            font-size: 1.1em;
+            color: #777777;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        table thead {
+            background-color: #5b9cd7;
+        }
+
+
+        table th,
+        table td {
+            padding: 20px;
+            /* background: #EEEEEE; */
+            text-align: center;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table th {
+            white-space: nowrap;
+            font-weight: normal;
+        }
+
+        table td {
+            text-align: right;
+        }
+
+        table td h3 {
+            color: #5b9cd7;
+            font-size: 1.2em;
+            font-weight: normal;
+            margin: 0 0 0.2em 0;
+        }
+
+        table .no {
+            color: #FFFFFF;
+            font-size: 1.6em;
+            background: #5b9cd7;
+        }
+
+        table .desc {
+            text-align: left;
+            width: 60%;
+        }
+
+        table .unit {
+            text-align: right;
+        }
+
+        table .qty {}
+
+        /* table .total {
+        color: #FFFFFF;
+        } */
+
+        .gross {
+            background-color: #5b9cd7;
+            color: #fff !important;
+        }
+
+        table td.unit,
+        table td.qty,
+        table td.total {
+            font-size: 14px;
+        }
+
+        table tbody tr:last-child td {
+            border: none;
+        }
+
+        table tfoot td {
+            padding: 6px 20px;
+            background: #FFFFFF;
+            font-size: 14px;
+            white-space: nowrap;
+            border-top: 1px solid #AAAAAA;
+        }
+
+        table tfoot tr:first-child td {
+            border-top: none;
+        }
+
+        table tfoot tr:last-child td {
+            color: #5b9cd7;
+            font-size: 14px;
+            border-top: 1px solid #5b9cd7;
+        }
+
+        table tfoot tr td:first-child {
+            border: none;
+        }
+
+        #thanks {
+            font-size: 2em;
+            margin-bottom: 50px;
+        }
+
+        #notices {
+            padding-left: 6px;
+            /* padding-right: 10px; */
+            border-left: 6px solid #5b9cd7;
+            margin-bottom: 20px;
+            font-size: 14px;
+            width: 55%;
+            float: left;
+        }
+
+        #notices .notice {
+            font-size: 14px;
+        }
+
+        footer {
+            color: #777777;
+            width: 95%;
+            /* height: 30px; */
+            position: absolute;
+            bottom: 2%;
+            /* bottom: 0; */
+            /* border-top: 1px solid #AAAAAA; */
+            padding: 8px 0;
+            text-align: center;
+        }
+
+        .bg-grey {
+            background-color: #e7eae9;
+        }
+
+        .bg-black {
+            background-color: #000;
+        }
+
+        .bg-white {
+            background-color: #fff;
+        }
+
+        thead tr th {
+            font-weight: 600;
+            color: #fff;
+            padding: 5px 20px;
+        }
+
+        .border-bottom {
+            border-bottom: 2px solid #9e9e9e;
+        }
+
+        tfoot tr {
+            padding-top: 20px;
+        }
+
+        .padding-t2 {
+            padding-top: 6px;
+        }
+
+        .align-left {
+            text-align: left !important;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #e7eae9;
+        }
+
+        tbody tr td {
+            color: #363636;
+            padding: 5px 20px;
+        }
+
+        .heading-right thead tr th {
+            border-bottom: 1px solid #5b9cd7 !important;
+        }
+
+        #amounts {
+            float: right;
+        }
+    </style>
 </head>
 
-<body style="-webkit-print-color-adjust: exact;">
+<body>
+    <header class="clearfix">
+        <div id="company">Teacher Timesheet
+        </div>
+        <div id="company-name">
+            {{ $companyDetail ? $companyDetail->company_name : '' }}
+        </div>
+        <div id="logo">
+            <img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}">
+        </div>
+    </header>
+    <main>
+        <div id="details" class="clearfix">
+            <div id="client">
+                <div class="to">
+                    @if (isset($itemList[0]))
+                        @if ($itemList[0]->knownAs_txt == null && $itemList[0]->knownAs_txt == '')
+                            {{ $itemList[0]->firstName_txt . ' ' . $itemList[0]->surname_txt }}
+                        @else
+                            {{ $itemList[0]->knownAs_txt . ' ' . $itemList[0]->surname_txt }}
+                        @endif
+                    @else
+                        {{ '' }}
+                    @endif
+                </div>
+                <div>{{ isset($itemList[0]) ? $itemList[0]->name_txt : '' }}</div>
 
-    <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 50px; ">
-        <tr style="padding: 15px;">
-            <th style="text-align:left; font-size: 50px; font-weight: bold; color: #fff; padding-left: 30px;">
-                Teacher Timesheet
-            </th>
-            <th style="text-align:right;">
-                {{-- <img src="{{ asset($companyDetail->company_logo) }}" alt=""
-                    style="width: 20%;"> --}}
-            </th>
-        </tr>
-    </table>
-
-    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 30px;">
-        <tr>
-            <td style="vertical-align: top; width: 45%;">
-                <table>
+            </div>
+            <div id="invoice"></div>
+        </div>
+        <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 15px;">
+            <thead>
+                <tr>
+                    <th class="qty">Date</th>
+                    <th class="qty">Start Time</th>
+                    <th class="qty">End Time</th>
+                    {{-- <th class=""></th> --}}
+                    <th class="unit">Part</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($itemList as $key => $item)
                     <tr>
-                        <td style="text-align:left; color: #333; font-size: 15px; font-weight: bold;">
-                            @if (isset($itemList[0]))
-                                @if ($itemList[0]->knownAs_txt == null && $itemList[0]->knownAs_txt == '')
-                                    {{ $itemList[0]->firstName_txt . ' ' . $itemList[0]->surname_txt }}
-                                @else
-                                    {{ $itemList[0]->knownAs_txt . ' ' . $itemList[0]->surname_txt }}
-                                @endif
-                            @else
-                                {{ '' }}
-                            @endif
+                        <td class="qty">
+                            {{ $item->asnDate_dte }}
+                        </td>
+                        <td class="qty">
+                            {{ $item->start_tm ? date('h:i a', strtotime($item->start_tm)) : '' }}
+                        </td>
+                        <td class="qty">
+                            {{ $item->end_tm ? date('h:i a', strtotime($item->end_tm)) : '' }}
+                        </td>
+                        {{-- <td class="unit"></td> --}}
+                        <td class="total">
+                            {{ $item->datePart_txt }}
                         </td>
                     </tr>
+                @endforeach
+            </tbody>
 
-                    <tr>
-                        <td style="text-align:left; color: #333; font-size: 15px; font-weight: 400;">
-                            {{ isset($itemList[0]) ? $itemList[0]->name_txt : '' }}
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+        </table>
 
-    <table style="margin: auto; width: 90%; border-collapse: collapse;">
-        <tr style="border: 2px solid #000; background-color: #48A0DC; ">
-            <th
-                style="text-align:left; color: #fff; font-size: 14px; font-weight: 400; width: 60%; padding: 4px 0 4px 15px;">
-                Date</th>
-            <!-- <th style="width: 30%;"></th> -->
-            <th
-                style="text-align:left; color: #fff; font-size: 14px; font-weight: 400; width: 40%; padding: 4px 0 4px 15px;border-left: 2px solid #000;">
-                Part</th>
-        </tr>
+    </main>
+    <footer>
+        <div style="border-top: 1px solid #AAAAAA; padding-top: 10px;">
+            <div style="float: left;">
+                <a href="www.bumblebee-education.co.uk">www.bumblebee-education.co.uk</a>
+            </div>
+            <div style="float: right;">
+                <a href="tel:02084329844">Tel: 0208 4329844</a>
+                <a href="fax:0208432635"> / Fax: 0208 432635</a>
+            </div>
+        </div>
 
-        @foreach ($itemList as $key => $item)
-            <tr style="border: 2px solid #000;">
-                <td
-                    style="text-align:left; color: #000; font-size: 14px; font-weight: 400; width: 60%; padding: 4px 0 4px 15px;">
-                    {{ $item->asnDate_dte }} </td>
-                <td
-                    style="text-align:left; color: #000; font-size: 14px; font-weight: 400; width: 40%; padding: 4px 15px 4px 0; border-left: 2px solid #000;">
-                    {{ $item->datePart_txt }}</td>
-            </tr>
-        @endforeach
-
-    </table>
-
+    </footer>
 </body>
 
 </html>

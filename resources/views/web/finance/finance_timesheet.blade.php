@@ -468,6 +468,7 @@
                                                     {{-- <th>Student</th> --}}
                                                     <th>Start Time</th>
                                                     <th>End Time</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table-body-sec" id="teacherListDiv">
@@ -488,9 +489,17 @@
                                                 title="Edit days from assignment">
                                                 <i class="fa-solid fa-pencil"></i>
                                             </a>
+                                            <a style="cursor: pointer" class="disabled-link"
+                                                id="timesheetTeacherRejectBtn" title="Reject Timesheet">
+                                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                            </a>
                                             <a style="cursor: pointer" class="disabled-link" id="logTimesheetBtnNew"
                                                 title="Log timesheets">
                                                 <i class="fa-solid fa-square-check"></i>
+                                            </a>
+                                            <a style="cursor: pointer" class="disabled-link"
+                                                id="timesheetTeacherSendSchoolBtn" title="Send to school">
+                                                <i class="fa-sharp fa-solid fa-paper-plane"></i>
                                             </a>
                                             <a style="cursor: pointer" id="reloadTimesheetBtn" title="Reload timesheets">
                                                 <i class="fa-solid fa-arrows-rotate"></i>
@@ -524,6 +533,10 @@
                                             <span></span>
                                         </div>
                                         <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link" id="logteacherTimeDeleteBtn"
+                                                title="Remove Timesheet">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </a>
                                             <a style="cursor: pointer" class="disabled-link" id="logteacherTimeRejectBtn"
                                                 title="Reject Timesheet">
                                                 <i class="fa-sharp fa-solid fa-circle-xmark"></i>
@@ -658,6 +671,7 @@
         });
 
         $(document).on('click', '#timesheetApproveBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
             var asnIds = $('#ajaxTimesheetAsnIds').val();
             if (asnIds) {
                 swal({
@@ -701,6 +715,10 @@
                                                     'You have just logged timesheet for ' + data
                                                     .message;
                                                 swal("", popTxt);
+                                            }
+                                            if (schoolId) {
+                                                teacherSubmittedSheet('{{ $p_maxDate }}',
+                                                    schoolId);
                                             }
                                         } else {
                                             location.reload();
@@ -1010,6 +1028,8 @@
             $('#deleteDaysBttn').addClass('disabled-link');
             $('#editDaysBttn').addClass('disabled-link');
             $('#logTimesheetBtnNew').addClass('disabled-link');
+            $('#timesheetTeacherRejectBtn').addClass('disabled-link');
+            $('#timesheetTeacherSendSchoolBtn').addClass('disabled-link');
             if (school_id) {
                 $.ajax({
                     type: 'POST',
@@ -1119,10 +1139,14 @@
                 $('#deleteDaysBttn').removeClass('disabled-link');
                 $('#editDaysBttn').removeClass('disabled-link');
                 $('#logTimesheetBtnNew').removeClass('disabled-link');
+                $('#timesheetTeacherRejectBtn').removeClass('disabled-link');
+                $('#timesheetTeacherSendSchoolBtn').removeClass('disabled-link');
             } else {
                 $('#deleteDaysBttn').addClass('disabled-link');
                 $('#editDaysBttn').addClass('disabled-link');
                 $('#logTimesheetBtnNew').addClass('disabled-link');
+                $('#timesheetTeacherRejectBtn').addClass('disabled-link');
+                $('#timesheetTeacherSendSchoolBtn').addClass('disabled-link');
             }
         }
 
@@ -1269,6 +1293,87 @@
             }
         });
 
+        $(document).on('click', '#timesheetTeacherSendSchoolBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            var asnItemIds = $('#asnItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to send all the selected timesheet(s) to school?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('sendLogTimesheetToSchool') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        schoolId: schoolId
+                                    },
+                                    success: function(data) {
+                                        fetchTecher('{{ $p_maxDate }}', schoolId);
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one item.");
+            }
+        });
+
+        $(document).on('click', '#timesheetTeacherRejectBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            var asnItemIds = $('#asnItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to reject all the selected timesheet(s)?",
+                        content: {
+                            element: 'textarea',
+                            attributes: {
+                                placeholder: 'Remark',
+                                rows: 3
+                            }
+                        },
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                var remark = $('.swal-content textarea').val();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('teacherTimesheetReject') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        schoolId: schoolId,
+                                        remark: remark
+                                    },
+                                    success: function(data) {
+                                        fetchTecher('{{ $p_maxDate }}', schoolId);
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one item.");
+            }
+        });
+
         $(document).on('click', '#ajaxAssignmentEventBtn', function() {
             var error = "";
             $(".field-validate").each(function() {
@@ -1348,10 +1453,12 @@
                 $('#logteacherTimeApproveBtn').removeClass('disabled-link');
                 $('#logteacherSendSchoolBtn').removeClass('disabled-link');
                 $('#logteacherTimeRejectBtn').removeClass('disabled-link');
+                $('#logteacherTimeDeleteBtn').removeClass('disabled-link');
             } else {
                 $('#logteacherTimeApproveBtn').addClass('disabled-link');
                 $('#logteacherSendSchoolBtn').addClass('disabled-link');
                 $('#logteacherTimeRejectBtn').addClass('disabled-link');
+                $('#logteacherTimeDeleteBtn').addClass('disabled-link');
             }
         }
 
@@ -1482,6 +1589,43 @@
                                         asnItemIds: asnItemIds,
                                         schoolId: schoolId,
                                         remark: remark
+                                    },
+                                    success: function(data) {
+                                        // location.reload();
+                                        teacherSubmittedSheet('{{ $p_maxDate }}', schoolId);
+                                        $('#fullLoader').hide();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#logteacherTimeDeleteBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
+            var asnItemIds = $('#logTeacherTimeItemIds').val();
+            if (asnItemIds) {
+                swal({
+                        title: "",
+                        text: "Are you sure you wish to delete all the selected timesheet(s)?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('teacherItemSheetDelete') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnItemIds: asnItemIds,
+                                        schoolId: schoolId
                                     },
                                     success: function(data) {
                                         // location.reload();

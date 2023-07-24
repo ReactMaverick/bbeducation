@@ -150,7 +150,9 @@
                             } else {
                                 swal("", "Action has been already taken.");
                             }
-
+                            setTimeout(function() {
+                                window.close();
+                            }, 2000);
                         }
                     });
             }

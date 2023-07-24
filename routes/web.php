@@ -60,6 +60,7 @@ Route::post('/checkVettingExist', [AssignmentController::class, 'checkVettingExi
 Route::post('/createCandidateVetting', [AssignmentController::class, 'createCandidateVetting']);
 Route::post('/updateCandidateVetting', [AssignmentController::class, 'updateCandidateVetting']);
 Route::post('/approveVettingSend', [AssignmentController::class, 'approveVettingSend']);
+Route::post('/approveVettingDownload', [AssignmentController::class, 'approveVettingDownload']);
 Route::post('/assignmentStatusEdit', [AssignmentController::class, 'assignmentStatusEdit']);
 Route::get('/assignment-contact/{id}', [AssignmentController::class, 'assignmentContact']);
 Route::post('/assignmentContactLogInsert', [AssignmentController::class, 'assignmentContactLogInsert']);
@@ -221,6 +222,7 @@ Route::get('/finance', [FinanceController::class, 'finance']);
 Route::get('/finance-timesheets', [FinanceController::class, 'financeTimesheets']);
 Route::post('/financeTimesheetApprove', [FinanceController::class, 'financeTimesheetApprove']);
 Route::post('/financeTimesheetReject', [FinanceController::class, 'financeTimesheetReject']);
+Route::post('/teacherTimesheetReject', [FinanceController::class, 'teacherTimesheetReject']);
 Route::post('/fetchTeacherById', [FinanceController::class, 'fetchTeacherById']);
 Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnItemDelete']);
 Route::post('/timesheetEditEvent', [FinanceController::class, 'timesheetEditEvent']);
@@ -230,11 +232,13 @@ Route::post('/fetchTeacherSheetByIdNew', [FinanceController::class, 'fetchTeache
 // Route::get('/teacher-timesheet', [FinanceController::class, 'teacherTimesheetView']);
 Route::post('/rejectTeacherSheet', [FinanceController::class, 'rejectTeacherSheet']);
 Route::post('/sendTimesheetToApproval', [FinanceController::class, 'sendTimesheetToApproval']);
+Route::post('/sendLogTimesheetToSchool', [FinanceController::class, 'sendLogTimesheetToSchool']);
 Route::post('/timesheetAsnItemLog', [FinanceController::class, 'timesheetAsnItemLog']);
 Route::post('/timesheetAsnItemLogNew', [FinanceController::class, 'timesheetAsnItemLogNew']);
 Route::post('/teacherItemSheetApprove', [FinanceController::class, 'teacherItemSheetApprove']);
 Route::post('/sendteacherItemSheetToApproval', [FinanceController::class, 'sendteacherItemSheetToApproval']);
 Route::post('/teacherItemSheetReject', [FinanceController::class, 'teacherItemSheetReject']);
+Route::post('/teacherItemSheetDelete', [FinanceController::class, 'teacherItemSheetDelete']);
 Route::get('/finance-invoices', [FinanceController::class, 'financeInvoices']);
 Route::post('/timesheetEventEdit', [FinanceController::class, 'timesheetEventEdit']);
 Route::post('/timesheetEventUpdateAjax', [FinanceController::class, 'timesheetEventUpdateAjax']);
@@ -357,4 +361,10 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::get('/teacher-itemsheet-approve-all/{asn_ids}/{school_id}', [SchoolController::class, 'logSchTeacherItemSheetDirAll']);
     Route::post('/logTeacherItemSheetRejectDir', [SchoolController::class, 'logTeacherItemSheetRejectDir']);
     Route::post('/logTeacherItemSheetApproveDir', [SchoolController::class, 'logTeacherItemSheetApproveDir']);
+
+    Route::get('/timesheet-teacher-approve-all/{asn_ids}/{school_id}', [SchoolController::class, 'teacherTimeSheetDirAll']);
+    Route::post('/teacherTimeSheetRejectDir', [SchoolController::class, 'teacherTimeSheetRejectDir']);
+    Route::post('/teacherTimeSheetApproveDir', [SchoolController::class, 'teacherTimeSheetApproveDir']);
 });
+
+Route::get('/approveVettingSendTest', [AssignmentController::class, 'approveVettingSendTest']);

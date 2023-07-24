@@ -103,9 +103,8 @@
                                     }
                                     
                                     ?>
-                                    <tr class="table-data editAssignmentRow"
-                                        onclick="assignmentRowSelect({{ $Assignment->asn_id }})"
-                                        id="editAssignmentRow{{ $Assignment->asn_id }}">
+                                    <tr class="table-data editAssignmentRow" id="editAssignmentRow{{ $Assignment->asn_id }}"
+                                        asn-id="{{ $Assignment->asn_id }}">
                                         <td>
                                             @if ($yDescription == null || $yDescription == '')
                                                 {{ $Assignment->yearGroup }}
@@ -172,6 +171,23 @@
         $(document).ready(function() {
             $('#myTable').DataTable({
                 ordering: false
+            });
+        });
+
+        $(document).ready(function() {
+            // Single click event for row selection
+            $('.editAssignmentRow').on('click', function(event) {
+                var asn_id = $(this).attr('asn-id');
+                assignmentRowSelect(asn_id);
+            });
+
+            // Double click event for opening URL in a new tab
+            $('.editAssignmentRow').on('dblclick', function(event) {
+                var asn_id = $(this).attr('asn-id');
+                assignmentRowSelect(asn_id);
+
+                window.location.href =
+                    "{{ URL::to('/assignment-details') }}" + '/' + asn_id;
             });
         });
 
@@ -286,5 +302,65 @@
                 swal("", "Please select one assignment.");
             }
         });
+
+        $(document).on('click', '#deleteAssignmentBttn', function() {
+            var assignmentId = $('#assignmentId').val();
+            if (assignmentId) {
+                schoolAssignmentDelete(assignmentId);
+            } else {
+                swal("", "Please select one assignment.");
+            }
+        });
+
+        function schoolAssignmentDelete(asn_id) {
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('checkAsssignmentUsed') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    asn_id: asn_id
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data.exist == 'Yes') {
+                        swal("",
+                            "You cannot delete this assignment because timesheet(s) or contact logs exist for it.",
+                            "warning"
+                        );
+                    } else {
+                        assignmentDeleteAjax(asn_id)
+                    }
+                }
+            });
+        }
+
+        function assignmentDeleteAjax(asn_id) {
+            swal({
+                    title: "",
+                    text: "Are you sure you want to completely delete this assignment?",
+                    buttons: {
+                        Yes: "Yes",
+                        cancel: "No"
+                    },
+                })
+                .then((value) => {
+                    switch (value) {
+                        case "Yes":
+                            $('#fullLoader').show();
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url('delete_assignment') }}',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    asn_id: asn_id
+                                },
+                                dataType: "json",
+                                success: function(data) {
+                                    location.reload();
+                                }
+                            });
+                    }
+                });
+        }
     </script>
 @endsection

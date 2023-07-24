@@ -572,6 +572,10 @@
             <button type="button" class="btn btn-secondary" id="candVettingEditBtn">Update</button>
         @endif
 
+        <button type="button" class="btn btn-info"
+            style="color: #fff !important; background-color: #17a2b8 !important; border-color: #17a2b8 !important;"
+            onclick="vettingDownload('{{ $vettingDetail->vetting_id }}')">Download Vetting</button>
+
         {{-- @if ($emailExist == 'Yes') --}}
         <button type="button" class="btn btn-warning"
             onclick="vettingSend('{{ $vettingDetail->vetting_id }}')">Approve and Send</button>
@@ -638,6 +642,32 @@
             swal("",
                 "Please update 'FAO Email'."
             );
+        }
+    }
+
+    function vettingDownload(vetting_id) {
+        if (vetting_id) {
+            $('#fullLoader').show();
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('approveVettingDownload') }}',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    vetting_id: vetting_id
+                },
+                dataType: "json",
+                success: function(data) {
+                    // console.log(data);
+                    if (data.exist == 'Yes' && data.invoice_path) {
+                        const link = document.createElement('a');
+                        link.href = data.invoice_path;
+                        link.download = data.pdfName;
+                        link.target = '_blank';
+                        link.click();
+                    }
+                    $('#fullLoader').hide();
+                }
+            });
         }
     }
 </script>

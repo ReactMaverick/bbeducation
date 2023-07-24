@@ -4367,7 +4367,7 @@ class TeacherController extends Controller
 
                 if ($adminMail && file_exists(public_path($fPath))) {
                     $mailData['subject'] = 'Reference Received (' . $refReqDetail->ref_request_firstname . ' ' . $refReqDetail->ref_request_lastname . ')';
-                    $mailData['mail_description'] = "Reference receieved for " . $refReqDetail->ref_request_firstname . ' ' . $refReqDetail->ref_request_lastname . ". Please find attachment.";
+                    $mailData['mail_description'] = "Reference receieved for " . $refReqDetail->ref_request_firstname . ' ' . $refReqDetail->ref_request_lastname . ". Please find the attached document.";
                     $mailData['invoice_path'] = asset($fPath);
                     $mailData['mail'] = $adminMail;
                     $myVar = new AlertController();
@@ -6026,6 +6026,15 @@ class TeacherController extends Controller
 
     public function logTeacherTimesheetAdd(Request $request)
     {
+        $teacherLoginData = Session::get('teacherLoginData');
+        $companyDetail = array();
+        if ($teacherLoginData) {
+            $company_id = $teacherLoginData->company_id;
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+        }
         if ($request->teacher_timesheet_id) {
             $teacher_timesheet_id = $request->teacher_timesheet_id;
             $timesheetExist = DB::table('teacher_timesheet')
@@ -6082,12 +6091,6 @@ class TeacherController extends Controller
                 }
             }
 
-            DB::table('teacher_timesheet_item')
-                ->where('teacher_timesheet_id', $teacher_timesheet_id)
-                ->update([
-                    'admin_approve' => 3
-                ]);
-
             $timesheetDet = DB::table('teacher_timesheet')
                 ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
                 ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
@@ -6106,12 +6109,22 @@ class TeacherController extends Controller
                     }
                 }
                 $itemList = DB::table('teacher_timesheet_item')
-                    ->select('teacher_timesheet_item.asnItem_id', 'teacher_timesheet_item.teacher_id', 'teacher_timesheet_item.asn_id', 'teacher_timesheet_item.school_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"))
+                    ->select('teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asnItem_id', 'teacher_timesheet_item.teacher_id', 'teacher_timesheet_item.asn_id', 'teacher_timesheet_item.school_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm', 'teacher_timesheet_item.end_tm', 'teacher_timesheet_item.admin_approve')
                     ->where('teacher_timesheet_id', $teacher_timesheet_id)
                     ->orderBy('teacher_timesheet_item.asnDate_dte', 'ASC')
                     ->get();
 
-                $pdf = PDF::loadView("web.teacherPortal.timesheet_pdf", ['timesheetDet' => $timesheetDet, 'itemList' => $itemList, 'weekStartDate' => $request->weekStartDate, 'weekEndDate' => $request->weekEndDate]);
+                foreach ($itemList as $key4 => $value4) {
+                    if ($value4->admin_approve != 1) {
+                        DB::table('teacher_timesheet_item')
+                            ->where('timesheet_item_id', $value4->timesheet_item_id)
+                            ->update([
+                                'admin_approve' => 3
+                            ]);
+                    }
+                }
+
+                $pdf = PDF::loadView("web.teacherPortal.timesheet_pdf", ['timesheetDet' => $timesheetDet, 'itemList' => $itemList, 'weekStartDate' => $request->weekStartDate, 'weekEndDate' => $request->weekEndDate, 'companyDetail' => $companyDetail]);
                 $pdfName = $timesheetDet->firstName_txt . '_' . $timesheetDet->surname_txt . '_' . $teacher_timesheet_id . '(' . $request->weekStartDate . 'to' . $request->weekEndDate . ')' . '.pdf';
                 // return $pdf->stream($pdfName);
                 // Save the PDF to the server

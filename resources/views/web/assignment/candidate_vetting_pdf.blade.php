@@ -1,561 +1,769 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vetting Pdf</title>
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"> -->
-    {{-- <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet"> --}}
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"> -->
+    <meta charset="utf-8">
+    <title>Vetting</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap');
+
+        * {
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .clearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        a {
+            color: #5b9cd7;
+            text-decoration: none;
+        }
+
+        body {
+            position: relative;
+            /* width: 21cm;
+            height: 500vh; */
+            /* height: 29.7cm; */
+            size: letter;
+            margin: 0;
+            /* margin: 0 auto; */
+            color: #555555;
+            background: #FFFFFF;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-family: SourceSansPro;
+            border: 2px solid #5b9cd7;
+            padding: 20px 20px 0 20px;
+        }
+
+        header {
+            padding: 10px 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #AAAAAA;
+            position: relative;
+            background-color: #5b9cd7;
+        }
+
+
+        #logo {
+            float: right;
+            margin-top: 8px;
+            width: 33.33%;
+            text-align: right;
+        }
+
+        #logo img {
+            height: 50px;
+        }
+
+        #company {
+            float: left;
+            width: 33.33%;
+            text-align: left;
+            font-size: 24px;
+            color: #fff;
+            margin-top: 15px;
+        }
+
+        #company-name {
+            float: left;
+            width: 33.33%;
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            margin-top: 15px;
+        }
+
+
+        /* #details {
+            margin-bottom: 20px;
+        } */
+
+        #client {
+            padding-left: 6px;
+            border-left: 6px solid #5b9cd7;
+            float: left;
+            width: 40%;
+        }
+
+        #client .to {
+            color: #000;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        h2.name {
+            font-size: 1.4em;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        #invoice {
+            float: right;
+            text-align: right;
+            /* width: 55%; */
+        }
+
+        #invoice h2 {
+            color: #5b9cd7;
+            font-size: 14px;
+            line-height: 1em;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        #invoice .date {
+            font-size: 1.1em;
+            color: #777777;
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid #5b9cd7;
+            /* border-radius: 5px; */
+            /* border-collapse: collapse; */
+            border-spacing: 0;
+        }
+
+        table thead {
+            /* background-color: #5b9cd7; */
+        }
+
+
+        table th,
+        table td {
+            color: #5b9cd7;
+        }
+
+        table th {
+            white-space: nowrap;
+            font-weight: normal;
+        }
+
+        table td {
+            text-align: right;
+        }
+
+        table td h3 {
+            color: #5b9cd7;
+            font-size: 1.2em;
+            font-weight: normal;
+            margin: 0 0 0.2em 0;
+        }
+
+        table .no {
+            color: #FFFFFF;
+            font-size: 1.6em;
+            background: #5b9cd7;
+        }
+
+        table .desc {
+            text-align: left;
+            width: 60%;
+        }
+
+        table .unit {
+            text-align: right;
+        }
+
+        table .qty {}
+
+        /* table .total {
+        color: #FFFFFF;
+        } */
+
+        .gross {
+            background-color: #5b9cd7;
+            color: #fff !important;
+        }
+
+        table td.unit,
+        table td.qty,
+        table td.total {
+            font-size: 14px;
+        }
+
+        table tbody tr:last-child td {
+            border: none;
+        }
+
+        table tfoot td {
+            padding: 6px 20px;
+            background: #FFFFFF;
+            font-size: 14px;
+            white-space: nowrap;
+            border-top: 1px solid #AAAAAA;
+        }
+
+        table tfoot tr:first-child td {
+            border-top: none;
+        }
+
+        table tfoot tr:last-child td {
+            color: #5b9cd7;
+            font-size: 14px;
+            border-top: 1px solid #5b9cd7;
+        }
+
+        table tfoot tr td:first-child {
+            border: none;
+        }
+
+        #thanks {
+            font-size: 2em;
+            margin-bottom: 50px;
+        }
+
+        #notices {
+            padding-left: 6px;
+            /* padding-right: 10px; */
+            border-left: 6px solid #5b9cd7;
+            margin-bottom: 20px;
+            font-size: 14px;
+            width: 55%;
+            float: left;
+        }
+
+        #notices .notice {
+            font-size: 14px;
+        }
+
+        footer {
+            color: #777777;
+            width: 95%;
+            /* height: 30px; */
+            position: absolute;
+            bottom: 2%;
+            /* bottom: 0; */
+            border-top: 1px solid #AAAAAA;
+            padding: 8px 0;
+            text-align: center;
+        }
+
+        .bg-grey {
+            background-color: #e7eae9;
+        }
+
+        .bg-black {
+            background-color: #000;
+        }
+
+        .bg-white {
+            background-color: #fff;
+        }
+
+        thead tr th {
+            font-weight: 600;
+            color: #5b9cd7;
+            padding: 5px 20px;
+            border-bottom: 1px solid #5b9cd7;
+        }
+
+        /* thead tr th:last-child {
+            text-align: right;
+        } */
+        thead tr th:first-child {
+            background-color: #5b9cd7;
+            color: #fff;
+        }
+
+        .border-bottom {
+            border-bottom: 2px solid #9e9e9e;
+        }
+
+        tfoot tr {
+            padding-top: 20px;
+        }
+
+        .padding-t2 {
+            padding-top: 6px;
+        }
+
+        .align-left {
+            text-align: left !important;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #e7eae9;
+        }
+
+        tbody tr td {
+            color: #363636;
+            padding: 5px 20px;
+            text-align: left;
+        }
+
+        tbody tr td:last-child {
+            text-align: right;
+        }
+
+        .heading-right thead tr th {
+            border-bottom: 1px solid #5b9cd7 !important;
+        }
+
+        #amounts {
+            float: right;
+        }
+
+        table.header-table {
+            width: 40%;
+            margin-bottom: 15px;
+            border: 1px solid #5b9cd7 !important;
+        }
+
+        table.header-table thead tr {
+            border: 1px solid #5b9cd7;
+        }
+
+        table.header-table thead tr:last-child th {
+            border-bottom: 0 !important;
+        }
+
+        table.middle-table thead tr th {
+            text-align: right;
+            background-color: #5b9cd7;
+            color: #fff;
+        }
+
+        table.middle-table thead tr th:first-child {
+            text-align: left !important;
+        }
+
+        table.image-table {
+            border: 0 !important;
+        }
+
+        table.image-table thead tr th {
+            background-color: #fff !important;
+        }
+
+        table.image-table thead tr th {
+            border: 0 !important;
+        }
+
+        .header-2 {
+            padding: 10px 20px;
+            margin-bottom: 15px;
+            margin-top: 20px;
+            border-bottom: 1px solid #AAAAAA;
+            position: relative;
+            background-color: #5b9cd7;
+        }
+    </style>
 </head>
 
-<body style="-webkit-print-color-adjust: exact;">
+<body>
+    <header class="clearfix">
+        <div id="company">
+            Vetting Checklist
+        </div>
+        <div id="company-name">
+            {{ $companyDetail ? $companyDetail->company_name : '' }}
+        </div>
+        <div id="logo">
+            <img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}">
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <table class="header-table">
+                <thead style="text-align: center !important;">
+                    <tr>
+                        <th style="background-color: #5b9cd7; color: #fff !important;">
+                            FAO :
+                        </th>
+                        <th>
+                            {{ $vettingDetail->fao_txt }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Candidate :
+                        </th>
+                        <th>
+                            {{ $vettingDetail->candidateName_txt }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Date of Birth :
+                        </th>
+                        <th>
+                            {{ $vettingDetail->dateOfBirth_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dateOfBirth_dte)) : '' }}
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class="middle-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Identity :
+                        </th>
+                        <th>
 
-    <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 50px; ">
-        <tr style="padding: 15px;">
-            <th style="text-align:left; font-size: 35px; font-weight: bold; color: #fff; padding-left: 30px;">
-                Vetting Checklist
-            </th>
-            <th style="text-align:right;"><img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}"
-                    alt="" style="width: 25%;">
-            </th>
-        </tr>
-    </table>
+                        </th>
+                        <th>
+                            Date Checked
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Original ID Seen:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->IDType_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->IDSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->IDSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Proof of Address:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->addressType_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->addressSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->addressSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Qualification:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->qualificationType_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->qualificationSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->qualificationSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>
+                            Reference and Employment History:
+                        </th>
+                        <th>
 
-    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 30px;">
-        <tr>
-            <td style="vertical-align: top; width: 18%;text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    FAO :
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 82%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->fao_txt }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 18%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Candidate :
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 82%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->candidateName_txt }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 18%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Date of Birth :
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 82%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->dateOfBirth_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dateOfBirth_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-    </table>
+                        </th>
+                        <th>
+                            Date Checked
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            References Received:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->referencesReceived_int }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->referencesSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->referencesSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Employment History:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->employmentHistory_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->employmentHistory_dte != '' ? date('d/m/Y', strtotime($vettingDetail->employmentHistory_dte)) : '' }}
+                        </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>
+                            Child Protection:
+                        </th>
+                        <th>
 
-    <table style="padding: 15px 0; margin: auto; width: 90%;">
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Identity :
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%;text-align:left;">
-            </td>
-            <td style="vertical-align: top; width: 20%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Date Checked
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Original ID Seen:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->IDType_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->IDSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->IDSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Proof of Address:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->addressType_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->addressSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->addressSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Qualification:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->qualificationType_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->qualificationSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->qualificationSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
+                        </th>
+                        <th>
+                            Date Checked
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            DBS Enhanced Disclosure Number:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->dbsNumber_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->dbsSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dbsSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            DBS Enhanced Disclosure Date:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->dbsDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dbsDate_dte)) : '' }}
+                        </td>
+                        <td>
 
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Reference and Employment History:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%;text-align:left;">
-            </td>
-            <td style="vertical-align: top; width: 20%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Date Checked
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    References Received:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->referencesReceived_int }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->referencesSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->referencesSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Employment History:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->employmentHistory_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->employmentHistory_dte != '' ? date('d/m/Y', strtotime($vettingDetail->employmentHistory_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Candidate on Update Service:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->updateService_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->updateServiceSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->updateServiceSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            List 99 Check Result:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->list99CheckResult_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->list99Seen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->list99Seen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            NCTL Check:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->NCTLCheck_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->NCTLSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->NCTLSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Safeguarding Induction:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->safeguardingInduction_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->safeguardingInduction_dte != '' ? date('d/m/Y', strtotime($vettingDetail->safeguardingInduction_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            s128 Management Check:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->s128MgmtCheck_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->s128MgmtCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->s128MgmtCheck_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            EEA Restriction Check:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->EEARestrictCheck_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->EEARestrictCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->EEARestrictCheck_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Radicalisation Check:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->vetRadical_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->vetRadical_dte != '' ? date('d/m/Y', strtotime($vettingDetail->vetRadical_dte)) : '' }}
+                        </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>
+                            Health Declaration:
+                        </th>
+                        <th>
 
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Child Protection:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%;text-align:left;">
-            </td>
-            <td style="vertical-align: top; width: 20%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Date Checked
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    DBS Enhanced Disclosure Number:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->dbsNumber_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->dbsSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dbsSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    DBS Enhanced Disclosure Date:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->dbsDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dbsDate_dte)) : '' }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
+                        </th>
+                        <th>
+                            Date Checked
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Health Declaration:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->healthDeclaration_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->healthDeclarationSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->healthDeclarationSeen_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Occupational Health:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->occupationalHealth_txt }}
+                        </td>
+                        <td>
 
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Candidate on Update Service:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->updateService_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->updateServiceSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->updateServiceSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    List 99 Check Result:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->list99CheckResult_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->list99Seen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->list99Seen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    NCTL Check:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->NCTLCheck_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->NCTLSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->NCTLSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Safeguarding Induction:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->safeguardingInduction_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->safeguardingInduction_dte != '' ? date('d/m/Y', strtotime($vettingDetail->safeguardingInduction_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    s128 Management Check:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->s128MgmtCheck_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->s128MgmtCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->s128MgmtCheck_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    EEA Restriction Check:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->EEARestrictCheck_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->EEARestrictCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->EEARestrictCheck_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Radicalisation Check:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->vetRadical_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->vetRadical_dte != '' ? date('d/m/Y', strtotime($vettingDetail->vetRadical_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Health Issues:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->healthIssues_txt }}
+                        </td>
+                        <td>
 
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Health Declaration:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%;text-align:left;">
-            </td>
-            <td style="vertical-align: top; width: 20%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Date Checked
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Health Declaration:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->healthDeclaration_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->healthDeclarationSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->healthDeclarationSeen_dte)) : '' }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Occupational Health:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->occupationalHealth_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Health Issues:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->healthIssues_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;"></span>
-            </td>
-        </tr>
+                        </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>
+                            Other:
+                        </th>
+                        <th>
 
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #333; font-size: 15px; font-weight: bold;">
-                    Other:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%;text-align:left;">
-            </td>
-            <td style="vertical-align: top; width: 20%; text-align:left;">
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Right To Work:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->rightToWork_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Face to Face Interview Date:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->interviewDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->interviewDate_dte)) : '' }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    NI Number:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->NINumber_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Emergency Name/Number:
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->emergencyNameNumber_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;"></span>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #5c5a5a; font-size: 15px; font-weight: bold;">
-                    Teacher Reference Number (TRN)
-                </span>
-            </td>
-            <td style="vertical-align: top; width: 40%; text-align:left;">
-                <span style="color: #000000; font-size: 15px;">
-                    {{ $vettingDetail->TRN_txt }}
-                </span>
-            </td>
-            <td style="vertical-align: top;text-align:right; width: 20%;">
-                <span style=" color: #000000; font-size: 15px;"></span>
-            </td>
-        </tr>
-    </table>
+                        </th>
+                        <th>
 
-    <table style="width: 90%; border-collapse: collapse; margin: 20px 0 50px 0;">
-        <tr>
-            <td style="text-align:center; font-size: 14px; font-weight: 400;"><a
-                    href="https://bumblebee-education.co.uk/"
-                    style="color: #48A0DC; text-decoration: none;">www.bumblebee-education.co.uk</a></td>
-            <td style="text-align:center; color: #48A0DC; font-size: 14px; font-weight: 400;"><span>Tel : 0208 4329844
-                    /
-                    Fax: 0208432635</span></td>
-        </tr>
-    </table>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Right To Work:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->rightToWork_txt }}
+                        </td>
+                        <td>
 
-    <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 50px; ">
-        <tr style="padding: 15px;">
-            <th style="text-align:left; font-size: 35px; font-weight: bold; color: #fff; padding-left: 30px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Face to Face Interview Date:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->interviewDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->interviewDate_dte)) : '' }}
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            NI Number:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->NINumber_txt }}
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Emergency Name/Number:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->emergencyNameNumber_txt }}
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Teacher Reference Number (TRN)
+                        </td>
+                        <td>
+                            {{ $vettingDetail->TRN_txt }}
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix header-2">
+            <div id="logo">
+                <img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}">
+            </div>
+            <div id="company">
                 Likeness of Candidate
-            </th>
-            <th style="text-align:right;"><img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}"
-                    alt="" style="width: 25%;">
-            </th>
-        </tr>
-    </table>
+            </div>
+        </div>
+        <div>
+            <table class="image-table">
+                <thead>
+                    <th>
 
-    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 30px;">
-        <tr>
-            <th style="text-align:center;"><img
-                    src="{{ $vettingDetail->imageLocation_txt ? asset($vettingDetail->imageLocation_txt) : '' }}"
-                    alt="" style="width: 60%;">
-            </th>
-        </tr>
-        <tr style="text-align:center;">
-            <h3 style="color: #5c5a5a;padding: 15px 0; margin: auto;">
+                    </th>
+                    <th>
+                        <img src="{{ $vettingDetail->imageLocation_txt ? asset($vettingDetail->imageLocation_txt) : '' }}"
+                            alt="afsafs" style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;">
+
+                    </th>
+                    <th>
+
+                    </th>
+                </thead>
+            </table>
+        </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 20px;">
+            <div>
                 If you require any other information on the above candidate please contact:
-            </h3>
-        </tr>
-        <tr style="text-align:center;">
-            <h3 style="color: #48A0DC;padding: 15px 0; margin: auto;">
-                admin@bumblebee-education.co.uk
-            </h3>
-        </tr>
-        <tr style="text-align:center;">
-            <h3 style="color: #5c5a5a;padding: 15px 0; margin: auto;">
-                or call 0208 432 9844
-            </h3>
-        </tr>
-    </table>
+            </div>
+            <div style="margin-top: 10px;">
+                <a href="mailto:admin@bumblebee-education.co.uk">admin@bumblebee-education.co.uk</a>
+            </div>
+            <div style="margin-top: 10px;">
+                <a href="tel:0208 432 9844">or call 0208 432 9844</a>
+            </div>
+        </div>
 
-    <table style="width: 90%; border-collapse: collapse; margin: 20px 0 50px 0;">
-        <tr>
-            <td style="text-align:center; font-size: 14px; font-weight: 400;"><a
-                    href="https://bumblebee-education.co.uk/"
-                    style="color: #48A0DC; text-decoration: none;">www.bumblebee-education.co.uk</a></td>
-            <td style="text-align:center; color: #48A0DC; font-size: 14px; font-weight: 400;"><span>Tel : 0208 4329844
-                    /
-                    Fax: 0208432635</span></td>
-        </tr>
-    </table>
 
+    </main>
+
+    <footer>
+        <div style="float: left;"><a href="www.bumblebee-education.co.uk">www.bumblebee-education.co.uk</a></div>
+        <div style="float: right;">
+            <a href="tel:02084329844">Tel: 0208 4329844</a>
+            <a href="fax:0208432635"> / Fax: 0208 432635</a>
+        </div>
+    </footer>
 </body>
 
 </html>
