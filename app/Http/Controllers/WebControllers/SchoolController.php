@@ -1094,9 +1094,15 @@ class SchoolController extends Controller
                 //         $join->on('tbl_invoice.school_id', '=', 't_email.school_id');
                 //     }
                 // )
+                ->LeftJoin('tbl_description as invPaymentMethod', function ($join) {
+                    $join->on('invPaymentMethod.description_int', '=', 'tbl_invoice.paymentMethod_int')
+                        ->where(function ($query) {
+                            $query->where('invPaymentMethod.descriptionGroup_int', '=', 42);
+                        });
+                })
                 ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
                 ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
-                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'), 'invPaymentMethod.description_txt as invPaymentMethod_txt')
                 ->where('tbl_invoice.school_id', $id);
             if ($request->include == '') {
                 $Invoices->where('tbl_invoice.paidOn_dte', NULL);
@@ -1521,7 +1527,7 @@ class SchoolController extends Controller
                 ->first();
             $invoiceItemList = DB::table('tbl_invoiceItem')
                 ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
-                ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
+                ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                 ->where('tbl_invoiceItem.invoice_id', $invoice_id)
                 ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                 ->get();

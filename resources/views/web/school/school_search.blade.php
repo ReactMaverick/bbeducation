@@ -201,6 +201,7 @@
             });
 
             // $('#advanceSearchDiv').css('display', 'none');
+            $("#searchKey").focus();
         });
 
         function schoolDetail(school_id) {
@@ -269,7 +270,9 @@
                                         if (data) {
                                             if (data.login == 'yes') {
                                                 if (data.asn_id) {
-                                                    window.location.href = "{{ URL::to('/assignment-details') }}" + '/' + data.asn_id;
+                                                    window.location.href =
+                                                        "{{ URL::to('/assignment-details') }}" + '/' + data
+                                                        .asn_id;
                                                 }
                                             } else {
                                                 window.location.href = "{{ URL::to('/') }}";

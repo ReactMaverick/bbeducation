@@ -246,7 +246,7 @@ class AssignmentController extends Controller
                                 $query->where('tbl_description.descriptionGroup_int', '=', 20);
                             });
                     })
-                    ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt) AS title'))
+                    ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('CONCAT(IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt),IF(lunch_time, CONCAT(" ( ", lunch_time,")"), "")) AS title'))
                     ->where('tbl_asnItem.asn_id', $id)
                     ->where('tbl_asnItem.asnDate_dte', '>=', $startDate)
                     ->where('tbl_asnItem.asnDate_dte', '<=', $endDate)
@@ -548,6 +548,7 @@ class AssignmentController extends Controller
                 'charge_dec' => $request->charge_dec,
                 'dayPercent_dec' => $request->dayPercent_dec,
                 'event_note' => $request->event_note,
+                'lunch_time' => $request->lunch_time,
                 'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
                 'cost_dec' => $request->cost_dec,
                 'start_tm' => $start_tm,
@@ -664,6 +665,7 @@ class AssignmentController extends Controller
                                 'start_tm' => $start_tm,
                                 'end_tm' => $end_tm,
                                 'event_note' => $request->event_note,
+                                'lunch_time' => $request->lunch_time,
                                 'timestamp_ts' => date('Y-m-d H:i:s')
                             ]);
 
@@ -709,6 +711,7 @@ class AssignmentController extends Controller
                                 'start_tm' => $start_tm,
                                 'end_tm' => $end_tm,
                                 'event_note' => $request->event_note,
+                                'lunch_time' => $request->lunch_time,
                                 'timestamp_ts' => date('Y-m-d H:i:s')
                             ]);
 
@@ -885,6 +888,11 @@ class AssignmentController extends Controller
                 $sidebar = '';
             }
 
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
             $asnDetail = DB::table('tbl_asn')
                 ->select('tbl_asn.*')
                 ->where('tbl_asn.asn_id', $asn_id)
@@ -1050,6 +1058,11 @@ class AssignmentController extends Controller
                         'tbl_asnVetting.occupationalHealth_txt' => DB::raw('IF(tbl_teacher.occupationalHealth_txt IS NULL, "No assessment needed", tbl_teacher.occupationalHealth_txt)'),
                         'tbl_asnVetting.healthIssues_txt' => DB::raw('IF(tbl_teacher.healthIssues_txt IS NULL, "No assessment needed", tbl_teacher.healthIssues_txt)'),
                         'tbl_asnVetting.rightToWork_txt' => DB::raw('IF(rightToWork_int IS NULL, "", (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 39 AND description_int = rightToWork_int))'),
+                        'vet_rightToWork_dte' => DB::raw('tbl_teacher.rightToWork_dte'),
+                        'vet_rightToWork_status' => DB::raw('tbl_teacher.rightToWork_status'),
+                        'vet_overseasPolicy_status' => DB::raw('tbl_teacher.overseasPolicy_status'),
+                        'vet_overseasPolicy_txt' => DB::raw('tbl_teacher.overseasPolicy_txt'),
+                        'vet_overseasPolicy_dte' => DB::raw('tbl_teacher.overseasPolicy_dte'),
                         'qualificationType_txt' => $newQualification,
                         'qualificationSeen_dte' => DB::raw('tbl_teacher.vetQualification_dte'),
                         'imageLocation_txt' => $f_location,
@@ -1107,7 +1120,158 @@ class AssignmentController extends Controller
                         ->where('tbl_contactItemSch.type_int', '=', 1)
                         ->where('tbl_schoolContact.receiveVetting_status', '=', '-1')
                         ->get();
-                    $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id, 'sidebar' => $sidebar])->render();
+
+                    $schoolContent = "<p>Please find attached Vetting Checklist for the above candidate.</p>";
+
+                    $teacherAddress = "";
+                    $teacherName = "";
+                    $teacherDet = DB::table('tbl_teacher')
+                        ->where('teacher_id', $vettingDetail->teacher_id)
+                        ->first();
+                    if ($teacherDet) {
+                        $teacherName = $teacherDet->firstName_txt . ' ' . $teacherDet->surname_txt;
+                        if ($teacherDet->address1_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address1_txt;
+                        }
+                        if ($teacherDet->address2_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address2_txt;
+                        }
+                        if ($teacherDet->address3_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address3_txt;
+                        }
+                        if ($teacherDet->address4_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address4_txt;
+                        }
+                        if ($teacherDet->postcode_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->postcode_txt;
+                        }
+                    }
+
+                    $schAddress = "";
+                    $schName = "";
+                    $schoolDetail = DB::table('tbl_school')
+                        ->join('tbl_asn', 'tbl_school.school_id', '=', 'tbl_asn.school_id')
+                        ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                        ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                            $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                        })
+                        ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                        ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                            $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                                ->where(function ($query) {
+                                    $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as religion', function ($join) {
+                            $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                                ->where(function ($query) {
+                                    $query->where('religion.descriptionGroup_int', '=', 29);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                            $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                                ->where(function ($query) {
+                                    $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                                });
+                        })
+                        ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                        ->where('tbl_asn.asn_id', $vettingDetail->asn_id)
+                        ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                        ->first();
+                    if ($schoolDetail) {
+                        $schName = $schoolDetail->name_txt;
+                        if ($schoolDetail->address1_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address1_txt;
+                        }
+                        if ($schoolDetail->address2_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address2_txt;
+                        }
+                        if ($schoolDetail->address3_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address3_txt;
+                        }
+                        if ($schoolDetail->address4_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address4_txt;
+                        }
+                        if ($schoolDetail->address5_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address5_txt;
+                        }
+                        if ($schoolDetail->postcode_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->postcode_txt;
+                        }
+                    }
+
+                    $lUrl = '"' . 'https://www.google.com/maps/dir/' . urlencode($teacherAddress) . '/' . urlencode($schAddress) . '"';
+
+                    $minMaxDates = DB::table('tbl_asnItem')
+                        ->leftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                        ->selectRaw("MIN(asnDate_dte) AS minDate, MAX(asnDate_dte) AS maxDate")
+                        ->where('tbl_asnItem.asn_id', $vettingDetail->asn_id)
+                        ->get();
+                    $minimumDate = '';
+                    $maximumDate = '';
+                    if (count($minMaxDates) > 0) {
+                        if ($minMaxDates[0]->minDate) {
+                            $minimumDate = date('d/m/Y', strtotime($minMaxDates[0]->minDate));
+                        }
+                        if ($minMaxDates[0]->maxDate) {
+                            $maximumDate = date('d/m/Y', strtotime($minMaxDates[0]->maxDate));
+                        }
+                    }
+
+                    $comName = '';
+                    if ($companyDetail) {
+                        $comName = $companyDetail->company_name;
+                    }
+
+                    $teacherContent = "<p>Dear
+                                    <strong>$teacherName,</strong>
+                                </p><br>
+                                <p>$comName has confirmed the position at
+                                    $schName starting
+                                    on $minimumDate and ending on $maximumDate.
+                                </p>
+                                <p>
+                                    The address of the school : $schAddress .
+                                </p>
+                                <p>Please attend with your hard copy of your DBS and photo ID.</p>
+                                <p>At the end of every week (Friday) you will need to complete an online timesheet through your candidate portal.</p>
+                                <p>*<b>Please note failure to submit a timesheet by the end of Friday (5pm latest) will result in payments being delayed.</b>*</p>
+                                <p>Please call us at $comName if you have any questions</p>";
+
+                    $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id, 'sidebar' => $sidebar, 'schoolContent' => $schoolContent, 'teacherContent' => $teacherContent])->render();
                     return response()->json(['html' => $view]);
                 } else {
                     return false;
@@ -1530,11 +1694,14 @@ class AssignmentController extends Controller
                     // $cc_mail = "dipankar.websadroit@gmail.com";
                     $cc_mail = $webUserLoginData->user_name;
                     $mailData['subject'] = 'Candidate Vetting ' . $vettingDetail->candidateName_txt;
-                    $mailData['mail_description'] = "Please find attached two PDF file containing the candidate vetting information and candidate timesheet information. Kindly review it at your earliest convenience.";
+                    // $mailData['mail_description'] = "Please find attached two PDF file containing the candidate vetting information and candidate timesheet information. Kindly review it at your earliest convenience.";
+                    $mailData['mail_description'] = $request->school_contnt;
                     $mailData['invoice_path'] = asset($fPath);
                     $mailData['invoice_path2'] = asset($tfPath);
                     $mailData['cc_mail'] = $cc_mail;
                     $mailData['mail'] = $sendMail;
+                    $mailData['companyDetail'] = $companyDetail;
+                    $mailData['schoolDetail'] = $schoolDetail;
                     $myVar = new AlertController();
                     $myVar->sendVettingMail($mailData);
                 }
@@ -1549,21 +1716,35 @@ class AssignmentController extends Controller
                 //     $myVar1 = new AlertController();
                 //     $myVar1->sendTeacherVettingMail($mailData);
                 // }
-                $mailData['subject'] = 'Bumblebee Education: Confirmation of Work';
-                $mailData['companyDetail'] = $companyDetail;
-                $mailData['teacherDet'] = $teacherDet;
-                $mailData['schoolDetail'] = $schoolDetail;
-                $mailData['itemList'] = $itemList;
-                $mailData['teacherAddress'] = $teacherAddress;
-                $mailData['schAddress'] = $schAddress;
-                $mailData['mail'] = $teacherMail;
+                $minMaxDates = DB::table('tbl_asnItem')
+                    ->leftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                    ->selectRaw("MIN(asnDate_dte) AS minDate, MAX(asnDate_dte) AS maxDate")
+                    ->where('tbl_asnItem.asn_id', $vettingDetail->asn_id)
+                    ->get();
+                // Access the minimum and maximum dates
+                $minDate = $minMaxDates[0]->minDate;
+                $maxDate = $minMaxDates[0]->maxDate;
+
+
+                $mailData1['subject'] = 'Bumblebee Education: Confirmation of Work';
+                $mailData1['companyDetail'] = $companyDetail;
+                $mailData1['teacherDet'] = $teacherDet;
+                $mailData1['schoolDetail'] = $schoolDetail;
+                $mailData1['teacher_contnt'] = $request->teacher_contnt;
+                // $mailData1['itemList'] = $itemList;
+                $mailData1['minDate'] = $minDate;
+                $mailData1['maxDate'] = $maxDate;
+                $mailData1['teacherAddress'] = $teacherAddress;
+                $mailData1['schAddress'] = $schAddress;
+                $mailData1['mail'] = $teacherMail;
                 $myVar1 = new AlertController();
-                $myVar1->sendTeacherVettingMail($mailData);
+                $myVar1->sendTeacherVettingMail($mailData1);
             }
         } else {
             $result['exist'] = 'No';
         }
-        return response()->json($result);
+        // return response()->json($result);
+        return redirect()->back()->with('success', "Mail have been send successfully.");
     }
 
     public function approveVettingDownload(Request $request)

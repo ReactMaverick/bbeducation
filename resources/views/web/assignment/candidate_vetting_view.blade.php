@@ -1,3 +1,20 @@
+<style>
+    #vettingContentModal .modal-dialog.modal-dialog-centered.calendar-modal-section {
+        position: relative;
+        z-index: 1;
+    }
+
+    #vettingContentModal::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgb(0 0 0 / 41%);
+    }
+</style>
+
 <form action="{{ url('/updateCandidateVetting') }}" method="post" id="candVettingEditForm">
     @csrf
     <div class="modal-input-field-section">
@@ -387,7 +404,7 @@
                     </div>
                 </div>
 
-                <div class="row align-items-end">
+                {{-- <div class="row align-items-end">
                     <div class="col-md-8">
                         <div class="cand-vetting-modal-input-field">
                             <p>Disqualification by Association Act</p>
@@ -407,7 +424,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="row align-items-end">
                     <div class="col-md-8">
@@ -511,6 +528,14 @@
                             @endif
                         </div>
                         <div class="cand-vetting-modal-input-field">
+                            <p>Overseas Police</p>
+                            @if ($vettingDetail->vet_overseasPolicy_txt)
+                                <span>{{ $vettingDetail->vet_overseasPolicy_txt }}</span>
+                            @else
+                                <div class="cand-vetting-modal-field"></div>
+                            @endif
+                        </div>
+                        <div class="cand-vetting-modal-input-field">
                             <p>Face to Face Interview Date</p>
                             @if ($vettingDetail->interviewDate_dte)
                                 <span>{{ date('d-m-Y', strtotime($vettingDetail->interviewDate_dte)) }}</span>
@@ -587,7 +612,64 @@
     </div>
 </form>
 
+<!-- Modal -->
+<div class="modal fade" id="vettingContentModal" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 80%;">
+        <div class="modal-content calendar-modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header calendar-modal-header">
+                <h4 class="modal-title">Send Vetting</h4>
+                <button type="button" class="close vettingContentCloseBtn">&times;</button>
+            </div>
+
+            <form action="{{ url('/approveVettingSend') }}" method="post" class=""
+                enctype="multipart/form-data" id="vettingContentFormId">
+                @csrf
+
+                <input type="hidden" name="vetting_id" id="contentVettingId" value="">
+                <input type="hidden" name="faoMail" id="contentFaoMailId" value="">
+                <input type="hidden" name="asn_id" value="{{ $asn_id }}">
+
+                <div class="row mt-3">
+                    <div class="modal-input-field-section col-md-6">
+                        <div class="modal-input-field">
+                            <label class="form-check-label">Mail Body ( For School )</label>
+                            <textarea class="form-control" name="school_contnt" id="school_contnt" rows="12" cols="50">{!! $schoolContent !!}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-input-field-section col-md-6">
+                        <div class="modal-input-field">
+                            <label class="form-check-label">Mail Body ( For Candidate )</label>
+                            <textarea class="form-control" name="teacher_contnt" id="teacher_contnt" rows="12" cols="50">{!! $teacherContent !!}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer calendar-modal-footer">
+                    <button type="button" class="btn btn-secondary" id="vettingContentSendBtn">Send</button>
+
+                    <button type="button" class="btn btn-danger cancel-btn vettingContentCloseBtn">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
 <script>
+    $(document).ready(function() {
+        CKEDITOR.replace('school_contnt', {
+            toolbar: [],
+        });
+        CKEDITOR.replace('teacher_contnt', {
+            toolbar: [],
+        });
+    });
+
     function vettingSend(vetting_id) {
         // var eMailExist = "{{ $emailExist }}";
         var eMailExist = $("#faoMailAjaxNew").val();
@@ -604,37 +686,40 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
-                                $('#fullLoader').show();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '{{ url('approveVettingSend') }}',
-                                    data: {
-                                        "_token": "{{ csrf_token() }}",
-                                        vetting_id: vetting_id,
-                                        faoMail: eMailExist
-                                    },
-                                    dataType: "json",
-                                    success: function(data) {
-                                        // console.log(data);
-                                        // if (data.exist == 'Yes' && data.invoice_path) {
-                                        //     const link = document.createElement('a');
-                                        //     link.href = data.invoice_path;
-                                        //     link.download = data.pdfName;
-                                        //     link.target = '_blank';
-                                        //     link.click();
-                                        // }
-                                        // var subject = data.subject;
-                                        // var body = "Hello";
-                                        // window.location = 'mailto:' + data.sendMail + '?subject=' +
-                                        //     encodeURIComponent(subject) + '&body=' +
-                                        //     encodeURIComponent(body);
-                                        $('#candidateVettingModal').modal("hide");
-                                        swal("",
-                                            "Mail have been send successfully."
-                                        );
-                                        $('#fullLoader').hide();
-                                    }
-                                });
+                                $("#contentVettingId").val(vetting_id);
+                                $("#contentFaoMailId").val(eMailExist);
+                                $('#vettingContentModal').modal("show");
+                                // $('#fullLoader').show();
+                                // $.ajax({
+                                //     type: 'POST',
+                                //     url: '{{ url('approveVettingSend') }}',
+                                //     data: {
+                                //         "_token": "{{ csrf_token() }}",
+                                //         vetting_id: vetting_id,
+                                //         faoMail: eMailExist
+                                //     },
+                                //     dataType: "json",
+                                //     success: function(data) {
+                                //         // console.log(data);
+                                //         // if (data.exist == 'Yes' && data.invoice_path) {
+                                //         //     const link = document.createElement('a');
+                                //         //     link.href = data.invoice_path;
+                                //         //     link.download = data.pdfName;
+                                //         //     link.target = '_blank';
+                                //         //     link.click();
+                                //         // }
+                                //         // var subject = data.subject;
+                                //         // var body = "Hello";
+                                //         // window.location = 'mailto:' + data.sendMail + '?subject=' +
+                                //         //     encodeURIComponent(subject) + '&body=' +
+                                //         //     encodeURIComponent(body);
+                                //         $('#candidateVettingModal').modal("hide");
+                                //         swal("",
+                                //             "Mail have been send successfully."
+                                //         );
+                                //         $('#fullLoader').hide();
+                                //     }
+                                // });
                         }
                     });
             }
@@ -644,6 +729,15 @@
             );
         }
     }
+
+    $(document).on('click', '#vettingContentSendBtn', function() {
+        $('#fullLoader').show();
+        $('#vettingContentFormId').submit();
+    });
+
+    $(document).on('click', '.vettingContentCloseBtn', function() {
+        $('#vettingContentModal').modal("hide");
+    });
 
     function vettingDownload(vetting_id) {
         if (vetting_id) {

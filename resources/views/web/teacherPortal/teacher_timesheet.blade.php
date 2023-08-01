@@ -110,15 +110,22 @@
                                                     </div>
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
+                                                    @if (
+                                                        $calender->day1Avail_txt &&
+                                                            $calender->day1asnDate_dte &&
+                                                            $calender->teacher_timesheet_id &&
+                                                            $calender->timesheet_item_id1)
                                                         <div class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
                                                             onclick="calDateClick('edit', '{{ $calender->day1asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id1 }}','{{ $calender->admin_approve1 }}','{{ $calender->day1asnItem_id }}')">
                                                             <p>
-                                                                {{ $calender->day1Avail_txt }}
+                                                                {{-- {{ $calender->day1Avail_txt }} --}}
                                                                 @if ($calender->start_tm1 && $calender->end_tm1)
-                                                                    ({{ date('h:i a', strtotime($calender->start_tm1)) }} -
-                                                                    {{ date('h:i a', strtotime($calender->end_tm1)) }})
+                                                                    {{ date('h:i a', strtotime($calender->start_tm1)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm1)) }}
+                                                                @endif
+                                                                @if ($calender->lunch_time1)
+                                                                    ({{ $calender->lunch_time1 }})
                                                                 @endif
                                                                 @if ($calender->admin_approve1 == 1)
                                                                     <br>Approved
@@ -147,15 +154,22 @@
                                                         value="{{ $calender->day1Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
+                                                    @if (
+                                                        $calender->day2Avail_txt &&
+                                                            $calender->day2asnDate_dte &&
+                                                            $calender->teacher_timesheet_id &&
+                                                            $calender->timesheet_item_id2)
                                                         <div class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
                                                             onclick="calDateClick('edit', '{{ $calender->day2asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id2 }}','{{ $calender->admin_approve2 }}','{{ $calender->day2asnItem_id }}')">
                                                             <p>
-                                                                {{ $calender->day2Avail_txt }}
+                                                                {{-- {{ $calender->day2Avail_txt }} --}}
                                                                 @if ($calender->start_tm2 && $calender->end_tm2)
-                                                                    ({{ date('h:i a', strtotime($calender->start_tm2)) }} -
-                                                                    {{ date('h:i a', strtotime($calender->end_tm2)) }})
+                                                                    {{ date('h:i a', strtotime($calender->start_tm2)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm2)) }}
+                                                                @endif
+                                                                @if ($calender->lunch_time2)
+                                                                    ({{ $calender->lunch_time2 }})
                                                                 @endif
                                                                 @if ($calender->admin_approve2 == 1)
                                                                     <br>Approved
@@ -184,15 +198,22 @@
                                                         value="{{ $calender->day2Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
+                                                    @if (
+                                                        $calender->day3Avail_txt &&
+                                                            $calender->day3asnDate_dte &&
+                                                            $calender->teacher_timesheet_id &&
+                                                            $calender->timesheet_item_id3)
                                                         <div class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
                                                             onclick="calDateClick('edit', '{{ $calender->day3asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id3 }}','{{ $calender->admin_approve3 }}','{{ $calender->day3asnItem_id }}')">
                                                             <p>
-                                                                {{ $calender->day3Avail_txt }}
+                                                                {{-- {{ $calender->day3Avail_txt }} --}}
                                                                 @if ($calender->start_tm3 && $calender->end_tm3)
-                                                                    ({{ date('h:i a', strtotime($calender->start_tm3)) }} -
-                                                                    {{ date('h:i a', strtotime($calender->end_tm3)) }})
+                                                                    {{ date('h:i a', strtotime($calender->start_tm3)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm3)) }}
+                                                                @endif
+                                                                @if ($calender->lunch_time3)
+                                                                    ({{ $calender->lunch_time3 }})
                                                                 @endif
                                                                 @if ($calender->admin_approve3 == 1)
                                                                     <br>Approved
@@ -221,15 +242,22 @@
                                                         value="{{ $calender->day3Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
+                                                    @if (
+                                                        $calender->day4Avail_txt &&
+                                                            $calender->day4asnDate_dte &&
+                                                            $calender->teacher_timesheet_id &&
+                                                            $calender->timesheet_item_id4)
                                                         <div class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
                                                             onclick="calDateClick('edit', '{{ $calender->day4asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id4 }}','{{ $calender->admin_approve4 }}','{{ $calender->day4asnItem_id }}')">
                                                             <p>
-                                                                {{ $calender->day4Avail_txt }}
+                                                                {{-- {{ $calender->day4Avail_txt }} --}}
                                                                 @if ($calender->start_tm4 && $calender->end_tm4)
-                                                                    ({{ date('h:i a', strtotime($calender->start_tm4)) }} -
-                                                                    {{ date('h:i a', strtotime($calender->end_tm4)) }})
+                                                                    {{ date('h:i a', strtotime($calender->start_tm4)) }} -
+                                                                    {{ date('h:i a', strtotime($calender->end_tm4)) }}
+                                                                @endif
+                                                                @if ($calender->lunch_time4)
+                                                                    ({{ $calender->lunch_time4 }})
                                                                 @endif
                                                                 @if ($calender->admin_approve4 == 1)
                                                                     <br>Approved
@@ -258,16 +286,23 @@
                                                         value="{{ $calender->day4Link_id }}">
                                                 </div>
                                                 <div class="date-left-teacher-calendar">
-                                                    @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
+                                                    @if (
+                                                        $calender->day5Avail_txt &&
+                                                            $calender->day5asnDate_dte &&
+                                                            $calender->teacher_timesheet_id &&
+                                                            $calender->timesheet_item_id5)
                                                         <div class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                             style="cursor: pointer;"
                                                             onclick="calDateClick('edit', '{{ $calender->day5asnDate_dte }}', {{ $calender->submit_status }}, {{ $calender->reject_status }}, {{ $calender->asn_id }}, '{{ $calender->timesheet_item_id5 }}','{{ $calender->admin_approve5 }}','{{ $calender->day5asnItem_id }}')">
                                                             <p>
-                                                                {{ $calender->day5Avail_txt }}
+                                                                {{-- {{ $calender->day5Avail_txt }} --}}
                                                                 @if ($calender->start_tm5 && $calender->end_tm5)
-                                                                    ({{ date('h:i a', strtotime($calender->start_tm5)) }}
+                                                                    {{ date('h:i a', strtotime($calender->start_tm5)) }}
                                                                     -
-                                                                    {{ date('h:i a', strtotime($calender->end_tm5)) }})
+                                                                    {{ date('h:i a', strtotime($calender->end_tm5)) }}
+                                                                @endif
+                                                                @if ($calender->lunch_time5)
+                                                                    ({{ $calender->lunch_time5 }})
                                                                 @endif
                                                                 @if ($calender->admin_approve5 == 1)
                                                                     <br>Approved
@@ -310,8 +345,8 @@
                                                             Timesheet</button>
                                                     @endif
 
-                                                    {{-- @if ($calender->teacher_timesheet_id) --}}
-                                                    {{-- @if ($calender->submit_status)
+                                                    @if ($calender->teacher_timesheet_id)
+                                                        {{-- @if ($calender->submit_status)
                                                             <button type="button" class="btn btn-secondary mt-3"
                                                                 style="float: right; background-color: #acd6f1">Timesheet
                                                                 Submitted</button>
@@ -320,14 +355,14 @@
                                                                 style="float: right; background-color: #48A0DC">Submit
                                                                 Timesheet</button>
                                                         @endif --}}
-                                                    <button type="submit" class="btn btn-secondary mt-3"
-                                                        style="float: right; background-color: #48A0DC">Submit
-                                                        Timesheet</button>
-                                                    {{-- @else
+                                                        <button type="submit" class="btn btn-secondary mt-3"
+                                                            style="float: right; background-color: #48A0DC">Submit
+                                                            Timesheet</button>
+                                                    @else
                                                         <button type="button" class="btn btn-secondary mt-3"
                                                             style="float: right; background-color: #acd6f1">Submit
                                                             Timesheet</button>
-                                                    @endif --}}
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -383,21 +418,27 @@
 
                         <div class="row">
                             <div class="col-md-6 form-group modal-input-field">
-                                <label class="form-check-label">From</label>
+                                <label class="form-check-label">Start Time</label>
                                 <input type="text" class="form-control field-validate-2" name="start_tm"
                                     id="workStartTime" value="">
                             </div>
 
                             <div class="col-md-6 form-group modal-input-field">
-                                <label class="form-check-label">To</label>
+                                <label class="form-check-label">Finish Time</label>
                                 <input type="text" class="form-control field-validate-2" name="end_tm"
                                     id="workEndTime" value="">
                             </div>
 
-                            <div class="col-md-6 form-group modal-input-field">
+                            <div class="col-md-6 form-group modal-input-field" hidden>
                                 <label class="form-check-label">Hours</label>
                                 <input type="text" class="form-control onlynumber" name="hours_dec"
                                     id="hours_dec_ajx" value="">
+                            </div>
+
+                            <div class="col-md-12 form-group modal-input-field">
+                                <label class="form-check-label">Mins taken for lunch</label>
+                                <input type="text" class="form-control" name="lunch_time" id=""
+                                    value="">
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 <input type="hidden" name="file_location" value="{{ $docDetail->file_location }}">
 <div class="col-md-12">
-    <div class="modal-input-field form-group">
+    <div class="modal-input-field form-group" hidden>
         <label class="form-check-label">Document Name</label>
         <input type="text" class="form-control" name="file_name" id="fileNameEdit" value="{{ $docDetail->file_name }}">
         <input type="hidden" class="form-control" name="file_name_hidden" id="docNameHiddenEdit" value="">

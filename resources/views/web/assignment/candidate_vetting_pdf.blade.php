@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <title>Vetting</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap');
+        /* @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap'); */
 
         * {
-            font-family: 'Source Sans 3', sans-serif;
+            font-family: 'Calibri', sans-serif;
         }
 
         .clearfix:after {
@@ -32,9 +32,9 @@
             /* margin: 0 auto; */
             color: #555555;
             background: #FFFFFF;
-            font-family: Arial, sans-serif;
+            /* font-family: Arial, sans-serif; */
             font-size: 14px;
-            font-family: SourceSansPro;
+            /* font-family: SourceSansPro; */
             border: 2px solid #5b9cd7;
             padding: 20px 20px 0 20px;
         }
@@ -347,7 +347,7 @@
         .header-2 {
             padding: 10px 20px;
             margin-bottom: 15px;
-            margin-top: 20px;
+            margin-top: 50px;
             border-bottom: 1px solid #AAAAAA;
             position: relative;
             background-color: #5b9cd7;
@@ -585,7 +585,7 @@
                             {{ $vettingDetail->EEARestrictCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->EEARestrictCheck_dte)) : '' }}
                         </td>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <td>
                             Radicalisation Check:
                         </td>
@@ -595,7 +595,7 @@
                         <td>
                             {{ $vettingDetail->vetRadical_dte != '' ? date('d/m/Y', strtotime($vettingDetail->vetRadical_dte)) : '' }}
                         </td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
                 <thead>
                     <tr>
@@ -622,7 +622,7 @@
                             {{ $vettingDetail->healthDeclarationSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->healthDeclarationSeen_dte)) : '' }}
                         </td>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <td>
                             Occupational Health:
                         </td>
@@ -643,7 +643,7 @@
                         <td>
 
                         </td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
                 <thead>
                     <tr>
@@ -667,7 +667,18 @@
                             {{ $vettingDetail->rightToWork_txt }}
                         </td>
                         <td>
-
+                            {{ $vettingDetail->vet_rightToWork_dte ? date('d/m/Y', strtotime($vettingDetail->vet_rightToWork_dte)) : '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Overseas Police:
+                        </td>
+                        <td>
+                            {{ $vettingDetail->vet_overseasPolicy_txt }}
+                        </td>
+                        <td>
+                            {{ $vettingDetail->vet_overseasPolicy_dte ? date('d/m/Y', strtotime($vettingDetail->vet_overseasPolicy_dte)) : '' }}
                         </td>
                     </tr>
                     <tr>
@@ -718,11 +729,14 @@
             </table>
         </div>
         <div class="clearfix header-2">
-            <div id="logo">
-                <img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}">
-            </div>
             <div id="company">
                 Likeness of Candidate
+            </div>
+            <div id="company-name">
+                {{ $companyDetail ? $companyDetail->company_name : '' }}
+            </div>
+            <div id="logo">
+                <img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}">
             </div>
         </div>
         <div>

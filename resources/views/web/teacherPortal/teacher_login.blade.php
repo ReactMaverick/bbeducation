@@ -26,7 +26,7 @@
                     <div class="login-page-img">
                         <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="">
                     </div>
-                    <h2>Teacher Login</h2>
+                    <h2>CANDIDATE Login</h2>
 
                     @if (count($errors) > 0)
                         @foreach ($errors->all() as $error)

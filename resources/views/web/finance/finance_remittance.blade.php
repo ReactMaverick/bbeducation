@@ -65,6 +65,7 @@
                                         <th>Invoice Date</th>
                                         <th>School</th>
                                         <th>Paid On</th>
+                                        <th>Payment Method</th>
                                         <th>Remitted By</th>
                                         <th>Sent On</th>
                                         <th>Sent By</th>
@@ -86,6 +87,7 @@
                                             <td>{{ $Invoices->school_txt }}</td>
                                             <td>{{ $Invoices->paid_dte ? date('d-m-Y', strtotime($Invoices->paid_dte)) : '' }}
                                             </td>
+                                            <td>{{ $Invoices->invPaymentMethod_txt }}</td>
                                             <td>{{ $Invoices->remittee_txt }}</td>
                                             <td>{{ $Invoices->sent_dte ? date('d-m-Y', strtotime($Invoices->sent_dte)) : '' }}
                                             </td>

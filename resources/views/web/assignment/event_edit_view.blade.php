@@ -19,18 +19,10 @@
             </select>
         </div>
 
-        <div class="form-group modal-input-field"
-            style="display: {{ $eventItemDetail->dayPart_int == 4 ? 'block' : 'none' }}" id="workStartTimeEditAjaxDiv">
+        <div class="form-group modal-input-field" id="workStartTimeEditAjaxDiv" hidden>
             <label class="form-check-label">Start Time</label>
-            <input type="text" class="form-control {{ $eventItemDetail->dayPart_int == 4 ? 'field-validate' : '' }}"
-                name="start_tm" id="workStartTimeEditAjax"
+            <input type="text" class="form-control" name="start_tm" id="workStartTimeEditAjax"
                 value="{{ $eventItemDetail->dayPart_int == 4 && $eventItemDetail->start_tm ? $eventItemDetail->start_tm : '' }}">
-        </div>
-
-        <div class="form-group modal-input-field">
-            <label class="form-check-label">Charge</label>
-            <input type="text" class="form-control number-validate" name="charge_dec" id=""
-                value="{{ $eventItemDetail->charge_dec }}">
         </div>
     </div>
 
@@ -47,14 +39,29 @@
                 value="{{ $eventItemDetail->hours_dec }}">
         </div>
 
-        <div class="form-group modal-input-field"
-            style="display: {{ $eventItemDetail->dayPart_int == 4 ? 'block' : 'none' }}" id="workEndTimeEditAjaxDiv">
-            <label class="form-check-label">End Time</label>
-            <input type="text" class="form-control {{ $eventItemDetail->dayPart_int == 4 ? 'field-validate' : '' }}"
-                name="end_tm" id="workEndTimeEditAjax"
+        <div class="form-group modal-input-field" id="workEndTimeEditAjaxDiv" hidden>
+            <label class="form-check-label">Finish Time</label>
+            <input type="text" class="form-control" name="end_tm" id="workEndTimeEditAjax"
                 value="{{ $eventItemDetail->dayPart_int == 4 && $eventItemDetail->end_tm ? $eventItemDetail->end_tm : '' }}">
         </div>
+    </div>
 
+    <div class="col-md-12 modal-form-right-sec">
+        <div class="form-group modal-input-field">
+            <label class="form-check-label">Mins taken for lunch</label>
+            <input type="text" class="form-control" name="lunch_time" id=""
+                value="{{ $eventItemDetail->lunch_time }}">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group modal-input-field">
+            <label class="form-check-label">Charge</label>
+            <input type="text" class="form-control number-validate" name="charge_dec" id=""
+                value="{{ $eventItemDetail->charge_dec }}">
+        </div>
+    </div>
+    <div class="col-md-6 modal-form-right-sec">
         <div class="form-group modal-input-field">
             <label class="form-check-label">Pay</label>
             <input type="text" class="form-control number-validate" name="cost_dec" id=""
@@ -87,19 +94,19 @@
         if (dayPart_int == 4) {
             $('#hours_dec_ajx').addClass('number-validate');
 
-            $('#workStartTimeEditAjaxDiv').css('display', 'block');
-            $('#workEndTimeEditAjaxDiv').css('display', 'block');
-            $('#workStartTimeEditAjax').addClass('field-validate');
-            $('#workEndTimeEditAjax').addClass('field-validate');
+            // $('#workStartTimeEditAjaxDiv').css('display', 'block');
+            // $('#workEndTimeEditAjaxDiv').css('display', 'block');
+            // $('#workStartTimeEditAjax').addClass('field-validate');
+            // $('#workEndTimeEditAjax').addClass('field-validate');
         } else {
             $('#hours_dec_ajx').removeClass('number-validate');
             $('#hours_dec_ajx').val('');
             $('#hours_dec_ajx').closest(".form-group").removeClass('has-error');
 
-            $('#workStartTimeEditAjaxDiv').css('display', 'none');
-            $('#workEndTimeEditAjaxDiv').css('display', 'none');
-            $('#workStartTimeEditAjax').removeClass('field-validate');
-            $('#workEndTimeEditAjax').removeClass('field-validate');
+            // $('#workStartTimeEditAjaxDiv').css('display', 'none');
+            // $('#workEndTimeEditAjaxDiv').css('display', 'none');
+            // $('#workStartTimeEditAjax').removeClass('field-validate');
+            // $('#workEndTimeEditAjax').removeClass('field-validate');
         }
     });
 

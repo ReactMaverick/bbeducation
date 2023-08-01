@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <title>Reference received</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap');
+        /* @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap'); */
 
         * {
-            font-family: 'Source Sans 3', sans-serif;
+            font-family: 'Calibri', sans-serif;
         }
 
         .clearfix:after {
@@ -31,9 +31,9 @@
             /* margin: 0 auto; */
             color: #555555;
             background: #FFFFFF;
-            font-family: Arial, sans-serif;
+            /* font-family: Arial, sans-serif; */
             font-size: 14px;
-            font-family: SourceSansPro;
+            /* font-family: SourceSansPro; */
             border: 2px solid #5b9cd7;
             padding: 20px 20px 0 20px;
         }

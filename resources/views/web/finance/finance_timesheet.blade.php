@@ -289,10 +289,13 @@
                                                                     class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
                                                                     <p>
                                                                         {{ $calender->day1Avail_txt }}
-                                                                        @if ($calender->start_tm1 && $calender->end_tm1)
+                                                                        {{-- @if ($calender->start_tm1 && $calender->end_tm1)
                                                                             ({{ date('h:i a', strtotime($calender->start_tm1)) }}
                                                                             -
                                                                             {{ date('h:i a', strtotime($calender->end_tm1)) }})
+                                                                        @endif --}}
+                                                                        @if ($calender->lunch_time1)
+                                                                            ({{ $calender->lunch_time1 }})
                                                                         @endif
                                                                     </p>
                                                                 </div>
@@ -306,10 +309,13 @@
                                                                     class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
                                                                     <p>
                                                                         {{ $calender->day2Avail_txt }}
-                                                                        @if ($calender->start_tm2 && $calender->end_tm2)
+                                                                        {{-- @if ($calender->start_tm2 && $calender->end_tm2)
                                                                             ({{ date('h:i a', strtotime($calender->start_tm2)) }}
                                                                             -
                                                                             {{ date('h:i a', strtotime($calender->end_tm2)) }})
+                                                                        @endif --}}
+                                                                        @if ($calender->lunch_time2)
+                                                                            ({{ $calender->lunch_time2 }})
                                                                         @endif
                                                                     </p>
                                                                 </div>
@@ -323,10 +329,13 @@
                                                                     class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
                                                                     <p>
                                                                         {{ $calender->day3Avail_txt }}
-                                                                        @if ($calender->start_tm3 && $calender->end_tm3)
+                                                                        {{-- @if ($calender->start_tm3 && $calender->end_tm3)
                                                                             ({{ date('h:i a', strtotime($calender->start_tm3)) }}
                                                                             -
                                                                             {{ date('h:i a', strtotime($calender->end_tm3)) }})
+                                                                        @endif --}}
+                                                                        @if ($calender->lunch_time3)
+                                                                            ({{ $calender->lunch_time3 }})
                                                                         @endif
                                                                     </p>
                                                                 </div>
@@ -340,10 +349,13 @@
                                                                     class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
                                                                     <p>
                                                                         {{ $calender->day4Avail_txt }}
-                                                                        @if ($calender->start_tm4 && $calender->end_tm4)
+                                                                        {{-- @if ($calender->start_tm4 && $calender->end_tm4)
                                                                             ({{ date('h:i a', strtotime($calender->start_tm4)) }}
                                                                             -
                                                                             {{ date('h:i a', strtotime($calender->end_tm4)) }})
+                                                                        @endif --}}
+                                                                        @if ($calender->lunch_time4)
+                                                                            ({{ $calender->lunch_time4 }})
                                                                         @endif
                                                                     </p>
                                                                 </div>
@@ -357,10 +369,13 @@
                                                                     class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
                                                                     <p>
                                                                         {{ $calender->day5Avail_txt }}
-                                                                        @if ($calender->start_tm5 && $calender->end_tm5)
+                                                                        {{-- @if ($calender->start_tm5 && $calender->end_tm5)
                                                                             ({{ date('h:i a', strtotime($calender->start_tm5)) }}
                                                                             -
                                                                             {{ date('h:i a', strtotime($calender->end_tm5)) }})
+                                                                        @endif --}}
+                                                                        @if ($calender->lunch_time5)
+                                                                            ({{ $calender->lunch_time5 }})
                                                                         @endif
                                                                     </p>
                                                                 </div>
@@ -452,7 +467,7 @@
 
                             <div class="finance-timesheet-left-sec mt-4">
 
-                                <div class="finance-timesheet-contact-first-sec">
+                                <div class="finance-timesheet-contact-first-sec" style="width: 50%;">
                                     <div class="contact-heading">
                                         <div class="contact-heading-text">
                                             <h2>Previous Timesheet list</h2>
@@ -466,8 +481,8 @@
                                                     <th>Date</th>
                                                     <th>Part</th>
                                                     {{-- <th>Student</th> --}}
-                                                    <th>Start Time</th>
-                                                    <th>End Time</th>
+                                                    {{-- <th>Start Time</th>
+                                                    <th>End Time</th> --}}
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
@@ -510,8 +525,8 @@
 
                                 <input type="hidden" name="" id="asnItemIds" value="">
 
-                                <div class="finance-timesheet-contact-second-sec" style="display: none;margin-top: 25px;"
-                                    id="teacherTimesheetDiv">
+                                <div class="finance-timesheet-contact-second-sec"
+                                    style="display: none;margin-top: 25px;width: 47%;" id="teacherTimesheetDiv">
                                     <div class="finance-timesheet-table-section" style="margin-top: 30px;">
                                         <table class="table finance-timesheet-page-table" id="">
                                             <thead>
@@ -519,8 +534,8 @@
                                                     <th>Teacher</th>
                                                     <th>Date</th>
                                                     <th>Part</th>
-                                                    <th>Start Time</th>
-                                                    <th>End Time</th>
+                                                    <th>Start Time - Finish Time</th>
+                                                    {{-- <th>End Time</th> --}}
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
@@ -908,7 +923,12 @@
                                         weekEndDate: "{{ $plusFiveDate }}"
                                     },
                                     success: function(data) {
-                                        location.reload();
+                                        if (data.success == 'Yes') {
+                                            $('#fullLoader').hide();
+                                            swal("", data.message);
+                                        } else {
+                                            location.reload();
+                                        }
                                     }
                                 });
                                 // $('#fullLoader').hide();

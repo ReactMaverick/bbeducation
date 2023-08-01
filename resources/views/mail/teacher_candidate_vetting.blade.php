@@ -20,7 +20,7 @@
         * {
             padding: 0;
             margin: 0;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Calibri', sans-serif;
         }
     </style>
 </head>
@@ -39,26 +39,34 @@
                                     style="width: 100px;" />
                             </td>
                             <td style="padding: 10px 20px; text-align: right;">
+                                <p style="color: #2c2b2b; font-size: 25px;">
+                                    {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</p>
+                            </td>
+                            <td style="padding: 10px 20px; text-align: right;">
                                 <p style="color: #888; font-size: 25px;">Confirmation of Work</p>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
+            <?php
+            $lUrl = 'https://www.google.com/maps/dir/' . $mailData['teacherAddress'] . '/' . $mailData['schAddress'];
+            ?>
             <tr>
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <p>Dear
+                                {!! $mailData['teacher_contnt'] !!}
+                                {{-- <p>Dear
                                     <strong>{{ $mailData['teacherDet'] ? $mailData['teacherDet']->firstName_txt . ' ' . $mailData['teacherDet']->surname_txt : '' }},</strong>
                                 </p>
                                 <p>Bumblebee Education has confirmed the position at
                                     {{ $mailData['schoolDetail'] ? $mailData['schoolDetail']->name_txt : '' }} starting
                                     on
-                                    {{ count($mailData['itemList']) > 0 ? date('d/m/Y', strtotime($mailData['itemList'][0]->minDate)) : '' }}
+                                    {{ $mailData['minDate'] ? date('d/m/Y', strtotime($mailData['minDate'])) : '' }}
                                     and ending on
-                                    {{ count($mailData['itemList']) > 0 ? date('d/m/Y', strtotime($mailData['itemList'][0]->maxDate)) : '' }}.
+                                    {{ $mailData['maxDate'] ? date('d/m/Y', strtotime($mailData['maxDate'])) : '' }}.
                                 </p>
                                 <p>
                                     The address of the school :
@@ -82,9 +90,6 @@
                                     @endif
                                     .
                                 </p><br>
-                                <?php
-                                $lUrl = 'https://www.google.com/maps/dir/' . $mailData['teacherAddress'] . '/' . $mailData['schAddress'];
-                                ?>
                                 <p>
                                     You can click this link to get directions <a
                                         href="{{ $lUrl }}">Location</a>
@@ -93,7 +98,10 @@
                                 <p>At the end of every week you will need to complete a timesheet (which you should have
                                     already received from us.) Please take a picture of your timesheet and send it via
                                     WhatsApp to 07772 852 424 at the latest by the Friday of that week.</p>
-                                <p>Please call us at Bumblebee if you have any questions</p>
+                                <p>Please call us at Bumblebee if you have any questions</p> --}}
+                                <p>
+                                    You can click this link to get directions <a href="{{ $lUrl }}">Location</a>
+                                </p>
                             </td>
                         </tr>
                     </table>
@@ -102,7 +110,8 @@
 
             <tr>
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
-                    <h3 style="margin-bottom: 10px;">Best regards, BBEDUCATION</h3>
+                    <h3 style="margin-bottom: 10px;">Best regards,
+                        {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</h3>
                 </td>
             </tr>
             <tr>

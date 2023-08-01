@@ -4,6 +4,18 @@
         .disabled-link {
             pointer-events: none;
         }
+
+        .teacher-document-second-heading-text {
+            width: 25%;
+        }
+
+        .teacher-document-second-name-text {
+            width: 5%;
+        }
+
+        .teacher-document-third-name-text {
+            width: 70%;
+        }
     </style>
     <div class="assignment-detail-page-section">
         <div class="row assignment-detail-row">
@@ -96,7 +108,7 @@
                                     </div>
                                 </div>
 
-                                <div class="school-name-section">
+                                {{-- <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
                                         <label for="vehicle1">Disqualification Check</label>
                                     </div>
@@ -119,7 +131,7 @@
                                             @endif
                                         </p>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
@@ -198,10 +210,19 @@
 
                                 <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
-                                        <h2>Right to Work</h2>
+                                        <h2>
+                                            Right to Work
+                                            @if ($teacherDetail->rightToWork_txt)
+                                                ({{ $teacherDetail->rightToWork_txt }})
+                                            @endif
+                                        </h2>
                                     </div>
-                                    <div class="teacher-document-second-text">
+                                    {{-- <div class="teacher-document-second-text">
                                         <p>{{ $teacherDetail->rightToWork_txt }}</p>
+                                    </div> --}}
+                                    <div class="teacher-document-second-name-text">
+                                        <input type="checkbox" id="" name="" value="1" disabled
+                                            {{ $teacherDetail->rightToWork_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
                                         <p>
@@ -221,6 +242,39 @@
                                 </div>
 
                                 <div class="school-name-section">
+                                    <div class="teacher-document-second-heading-text">
+                                        <h2>
+                                            Overseas Police
+                                            @if ($teacherDetail->overseasPolicy_txt)
+                                                ({{ $teacherDetail->overseasPolicy_txt }})
+                                            @endif
+                                        </h2>
+                                    </div>
+                                    {{-- <div class="teacher-document-second-text">
+                                        <p>{{ $teacherDetail->overseasPolicy_txt }}</p>
+                                    </div> --}}
+                                    <div class="teacher-document-second-name-text">
+                                        <input type="checkbox" id="" name="" value="1" disabled
+                                            {{ $teacherDetail->overseasPolicy_status == '-1' ? 'checked' : '' }}>
+                                    </div>
+                                    <div class="teacher-document-third-name-text">
+                                        <p>
+                                            @if (isset($vettingHistory['overseasPolicy_dte']))
+                                                @foreach ($vettingHistory['overseasPolicy_dte'] as $key => $val)
+                                                    @if ($key > 0)
+                                                        {{ ', ' }}
+                                                    @endif
+                                                    {{ date('d-m-Y', strtotime($val->check_date)) }}
+                                                    <a style="cursor: pointer;"
+                                                        onclick="historyEdit('{{ $val->vetting_check_history_id }}')"><i
+                                                            class="fa-solid fa-pencil"></i></a>
+                                                @endforeach
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {{-- <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
                                         <h2>Redicalisation Check</h2>
                                     </div>
@@ -243,7 +297,7 @@
                                             @endif
                                         </p>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">

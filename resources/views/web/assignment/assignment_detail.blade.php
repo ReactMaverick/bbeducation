@@ -378,7 +378,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group modal-input-field" id="blockBookingStartTimeDiv"
-                                    style="display: none;">
+                                    style="display: none;" hidden>
                                     <label class="form-check-label">Start Time</label>
                                     <input type="text" class="form-control" name="start_tm"
                                         id="blockBookingStartTime" value="">
@@ -386,9 +386,17 @@
                             </div>
                             <div class="col-md-6 modal-form-right-sec">
                                 <div class="form-group modal-input-field" id="blockBookingEndTimeDiv"
-                                    style="display: none;">
-                                    <label class="form-check-label">End Time</label>
+                                    style="display: none;" hidden>
+                                    <label class="form-check-label">Finish Time</label>
                                     <input type="text" class="form-control" name="end_tm" id="blockBookingEndTime"
+                                        value="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 modal-form-right-sec">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Mins taken for lunch</label>
+                                    <input type="text" class="form-control" name="lunch_time" id=""
                                         value="">
                                 </div>
                             </div>
@@ -522,6 +530,27 @@
         </div>
     </div>
     <!-- Candidate Vetting Modal -->
+
+    <script src="//cdn.ckeditor.com/4.4.7/standard-all/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.4.7/standard-all/adapters/jquery.js"></script>
+    <script>
+        // Use the document as the parent element for event delegation
+        // jQuery(document).ready(function($) {
+        //     // Initialize CKEditor when the modal is shown
+        //     $('#candidateVettingModal').on('shown.bs.modal', function() {
+        //         $('#school_contnt').ckeditor({
+        //             toolbar: [],
+        //         });
+
+        //         const teacherHtml = $('#teacher_contnt').val();
+        //         // console.log(teacherHtml);
+        //         const editor = CKEDITOR.replace('teacher_contnt', {
+        //             toolbar: [],
+        //         });
+        //         editor.setData(teacherHtml);
+        //     });
+        // });
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -841,22 +870,22 @@
                 $('#blockHour').addClass('number-validate-2');
                 $('#blockHourDiv').show();
 
-                $('#blockBookingStartTime').addClass('field-validate-2');
-                $('#blockBookingStartTimeDiv').show();
-                $('#blockBookingEndTime').addClass('field-validate-2');
-                $('#blockBookingEndTimeDiv').show();
+                // $('#blockBookingStartTime').addClass('field-validate-2');
+                // $('#blockBookingStartTimeDiv').show();
+                // $('#blockBookingEndTime').addClass('field-validate-2');
+                // $('#blockBookingEndTimeDiv').show();
             } else {
                 $('#blockHour').val('');
                 $('#blockHour').removeClass('number-validate-2');
                 $('#blockHour').closest(".form-group").removeClass('has-error');
                 $('#blockHourDiv').hide();
 
-                $('#blockBookingStartTime').removeClass('field-validate-2');
-                $('#blockBookingStartTime').closest(".form-group").removeClass('has-error');
-                $('#blockBookingStartTimeDiv').hide();
-                $('#blockBookingEndTime').removeClass('field-validate-2');
-                $('#blockBookingEndTime').closest(".form-group").removeClass('has-error');
-                $('#blockBookingEndTimeDiv').hide();
+                // $('#blockBookingStartTime').removeClass('field-validate-2');
+                // $('#blockBookingStartTime').closest(".form-group").removeClass('has-error');
+                // $('#blockBookingStartTimeDiv').hide();
+                // $('#blockBookingEndTime').removeClass('field-validate-2');
+                // $('#blockBookingEndTime').closest(".form-group").removeClass('has-error');
+                // $('#blockBookingEndTimeDiv').hide();
             }
         });
 

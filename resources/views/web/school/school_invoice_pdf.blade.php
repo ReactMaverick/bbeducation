@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <title>Invoice</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap');
+        /* @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@200;300;400;500;600&display=swap'); */
 
         * {
-            font-family: 'Source Sans 3', sans-serif;
+            font-family: 'Calibri', sans-serif;
         }
 
         .clearfix:after {
@@ -31,9 +31,9 @@
             /* margin: 0 auto; */
             color: #555555;
             background: #FFFFFF;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            font-family: SourceSansPro;
+            /* font-family: Arial, sans-serif; */
+            font-size: 11px;
+            /* font-family: SourceSansPro; */
             border: 2px solid #5b9cd7;
             padding: 20px 20px 0 20px;
         }
@@ -62,7 +62,7 @@
             float: left;
             width: 33.33%;
             text-align: left;
-            font-size: 24px;
+            font-size: 20px;
             color: #fff;
             margin-top: 15px;
         }
@@ -71,11 +71,10 @@
             float: left;
             width: 33.33%;
             text-align: center;
-            font-size: 24px;
+            font-size: 20px;
             color: #fff;
             margin-top: 15px;
         }
-
 
         /* #details {
             margin-bottom: 20px;
@@ -91,11 +90,11 @@
         #client .to {
             color: #000;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 11px;
         }
 
         h2.name {
-            font-size: 1.4em;
+            font-size: 11px;
             font-weight: normal;
             margin: 0;
         }
@@ -108,14 +107,14 @@
 
         #invoice h2 {
             color: #5b9cd7;
-            font-size: 14px;
+            font-size: 11px;
             line-height: 1em;
             font-weight: 600;
             margin: 0;
         }
 
         #invoice .date {
-            font-size: 1.1em;
+            font-size: 11px;
             color: #777777;
         }
 
@@ -150,20 +149,20 @@
 
         table td h3 {
             color: #5b9cd7;
-            font-size: 1.2em;
+            font-size: 11px;
             font-weight: normal;
             margin: 0 0 0.2em 0;
         }
 
         table .no {
             color: #FFFFFF;
-            font-size: 1.6em;
+            font-size: 11px;
             background: #5b9cd7;
         }
 
         table .desc {
             text-align: left;
-            width: 60%;
+            width: 80%;
         }
 
         table .unit {
@@ -184,7 +183,7 @@
         table td.unit,
         table td.qty,
         table td.total {
-            font-size: 14px;
+            font-size: 11px;
         }
 
         table tbody tr:last-child td {
@@ -194,7 +193,7 @@
         table tfoot td {
             padding: 6px 20px;
             background: #FFFFFF;
-            font-size: 14px;
+            font-size: 11px;
             white-space: nowrap;
             border-top: 1px solid #AAAAAA;
         }
@@ -205,7 +204,7 @@
 
         table tfoot tr:last-child td {
             color: #5b9cd7;
-            font-size: 14px;
+            font-size: 11px;
             border-top: 1px solid #5b9cd7;
         }
 
@@ -214,7 +213,7 @@
         }
 
         #thanks {
-            font-size: 2em;
+            font-size: 11px;
             margin-bottom: 50px;
         }
 
@@ -223,13 +222,13 @@
             /* padding-right: 10px; */
             border-left: 6px solid #5b9cd7;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 11px;
             width: 55%;
             float: left;
         }
 
         #notices .notice {
-            font-size: 14px;
+            font-size: 11px;
         }
 
         footer {
@@ -377,57 +376,37 @@
                                 </td>
                             </tr>
                         @endif
-                        @if ($companyDetail && $companyDetail->address1_txt)
-                            <tr>
-                                <td>
+                        <tr>
+                            <td>
+                                @if ($companyDetail && $companyDetail->address1_txt)
                                     {{ $companyDetail->address1_txt }}
-                                </td>
-                            </tr>
-                        @endif
-                        @if ($companyDetail && $companyDetail->address2_txt)
-                            <tr>
-                                <td>
-                                    {{ $companyDetail->address2_txt }}
-                                </td>
-                            </tr>
-                        @endif
-                        @if ($companyDetail && $companyDetail->address3_txt)
-                            <tr>
-                                <td>
-                                    {{ $companyDetail->address3_txt }}
-                                </td>
-                            </tr>
-                        @endif
-                        @if ($companyDetail && $companyDetail->address4_txt)
-                            <tr>
-                                <td>
-                                    {{ $companyDetail->address4_txt }}
-                                </td>
-                            </tr>
-                        @endif
-                        @if ($companyDetail && $companyDetail->address5_txt)
-                            <tr>
-                                <td>
-                                    {{ $companyDetail->address5_txt }}
-                                </td>
-                            </tr>
-                        @endif
-                        @if ($companyDetail && $companyDetail->postcode_txt)
-                            <tr>
-                                <td>
-                                    {{ $companyDetail->postcode_txt }}
-                                </td>
-                            </tr>
-                        @endif
+                                @endif
+                                @if ($companyDetail && $companyDetail->address2_txt)
+                                    {{ ', ' . $companyDetail->address2_txt }}
+                                @endif
+                                @if ($companyDetail && $companyDetail->address3_txt)
+                                    {{ ', ' . $companyDetail->address3_txt }}
+                                @endif
+                                @if ($companyDetail && $companyDetail->address4_txt)
+                                    {{ ', ' . $companyDetail->address4_txt }}
+                                @endif
+                                @if ($companyDetail && $companyDetail->address5_txt)
+                                    {{ ', ' . $companyDetail->address5_txt }}
+                                @endif
+                                @if ($companyDetail && $companyDetail->postcode_txt)
+                                    {{ ', ' . $companyDetail->postcode_txt }}
+                                @endif
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <table class="heading-right-table">
                     <tbody>
                         <tr>
-                            <td style="padding-top: 10px;">
+                            <td>
                                 Company Number:
                             </td>
-                            <td style="padding-top: 10px;">
+                            <td>
                                 {{ $companyDetail ? $companyDetail->company_phone : '' }}
                             </td>
                         </tr>
@@ -440,10 +419,10 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding-top: 10px;">
+                            <td style="padding-top: 5px;">
                                 Invoice Number:
                             </td>
-                            <td style="padding-top: 10px;">
+                            <td style="padding-top: 5px;">
                                 {{ $schoolInvoices->invoice_id }}
                             </td>
                         </tr>
@@ -460,7 +439,8 @@
                                 Authorized By(Name):
                             </td>
                             <td>
-                                {{ $schoolInvoices->admin_fname . ' ' . $schoolInvoices->admin_sname }}
+                                {{-- {{ $schoolInvoices->admin_fname . ' ' . $schoolInvoices->admin_sname }} --}}
+                                {{ $schoolDetail->name_txt }}
                             </td>
                         </tr>
                         <tr>
@@ -468,7 +448,8 @@
                                 Authorized By(Email):
                             </td>
                             <td>
-                                {{ $schoolInvoices->admin_email }}
+                                {{-- {{ $schoolInvoices->admin_email }} --}}
+                                {{ $schoolDetail->login_mail }}
                             </td>
                         </tr>
                         <tr>
@@ -487,9 +468,9 @@
             <thead>
                 <tr>
                     <th class="desc">DESCRIPTION</th>
-                    <th class=""></th>
+                    {{-- <th class=""></th>
                     <th class="qty"></th>
-                    <th class=""></th>
+                    <th class=""></th> --}}
                     <th class="unit">PRICE</th>
                 </tr>
             </thead>
@@ -509,9 +490,9 @@
                                 £{{ (int) $invoiceItem->charge_dec }})
                             @endif
                         </td>
-                        <td class=""></td>
+                        {{-- <td class=""></td>
                         <td class="qty"></td>
-                        <td class="unit"></td>
+                        <td class="unit"></td> --}}
                         <td class="total">
                             £{{ (int) $invoiceItem->numItems_dec * $invoiceItem->charge_dec }}
                         </td>
@@ -546,14 +527,14 @@
 
     </main>
     <footer>
-        <div style="text-align: left; width: 60%;">
+        <div style="text-align: left; width: 100%;">
             <div>By paying this invoice i certify that i have read and agree to be bound to the TC’s
                 of
                 BumbleBee Education</div>
             <div> <b>Payment Terms:</b> Payment within 14 days of invoice date </div>
 
-            <div style="font-size: 18px; font-weight: 700; margin-top: 20px;">THANK YOU!</div>
-            <div><b>Payee Details:</b></div>
+            {{-- <div style="font-size: 18px; font-weight: 700; margin-top: 20px;">THANK YOU!</div> --}}
+            <div style="margin-top: 10px;"><b>Payee Details:</b></div>
             <div>Payment by BACS:</div>
             <div>Account Name: BumbleBee Education LTD</div>
             <div>Account Number: 90009687</div>
@@ -572,9 +553,6 @@
                         </td>
                     </tr>
                 </tbody>
-
-
-
             </table>
         </div>
         <div style="border-top: 1px solid #AAAAAA; padding-top: 10px;">

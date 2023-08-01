@@ -207,7 +207,7 @@
                                     </div>
                                 </div>
 
-                                <div class="school-name-section">
+                                {{-- <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
                                         <label for="vehicle1">Disqualification Check</label>
                                     </div>
@@ -219,7 +219,7 @@
                                         <p>{{ $teacherDetail->vetDisqualAssociation_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetDisqualAssociation_dte)) : '' }}
                                         </p>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
@@ -265,14 +265,49 @@
 
                                 <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
-                                        <h2>Right to Work</h2>
+                                        <h2>
+                                            Right to Work
+                                            @if ($teacherDetail->rightToWork_txt)
+                                                ({{ $teacherDetail->rightToWork_txt }})
+                                            @endif
+                                        </h2>
                                     </div>
-                                    <div class="teacher-document-second-text">
+                                    {{-- <div class="teacher-document-second-text">
                                         <p>{{ $teacherDetail->rightToWork_txt }}</p>
+                                    </div> --}}
+                                    <div class="teacher-document-second-name-text">
+                                        <input type="checkbox" id="" name="" value="1" disabled
+                                            {{ $teacherDetail->rightToWork_status == '-1' ? 'checked' : '' }}>
+                                    </div>
+                                    <div class="teacher-document-third-name-text">
+                                        <p>{{ $teacherDetail->rightToWork_dte != null ? date('d-m-Y', strtotime($teacherDetail->rightToWork_dte)) : '' }}
+                                        </p>
                                     </div>
                                 </div>
 
                                 <div class="school-name-section">
+                                    <div class="teacher-document-second-heading-text">
+                                        <h2>
+                                            Overseas Police
+                                            @if ($teacherDetail->overseasPolicy_txt)
+                                                ({{ $teacherDetail->overseasPolicy_txt }})
+                                            @endif
+                                        </h2>
+                                    </div>
+                                    {{-- <div class="teacher-document-second-text">
+                                        <p>{{ $teacherDetail->overseasPolicy_txt }}</p>
+                                    </div> --}}
+                                    <div class="teacher-document-second-name-text">
+                                        <input type="checkbox" id="" name="" value="1" disabled
+                                            {{ $teacherDetail->overseasPolicy_status == '-1' ? 'checked' : '' }}>
+                                    </div>
+                                    <div class="teacher-document-third-name-text">
+                                        <p>{{ $teacherDetail->overseasPolicy_dte != null ? date('d-m-Y', strtotime($teacherDetail->overseasPolicy_dte)) : '' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {{-- <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
                                         <h2>Redicalisation Check</h2>
                                     </div>
@@ -284,7 +319,7 @@
                                         <p>{{ $teacherDetail->vetRadical_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetRadical_dte)) : '' }}
                                         </p>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="school-name-section">
                                     <div class="teacher-document-second-heading-text">
@@ -345,9 +380,9 @@
                                 <thead>
                                     <tr class="school-detail-table-heading">
                                         <th>#</th>
-                                        <th>File Name</th>
-                                        <th>File Type</th>
+                                        {{-- <th>File Name</th> --}}
                                         <th>Document Type</th>
+                                        <th>File Type</th>
                                         <th>Date</th>
                                     </tr>
                                 </thead>
@@ -358,9 +393,9 @@
                                                 id="editDocumentRow{{ $document->teacherDocument_id }}"
                                                 onclick="documentRowSelect({{ $document->teacherDocument_id }})">
                                                 <td>{{ $key + 1 }}</td>
-                                                <td>{{ $document->file_name }}</td>
-                                                <td>{{ $document->file_type }}</td>
+                                                {{-- <td>{{ $document->file_name }}</td> --}}
                                                 <td>{{ $document->doc_type_txt }}</td>
+                                                <td>{{ $document->file_type }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($document->uploadOn_dtm)) }}</td>
                                             </tr>
                                         @endforeach
@@ -396,6 +431,11 @@
                                 </a>
                             </div>
                         </div>
+
+                        <?php
+                        $dbsExp = '';
+                        $dbsExpText = '';
+                        ?>
                         <div class="assignment-finance-table-section">
                             <table class="table school-detail-page-table" id="myTable">
                                 <thead>
@@ -408,6 +448,20 @@
                                 <tbody class="table-body-sec">
                                     @if (count($DBS_list) > 0)
                                         @foreach ($DBS_list as $key => $DBS)
+                                            <?php
+                                            if ($DBS->DBSDate_dte != null) {
+                                                $dateExp = date('d-m-Y', strtotime($DBS->DBSDate_dte . ' +3 years'));
+                                                $tday = date('d-m-Y');
+                                                $dateExp2 = date('d-m-Y', strtotime($dateExp . ' -21 days'));
+                                                if (strtotime($dateExp2) <= strtotime($tday)) {
+                                                    $dbsExp = '1';
+                                                    if ($dbsExpText != '') {
+                                                        $dbsExpText .= ', ';
+                                                    }
+                                                    $dbsExpText .= 'Certificate no ' . $DBS->certificateNumber_txt . ' will expire on ' . $dateExp . '.';
+                                                }
+                                            }
+                                            ?>
                                             <tr class="school-detail-table-data editDBSRow"
                                                 id="editDBSRow{{ $DBS->DBS_id }}"
                                                 onclick="DBSRowSelect({{ $DBS->DBS_id }})">
@@ -596,7 +650,7 @@
                     <h2>Edit Vetting</h2>
                 </div>
 
-                <form action="{{ url('/teacherVettingUpdate') }}" method="post" class="">
+                <form action="{{ url('/teacherVettingUpdate') }}" method="post" class="form-validate-5">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>
@@ -622,10 +676,9 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Date Register On Update</label>
-                                    <input type="text" class="form-control datePickerPaste"
+                                    <input type="text" class="form-control datePickerPaste field-validate-5"
                                         name="vetUpdateServiceReg_dte" id=""
-                                        value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('d/m/Y', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}"
-                                        required>
+                                        value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('d/m/Y', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}">
                                 </div>
 
                                 <div class="modal-side-field mb-2">
@@ -649,15 +702,21 @@
                                         {{ $teacherDetail->vetNCTLChecked_dte != null ? 'checked' : '' }}>
                                 </div>
 
-                                <div class="modal-side-field mb-2">
+                                {{-- <div class="modal-side-field mb-2">
                                     <label class="form-check-label" for="vetDisqualAssociation_status">Disqualification
                                         Check</label>
                                     <input type="checkbox" class="" name="vetDisqualAssociation_status"
                                         id="vetDisqualAssociation_status" value="1"
                                         {{ $teacherDetail->vetDisqualAssociation_status == '-1' ? 'checked' : '' }}>
+                                </div> --}}
+
+                                <div class="modal-side-field mb-2">
+                                    <label class="form-check-label" for="vetQualification_status">Qualifications
+                                        Check</label>
+                                    <input type="checkbox" class="" name="vetQualification_status"
+                                        id="vetQualification_status" value="1"
+                                        {{ $teacherDetail->vetQualification_status == '-1' ? 'checked' : '' }}>
                                 </div>
-                            </div>
-                            <div class="col-md-6 modal-form-right-sec">
                                 <div class="modal-side-field mb-2">
                                     <label class="form-check-label" for="safeguardingInduction_status">Safeguarding
                                         Induction</label>
@@ -665,10 +724,18 @@
                                         id="safeguardingInduction_status" value="1"
                                         {{ $teacherDetail->safeguardingInduction_status == '-1' ? 'checked' : '' }}>
                                 </div>
-
+                            </div>
+                            <div class="col-md-6 modal-form-right-sec">
+                                <div class="modal-side-field">
+                                    <label for="rightToWork_status">Right to Work</label>
+                                    <input type="checkbox" class="" name="rightToWork_status"
+                                        id="rightToWork_status" value="1"
+                                        {{ $teacherDetail->rightToWork_status == '-1' ? 'checked' : '' }}>
+                                </div>
                                 <div class="form-group calendar-form-filter">
-                                    <label for="">Right to Work</label>
-                                    <select class="form-control select2" name="rightToWork_int" style="width:100%;">
+                                    <select
+                                        class="form-control select2 {{ $teacherDetail->rightToWork_status == '-1' ? 'field-validate-5' : '' }}"
+                                        name="rightToWork_int" id="rightToWork_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($RTW_list as $key2 => $RTW)
                                             <option value="{{ $RTW->description_int }}"
@@ -676,6 +743,26 @@
                                                 {{ $RTW->description_txt }}
                                             </option>
                                         @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="modal-side-field">
+                                    <label for="overseasPolicy_status">Overseas Police</label>
+                                    <input type="checkbox" class="" name="overseasPolicy_status"
+                                        id="overseasPolicy_status" value="1"
+                                        {{ $teacherDetail->overseasPolicy_status == '-1' ? 'checked' : '' }}>
+                                </div>
+                                <div class="form-group calendar-form-filter">
+                                    <select
+                                        class="form-control select2 {{ $teacherDetail->overseasPolicy_status == '-1' ? 'field-validate-5' : '' }}"
+                                        name="overseasPolicy_txt" id="overseasPolicy_txt" style="width:100%;">
+                                        <option value="">Choose one</option>
+                                        <option value="N/A"
+                                            {{ $teacherDetail->overseasPolicy_txt == 'N/A' ? 'selected' : '' }}>N/A
+                                        </option>
+                                        <option value="Clear"
+                                            {{ $teacherDetail->overseasPolicy_txt == 'Clear' ? 'selected' : '' }}>Clear
+                                        </option>
                                     </select>
                                 </div>
 
@@ -693,21 +780,15 @@
                                         {{ $teacherDetail->vetEEARestriction_status == '-1' ? 'checked' : '' }}>
                                 </div>
 
-                                <div class="modal-side-field mb-2">
+                                {{-- <div class="modal-side-field mb-2">
                                     <label class="form-check-label" for="vetRadical_status">Redicalisation
                                         Check</label>
                                     <input type="checkbox" class="" name="vetRadical_status"
                                         id="vetRadical_status" value="1"
                                         {{ $teacherDetail->vetRadical_status == '-1' ? 'checked' : '' }}>
-                                </div>
+                                </div> --}}
 
-                                <div class="modal-side-field mb-2">
-                                    <label class="form-check-label" for="vetQualification_status">Qualifications
-                                        Check</label>
-                                    <input type="checkbox" class="" name="vetQualification_status"
-                                        id="vetQualification_status" value="1"
-                                        {{ $teacherDetail->vetQualification_status == '-1' ? 'checked' : '' }}>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -945,7 +1026,7 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="modal-input-field form-group">
+                                <div class="modal-input-field form-group" hidden>
                                     <label class="form-check-label">Document Name</label>
                                     <input type="text" class="form-control" name="file_name" id="fileName"
                                         value="">
@@ -1040,7 +1121,36 @@
     </div>
     <!-- Document Edit Modal -->
 
+    @if ($dbsExp == '1')
+        <script>
+            $(document).ready(function() {
+                var expText = "{{ $dbsExpText }}";
+                swal("DBS Record Expire Soon", expText);
+            })
+        </script>
+        <?php $dbsExp == '2'; ?>
+    @endif
+
     <script>
+        $(document).ready(function() {
+            $("#rightToWork_status").change(function() {
+                if ($(this).is(":checked")) {
+                    $('#rightToWork_int').addClass('field-validate-5');
+                } else {
+                    $('#rightToWork_int').closest(".form-group").removeClass('has-error');
+                    $('#rightToWork_int').removeClass('field-validate-5');
+                }
+            });
+            $("#overseasPolicy_status").change(function() {
+                if ($(this).is(":checked")) {
+                    $('#overseasPolicy_txt').addClass('field-validate-5');
+                } else {
+                    $('#overseasPolicy_txt').closest(".form-group").removeClass('has-error');
+                    $('#overseasPolicy_txt').removeClass('field-validate-5');
+                }
+            });
+        });
+
         $("#dbsWarning_status").change(function() {
             if ($(this).is(":checked")) {
                 $('#dbsWarning_txt').attr('disabled', false);

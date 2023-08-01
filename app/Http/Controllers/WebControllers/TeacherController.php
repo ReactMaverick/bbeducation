@@ -205,7 +205,13 @@ class TeacherController extends Controller
             ->where('tbl_teacher.teacher_id', $teacher_id)
             ->first();
         if ($teacherDetail && $teacherDetail->login_mail) {
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $teacherDetail->company_id)
+                ->first();
+
             $uID = base64_encode($teacher_id);
+            $mailData['companyDetail'] = $companyDetail;
             $mailData['firstName_txt'] = $teacherDetail->firstName_txt;
             $mailData['surname_txt'] = $teacherDetail->surname_txt;
             $mailData['mail'] = $teacherDetail->login_mail;
@@ -2285,6 +2291,12 @@ class TeacherController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->with('error', "Please fill all mandatory fields.");
             }
+
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
             $employedFrom_dte = NULL;
             if ($request->employedFrom_dte != '') {
                 $employedFrom_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->employedFrom_dte)));
@@ -2340,6 +2352,7 @@ class TeacherController extends Controller
                 $mailData['refereeName'] = $request->refereeName_txt;
                 $mailData['mail'] = $request->refereeEmail_txt;
                 $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID . '/' . $adminMailEnc;
+                $mailData['companyDetail'] = $companyDetail;
                 $myVar = new AlertController();
                 $myVar->referenceRequestMail($mailData);
             }
@@ -2361,6 +2374,11 @@ class TeacherController extends Controller
             $admin_mail = 'sanjoy.websadroit@gmail.com';
             $input = $request->all();
             $teacherReferenceId = $input['teacherReferenceId'];
+
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
 
             $refDetails = DB::table('tbl_teacherReference')
                 ->where('teacherReference_id', $teacherReferenceId)
@@ -2395,6 +2413,7 @@ class TeacherController extends Controller
                     $mailData['refereeName'] = $refDetails->refereeName_txt;
                     $mailData['mail'] = $refDetails->refereeEmail_txt;
                     $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID . '/' . $adminMailEnc;
+                    $mailData['companyDetail'] = $companyDetail;
                     $myVar = new AlertController();
                     $myVar->referenceRequestMail($mailData);
 
@@ -3170,8 +3189,24 @@ class TeacherController extends Controller
                 array_push($historyArr, $nArr);
             }
 
-            if ($request->rightToWork_int) {
+            $rightToWork_status = 0;
+            $rightToWork_dte = $teacherDetail->rightToWork_dte;
+            if ($request->rightToWork_status) {
+                $rightToWork_status = -1;
+                $rightToWork_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
                 $nArr['field_name'] = 'rightToWork_dte';
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                array_push($historyArr, $nArr);
+            }
+
+            $overseasPolicy_status = 0;
+            $overseasPolicy_dte = $teacherDetail->overseasPolicy_dte;
+            if ($request->overseasPolicy_status) {
+                $overseasPolicy_status = -1;
+                $overseasPolicy_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+
+                $nArr['field_name'] = 'overseasPolicy_dte';
                 $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
                 array_push($historyArr, $nArr);
             }
@@ -3189,6 +3224,11 @@ class TeacherController extends Controller
                     'safeguardingInduction_status' => $safeguardingInduction_status,
                     'safeguardingInduction_dte' => $safeguardingInduction_dte,
                     'rightToWork_int' => $request->rightToWork_int,
+                    'rightToWork_status' => $rightToWork_status,
+                    'rightToWork_dte' => $rightToWork_dte,
+                    'overseasPolicy_txt' => $request->overseasPolicy_txt,
+                    'overseasPolicy_status' => $overseasPolicy_status,
+                    'overseasPolicy_dte' => $overseasPolicy_dte,
                     'vets128_status' => $vets128_status,
                     'vets128_dte' => $vets128_dte,
                     'vetEEARestriction_status' => $vetEEARestriction_status,
@@ -4370,6 +4410,7 @@ class TeacherController extends Controller
                     $mailData['mail_description'] = "Reference receieved for " . $refReqDetail->ref_request_firstname . ' ' . $refReqDetail->ref_request_lastname . ". Please find the attached document.";
                     $mailData['invoice_path'] = asset($fPath);
                     $mailData['mail'] = $adminMail;
+                    $mailData['companyDetail'] = $companyDetail;
                     $myVar = new AlertController();
                     $myVar->referenceReceivedToAdmin($mailData);
                 }
@@ -5900,7 +5941,7 @@ class TeacherController extends Controller
                             $query->where('tbl_asnItem5.asnDate_dte', '=', $weekStartDate5);
                         });
                 })
-                ->select('teacher_timesheet.teacher_timesheet_id', 'teacher_timesheet.asn_id', 'teacher_timesheet.school_id', 'tbl_school.name_txt', DB::raw("'$teacher_id' AS teacher_id"), 'teacher_timesheet.timesheet_status', 'teacher_timesheet.submit_status', 'teacher_timesheet.approve_by_school', 'teacher_timesheet.reject_status', 'tbl_asnItem1.timesheet_item_id AS timesheet_item_id1', 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asnItem1.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asnItem1.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem1.admin_approve AS admin_approve1', 'tbl_asnItem1.rejected_text AS rejected_text1', 'tbl_asnItem1.start_tm AS start_tm1', 'tbl_asnItem1.end_tm AS end_tm1', 'tbl_asnItem2.timesheet_item_id AS timesheet_item_id2', 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asnItem2.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asnItem2.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem2.admin_approve AS admin_approve2', 'tbl_asnItem2.rejected_text AS rejected_text2', 'tbl_asnItem2.start_tm AS start_tm2', 'tbl_asnItem2.end_tm AS end_tm2', 'tbl_asnItem3.timesheet_item_id AS timesheet_item_id3', 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asnItem3.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asnItem3.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem3.admin_approve AS admin_approve3', 'tbl_asnItem3.rejected_text AS rejected_text3', 'tbl_asnItem3.start_tm AS start_tm3', 'tbl_asnItem3.end_tm AS end_tm3', 'tbl_asnItem4.timesheet_item_id AS timesheet_item_id4', 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asnItem4.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asnItem4.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem4.admin_approve AS admin_approve4', 'tbl_asnItem4.rejected_text AS rejected_text4', 'tbl_asnItem4.start_tm AS start_tm4', 'tbl_asnItem4.end_tm AS end_tm4', 'tbl_asnItem5.timesheet_item_id AS timesheet_item_id5', 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asnItem5.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asnItem5.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), 'tbl_asnItem5.admin_approve AS admin_approve5', 'tbl_asnItem5.rejected_text AS rejected_text5', 'tbl_asnItem5.start_tm AS start_tm5', 'tbl_asnItem5.end_tm AS end_tm5')
+                ->select('teacher_timesheet.teacher_timesheet_id', 'teacher_timesheet.asn_id', 'teacher_timesheet.school_id', 'tbl_school.name_txt', DB::raw("'$teacher_id' AS teacher_id"), 'teacher_timesheet.timesheet_status', 'teacher_timesheet.submit_status', 'teacher_timesheet.approve_by_school', 'teacher_timesheet.reject_status', 'tbl_asnItem1.timesheet_item_id AS timesheet_item_id1', 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asnItem1.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asnItem1.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem1.admin_approve AS admin_approve1', 'tbl_asnItem1.rejected_text AS rejected_text1', 'tbl_asnItem1.start_tm AS start_tm1', 'tbl_asnItem1.end_tm AS end_tm1', 'tbl_asnItem1.lunch_time AS lunch_time1', 'tbl_asnItem2.timesheet_item_id AS timesheet_item_id2', 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asnItem2.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asnItem2.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem2.admin_approve AS admin_approve2', 'tbl_asnItem2.rejected_text AS rejected_text2', 'tbl_asnItem2.start_tm AS start_tm2', 'tbl_asnItem2.end_tm AS end_tm2', 'tbl_asnItem2.lunch_time AS lunch_time2', 'tbl_asnItem3.timesheet_item_id AS timesheet_item_id3', 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asnItem3.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asnItem3.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem3.admin_approve AS admin_approve3', 'tbl_asnItem3.rejected_text AS rejected_text3', 'tbl_asnItem3.start_tm AS start_tm3', 'tbl_asnItem3.end_tm AS end_tm3', 'tbl_asnItem3.lunch_time AS lunch_time3', 'tbl_asnItem4.timesheet_item_id AS timesheet_item_id4', 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asnItem4.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asnItem4.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem4.admin_approve AS admin_approve4', 'tbl_asnItem4.rejected_text AS rejected_text4', 'tbl_asnItem4.start_tm AS start_tm4', 'tbl_asnItem4.end_tm AS end_tm4', 'tbl_asnItem4.lunch_time AS lunch_time4', 'tbl_asnItem5.timesheet_item_id AS timesheet_item_id5', 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asnItem5.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asnItem5.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), 'tbl_asnItem5.admin_approve AS admin_approve5', 'tbl_asnItem5.rejected_text AS rejected_text5', 'tbl_asnItem5.start_tm AS start_tm5', 'tbl_asnItem5.end_tm AS end_tm5', 'tbl_asnItem5.lunch_time AS lunch_time5')
                 ->whereDate('teacher_timesheet.start_date', '=', $weekStartDate)
                 ->whereDate('teacher_timesheet.end_date', '=', $weekEndDate)
                 ->where('teacher_timesheet.teacher_id', $teacher_id)
@@ -5947,7 +5988,7 @@ class TeacherController extends Controller
                                 ->where('tbl_asnItem5.asnDate_dte', '=', $weekStartDate5);
                         });
                 })
-                ->select(DB::raw("NULL AS teacher_timesheet_id"), 'tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), DB::raw("0 AS admin_approve1"), DB::raw("NULL AS rejected_text1"), DB::raw("NULL AS start_tm1"), DB::raw("NULL AS end_tm1"), 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), DB::raw("0 AS admin_approve2"), DB::raw("NULL AS rejected_text2"), DB::raw("NULL AS start_tm2"), DB::raw("NULL AS end_tm2"), 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), DB::raw("0 AS admin_approve3"), DB::raw("NULL AS rejected_text3"), DB::raw("NULL AS start_tm3"), DB::raw("NULL AS end_tm3"), 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), DB::raw("0 AS admin_approve4"), DB::raw("NULL AS rejected_text4"), DB::raw("NULL AS start_tm4"), DB::raw("NULL AS end_tm4"), 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), DB::raw("0 AS admin_approve5"), DB::raw("NULL AS rejected_text5"), DB::raw("NULL AS start_tm5"), DB::raw("NULL AS end_tm5"), DB::raw("NULL AS timesheet_item_id1"), DB::raw("NULL AS timesheet_item_id2"), DB::raw("NULL AS timesheet_item_id3"), DB::raw("NULL AS timesheet_item_id4"), DB::raw("NULL AS timesheet_item_id5"))
+                ->select(DB::raw("NULL AS teacher_timesheet_id"), 'tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), DB::raw("0 AS admin_approve1"), DB::raw("NULL AS rejected_text1"), DB::raw("NULL AS start_tm1"), DB::raw("NULL AS end_tm1"), 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), DB::raw("0 AS admin_approve2"), DB::raw("NULL AS rejected_text2"), DB::raw("NULL AS start_tm2"), DB::raw("NULL AS end_tm2"), 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), DB::raw("0 AS admin_approve3"), DB::raw("NULL AS rejected_text3"), DB::raw("NULL AS start_tm3"), DB::raw("NULL AS end_tm3"), 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), DB::raw("0 AS admin_approve4"), DB::raw("NULL AS rejected_text4"), DB::raw("NULL AS start_tm4"), DB::raw("NULL AS end_tm4"), 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), DB::raw("0 AS admin_approve5"), DB::raw("NULL AS rejected_text5"), DB::raw("NULL AS start_tm5"), DB::raw("NULL AS end_tm5"), DB::raw("NULL AS timesheet_item_id1"), DB::raw("NULL AS timesheet_item_id2"), DB::raw("NULL AS timesheet_item_id3"), DB::raw("NULL AS timesheet_item_id4"), DB::raw("NULL AS timesheet_item_id5"), DB::raw("NULL AS lunch_time1"), DB::raw("NULL AS lunch_time2"), DB::raw("NULL AS lunch_time3"), DB::raw("NULL AS lunch_time4"), DB::raw("NULL AS lunch_time5"))
                 ->whereIn('tbl_asn.asn_id', function ($query) use ($weekStartDate, $plusFiveDate, $company_id, $teacher_id) {
                     $query->select('tbl_asn.asn_id')
                         ->from('tbl_asn')
@@ -6261,6 +6302,7 @@ class TeacherController extends Controller
                     'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
                     'start_tm' => date("H:i:s", strtotime($request->start_tm)),
                     'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                    'lunch_time' => $request->lunch_time,
                 ]);
         } else if ($request->asnItem_id) {
             $asnItem_id = $request->asnItem_id;
@@ -6291,6 +6333,7 @@ class TeacherController extends Controller
                             'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
                             'start_tm' => date("H:i:s", strtotime($request->start_tm)),
                             'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                            'lunch_time' => $request->lunch_time,
                             'timestamp_ts' => date('Y-m-d H:i:s')
                         ]);
                 }
@@ -6349,6 +6392,7 @@ class TeacherController extends Controller
                     'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
                     'start_tm' => date("H:i:s", strtotime($request->start_tm)),
                     'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                    'lunch_time' => $request->lunch_time,
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
         }

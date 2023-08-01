@@ -8,7 +8,7 @@
         * {
             padding: 0;
             margin: 0;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Calibri', sans-serif;
         }
     </style>
 </head>
@@ -26,7 +26,11 @@
                                     style="width: 100px;" />
                             </td>
                             <td style="padding: 10px 20px; text-align: right;">
-                                <p style="color: #888; font-size: 25px;"><strong>Teacher Timesheet</strong></p>
+                                <p style="color: #2c2b2b; font-size: 25px;">
+                                    {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</p>
+                            </td>
+                            <td style="padding: 10px 20px; text-align: right;">
+                                <p style="color: #888; font-size: 25px;"><strong>Weekly Timesheet Log</strong></p>
                             </td>
                         </tr>
                     </table>
@@ -81,12 +85,12 @@
                                             <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 Part
                                             </th>
-                                            <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
+                                            {{-- <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 Start Time
                                             </th>
                                             <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 End Time
-                                            </th>
+                                            </th> --}}
                                             <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 Approve
                                             </th>
@@ -118,6 +122,11 @@
                                                 if ($item->t_end_tm) {
                                                     $endTime = date('h:i a', strtotime($item->t_end_tm));
                                                 }
+                                                
+                                                $lunch_time = '';
+                                                if ($item->t_lunch_time) {
+                                                    $lunch_time = ' ( ' . $item->t_lunch_time . ' )';
+                                                }
                                                 ?>
                                                 <tr style="border: 1px solid #6fa179;">
                                                     <td style="text-align: center;padding-top: 10px;">
@@ -134,10 +143,10 @@
                                                     <td
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
-                                                            {{ $item->datePart_txt }}
+                                                            {{ $item->datePart_txt . $lunch_time }}
                                                         </span>
                                                     </td>
-                                                    <td
+                                                    {{-- <td
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
                                                             {{ $startTime }}
@@ -148,7 +157,7 @@
                                                         <span class="label label-primary">
                                                             {{ $endTime }}
                                                         </span>
-                                                    </td>
+                                                    </td> --}}
                                                     <td
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <a href="{{ $rUrl . '?status=approve' }}">Click Here</a>
@@ -170,7 +179,8 @@
 
             <tr>
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
-                    <h3 style="margin-bottom: 10px;">Best regards, BBEDUCATION</h3>
+                    <h3 style="margin-bottom: 10px;">Best regards,
+                        {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</h3>
                 </td>
             </tr>
             <tr>

@@ -115,7 +115,7 @@ class FinanceController extends Controller
                                 ->where('tbl_asnItem5.asnDate_dte', '=', $weekStartDate5);
                         });
                 })
-                ->select('tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.admin_approve AS admin_approve1', 'tbl_asnItem1.send_to_school AS send_to_school1', 'tbl_asnItem1.rejected_text AS rejected_text1', 'tbl_asnItem1.rejected_by_type AS rejected_by_type1', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem1.start_tm AS start_tm1', 'tbl_asnItem1.end_tm AS end_tm1', 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.admin_approve AS admin_approve2', 'tbl_asnItem2.send_to_school AS send_to_school2', 'tbl_asnItem2.rejected_text AS rejected_text2', 'tbl_asnItem2.rejected_by_type AS rejected_by_type2', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem2.start_tm AS start_tm2', 'tbl_asnItem2.end_tm AS end_tm2', 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.admin_approve AS admin_approve3', 'tbl_asnItem3.send_to_school AS send_to_school3', 'tbl_asnItem3.rejected_text AS rejected_text3', 'tbl_asnItem3.rejected_by_type AS rejected_by_type3', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem3.start_tm AS start_tm3', 'tbl_asnItem3.end_tm AS end_tm3', 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.admin_approve AS admin_approve4', 'tbl_asnItem4.send_to_school AS send_to_school4', 'tbl_asnItem4.rejected_text AS rejected_text4', 'tbl_asnItem4.rejected_by_type AS rejected_by_type4', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem4.start_tm AS start_tm4', 'tbl_asnItem4.end_tm AS end_tm4', 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.admin_approve AS admin_approve5', 'tbl_asnItem5.send_to_school AS send_to_school5', 'tbl_asnItem5.rejected_text AS rejected_text5', 'tbl_asnItem5.rejected_by_type AS rejected_by_type5', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), 'tbl_asnItem5.start_tm AS start_tm5', 'tbl_asnItem5.end_tm AS end_tm5')
+                ->select('tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.admin_approve AS admin_approve1', 'tbl_asnItem1.send_to_school AS send_to_school1', 'tbl_asnItem1.rejected_text AS rejected_text1', 'tbl_asnItem1.rejected_by_type AS rejected_by_type1', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem1.start_tm AS start_tm1', 'tbl_asnItem1.end_tm AS end_tm1', 'tbl_asnItem1.lunch_time AS lunch_time1', 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.admin_approve AS admin_approve2', 'tbl_asnItem2.send_to_school AS send_to_school2', 'tbl_asnItem2.rejected_text AS rejected_text2', 'tbl_asnItem2.rejected_by_type AS rejected_by_type2', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem2.start_tm AS start_tm2', 'tbl_asnItem2.end_tm AS end_tm2', 'tbl_asnItem2.lunch_time AS lunch_time2', 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.admin_approve AS admin_approve3', 'tbl_asnItem3.send_to_school AS send_to_school3', 'tbl_asnItem3.rejected_text AS rejected_text3', 'tbl_asnItem3.rejected_by_type AS rejected_by_type3', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem3.start_tm AS start_tm3', 'tbl_asnItem3.end_tm AS end_tm3', 'tbl_asnItem3.lunch_time AS lunch_time3', 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.admin_approve AS admin_approve4', 'tbl_asnItem4.send_to_school AS send_to_school4', 'tbl_asnItem4.rejected_text AS rejected_text4', 'tbl_asnItem4.rejected_by_type AS rejected_by_type4', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem4.start_tm AS start_tm4', 'tbl_asnItem4.end_tm AS end_tm4', 'tbl_asnItem4.lunch_time AS lunch_time4', 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.admin_approve AS admin_approve5', 'tbl_asnItem5.send_to_school AS send_to_school5', 'tbl_asnItem5.rejected_text AS rejected_text5', 'tbl_asnItem5.rejected_by_type AS rejected_by_type5', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), 'tbl_asnItem5.start_tm AS start_tm5', 'tbl_asnItem5.end_tm AS end_tm5', 'tbl_asnItem5.lunch_time AS lunch_time5')
                 ->whereIn('tbl_asn.asn_id', function ($query) use ($weekStartDate, $plusFiveDate, $company_id) {
                     $query->select('tbl_asn.asn_id')
                         ->from('tbl_asn')
@@ -313,6 +313,8 @@ class FinanceController extends Controller
     public function sendTimesheetToApproval(Request $request)
     {
         $webUserLoginData = Session::get('webUserLoginData');
+        $rData['success'] = 'No';
+        $rData['message'] = '';
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
@@ -336,7 +338,7 @@ class FinanceController extends Controller
                 ->whereIn('tbl_asn.asn_id', $asnIdsArr)
                 ->where('company_id', $company_id)
                 ->where('admin_approve', '!=', 1)
-                ->where('send_to_school', 0)
+                // ->where('send_to_school', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->pluck('tbl_asnItem.asnItem_id')
                 ->toArray();
@@ -357,7 +359,7 @@ class FinanceController extends Controller
                 ->whereIn('tbl_asn.asn_id', $asnIdsArr)
                 ->where('company_id', $company_id)
                 ->where('admin_approve', 1)
-                ->where('send_to_school', 0)
+                // ->where('send_to_school', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->get();
 
@@ -372,7 +374,7 @@ class FinanceController extends Controller
             // echo "<pre>";
             // print_r($result_array);
             // exit;
-
+            $notMailSchoolName = '';
             foreach ($result_array as $key => $value) {
                 DB::table('tbl_asnItem')
                     ->whereIn('asnItem_id', $value)
@@ -424,7 +426,7 @@ class FinanceController extends Controller
                                         ->where('tbl_asnItem5.asnDate_dte', '=', $weekStartDate5);
                                 });
                         })
-                        ->select('tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem1.start_tm AS start_tm1', 'tbl_asnItem1.end_tm AS end_tm1', 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem2.start_tm AS start_tm2', 'tbl_asnItem2.end_tm AS end_tm2', 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem3.start_tm AS start_tm3', 'tbl_asnItem3.end_tm AS end_tm3', 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem4.start_tm AS start_tm4', 'tbl_asnItem4.end_tm AS end_tm4', 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), 'tbl_asnItem5.start_tm AS start_tm5', 'tbl_asnItem5.end_tm AS end_tm5')
+                        ->select('tbl_asn.asn_id', 'tbl_school.school_id', 'tbl_school.name_txt', 'tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("0 AS timesheet_status"), DB::raw("0 AS submit_status"), DB::raw("0 AS approve_by_school"), DB::raw("0 AS reject_status"), 'tbl_asnItem1.asnItem_id AS day1asnItem_id', 'tbl_asnItem1.asnDate_dte AS day1asnDate_dte', 'tbl_asn.asn_id AS day1Link_id', 'tbl_asnItem1.dayPart_int AS day1LinkType_int', 'tbl_asn.school_id AS day1school_id', DB::raw("IF(tbl_asnItem1.dayPart_int = 4, CONCAT(tbl_asnItem1.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem1.dayPart_int)) AS day1Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem1.dayPercent_dec), 0) AS day1Amount_dec"), 'tbl_asnItem1.start_tm AS start_tm1', 'tbl_asnItem1.end_tm AS end_tm1', 'tbl_asnItem1.lunch_time AS lunch_time1', 'tbl_asnItem2.asnItem_id AS day2asnItem_id', 'tbl_asnItem2.asnDate_dte AS day2asnDate_dte', 'tbl_asn.asn_id AS day2Link_id', 'tbl_asnItem2.dayPart_int AS day2LinkType_int', 'tbl_asn.school_id AS day2school_id', DB::raw("IF(tbl_asnItem2.dayPart_int = 4, CONCAT(tbl_asnItem2.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem2.dayPart_int)) AS day2Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem2.dayPercent_dec), 0) AS day2Amount_dec"), 'tbl_asnItem2.start_tm AS start_tm2', 'tbl_asnItem2.end_tm AS end_tm2', 'tbl_asnItem2.lunch_time AS lunch_time2', 'tbl_asnItem3.asnItem_id AS day3asnItem_id', 'tbl_asnItem3.asnDate_dte AS day3asnDate_dte', 'tbl_asn.asn_id AS day3Link_id', 'tbl_asnItem3.dayPart_int AS day3LinkType_int', 'tbl_asn.school_id AS day3school_id', DB::raw("IF(tbl_asnItem3.dayPart_int = 4, CONCAT(tbl_asnItem3.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem3.dayPart_int)) AS day3Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem3.dayPercent_dec), 0) AS day3Amount_dec"), 'tbl_asnItem3.start_tm AS start_tm3', 'tbl_asnItem3.end_tm AS end_tm3', 'tbl_asnItem3.lunch_time AS lunch_time3', 'tbl_asnItem4.asnItem_id AS day4asnItem_id', 'tbl_asnItem4.asnDate_dte AS day4asnDate_dte', 'tbl_asn.asn_id AS day4Link_id', 'tbl_asnItem4.dayPart_int AS day4LinkType_int', 'tbl_asn.school_id AS day4school_id', DB::raw("IF(tbl_asnItem4.dayPart_int = 4, CONCAT(tbl_asnItem4.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem4.dayPart_int)) AS day4Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem4.dayPercent_dec), 0) AS day4Amount_dec"), 'tbl_asnItem4.start_tm AS start_tm4', 'tbl_asnItem4.end_tm AS end_tm4', 'tbl_asnItem4.lunch_time AS lunch_time4', 'tbl_asnItem5.asnItem_id AS day5asnItem_id', 'tbl_asnItem5.asnDate_dte AS day5asnDate_dte', 'tbl_asn.asn_id AS day5Link_id', 'tbl_asnItem5.dayPart_int AS day5LinkType_int', 'tbl_asn.school_id AS day5school_id', DB::raw("IF(tbl_asnItem5.dayPart_int = 4, CONCAT(tbl_asnItem5.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem5.dayPart_int)) AS day5Avail_txt"), DB::raw("IFNULL(SUM(tbl_asnItem5.dayPercent_dec), 0) AS day5Amount_dec"), 'tbl_asnItem5.start_tm AS start_tm5', 'tbl_asnItem5.end_tm AS end_tm5', 'tbl_asnItem5.lunch_time AS lunch_time5')
                         ->whereIn('tbl_asn.asn_id', function ($query) use ($value) {
                             $query->select('tbl_asn.asn_id')
                                 ->from('tbl_asn')
@@ -464,13 +466,23 @@ class FinanceController extends Controller
                         $mailData['mail'] = $contactDet->contactItem_txt;
                         $myVar = new AlertController();
                         $myVar->sendToSchoolApproval($mailData);
+                    } else {
+                        if ($notMailSchoolName != '') {
+                            $notMailSchoolName .= ', ';
+                        }
+                        $notMailSchoolName .= $schoolDet->name_txt;
                     }
                 }
             }
 
-            return true;
+            if ($notMailSchoolName) {
+                $rData['success'] = 'Yes';
+                $rData['message'] = "Please update the contact email for the following school(s) - " . $notMailSchoolName;
+            }
+
+            return $rData;
         }
-        return true;
+        return $rData;
     }
 
     public function sendLogTimesheetToSchool(Request $request)
@@ -488,7 +500,7 @@ class FinanceController extends Controller
                 ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->LeftJoin('tbl_student', 'tbl_asn.student_id', '=', 'tbl_student.student_id')
-                ->select('asnItem_id', 'tbl_asn.teacher_id', 'tbl_asn.asn_id', 'tbl_asn.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), DB::raw("IF(tbl_asn.student_id IS NOT NULL, CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt), '') AS studentName_txt"), 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', 'tbl_asnItem.admin_approve', 'tbl_asnItem.send_to_school', 'tbl_asnItem.rejected_text')
+                ->select('asnItem_id', 'tbl_asn.teacher_id', 'tbl_asn.asn_id', 'tbl_asn.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), DB::raw("IF(tbl_asn.student_id IS NOT NULL, CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt), '') AS studentName_txt"), 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', 'tbl_asnItem.admin_approve', 'tbl_asnItem.send_to_school', 'tbl_asnItem.rejected_text', 'tbl_asnItem.lunch_time')
                 ->whereIn('tbl_asnItem.asnItem_id', $asnIdsArr)
                 ->groupBy('tbl_asn.teacher_id', 'asnItem_id', 'asnDate_dte')
                 ->orderBy('tbl_asn.teacher_id', 'ASC')
@@ -572,7 +584,7 @@ class FinanceController extends Controller
                 ->join('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
                 ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
                 ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
-                ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text')
+                ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text', 'teacher_timesheet_item.lunch_time as t_lunch_time')
                 ->whereIn('teacher_timesheet_item.timesheet_item_id', $asnIdsArr)
                 ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
                 ->orderBy('teacher_timesheet.teacher_id', 'ASC')
@@ -968,7 +980,7 @@ class FinanceController extends Controller
             ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
             ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
             ->LeftJoin('tbl_student', 'tbl_asn.student_id', '=', 'tbl_student.student_id')
-            ->select('asnItem_id', 'tbl_asn.teacher_id', 'tbl_asn.asn_id', 'tbl_asn.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), DB::raw("IF(tbl_asn.student_id IS NOT NULL, CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt), '') AS studentName_txt"), 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', 'tbl_asnItem.admin_approve', 'tbl_asnItem.send_to_school', 'tbl_asnItem.rejected_text')
+            ->select('asnItem_id', 'tbl_asn.teacher_id', 'tbl_asn.asn_id', 'tbl_asn.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), DB::raw("IF(tbl_asn.student_id IS NOT NULL, CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt), '') AS studentName_txt"), 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', 'tbl_asnItem.admin_approve', 'tbl_asnItem.send_to_school', 'tbl_asnItem.rejected_text', 'tbl_asnItem.lunch_time')
             ->where('timesheet_id', NULL)
             ->where('status_int', 3)
             ->whereDate('asnDate_dte', '<=', $weekStartDate)
@@ -1010,12 +1022,15 @@ class FinanceController extends Controller
                     $tStatus = "--";
                 }
 
+                $lunch_time = '';
+                if ($teacher->lunch_time) {
+                    $lunch_time = '( ' . $teacher->lunch_time . ' )';
+                }
+
                 $html .= "<tr class='school-detail-table-data selectTeacherRow' id='selectTeacherRow$teacher->asnItem_id' teacher-id='$teacher->teacher_id' asn-id='$teacher->asn_id' asnitem-id='$teacher->asnItem_id' school-id='$teacher->school_id'>
                     <td>$name</td>
                     <td>$teacher->asnDate_dte</td>
-                    <td>$teacher->datePart_txt</td>
-                    <td>$startTime</td>
-                    <td>$endTime</td>
+                    <td>$teacher->datePart_txt $lunch_time</td>
                     <td>$tStatus</td>
                 </tr>";
             }
@@ -1179,7 +1194,8 @@ class FinanceController extends Controller
             ->join('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
             ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
             ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
-            ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text')
+            ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text', 'teacher_timesheet_item.lunch_time as t_lunch_time')
+            ->where('teacher_timesheet.submit_status', 1)
             ->whereDate('teacher_timesheet_item.asnDate_dte', '<=', $weekEndDate)
             ->where('teacher_timesheet_item.school_id', $school_id)
             ->where('teacher_timesheet_item.admin_approve', '!=', 1)
@@ -1219,12 +1235,16 @@ class FinanceController extends Controller
                     $tStatus = "--";
                 }
 
+                $lunch_time = '';
+                if ($teacher->t_lunch_time) {
+                    $lunch_time = '( ' . $teacher->t_lunch_time . ' )';
+                }
+
                 $html .= "<tr class='school-detail-table-data selectLogTeacherRow' id='selectLogTeacherRow$teacher->timesheet_item_id' teacher-id='$teacher->t_teacher_id' asn-id='$teacher->t_asn_id' timesheet-item-id='$teacher->timesheet_item_id' school-id='$teacher->t_school_id'>
                     <td>$name</td>
                     <td>$teacher->asnDate_dte</td>
                     <td>$teacher->datePart_txt</td>
-                    <td>$startTime</td>
-                    <td>$endTime</td>
+                    <td>$startTime - $endTime $lunch_time</td>
                     <td>$tStatus</td>
                 </tr>";
             }
@@ -1357,16 +1377,22 @@ class FinanceController extends Controller
                         $join->on('tbl_school.school_id', '=', 't_email.school_id');
                     }
                 )
-                ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_invoice.sentMailBy', 'tbl_invoice.sentMailDate', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte')
-                ->whereBetween('tbl_invoice.invoice_id', array($p_invoiceNumberMin, $p_invoiceNumberMax));
+                ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_invoice.sentMailBy', 'tbl_invoice.sentMailDate', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte');
+
             if ($showSent == 'true') {
                 $invoices->where('tbl_invoice.sentMailDate', '!=', NULL);
             } else {
                 $invoices->where('tbl_invoice.sentMailDate', NULL);
             }
 
+            if ($p_invoiceNumberMin && $p_invoiceNumberMax) {
+                $invoices->whereBetween('tbl_invoice.invoice_id', array($p_invoiceNumberMin, $p_invoiceNumberMax));
+            } else {
+                $invoices->limit(100);
+            }
+
             $invoiceList = $invoices->groupBy('tbl_invoice.invoice_id')
-                ->orderBy('tbl_invoice.invoice_id', 'ASC')
+                ->orderBy('tbl_invoice.invoice_id', 'DESC')
                 ->orderBy('invoiceDate_dte', 'DESC')
                 ->orderByRaw('SUM(numItems_dec * charge_dec)')
                 ->get();
@@ -1970,7 +1996,7 @@ class FinanceController extends Controller
                 } else {
                     $invoiceItemList = DB::table('tbl_invoiceItem')
                         ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
-                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
+                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                         ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
@@ -2033,6 +2059,7 @@ class FinanceController extends Controller
                 //     $mailData['invoice_path'] = asset($fPath);
                 //     $mailData['contactDet'] = $contactDet;
                 //     $mailData['mail'] = $sendMail;
+                // $mailData['companyDetail'] = $companyDetail;
                 //     $myVar = new AlertController();
                 //     $myVar->sendSchFinanceInvoiceMail($mailData);
                 // }
@@ -2072,6 +2099,11 @@ class FinanceController extends Controller
                     ->where('tbl_contactItemSch.type_int', 1)
                     ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                     ->first();
+                $companyDetail = DB::table('company')
+                    ->select('company.*')
+                    ->where('company.company_id', $company_id)
+                    ->first();
+
                 $sendMail = '';
                 if ($contactDet && $contactDet->contactItem_txt) {
                     $sendMail = $contactDet->contactItem_txt;
@@ -2092,15 +2124,10 @@ class FinanceController extends Controller
                 } else {
                     $invoiceItemList = DB::table('tbl_invoiceItem')
                         ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
-                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
+                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                         ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
-
-                    $companyDetail = DB::table('company')
-                        ->select('company.*')
-                        ->where('company.company_id', $company_id)
-                        ->first();
 
                     $schoolDetail = DB::table('tbl_school')
                         ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
@@ -2155,6 +2182,7 @@ class FinanceController extends Controller
                     $mailData['invoice_path'] = asset($fPath);
                     $mailData['contactDet'] = $contactDet;
                     $mailData['mail'] = $sendMail;
+                    $mailData['companyDetail'] = $companyDetail;
                     $myVar = new AlertController();
                     $myVar->sendSchFinanceInvoiceMail($mailData);
                 }
@@ -2195,6 +2223,11 @@ class FinanceController extends Controller
                     ->where('tbl_contactItemSch.type_int', 1)
                     ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                     ->first();
+                $companyDetail = DB::table('company')
+                    ->select('company.*')
+                    ->where('company.company_id', $company_id)
+                    ->first();
+
                 $sendMail = '';
                 $invoice_path = '';
                 if ($contactDet && $contactDet->contactItem_txt) {
@@ -2203,10 +2236,10 @@ class FinanceController extends Controller
 
                 $fileExist = 'No';
                 if ($schoolInvoices->invoice_path) {
-                    if (file_exists(public_path($schoolInvoices->invoice_path))) {
-                        $fileExist = 'Yes';
-                        $invoice_path = asset($schoolInvoices->invoice_path);
-                    }
+                    // if (file_exists(public_path($schoolInvoices->invoice_path))) {
+                    //     $fileExist = 'Yes';
+                    //     $invoice_path = asset($schoolInvoices->invoice_path);
+                    // }
                 }
 
                 if ($fileExist == 'Yes') {
@@ -2216,15 +2249,10 @@ class FinanceController extends Controller
                 } else {
                     $invoiceItemList = DB::table('tbl_invoiceItem')
                         ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
-                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
+                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                         ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
-
-                    $companyDetail = DB::table('company')
-                        ->select('company.*')
-                        ->where('company.company_id', $company_id)
-                        ->first();
 
                     $schoolDetail = DB::table('tbl_school')
                         ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
@@ -2286,6 +2314,7 @@ class FinanceController extends Controller
                     $mailData['invoice_name'] = $invoice_name;
                     $mailData['contactDet'] = $contactDet;
                     $mailData['mail'] = $contactDet->contactItem_txt;
+                    $mailData['companyDetail'] = $companyDetail;
                     $myVar = new AlertController();
                     $myVar->sendInvoiceToSchool($mailData);
 
@@ -2354,6 +2383,12 @@ class FinanceController extends Controller
                         ->where('tbl_contactItemSch.type_int', 1)
                         ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                         ->first();
+
+                    $companyDetail = DB::table('company')
+                        ->select('company.*')
+                        ->where('company.company_id', $company_id)
+                        ->first();
+
                     $sendMail = '';
                     $invoice_path = '';
                     if ($contactDet && $contactDet->contactItem_txt) {
@@ -2374,15 +2409,10 @@ class FinanceController extends Controller
                     } else {
                         $invoiceItemList = DB::table('tbl_invoiceItem')
                             ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
-                            ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
+                            ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                             ->where('tbl_invoiceItem.invoice_id', $value->invoice_id)
                             ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                             ->get();
-
-                        $companyDetail = DB::table('company')
-                            ->select('company.*')
-                            ->where('company.company_id', $company_id)
-                            ->first();
 
                         $schoolDetail = DB::table('tbl_school')
                             ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
@@ -2443,6 +2473,7 @@ class FinanceController extends Controller
                         $mailData['invoice_name'] = $invoice_name;
                         $mailData['contactDet'] = $contactDet;
                         $mailData['mail'] = $contactDet->contactItem_txt;
+                        $mailData['companyDetail'] = $companyDetail;
                         $myVar = new AlertController();
                         $myVar->sendInvoiceToSchool($mailData);
 
@@ -2715,7 +2746,13 @@ class FinanceController extends Controller
                             $query->where('SchoolPaymentMethod.descriptionGroup_int', '=', 42);
                         });
                 })
-                ->select('tbl_invoice.invoice_id', 'tbl_invoice.school_id', 'tbl_invoice.invoiceDate_dte As invoice_dte', 'tbl_school.name_txt As school_txt', 'tbl_invoice.paidOn_dte As paid_dte', 'tbl_invoice.school_paid_dte', DB::raw("CONCAT(paymentLoggedTbl.firstName_txt, ' ', paymentLoggedTbl.surname_txt) As remittee_txt"), 'tbl_invoice.sentOn_dte As sent_dte', DB::raw("CONCAT(senderTbl.firstName_txt, ' ', senderTbl.surname_txt) As sender_txt"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"), 'SchoolPaymentMethod.description_txt as paymentMethod_txt');
+                ->LeftJoin('tbl_description as invPaymentMethod', function ($join) {
+                    $join->on('invPaymentMethod.description_int', '=', 'tbl_invoice.paymentMethod_int')
+                        ->where(function ($query) {
+                            $query->where('invPaymentMethod.descriptionGroup_int', '=', 42);
+                        });
+                })
+                ->select('tbl_invoice.invoice_id', 'tbl_invoice.school_id', 'tbl_invoice.invoiceDate_dte As invoice_dte', 'tbl_school.name_txt As school_txt', 'tbl_invoice.paidOn_dte As paid_dte', 'tbl_invoice.school_paid_dte', DB::raw("CONCAT(paymentLoggedTbl.firstName_txt, ' ', paymentLoggedTbl.surname_txt) As remittee_txt"), 'tbl_invoice.sentOn_dte As sent_dte', DB::raw("CONCAT(senderTbl.firstName_txt, ' ', senderTbl.surname_txt) As sender_txt"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"), 'SchoolPaymentMethod.description_txt as paymentMethod_txt', 'invPaymentMethod.description_txt as invPaymentMethod_txt');
             if ($request->include == '') {
                 $Invoices->where('tbl_invoice.paidOn_dte', NULL);
             }

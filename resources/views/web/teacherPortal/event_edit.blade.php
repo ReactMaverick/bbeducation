@@ -11,21 +11,27 @@
 
     <div class="row">
         <div class="col-md-6 form-group modal-input-field">
-            <label class="form-check-label">From</label>
+            <label class="form-check-label">Start Time</label>
             <input type="text" class="form-control field-validate" name="start_tm" id="workStartTimeEdit"
                 value="{{ $eventItemDetail->start_tm }}">
         </div>
 
         <div class="col-md-6 form-group modal-input-field">
-            <label class="form-check-label">To</label>
+            <label class="form-check-label">Finish Time</label>
             <input type="text" class="form-control field-validate" name="end_tm" id="workEndTimeEdit"
                 value="{{ $eventItemDetail->end_tm }}">
         </div>
 
-        <div class="col-md-6 form-group modal-input-field">
+        <div class="col-md-6 form-group modal-input-field" hidden>
             <label class="form-check-label">Hours</label>
             <input type="text" class="form-control onlynumber" name="hours_dec" id="hours_dec_ajx_edit"
                 value="{{ $eventItemDetail->hours_dec }}">
+        </div>
+
+        <div class="col-md-12 form-group modal-input-field">
+            <label class="form-check-label">Mins taken for lunch</label>
+            <input type="text" class="form-control" name="lunch_time" id=""
+                value="{{ $eventItemDetail->lunch_time }}">
         </div>
     </div>
 </div>

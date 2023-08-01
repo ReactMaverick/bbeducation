@@ -96,6 +96,7 @@
                                         <th>Vat</th>
                                         <th>Gross</th>
                                         <th>Paid On</th>
+                                        <th>Payment Method</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -113,6 +114,7 @@
                                                     {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
                                                 @endif
                                             </td>
+                                            <td>{{ $Invoices->invPaymentMethod_txt }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

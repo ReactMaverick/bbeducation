@@ -8,7 +8,7 @@
         * {
             padding: 0;
             margin: 0;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Calibri', sans-serif;
         }
     </style>
 </head>
@@ -26,7 +26,11 @@
                                     style="width: 100px;" />
                             </td>
                             <td style="padding: 10px 20px; text-align: right;">
-                                <p style="color: #888; font-size: 25px;"><strong>Teacher Timesheet</strong></p>
+                                <p style="color: #2c2b2b; font-size: 25px;">
+                                    {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</p>
+                            </td>
+                            <td style="padding: 10px 20px; text-align: right;">
+                                <p style="color: #888; font-size: 25px;"><strong>Weekly Timesheet Log</strong></p>
                             </td>
                         </tr>
                     </table>
@@ -136,10 +140,13 @@
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
                                                             {{ $item->day1Avail_txt }}
-                                                            @if ($item->start_tm1 && $item->end_tm1)
+                                                            {{-- @if ($item->start_tm1 && $item->end_tm1)
                                                                 ({{ date('h:i a', strtotime($item->start_tm1)) }}
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm1)) }})
+                                                            @endif --}}
+                                                            @if ($item->lunch_time1)
+                                                                ({{ $item->lunch_time1 }})
                                                             @endif
                                                         </span>
                                                     </td>
@@ -147,10 +154,13 @@
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
                                                             {{ $item->day2Avail_txt }}
-                                                            @if ($item->start_tm2 && $item->end_tm2)
+                                                            {{-- @if ($item->start_tm2 && $item->end_tm2)
                                                                 ({{ date('h:i a', strtotime($item->start_tm2)) }}
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm2)) }})
+                                                            @endif --}}
+                                                            @if ($item->lunch_time2)
+                                                                ({{ $item->lunch_time2 }})
                                                             @endif
                                                         </span>
                                                     </td>
@@ -158,10 +168,13 @@
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
                                                             {{ $item->day3Avail_txt }}
-                                                            @if ($item->start_tm3 && $item->end_tm3)
+                                                            {{-- @if ($item->start_tm3 && $item->end_tm3)
                                                                 ({{ date('h:i a', strtotime($item->start_tm3)) }}
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm3)) }})
+                                                            @endif --}}
+                                                            @if ($item->lunch_time3)
+                                                                ({{ $item->lunch_time3 }})
                                                             @endif
                                                         </span>
                                                     </td>
@@ -169,10 +182,13 @@
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
                                                             {{ $item->day4Avail_txt }}
-                                                            @if ($item->start_tm4 && $item->end_tm4)
+                                                            {{-- @if ($item->start_tm4 && $item->end_tm4)
                                                                 ({{ date('h:i a', strtotime($item->start_tm4)) }}
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm4)) }})
+                                                            @endif --}}
+                                                            @if ($item->lunch_time4)
+                                                                ({{ $item->lunch_time4 }})
                                                             @endif
                                                         </span>
                                                     </td>
@@ -180,10 +196,13 @@
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
                                                             {{ $item->day5Avail_txt }}
-                                                            @if ($item->start_tm5 && $item->end_tm5)
+                                                            {{-- @if ($item->start_tm5 && $item->end_tm5)
                                                                 ({{ date('h:i a', strtotime($item->start_tm5)) }}
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm5)) }})
+                                                            @endif --}}
+                                                            @if ($item->lunch_time5)
+                                                                ({{ $item->lunch_time5 }})
                                                             @endif
                                                         </span>
                                                     </td>
@@ -208,7 +227,8 @@
 
             <tr>
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
-                    <h3 style="margin-bottom: 10px;">Best regards, BBEDUCATION</h3>
+                    <h3 style="margin-bottom: 10px;">Best regards,
+                        {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</h3>
                 </td>
             </tr>
             <tr>

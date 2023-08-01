@@ -134,7 +134,7 @@ class AlertController extends Controller
                         ->cc($mailData['cc_mail'])
                         ->subject($mailData['subject'])
                         ->attach($mailData['invoice_path'], ['as' => $mailData['subject'] . '.pdf'])
-                        ->attach($mailData['invoice_path2'], ['as' => 'Candidate Timesheet.pdf'])
+                        // ->attach($mailData['invoice_path2'], ['as' => 'Candidate Timesheet.pdf'])
                         ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
@@ -161,8 +161,8 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                echo $e;
-                exit;
+                // echo $e;
+                // exit;
             }
         }
     }

@@ -41,7 +41,8 @@
                                                 {{ $teacher->firstName_txt . ' (' . $teacher->knownAs_txt . ') ' . $teacher->surname_txt }}
                                             @endif
                                         </td>
-                                        <td>{{ $teacher->professionalType_txt . ' - ' . $teacher->ageRangeSpecialism_txt }}</td>
+                                        <td>{{ $teacher->professionalType_txt . ' - ' . $teacher->ageRangeSpecialism_txt }}
+                                        </td>
                                         <td>{{ $teacher->appStatus_txt }}</td>
                                         <td>{{ $teacher->daysWorked_dec }}</td>
                                         <td>
@@ -231,6 +232,7 @@
             });
 
             // $('#advanceSearchDiv').css('display', 'none');
+            $("#searchKey").focus();
         });
 
         function teacherDetail(teacher_id) {
