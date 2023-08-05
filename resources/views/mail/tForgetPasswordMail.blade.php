@@ -42,20 +42,17 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <p>Dear <strong>{{ $mailData['name_txt'] }},</strong>
+                                <p>Dear <strong>{{ $mailData['userExist']->firstName_txt }}
+                                        {{ $mailData['userExist']->surname_txt }},</strong>
                                 </p>
-                                <p>Your login user name is '{{ $mailData['mail'] }}'.</p>
+                                <p>Your login user name is '{{ $mailData['mail'] }}'</p>
+                                <p>Your forget password OTP is '{{ $mailData['rand_otp'] }}'</p>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
-            <tr>
-                <td style="padding: 20px;">
-                    <h1 style="font-size: 20px;">Please click the bellow link to reset your login password.</h1>
-                    <p style="font-size: 16px;"><a href="{{ $mailData['rUrl'] }}">{{ $mailData['rUrl'] }}</a></p>
-                </td>
-            </tr>
+
             <tr>
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
                     <h3 style="margin-bottom: 10px;">Best regards,

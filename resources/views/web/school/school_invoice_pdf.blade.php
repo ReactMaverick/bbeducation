@@ -440,7 +440,7 @@
                             </td>
                             <td>
                                 {{-- {{ $schoolInvoices->admin_fname . ' ' . $schoolInvoices->admin_sname }} --}}
-                                {{ $schoolDetail->name_txt }}
+                                {{ $contactDet->firstName_txt . ' ' . $contactDet->surname_txt }}
                             </td>
                         </tr>
                         <tr>
@@ -449,7 +449,7 @@
                             </td>
                             <td>
                                 {{-- {{ $schoolInvoices->admin_email }} --}}
-                                {{ $schoolDetail->login_mail }}
+                                {{ $contactDet->contactItem_txt }}
                             </td>
                         </tr>
                         <tr>
@@ -482,8 +482,10 @@
                             @if ($invoiceItem->dayAvail_txt)
                                 {{ ' - ' . $invoiceItem->dayAvail_txt }}
                                 @if ($invoiceItem->start_tm && $invoiceItem->end_tm)
-                                    ( {{ date('h:i a', strtotime($invoiceItem->start_tm)) }} -
-                                    {{ date('h:i a', strtotime($invoiceItem->end_tm)) }} )
+                                    {{-- ( {{ date('h:i a', strtotime($invoiceItem->start_tm)) }} -
+                                    {{ date('h:i a', strtotime($invoiceItem->end_tm)) }} ) --}}
+                                    ( {{ $invoiceItem->start_tm }} -
+                                    {{ $invoiceItem->end_tm }} )
                                 @endif
                             @else
                                 ({{ (int) $invoiceItem->numItems_dec }} Item(s) X

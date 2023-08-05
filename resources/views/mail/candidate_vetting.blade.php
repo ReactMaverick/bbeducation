@@ -18,7 +18,7 @@
     <div style="width: 100%; display:block;">
         {{-- <h2>Welcome</h2> --}}
         <p>
-            <strong>Hi {{ $mailData['schoolDetail'] ? $mailData['schoolDetail']->name_txt : '' }}!</strong>
+            <strong>Dear {{ $mailData['schoolDetail'] ? $mailData['schoolDetail']->name_txt : '' }}!</strong>
         </p><br>
 
         {!! $mailData['mail_description'] !!}

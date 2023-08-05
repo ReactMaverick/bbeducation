@@ -42,7 +42,8 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <p>Hi <strong>{{ $mailData['firstName_txt'] }} {{ $mailData['surname_txt'] }},</strong>
+                                <p>Dear <strong>{{ $mailData['firstName_txt'] }}
+                                        {{ $mailData['surname_txt'] }},</strong>
                                 </p>
                                 <p>Your login user name is '{{ $mailData['mail'] }}'</p>
                             </td>

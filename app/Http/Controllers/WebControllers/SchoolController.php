@@ -1537,7 +1537,17 @@ class SchoolController extends Controller
                 ->where('company.company_id', $company_id)
                 ->first();
 
-            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+            $contactDet = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                ->first();
+
+            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
             $pdfName = 'invoice-' . $id . '.pdf';
             // return $pdf->download('test.pdf');
             return $pdf->stream($pdfName);
@@ -3349,7 +3359,17 @@ class SchoolController extends Controller
                 ->where('company.company_id', $company_id)
                 ->first();
 
-            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+            $contactDet = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                ->first();
+
+            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
             $pdfName = 'invoice-' . $id . '.pdf';
             // return $pdf->download('test.pdf');
             return $pdf->stream($pdfName);

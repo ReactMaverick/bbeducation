@@ -17,19 +17,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<style>
-    .forget_pass_btn {
-        display: flex;
-        justify-content: end;
-        align-items: center;
-        margin-top: 10px;
-    }
-
-    .forget_pass_btn a {
-        color: #bb0404;
-        text-decoration: none;
-    }
-</style>
 
 <body>
     <div class="container-fluid">
@@ -39,7 +26,7 @@
                     <div class="login-page-img">
                         <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="">
                     </div>
-                    <h2>CANDIDATE Login</h2>
+                    <h2>Forget Password</h2>
 
                     @if (count($errors) > 0)
                         @foreach ($errors->all() as $error)
@@ -51,77 +38,49 @@
                         @endforeach
                     @endif
 
-                    @if (Session::has('loginError'))
+                    @if (Session::has('otp_error'))
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">Error:</span>
-                            {!! session('loginError') !!}
+                            {!! session('otp_error') !!}
                         </div>
                     @endif
 
-                    @if (Session::has('loginSuccess'))
+                    @if (Session::has('otp_success'))
                         <div class="alert alert-success" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            {!! session('loginSuccess') !!}
+                            {!! session('otp_success') !!}
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ url('/teacher/processLogin') }}" class="form-validate">
+                    <?php
+                    $forget_user_id = '';
+                    if (Session::has('forget_pass_teacher_id')) {
+                        $forget_user_id = session('forget_pass_teacher_id');
+                    }
+                    ?>
+
+                    <form method="POST" action="{{ url('/teacher/forgetPasswordOtpVerify') }}" class="form-validate">
                         @csrf
+                        <input type="hidden" name="forget_user_id" value="{{ $forget_user_id }}">
                         <div class="form-group row login-form-sec">
-                            <label for="user_name" class="col-sm-3 col-form-label">Username</label>
+                            <label for="" class="col-sm-3 col-form-label">OTP</label>
                             <div class="col-sm-9">
-                                <input type="text"
-                                    class="form-control password-field field-validate @error('user_name') is-invalid @enderror"
-                                    id="user_name" name="user_name" value="{{ old('user_name') }}"
-                                    autocomplete="user_name" autofocus placeholder="Username">
-
-                                @error('user_name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <input type="text" class="form-control field-validate" id=""
+                                    name="f_pass_otp" autofocus placeholder="Enter OTP">
                             </div>
                         </div>
-                        <div class="form-group row login-form-sec">
-                            <label for="password" class="col-sm-3 col-form-label">Password</label>
-                            <div class="col-sm-9">
-                                <input type="password"
-                                    class="form-control password-field field-validate @error('password') is-invalid @enderror"
-                                    id="password" name="password" autocomplete="current-password"
-                                    placeholder="Password">
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="login-button-sec">
-                            <button type="button" id="loginResetBtn">Reset</button>
+                        <div class="login-button-sec" style="justify-content: center">
                             <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                        <div class="forget_pass_btn">
-                            <a href="{{ URL::to('/teacher/forget-password') }}">Forget password</a>
                         </div>
                     </form>
                 </div>
-                <div>
 
-                </div>
             </div>
         </div>
     </div>
 
     @include('web.teacherPortal.common.scripts')
-
-    <script>
-        $(document).on('click', '#loginResetBtn', function() {
-            $('#user_name').val('');
-            $('#password').val('');
-        });
-    </script>
 
 </body>
 

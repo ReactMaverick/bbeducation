@@ -49,7 +49,7 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <p>Hi <strong>{{ $mailData['contactDet']->firstName_txt }}
+                                <p>Dear <strong>{{ $mailData['contactDet']->firstName_txt }}
                                         {{ $mailData['contactDet']->surname_txt }},</strong></p>
                                 <p>Please check the timesheet(s).</p>
                                 {{-- <p>{{ isset($mailData['teacherList'][0]) ? $mailData['teacherList'][0]->name_txt : '' }}</p> --}}
@@ -82,15 +82,18 @@
                                             <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 Date
                                             </th>
-                                            <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
+                                            {{-- <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 Part
-                                            </th>
+                                            </th> --}}
                                             {{-- <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 Start Time
                                             </th>
                                             <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 End Time
                                             </th> --}}
+                                            <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
+                                                Start Time - Finish Time
+                                            </th>
                                             <th style="border-left: 1px solid #6fa179; padding: 5px 0;">
                                                 Approve
                                             </th>
@@ -140,12 +143,12 @@
                                                             {{ $item->asnDate_dte }}
                                                         </span>
                                                     </td>
-                                                    <td
+                                                    {{-- <td
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
                                                             {{ $item->datePart_txt . $lunch_time }}
                                                         </span>
-                                                    </td>
+                                                    </td> --}}
                                                     {{-- <td
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <span class="label label-primary">
@@ -158,6 +161,12 @@
                                                             {{ $endTime }}
                                                         </span>
                                                     </td> --}}
+                                                    <td
+                                                        style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
+                                                        <span class="label label-primary">
+                                                            {{ $item->t_start_tm . ' - ' . $item->t_end_tm . $lunch_time }}
+                                                        </span>
+                                                    </td>
                                                     <td
                                                         style="text-align: center;padding-top: 10px;border-left: 1px solid #6fa179;">
                                                         <a href="{{ $rUrl . '?status=approve' }}">Click Here</a>

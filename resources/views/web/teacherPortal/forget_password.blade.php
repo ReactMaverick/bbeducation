@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Teacher Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('web/css/style.css') }}">
@@ -16,6 +16,20 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .forget_pass_btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .forget_pass_btn a {
+            color: #bb0404;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -29,7 +43,7 @@
                     <div class="login-page-img">
                         <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="">
                     </div>
-                    {{-- <h2>welcome to bumblebee education</h2> --}}
+                    <h2>Forget Password</h2>
 
                     @if (count($errors) > 0)
                         @foreach ($errors->all() as $error)
@@ -41,68 +55,48 @@
                         @endforeach
                     @endif
 
-                    @if (Session::has('loginError'))
+                    @if (Session::has('fp_error'))
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">Error:</span>
-                            {!! session('loginError') !!}
+                            {!! session('fp_error') !!}
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ url('/processLogin') }}" class="form-validate">
+                    @if (Session::has('loginSuccess'))
+                        <div class="alert alert-success" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            {!! session('loginSuccess') !!}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ url('/teacher/forgetPasswordSendOtp') }}" class="form-validate">
                         @csrf
                         <div class="form-group row login-form-sec">
-                            <label for="user_name" class="col-sm-3 col-form-label">Username</label>
+                            <label for="" class="col-sm-3 col-form-label">Email</label>
                             <div class="col-sm-9">
-                                <input type="text"
-                                    class="form-control password-field field-validate @error('user_name') is-invalid @enderror"
-                                    id="user_name" name="user_name" value="{{ old('user_name') }}"
-                                    autocomplete="user_name" autofocus placeholder="Username">
-
-                                @error('user_name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <input type="text" class="form-control email-validate" id="" name="email"
+                                    autofocus placeholder="Enter email">
                             </div>
                         </div>
-                        <div class="form-group row login-form-sec">
-                            <label for="password" class="col-sm-3 col-form-label">Password</label>
-                            <div class="col-sm-9">
-                                <input type="password"
-                                    class="form-control password-field field-validate @error('password') is-invalid @enderror"
-                                    id="password" name="password" autocomplete="current-password"
-                                    placeholder="Password">
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="login-button-sec" style="justify-content: center">
+                            <button type="submit" class="btn btn-primary" id="fPassBtn">Submit</button>
                         </div>
-                        <div class="login-button-sec">
-                            <button type="button" id="loginResetBtn">Reset</button>
-                            <button type="submit" class="btn btn-primary" id="loginBtn">Submit</button>
+
+                        <div class="forget_pass_btn">
+                            <span><a href="{{ URL::to('/teacher') }}">Login</a></span>
                         </div>
                     </form>
                 </div>
-                <div>
 
-                </div>
             </div>
         </div>
     </div>
 
-    @include('web.common.scripts')
+    @include('web.teacherPortal.common.scripts')
 
     <script>
-        $(document).on('click', '#loginResetBtn', function() {
-            $('#user_name').val('');
-            $('#password').val('');
-        });
-
-        $(document).on('click', '#loginBtn', function() {
+        $(document).on('click', '#fPassBtn', function() {
             $('#fullLoader').show();
         });
     </script>

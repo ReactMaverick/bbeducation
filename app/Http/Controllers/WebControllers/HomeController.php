@@ -8,6 +8,7 @@ use Auth;
 use DB;
 use Session;
 use Illuminate\Support\Carbon;
+use App\Http\Controllers\WebControllers\AlertController;
 
 class HomeController extends Controller
 {
@@ -20,6 +21,7 @@ class HomeController extends Controller
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
+
             if ($request->date) {
                 $weekStartDate = $request->date;
             } else {
@@ -113,6 +115,44 @@ class HomeController extends Controller
             //         't_billed.actualBilled_dec',
             //     ])
             //     ->first();
+
+            // dbs expire mail
+            // $adminMail = $webUserLoginData->user_name;
+            $adminMail = 'sanjoy.websadroit@gmail.com';
+            $twentyOneDaysBeforeToday = Carbon::now()->toDateString();
+
+            $expiredCertificates = DB::table('tbl_teacher')
+                ->join('tbl_teacherdbs', 'tbl_teacherdbs.teacher_id', '=', 'tbl_teacher.teacher_id')
+                ->select('tbl_teacher.*', 'tbl_teacherdbs.DBSDate_dte', 'tbl_teacherdbs.certificateNumber_txt', DB::raw('DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR) AS expiry_date'))
+                ->whereRaw('DATE_SUB(DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR), INTERVAL -21 DAY) = ?', [$twentyOneDaysBeforeToday])
+                ->where('tbl_teacher.is_delete', 0)
+                ->where('tbl_teacher.isCurrent_status', '<>', 0)
+                ->where('tbl_teacher.company_id', $company_id)
+                ->get();
+            // echo "<pre>";
+            // print_r($expiredCertificates);
+            // exit;
+            $mail_is_sent = DB::table('dbs_expire_mail')
+                ->where('date', date('Y-m-d'))
+                ->where('mail_id', $adminMail)
+                ->where('company_id', $company_id)
+                ->first();
+
+            if (count($expiredCertificates) > 0 && !$mail_is_sent) {
+                DB::table('dbs_expire_mail')
+                    ->insertGetId([
+                        'date' => date('Y-m-d'),
+                        'mail_id' => $adminMail,
+                        'company_id' => $company_id,
+                        'timestamp_ts' => date('Y-m-d H:i:s')
+                    ]);
+
+                $mailData['subject'] = "Teacher DBS Record";
+                $mailData['mail'] = $adminMail;
+                $mailData['expiredCertificates'] = $expiredCertificates;
+                $myVar = new AlertController();
+                $myVar->dbsExpireAdmin($mailData);
+            }
 
             return view("web.dashboard", ['title' => $title, 'latestAssignment' => $latestAssignment, 'headerTitle' => $headerTitle, 'weekStartDate' => $weekStartDate, 'asnSubquery' => $asnSubquery, 'invoiceSubquery' => $invoiceSubquery, 'billedSubquery' => $billedSubquery]);
         } else {

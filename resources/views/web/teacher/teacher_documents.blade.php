@@ -176,7 +176,7 @@
                                             {{ $teacherDetail->vetUpdateService_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->vetUpdateServiceChecked_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetUpdateServiceChecked_dte)) : '' }}
+                                        <p>{{ $teacherDetail->vetUpdateServiceChecked_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetUpdateServiceChecked_dte)) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -189,7 +189,7 @@
                                             {{ $teacherDetail->vetList99Checked_dte != null ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->vetList99Checked_dte != null ? 'Expires on ' . date('d-m-Y', strtotime($teacherDetail->vetList99Checked_dte . ' +1 years')) : '' }}
+                                        <p>{{ $teacherDetail->vetList99Checked_dte != null ? 'Expires on ' . date('d-m-Y', strtotime($teacherDetail->vetList99Checked_dte . ' +1 years')) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -202,7 +202,7 @@
                                             {{ $teacherDetail->vetNCTLChecked_dte != null ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->vetNCTLChecked_dte != null ? 'Expires on ' . date('d-m-Y', strtotime($teacherDetail->vetNCTLChecked_dte . ' +1 years')) : '' }}
+                                        <p>{{ $teacherDetail->vetNCTLChecked_dte != null ? 'Expires on ' . date('d-m-Y', strtotime($teacherDetail->vetNCTLChecked_dte . ' +1 years')) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -230,7 +230,7 @@
                                             {{ $teacherDetail->safeguardingInduction_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->safeguardingInduction_dte != null ? date('d-m-Y', strtotime($teacherDetail->safeguardingInduction_dte)) : '' }}
+                                        <p>{{ $teacherDetail->safeguardingInduction_dte != null ? date('d-m-Y', strtotime($teacherDetail->safeguardingInduction_dte)) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@
                                             {{ $teacherDetail->vets128_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->vets128_dte != null ? date('d-m-Y', strtotime($teacherDetail->vets128_dte)) : '' }}
+                                        <p>{{ $teacherDetail->vets128_dte != null ? date('d-m-Y', strtotime($teacherDetail->vets128_dte)) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -258,7 +258,7 @@
                                             {{ $teacherDetail->vetEEARestriction_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->vetEEARestriction_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetEEARestriction_dte)) : '' }}
+                                        <p>{{ $teacherDetail->vetEEARestriction_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetEEARestriction_dte)) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -280,7 +280,7 @@
                                             {{ $teacherDetail->rightToWork_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->rightToWork_dte != null ? date('d-m-Y', strtotime($teacherDetail->rightToWork_dte)) : '' }}
+                                        <p>{{ $teacherDetail->rightToWork_dte != null ? date('d-m-Y', strtotime($teacherDetail->rightToWork_dte)) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -302,7 +302,7 @@
                                             {{ $teacherDetail->overseasPolicy_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->overseasPolicy_dte != null ? date('d-m-Y', strtotime($teacherDetail->overseasPolicy_dte)) : '' }}
+                                        <p>{{ $teacherDetail->overseasPolicy_dte != null ? date('d-m-Y', strtotime($teacherDetail->overseasPolicy_dte)) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -330,7 +330,7 @@
                                             {{ $teacherDetail->vetQualification_status == '-1' ? 'checked' : '' }}>
                                     </div>
                                     <div class="teacher-document-third-name-text">
-                                        <p>{{ $teacherDetail->vetQualification_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetQualification_dte)) : '' }}
+                                        <p>{{ $teacherDetail->vetQualification_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetQualification_dte)) : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
@@ -379,7 +379,7 @@
                             <table class="table school-detail-page-table" id="myTable">
                                 <thead>
                                     <tr class="school-detail-table-heading">
-                                        <th>#</th>
+                                        <th>No.</th>
                                         {{-- <th>File Name</th> --}}
                                         <th>Document Type</th>
                                         <th>File Type</th>
@@ -732,9 +732,10 @@
                                         id="rightToWork_status" value="1"
                                         {{ $teacherDetail->rightToWork_status == '-1' ? 'checked' : '' }}>
                                 </div>
-                                <div class="form-group calendar-form-filter">
+                                <div class="form-group calendar-form-filter rightToWorkDiv"
+                                    style="display: {{ $teacherDetail->rightToWork_status == '-1' ? 'block' : 'none' }}">
                                     <select
-                                        class="form-control select2 {{ $teacherDetail->rightToWork_status == '-1' ? 'field-validate-5' : '' }}"
+                                        class="form-control {{ $teacherDetail->rightToWork_status == '-1' ? 'field-validate-5' : '' }}"
                                         name="rightToWork_int" id="rightToWork_int" style="width:100%;">
                                         <option value="">Choose one</option>
                                         @foreach ($RTW_list as $key2 => $RTW)
@@ -745,6 +746,13 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group modal-input-field rightToWorkDiv"
+                                    style="display: {{ $teacherDetail->rightToWork_status == '-1' ? 'block' : 'none' }}">
+                                    <label class="form-check-label">Date On Update</label>
+                                    <input type="text" class="form-control datePickerPaste" name="rightToWork_dte"
+                                        id="rightToWork_dteId"
+                                        value="{{ $teacherDetail->rightToWork_dte != null ? date('d/m/Y', strtotime($teacherDetail->rightToWork_dte)) : '' }}">
+                                </div>
 
                                 <div class="modal-side-field">
                                     <label for="overseasPolicy_status">Overseas Police</label>
@@ -752,9 +760,10 @@
                                         id="overseasPolicy_status" value="1"
                                         {{ $teacherDetail->overseasPolicy_status == '-1' ? 'checked' : '' }}>
                                 </div>
-                                <div class="form-group calendar-form-filter">
+                                <div class="form-group calendar-form-filter OverseasPolisyDiv"
+                                    style="display: {{ $teacherDetail->overseasPolicy_status == '-1' ? 'block' : 'none' }}">
                                     <select
-                                        class="form-control select2 {{ $teacherDetail->overseasPolicy_status == '-1' ? 'field-validate-5' : '' }}"
+                                        class="form-control {{ $teacherDetail->overseasPolicy_status == '-1' ? 'field-validate-5' : '' }}"
                                         name="overseasPolicy_txt" id="overseasPolicy_txt" style="width:100%;">
                                         <option value="">Choose one</option>
                                         <option value="N/A"
@@ -764,6 +773,13 @@
                                             {{ $teacherDetail->overseasPolicy_txt == 'Clear' ? 'selected' : '' }}>Clear
                                         </option>
                                     </select>
+                                </div>
+                                <div class="form-group modal-input-field OverseasPolisyDiv"
+                                    style="display: {{ $teacherDetail->overseasPolicy_status == '-1' ? 'block' : 'none' }}">
+                                    <label class="form-check-label">Date On Update</label>
+                                    <input type="text" class="form-control datePickerPaste" name="overseasPolicy_dte"
+                                        id="overseasPolicy_dteId"
+                                        value="{{ $teacherDetail->overseasPolicy_dte != null ? date('d/m/Y', strtotime($teacherDetail->overseasPolicy_dte)) : '' }}">
                                 </div>
 
                                 <div class="modal-side-field mb-2">
@@ -1135,18 +1151,38 @@
         $(document).ready(function() {
             $("#rightToWork_status").change(function() {
                 if ($(this).is(":checked")) {
+                    $('.rightToWorkDiv').css('display', 'block');
+
                     $('#rightToWork_int').addClass('field-validate-5');
+                    $('#rightToWork_dteId').addClass('field-validate-5');
                 } else {
+                    $('.rightToWorkDiv').css('display', 'none');
+
                     $('#rightToWork_int').closest(".form-group").removeClass('has-error');
                     $('#rightToWork_int').removeClass('field-validate-5');
+                    $('#rightToWork_int').val('');
+
+                    $('#rightToWork_dteId').closest(".form-group").removeClass('has-error');
+                    $('#rightToWork_dteId').removeClass('field-validate-5');
+                    $('#rightToWork_dteId').val('');
                 }
             });
             $("#overseasPolicy_status").change(function() {
                 if ($(this).is(":checked")) {
+                    $('.OverseasPolisyDiv').css('display', 'block');
+
                     $('#overseasPolicy_txt').addClass('field-validate-5');
+                    $('#overseasPolicy_dteId').addClass('field-validate-5');
                 } else {
+                    $('.OverseasPolisyDiv').css('display', 'none');
+
                     $('#overseasPolicy_txt').closest(".form-group").removeClass('has-error');
                     $('#overseasPolicy_txt').removeClass('field-validate-5');
+                    $('#overseasPolicy_txt').val('');
+
+                    $('#overseasPolicy_dteId').closest(".form-group").removeClass('has-error');
+                    $('#overseasPolicy_dteId').removeClass('field-validate-5');
+                    $('#overseasPolicy_dteId').val('');
                 }
             });
         });

@@ -49,27 +49,27 @@
 
 
 <script>
-    $(document).ready(function() {
-        $('#workStartTimeEdit, #workEndTimeEdit').timepicker({
-            // timeFormat: 'h:i a',
-            // 'step': 30,
-            // 'forceRoundTime': true,
-            autocomplete: true
-        });
-    });
+    // $(document).ready(function() {
+    //     $('#workStartTimeEdit, #workEndTimeEdit').timepicker({
+    //         // timeFormat: 'h:i a',
+    //         // 'step': 30,
+    //         // 'forceRoundTime': true,
+    //         autocomplete: true
+    //     });
+    // });
 
-    $(document).on('change', '#workStartTimeEdit, #workEndTimeEdit', function() {
-        var startTime = $('#workStartTimeEdit').val();
-        var endTime = $('#workEndTimeEdit').val();
-        $('#hours_dec_ajx_edit').val('');
-        if (startTime, endTime) {
-            var start = parseTime1(startTime);
-            var end = parseTime1(endTime);
-            // Calculate the time difference in hours
-            var hoursDiff = (end - start) / 1000 / 60 / 60;
-            $('#hours_dec_ajx_edit').val(hoursDiff);
-        }
-    });
+    // $(document).on('change', '#workStartTimeEdit, #workEndTimeEdit', function() {
+    //     var startTime = $('#workStartTimeEdit').val();
+    //     var endTime = $('#workEndTimeEdit').val();
+    //     $('#hours_dec_ajx_edit').val('');
+    //     if (startTime, endTime) {
+    //         var start = parseTime1(startTime);
+    //         var end = parseTime1(endTime);
+    //         // Calculate the time difference in hours
+    //         var hoursDiff = (end - start) / 1000 / 60 / 60;
+    //         $('#hours_dec_ajx_edit').val(hoursDiff);
+    //     }
+    // });
 
     function parseTime1(time) {
         var parts = time.match(/(\d+):(\d+)(am|pm)/);

@@ -1031,6 +1031,8 @@ class FinanceController extends Controller
                     <td>$name</td>
                     <td>$teacher->asnDate_dte</td>
                     <td>$teacher->datePart_txt $lunch_time</td>
+                    <td>$teacher->start_tm</td>
+                    <td>$teacher->end_tm</td>
                     <td>$tStatus</td>
                 </tr>";
             }
@@ -1091,6 +1093,8 @@ class FinanceController extends Controller
                 'charge_dec' => $request->charge_dec,
                 'dayPercent_dec' => $request->dayPercent_dec,
                 'hours_dec' => $request->hours_dec,
+                'start_tm' => $request->start_tm,
+                'end_tm' => $request->end_tm,
                 'cost_dec' => $request->cost_dec
             ]);
 
@@ -1214,14 +1218,14 @@ class FinanceController extends Controller
                     $name = $teacher->knownAs_txt . ' ' . $teacher->surname_txt;
                 }
 
-                $startTime = '';
-                if ($teacher->t_start_tm) {
-                    $startTime = date("h:i a", strtotime($teacher->t_start_tm));
-                }
-                $endTime = '';
-                if ($teacher->t_end_tm) {
-                    $endTime = date("h:i a", strtotime($teacher->t_end_tm));
-                }
+                // $startTime = '';
+                // if ($teacher->t_start_tm) {
+                //     $startTime = date("h:i a", strtotime($teacher->t_start_tm));
+                // }
+                // $endTime = '';
+                // if ($teacher->t_end_tm) {
+                //     $endTime = date("h:i a", strtotime($teacher->t_end_tm));
+                // }
                 $rejectText = '';
                 if ($teacher->t_rejected_text) {
                     $rejectText = '( ' . $teacher->t_rejected_text . ' )';
@@ -1243,8 +1247,7 @@ class FinanceController extends Controller
                 $html .= "<tr class='school-detail-table-data selectLogTeacherRow' id='selectLogTeacherRow$teacher->timesheet_item_id' teacher-id='$teacher->t_teacher_id' asn-id='$teacher->t_asn_id' timesheet-item-id='$teacher->timesheet_item_id' school-id='$teacher->t_school_id'>
                     <td>$name</td>
                     <td>$teacher->asnDate_dte</td>
-                    <td>$teacher->datePart_txt</td>
-                    <td>$startTime - $endTime $lunch_time</td>
+                    <td>$teacher->t_start_tm - $teacher->t_end_tm $lunch_time</td>
                     <td>$tStatus</td>
                 </tr>";
             }
@@ -1835,6 +1838,16 @@ class FinanceController extends Controller
                 ->groupBy('tbl_invoice.invoice_id')
                 ->first();
             if ($schoolInvoices) {
+                $contactDet = DB::table('tbl_schoolContact')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                    ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                    ->where('tbl_schoolContact.isCurrent_status', '-1')
+                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                    ->where('tbl_contactItemSch.type_int', 1)
+                    ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                    ->first();
+
                 $invoiceItemList = DB::table('tbl_invoiceItem')
                     ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
                     ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
@@ -1876,7 +1889,7 @@ class FinanceController extends Controller
                     ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                     ->first();
 
-                $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+                $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
                 $pdfName = 'invoice-' . $invoice_id . '.pdf';
                 $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                 $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2035,7 +2048,7 @@ class FinanceController extends Controller
                         ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2158,7 +2171,7 @@ class FinanceController extends Controller
                         ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2283,7 +2296,7 @@ class FinanceController extends Controller
                         ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2397,10 +2410,10 @@ class FinanceController extends Controller
 
                     $fileExist = 'No';
                     if ($schoolInvoices->invoice_path) {
-                        if (file_exists(public_path($schoolInvoices->invoice_path))) {
-                            $fileExist = 'Yes';
-                            $invoice_path = asset($schoolInvoices->invoice_path);
-                        }
+                        // if (file_exists(public_path($schoolInvoices->invoice_path))) {
+                        //     $fileExist = 'Yes';
+                        //     $invoice_path = asset($schoolInvoices->invoice_path);
+                        // }
                     }
 
                     if ($fileExist == 'Yes') {
@@ -2443,7 +2456,7 @@ class FinanceController extends Controller
                             ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                             ->first();
 
-                        $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+                        $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
                         $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
                         $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                         $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2837,7 +2850,17 @@ class FinanceController extends Controller
                 ->where('company.company_id', $company_id)
                 ->first();
 
-            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail]);
+            $contactDet = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                ->first();
+
+            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
             $pdfName = 'invoice-' . $invoice_id . '.pdf';
             // return $pdf->download('test.pdf');
             return $pdf->stream($pdfName);

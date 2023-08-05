@@ -84,8 +84,8 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                echo $e;
-                exit;
+                // echo $e;
+                // exit;
             }
         }
     }
@@ -217,6 +217,38 @@ class AlertController extends Controller
             } catch (\Exception $e) {
                 // echo $e;
                 // exit;
+            }
+        }
+    }
+
+    public function dbsExpireAdmin($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/dbs_expire_admin', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject($mailData['subject'])->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function fPasswordOtpAlert($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/tForgetPasswordMail', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Forget Password")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                echo $e;
+                exit;
             }
         }
     }

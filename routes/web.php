@@ -158,6 +158,8 @@ Route::post('/delete_teacher', [TeacherController::class, 'delete_teacher']);
 
 Route::get('/teacher/reference-request/{id}/{mail}', [TeacherController::class, 'teacherReferenceRequest']);
 Route::post('/addReferenceRequest', [TeacherController::class, 'addReferenceRequest']);
+
+Route::get('/teacherDbsExpire', [TeacherController::class, 'teacherDbsExpire']);
 // Teacher
 
 // School
@@ -315,6 +317,13 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'teacher'], function 
     Route::post('/LogTeacherStatusUpdateHead', [TeacherController::class, 'LogTeacherStatusUpdateHead']);
 
     Route::get('/testMail', [TeacherController::class, 'testMail']);
+
+    Route::get('/forget-password', [TeacherController::class, 'forgetPassword']);
+    Route::post('/forgetPasswordSendOtp', [TeacherController::class, 'forgetPasswordSendOtp']);
+    Route::get('/forget-password-otp', [TeacherController::class, 'forgetPasswordOtp']);
+    Route::post('/forgetPasswordOtpVerify', [TeacherController::class, 'forgetPasswordOtpVerify']);
+    Route::get('/forget-password-generate', [TeacherController::class, 'forgetPasswordGenerate']);
+    Route::post('/processPassword', [TeacherController::class, 'processPassword']);
 });
 
 // School Portal

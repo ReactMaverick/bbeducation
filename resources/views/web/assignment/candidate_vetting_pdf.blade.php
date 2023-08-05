@@ -63,7 +63,7 @@
             float: left;
             width: 33.33%;
             text-align: left;
-            font-size: 24px;
+            font-size: 20px;
             color: #fff;
             margin-top: 15px;
         }
@@ -72,7 +72,7 @@
             float: left;
             width: 33.33%;
             text-align: center;
-            font-size: 24px;
+            font-size: 20px;
             color: #fff;
             margin-top: 15px;
         }
@@ -347,7 +347,7 @@
         .header-2 {
             padding: 10px 20px;
             margin-bottom: 15px;
-            margin-top: 50px;
+            margin-top: 60px;
             border-bottom: 1px solid #AAAAAA;
             position: relative;
             background-color: #5b9cd7;
@@ -513,7 +513,7 @@
                             DBS Enhanced Disclosure Date:
                         </td>
                         <td>
-                            {{ $vettingDetail->dbsDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dbsDate_dte)) : '' }}
+                            {{ $vettingDetail->dbsDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->dbsDate_dte)) : 'N/A' }}
                         </td>
                         <td>
 
@@ -527,7 +527,7 @@
                             {{ $vettingDetail->updateService_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->updateServiceSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->updateServiceSeen_dte)) : '' }}
+                            {{ $vettingDetail->updateServiceSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->updateServiceSeen_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -538,7 +538,7 @@
                             {{ $vettingDetail->list99CheckResult_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->list99Seen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->list99Seen_dte)) : '' }}
+                            {{ $vettingDetail->list99Seen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->list99Seen_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -549,7 +549,7 @@
                             {{ $vettingDetail->NCTLCheck_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->NCTLSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->NCTLSeen_dte)) : '' }}
+                            {{ $vettingDetail->NCTLSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->NCTLSeen_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -560,7 +560,7 @@
                             {{ $vettingDetail->safeguardingInduction_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->safeguardingInduction_dte != '' ? date('d/m/Y', strtotime($vettingDetail->safeguardingInduction_dte)) : '' }}
+                            {{ $vettingDetail->safeguardingInduction_dte != '' ? date('d/m/Y', strtotime($vettingDetail->safeguardingInduction_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -571,7 +571,7 @@
                             {{ $vettingDetail->s128MgmtCheck_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->s128MgmtCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->s128MgmtCheck_dte)) : '' }}
+                            {{ $vettingDetail->s128MgmtCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->s128MgmtCheck_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -582,7 +582,7 @@
                             {{ $vettingDetail->EEARestrictCheck_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->EEARestrictCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->EEARestrictCheck_dte)) : '' }}
+                            {{ $vettingDetail->EEARestrictCheck_dte != '' ? date('d/m/Y', strtotime($vettingDetail->EEARestrictCheck_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     {{-- <tr>
@@ -619,7 +619,7 @@
                             {{ $vettingDetail->healthDeclaration_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->healthDeclarationSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->healthDeclarationSeen_dte)) : '' }}
+                            {{ $vettingDetail->healthDeclarationSeen_dte != '' ? date('d/m/Y', strtotime($vettingDetail->healthDeclarationSeen_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     {{-- <tr>
@@ -667,7 +667,7 @@
                             {{ $vettingDetail->rightToWork_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->vet_rightToWork_dte ? date('d/m/Y', strtotime($vettingDetail->vet_rightToWork_dte)) : '' }}
+                            {{ $vettingDetail->vet_rightToWork_dte ? date('d/m/Y', strtotime($vettingDetail->vet_rightToWork_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -678,7 +678,7 @@
                             {{ $vettingDetail->vet_overseasPolicy_txt }}
                         </td>
                         <td>
-                            {{ $vettingDetail->vet_overseasPolicy_dte ? date('d/m/Y', strtotime($vettingDetail->vet_overseasPolicy_dte)) : '' }}
+                            {{ $vettingDetail->vet_overseasPolicy_dte ? date('d/m/Y', strtotime($vettingDetail->vet_overseasPolicy_dte)) : 'N/A' }}
                         </td>
                     </tr>
                     <tr>
@@ -686,7 +686,7 @@
                             Face to Face Interview Date:
                         </td>
                         <td>
-                            {{ $vettingDetail->interviewDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->interviewDate_dte)) : '' }}
+                            {{ $vettingDetail->interviewDate_dte != '' ? date('d/m/Y', strtotime($vettingDetail->interviewDate_dte)) : 'N/A' }}
                         </td>
                         <td>
 

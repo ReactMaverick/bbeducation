@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Teacher Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('web/css/style.css') }}">
@@ -19,9 +19,6 @@
 </head>
 
 <body>
-    <div id="fullLoader">
-        <div class="loadingDiv"></div>
-    </div>
     <div class="container-fluid">
         <div class="container login-container">
             <div class="login-row">
@@ -29,7 +26,7 @@
                     <div class="login-page-img">
                         <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="">
                     </div>
-                    {{-- <h2>welcome to bumblebee education</h2> --}}
+                    <h2>Generate New Password</h2>
 
                     @if (count($errors) > 0)
                         @foreach ($errors->all() as $error)
@@ -41,71 +38,57 @@
                         @endforeach
                     @endif
 
-                    @if (Session::has('loginError'))
+                    @if (Session::has('up_password_error'))
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">Error:</span>
-                            {!! session('loginError') !!}
+                            {!! session('up_password_error') !!}
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ url('/processLogin') }}" class="form-validate">
+                    @if (Session::has('up_password_success'))
+                        <div class="alert alert-success" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            {!! session('up_password_success') !!}
+                        </div>
+                    @endif
+
+                    <?php
+                    $forget_user_id = '';
+                    if (Session::has('forget_pass_teacher_id')) {
+                        $forget_user_id = session('forget_pass_teacher_id');
+                    }
+                    ?>
+
+                    <form method="POST" action="{{ url('/teacher/processPassword') }}" class="form-validate">
                         @csrf
-                        <div class="form-group row login-form-sec">
-                            <label for="user_name" class="col-sm-3 col-form-label">Username</label>
-                            <div class="col-sm-9">
-                                <input type="text"
-                                    class="form-control password-field field-validate @error('user_name') is-invalid @enderror"
-                                    id="user_name" name="user_name" value="{{ old('user_name') }}"
-                                    autocomplete="user_name" autofocus placeholder="Username">
+                        <input type="hidden" name="forget_user_id" value="{{ $forget_user_id }}">
 
-                                @error('user_name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div class="form-group row login-form-sec">
+                            <label for="" class="col-sm-3 col-form-label">Password</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control field-validate" id=""
+                                    name="password" autofocus placeholder="Password">
                             </div>
                         </div>
                         <div class="form-group row login-form-sec">
-                            <label for="password" class="col-sm-3 col-form-label">Password</label>
+                            <label for="" class="col-sm-3 col-form-label">Confirm Password</label>
                             <div class="col-sm-9">
-                                <input type="password"
-                                    class="form-control password-field field-validate @error('password') is-invalid @enderror"
-                                    id="password" name="password" autocomplete="current-password"
-                                    placeholder="Password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <input type="password" class="form-control field-validate" id=""
+                                    name="confirm_password" autofocus placeholder="Confirm Password">
                             </div>
                         </div>
-                        <div class="login-button-sec">
-                            <button type="button" id="loginResetBtn">Reset</button>
-                            <button type="submit" class="btn btn-primary" id="loginBtn">Submit</button>
+
+                        <div class="login-button-sec" style="justify-content: center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                 </div>
-                <div>
 
-                </div>
             </div>
         </div>
     </div>
 
-    @include('web.common.scripts')
-
-    <script>
-        $(document).on('click', '#loginResetBtn', function() {
-            $('#user_name').val('');
-            $('#password').val('');
-        });
-
-        $(document).on('click', '#loginBtn', function() {
-            $('#fullLoader').show();
-        });
-    </script>
+    @include('web.teacherPortal.common.scripts')
 
 </body>
 

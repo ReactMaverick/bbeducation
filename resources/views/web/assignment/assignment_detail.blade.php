@@ -378,7 +378,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group modal-input-field" id="blockBookingStartTimeDiv"
-                                    style="display: none;" hidden>
+                                    style="display: none;">
                                     <label class="form-check-label">Start Time</label>
                                     <input type="text" class="form-control" name="start_tm"
                                         id="blockBookingStartTime" value="">
@@ -386,7 +386,7 @@
                             </div>
                             <div class="col-md-6 modal-form-right-sec">
                                 <div class="form-group modal-input-field" id="blockBookingEndTimeDiv"
-                                    style="display: none;" hidden>
+                                    style="display: none;">
                                     <label class="form-check-label">Finish Time</label>
                                     <input type="text" class="form-control" name="end_tm" id="blockBookingEndTime"
                                         value="">
@@ -566,14 +566,14 @@
         });
 
 
-        $(document).ready(function() {
-            $('#blockBookingStartTime, #blockBookingEndTime').timepicker({
-                // timeFormat: 'h:i a',
-                // 'step': 30,
-                // 'forceRoundTime': true,
-                autocomplete: true
-            });
-        });
+        // $(document).ready(function() {
+        //     $('#blockBookingStartTime, #blockBookingEndTime').timepicker({
+        //         // timeFormat: 'h:i a',
+        //         // 'step': 30,
+        //         // 'forceRoundTime': true,
+        //         autocomplete: true
+        //     });
+        // });
 
         $(document).ready(function() {
             var SITEURL = "{{ url('/') }}";
@@ -870,43 +870,43 @@
                 $('#blockHour').addClass('number-validate-2');
                 $('#blockHourDiv').show();
 
-                // $('#blockBookingStartTime').addClass('field-validate-2');
-                // $('#blockBookingStartTimeDiv').show();
-                // $('#blockBookingEndTime').addClass('field-validate-2');
-                // $('#blockBookingEndTimeDiv').show();
+                $('#blockBookingStartTime').addClass('field-validate-2');
+                $('#blockBookingStartTimeDiv').show();
+                $('#blockBookingEndTime').addClass('field-validate-2');
+                $('#blockBookingEndTimeDiv').show();
             } else {
                 $('#blockHour').val('');
                 $('#blockHour').removeClass('number-validate-2');
                 $('#blockHour').closest(".form-group").removeClass('has-error');
                 $('#blockHourDiv').hide();
 
-                // $('#blockBookingStartTime').removeClass('field-validate-2');
-                // $('#blockBookingStartTime').closest(".form-group").removeClass('has-error');
-                // $('#blockBookingStartTimeDiv').hide();
-                // $('#blockBookingEndTime').removeClass('field-validate-2');
-                // $('#blockBookingEndTime').closest(".form-group").removeClass('has-error');
-                // $('#blockBookingEndTimeDiv').hide();
+                $('#blockBookingStartTime').removeClass('field-validate-2');
+                $('#blockBookingStartTime').closest(".form-group").removeClass('has-error');
+                $('#blockBookingStartTimeDiv').hide();
+                $('#blockBookingEndTime').removeClass('field-validate-2');
+                $('#blockBookingEndTime').closest(".form-group").removeClass('has-error');
+                $('#blockBookingEndTimeDiv').hide();
             }
         });
 
-        $(document).on('change', '#blockBookingStartTime, #blockBookingEndTime', function() {
-            var startTime = $('#blockBookingStartTime').val();
-            var endTime = $('#blockBookingEndTime').val();
-            $('#blockHour').val('');
-            if (startTime, endTime) {
-                // var currentDate = new Date();
-                // var startDate = new Date(currentDate.toDateString() + ' ' + startTime);
-                // var endDate = new Date(currentDate.toDateString() + ' ' + endTime);
-                // var timeDiff = endDate - startDate;
-                // var hoursDiff = timeDiff / (1000 * 60 * 60);
-                var start = parseTime(startTime);
-                var end = parseTime(endTime);
-                // Calculate the time difference in hours
-                var hoursDiff = (end - start) / 1000 / 60 / 60;
+        // $(document).on('change', '#blockBookingStartTime, #blockBookingEndTime', function() {
+        //     var startTime = $('#blockBookingStartTime').val();
+        //     var endTime = $('#blockBookingEndTime').val();
+        //     $('#blockHour').val('');
+        //     if (startTime, endTime) {
+        //         // var currentDate = new Date();
+        //         // var startDate = new Date(currentDate.toDateString() + ' ' + startTime);
+        //         // var endDate = new Date(currentDate.toDateString() + ' ' + endTime);
+        //         // var timeDiff = endDate - startDate;
+        //         // var hoursDiff = timeDiff / (1000 * 60 * 60);
+        //         var start = parseTime(startTime);
+        //         var end = parseTime(endTime);
+        //         // Calculate the time difference in hours
+        //         var hoursDiff = (end - start) / 1000 / 60 / 60;
 
-                $('#blockHour').val(hoursDiff);
-            }
-        });
+        //         $('#blockHour').val(hoursDiff);
+        //     }
+        // });
 
         function parseTime(time) {
             var parts = time.match(/(\d+):(\d+)(am|pm)/);

@@ -246,7 +246,7 @@ class AssignmentController extends Controller
                                 $query->where('tbl_description.descriptionGroup_int', '=', 20);
                             });
                     })
-                    ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('CONCAT(IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt),IF(lunch_time, CONCAT(" ( ", lunch_time,")"), "")) AS title'))
+                    ->select('tbl_asnItem.asnItem_id as id', 'tbl_asnItem.asnDate_dte as start', DB::raw('CONCAT(IF(dayPart_int = 4, CONCAT("Set hours: ", hours_dec), description_txt),IF(lunch_time, CONCAT(" ( ", lunch_time," )"), "")) AS title'))
                     ->where('tbl_asnItem.asn_id', $id)
                     ->where('tbl_asnItem.asnDate_dte', '>=', $startDate)
                     ->where('tbl_asnItem.asnDate_dte', '<=', $endDate)
@@ -530,15 +530,15 @@ class AssignmentController extends Controller
             $end_tm = date("H:i:s", strtotime($request->end_tm));
         }
 
-        $diff = NULL;
-        if ($request->start_tm && $request->end_tm) {
-            $start  = new Carbon($request->start_tm);
-            $end    = new Carbon($request->end_tm);
-            $totalDuration = $end->diffInSeconds($start);
-            // $diff = gmdate('H', $totalDuration);
-            $totalDurationInHours = $totalDuration / 3600;
-            $diff = round($totalDurationInHours, 1);
-        }
+        // $diff = NULL;
+        // if ($request->start_tm && $request->end_tm) {
+        //     $start  = new Carbon($request->start_tm);
+        //     $end    = new Carbon($request->end_tm);
+        //     $totalDuration = $end->diffInSeconds($start);
+        //     // $diff = gmdate('H', $totalDuration);
+        //     $totalDurationInHours = $totalDuration / 3600;
+        //     $diff = round($totalDurationInHours, 1);
+        // }
 
         DB::table('tbl_asnItem')
             ->where('asnItem_id', $editEventId)
@@ -549,10 +549,10 @@ class AssignmentController extends Controller
                 'dayPercent_dec' => $request->dayPercent_dec,
                 'event_note' => $request->event_note,
                 'lunch_time' => $request->lunch_time,
-                'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
+                'hours_dec' => $request->hours_dec,
                 'cost_dec' => $request->cost_dec,
-                'start_tm' => $start_tm,
-                'end_tm' => $end_tm
+                'start_tm' => $request->start_tm,
+                'end_tm' => $request->end_tm
             ]);
 
         $eventItem = DB::table('tbl_asnItem')
@@ -598,22 +598,24 @@ class AssignmentController extends Controller
 
         $start_tm = NULL;
         if ($request->start_tm) {
-            $start_tm = date("H:i:s", strtotime($request->start_tm));
+            // $start_tm = date("H:i:s", strtotime($request->start_tm));
+            $start_tm = $request->start_tm;
         }
         $end_tm = NULL;
         if ($request->end_tm) {
-            $end_tm = date("H:i:s", strtotime($request->end_tm));
+            // $end_tm = date("H:i:s", strtotime($request->end_tm));
+            $end_tm = $request->end_tm;
         }
 
-        $diff = NULL;
-        if ($request->start_tm && $request->end_tm) {
-            $start  = new Carbon($request->start_tm);
-            $end    = new Carbon($request->end_tm);
-            $totalDuration = $end->diffInSeconds($start);
-            // $diff = gmdate('H', $totalDuration);
-            $totalDurationInHours = $totalDuration / 3600;
-            $diff = round($totalDurationInHours, 1);
-        }
+        // $diff = NULL;
+        // if ($request->start_tm && $request->end_tm) {
+        //     $start  = new Carbon($request->start_tm);
+        //     $end    = new Carbon($request->end_tm);
+        //     $totalDuration = $end->diffInSeconds($start);
+        //     // $diff = gmdate('H', $totalDuration);
+        //     $totalDurationInHours = $totalDuration / 3600;
+        //     $diff = round($totalDurationInHours, 1);
+        // }
 
         $Detail = DB::table('tbl_asn')
             ->where('tbl_asn.asn_id', $assignmentId)
@@ -659,7 +661,7 @@ class AssignmentController extends Controller
                                 'asnDate_dte' => $date->format('Y-m-d'),
                                 'dayPart_int' => $blockDayPart,
                                 'dayPercent_dec' => $dayPercent_dec,
-                                'hours_dec' => $request->blockHour ? $request->blockHour : $diff,
+                                'hours_dec' => $request->blockHour,
                                 'charge_dec' => $charge_dec,
                                 'cost_dec' => $cost_dec,
                                 'start_tm' => $start_tm,
@@ -705,7 +707,7 @@ class AssignmentController extends Controller
                                 'asnDate_dte' => $date->format('Y-m-d'),
                                 'dayPart_int' => $blockDayPart,
                                 'dayPercent_dec' => $dayPercent_dec,
-                                'hours_dec' => $request->blockHour ? $request->blockHour : $diff,
+                                'hours_dec' => $request->blockHour,
                                 'charge_dec' => $charge_dec,
                                 'cost_dec' => $cost_dec,
                                 'start_tm' => $start_tm,

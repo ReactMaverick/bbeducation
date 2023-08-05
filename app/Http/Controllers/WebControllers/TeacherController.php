@@ -3087,7 +3087,7 @@ class TeacherController extends Controller
                 ->first();
 
             $vetUpdateService_status = 0;
-            $vetUpdateServiceChecked_dte = $teacherDetail->vetUpdateServiceChecked_dte;
+            $vetUpdateServiceChecked_dte = NULL;
             if ($request->vetUpdateService_status) {
                 $vetUpdateService_status = -1;
                 $vetUpdateServiceChecked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
@@ -3096,7 +3096,7 @@ class TeacherController extends Controller
                 $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
                 array_push($historyArr, $nArr);
             }
-            $vetUpdateServiceReg_dte = $teacherDetail->vetUpdateServiceReg_dte;
+            $vetUpdateServiceReg_dte = NULL;
             if ($request->vetUpdateServiceReg_dte != '') {
                 $vetUpdateServiceReg_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
 
@@ -3104,110 +3104,132 @@ class TeacherController extends Controller
                 $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
                 array_push($historyArr, $nArr);
             }
-            $vetList99Checked_dte = $teacherDetail->vetList99Checked_dte;
+            $vetList99Checked_dte = NULL;
             if ($request->vetList99Checked_dte) {
-                $vetList99Checked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetList99Checked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetList99Checked_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetList99Checked_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
-            $vetNctlExempt_dte = $teacherDetail->vetNctlExempt_dte;
+            $vetNctlExempt_dte = NULL;
             if ($request->vetNctlExempt_dte) {
-                $vetNctlExempt_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetNctlExempt_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetNctlExempt_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetNctlExempt_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
-            $vetNCTLChecked_dte = $teacherDetail->vetNCTLChecked_dte;
+            $vetNCTLChecked_dte = NULL;
             if ($request->vetNCTLChecked_dte) {
-                $vetNCTLChecked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetNCTLChecked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetNCTLChecked_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetNCTLChecked_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
             $vetDisqualAssociation_status = 0;
-            $vetDisqualAssociation_dte = $teacherDetail->vetDisqualAssociation_dte;
+            $vetDisqualAssociation_dte = NULL;
             if ($request->vetDisqualAssociation_status) {
                 $vetDisqualAssociation_status = -1;
-                $vetDisqualAssociation_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetDisqualAssociation_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetDisqualAssociation_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetDisqualAssociation_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
             $safeguardingInduction_status = 0;
-            $safeguardingInduction_dte = $teacherDetail->safeguardingInduction_dte;
+            $safeguardingInduction_dte = NULL;
             if ($request->safeguardingInduction_status) {
                 $safeguardingInduction_status = -1;
-                $safeguardingInduction_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $safeguardingInduction_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $safeguardingInduction_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'safeguardingInduction_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
             $vets128_status = 0;
-            $vets128_dte = $teacherDetail->vets128_dte;
+            $vets128_dte = NULL;
             if ($request->vets128_status) {
                 $vets128_status = -1;
-                $vets128_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vets128_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vets128_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vets128_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
             $vetEEARestriction_status = 0;
-            $vetEEARestriction_dte = $teacherDetail->vetEEARestriction_dte;
+            $vetEEARestriction_dte = NULL;
             if ($request->vetEEARestriction_status) {
                 $vetEEARestriction_status = -1;
-                $vetEEARestriction_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetEEARestriction_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetEEARestriction_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetEEARestriction_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
             $vetRadical_status = 0;
-            $vetRadical_dte = $teacherDetail->vetRadical_dte;
+            $vetRadical_dte = NULL;
             if ($request->vetRadical_status) {
                 $vetRadical_status = -1;
-                $vetRadical_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetRadical_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetRadical_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetRadical_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
             $vetQualification_status = 0;
-            $vetQualification_dte = $teacherDetail->vetQualification_dte;
+            $vetQualification_dte = NULL;
             if ($request->vetQualification_status) {
                 $vetQualification_status = -1;
-                $vetQualification_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetQualification_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetQualification_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetQualification_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
 
             $rightToWork_status = 0;
-            $rightToWork_dte = $teacherDetail->rightToWork_dte;
+            $rightToWork_int = NULL;
+            $rightToWork_dte = NULL;
             if ($request->rightToWork_status) {
                 $rightToWork_status = -1;
-                $rightToWork_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $rightToWork_int = $request->rightToWork_int;
+                $rightToWork_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->rightToWork_dte)));
 
                 $nArr['field_name'] = 'rightToWork_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->rightToWork_dte)));
                 array_push($historyArr, $nArr);
             }
 
             $overseasPolicy_status = 0;
-            $overseasPolicy_dte = $teacherDetail->overseasPolicy_dte;
+            $overseasPolicy_txt = '';
+            $overseasPolicy_dte = NULL;
             if ($request->overseasPolicy_status) {
                 $overseasPolicy_status = -1;
-                $overseasPolicy_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $overseasPolicy_txt = $request->overseasPolicy_txt;
+                $overseasPolicy_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->overseasPolicy_dte)));
 
                 $nArr['field_name'] = 'overseasPolicy_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->overseasPolicy_dte)));
                 array_push($historyArr, $nArr);
             }
 
@@ -3223,10 +3245,10 @@ class TeacherController extends Controller
                     'vetDisqualAssociation_dte' => $vetDisqualAssociation_dte,
                     'safeguardingInduction_status' => $safeguardingInduction_status,
                     'safeguardingInduction_dte' => $safeguardingInduction_dte,
-                    'rightToWork_int' => $request->rightToWork_int,
+                    'rightToWork_int' => $rightToWork_int,
                     'rightToWork_status' => $rightToWork_status,
                     'rightToWork_dte' => $rightToWork_dte,
-                    'overseasPolicy_txt' => $request->overseasPolicy_txt,
+                    'overseasPolicy_txt' => $overseasPolicy_txt,
                     'overseasPolicy_status' => $overseasPolicy_status,
                     'overseasPolicy_dte' => $overseasPolicy_dte,
                     'vets128_status' => $vets128_status,
@@ -6076,28 +6098,32 @@ class TeacherController extends Controller
                 ->where('company.company_id', $company_id)
                 ->first();
         }
-        if ($request->teacher_timesheet_id) {
+        // if ($request->teacher_timesheet_id) {
+        //     $teacher_timesheet_id = $request->teacher_timesheet_id;
+        //     $timesheetExist = DB::table('teacher_timesheet')
+        //         ->where('teacher_timesheet_id', $request->teacher_timesheet_id)
+        //         ->first();
+        // } else {
+        //     $teacher_timesheet_id = DB::table('teacher_timesheet')
+        //         ->insertGetId([
+        //             'asn_id' => $request->asnId,
+        //             'school_id' => $request->school_id,
+        //             'teacher_id' => $request->teacher_id,
+        //             'start_date' => $request->weekStartDate,
+        //             'end_date' => $request->weekEndDate,
+        //             'timestamp_ts' => date('Y-m-d H:i:s')
+        //         ]);
+
+        //     $timesheetExist = DB::table('teacher_timesheet')
+        //         ->where('teacher_timesheet_id', $teacher_timesheet_id)
+        //         ->first();
+        // }
+        $timesheetExist = DB::table('teacher_timesheet')
+            ->where('teacher_timesheet_id', $request->teacher_timesheet_id)
+            ->first();
+
+        if ($request->teacher_timesheet_id && $timesheetExist) {
             $teacher_timesheet_id = $request->teacher_timesheet_id;
-            $timesheetExist = DB::table('teacher_timesheet')
-                ->where('teacher_timesheet_id', $request->teacher_timesheet_id)
-                ->first();
-        } else {
-            $teacher_timesheet_id = DB::table('teacher_timesheet')
-                ->insertGetId([
-                    'asn_id' => $request->asnId,
-                    'school_id' => $request->school_id,
-                    'teacher_id' => $request->teacher_id,
-                    'start_date' => $request->weekStartDate,
-                    'end_date' => $request->weekEndDate,
-                    'timestamp_ts' => date('Y-m-d H:i:s')
-                ]);
-
-            $timesheetExist = DB::table('teacher_timesheet')
-                ->where('teacher_timesheet_id', $teacher_timesheet_id)
-                ->first();
-        }
-
-        if ($timesheetExist) {
             DB::table('teacher_timesheet')
                 ->where('teacher_timesheet_id', $teacher_timesheet_id)
                 ->update([
@@ -6105,32 +6131,32 @@ class TeacherController extends Controller
                     'reject_status' => 0
                 ]);
 
-            foreach ($request->asnDate_dte as $key => $value) {
-                if (($request->timesheet_item_id[$key] == '' || $request->timesheet_item_id[$key] == null) && $request->asnItem_id[$key]) {
-                    $asnItem_id = $request->asnItem_id[$key];
-                    $asnItemExist = DB::table('tbl_asnItem')
-                        ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
-                        ->select('tbl_asnItem.*', 'tbl_asn.school_id', 'tbl_asn.teacher_id')
-                        ->where('tbl_asnItem.asnItem_id', $asnItem_id)
-                        ->first();
-                    if ($asnItemExist) {
-                        DB::table('teacher_timesheet_item')
-                            ->insertGetId([
-                                'teacher_timesheet_id' => $teacher_timesheet_id,
-                                'asn_id' => $asnItemExist->asn_id,
-                                'asnItem_id' => $asnItemExist->asnItem_id,
-                                'school_id' => $asnItemExist->school_id,
-                                'teacher_id' => $asnItemExist->teacher_id,
-                                'asnDate_dte' => date('Y-m-d', strtotime($asnItemExist->asnDate_dte)),
-                                'dayPart_int' => $asnItemExist->dayPart_int,
-                                'hours_dec' => $asnItemExist->hours_dec,
-                                'start_tm' => $asnItemExist->start_tm,
-                                'end_tm' => $asnItemExist->end_tm,
-                                'timestamp_ts' => date('Y-m-d H:i:s')
-                            ]);
-                    }
-                }
-            }
+            // foreach ($request->asnDate_dte as $key => $value) {
+            //     if (($request->timesheet_item_id[$key] == '' || $request->timesheet_item_id[$key] == null) && $request->asnItem_id[$key]) {
+            //         $asnItem_id = $request->asnItem_id[$key];
+            //         $asnItemExist = DB::table('tbl_asnItem')
+            //             ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+            //             ->select('tbl_asnItem.*', 'tbl_asn.school_id', 'tbl_asn.teacher_id')
+            //             ->where('tbl_asnItem.asnItem_id', $asnItem_id)
+            //             ->first();
+            //         if ($asnItemExist) {
+            //             DB::table('teacher_timesheet_item')
+            //                 ->insertGetId([
+            //                     'teacher_timesheet_id' => $teacher_timesheet_id,
+            //                     'asn_id' => $asnItemExist->asn_id,
+            //                     'asnItem_id' => $asnItemExist->asnItem_id,
+            //                     'school_id' => $asnItemExist->school_id,
+            //                     'teacher_id' => $asnItemExist->teacher_id,
+            //                     'asnDate_dte' => date('Y-m-d', strtotime($asnItemExist->asnDate_dte)),
+            //                     'dayPart_int' => $asnItemExist->dayPart_int,
+            //                     'hours_dec' => $asnItemExist->hours_dec,
+            //                     'start_tm' => $asnItemExist->start_tm,
+            //                     'end_tm' => $asnItemExist->end_tm,
+            //                     'timestamp_ts' => date('Y-m-d H:i:s')
+            //                 ]);
+            //         }
+            //     }
+            // }
 
             $timesheetDet = DB::table('teacher_timesheet')
                 ->LeftJoin('tbl_school', 'teacher_timesheet.school_id', '=', 'tbl_school.school_id')
@@ -6287,58 +6313,59 @@ class TeacherController extends Controller
 
     public function teacherTimesheetUpdate(Request $request)
     {
-        $start  = new Carbon($request->start_tm);
-        $end    = new Carbon($request->end_tm);
-        $totalDuration = $end->diffInSeconds($start);
-        // $diff = gmdate('H', $totalDuration);
-        $totalDurationInHours = $totalDuration / 3600;
-        $diff = round($totalDurationInHours, 1);
+        // $start  = new Carbon($request->start_tm);
+        // $end    = new Carbon($request->end_tm);
+        // $totalDuration = $end->diffInSeconds($start);
+        // // $diff = gmdate('H', $totalDuration);
+        // $totalDurationInHours = $totalDuration / 3600;
+        // $diff = round($totalDurationInHours, 1);
 
         if ($request->timesheet_item_id) {
             $timesheet_item_id = $request->timesheet_item_id;
             DB::table('teacher_timesheet_item')
                 ->where('timesheet_item_id', $timesheet_item_id)
                 ->update([
-                    'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
-                    'start_tm' => date("H:i:s", strtotime($request->start_tm)),
-                    'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                    // 'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
+                    'start_tm' => $request->start_tm,
+                    'end_tm' => $request->end_tm,
                     'lunch_time' => $request->lunch_time,
                 ]);
-        } else if ($request->asnItem_id) {
-            $asnItem_id = $request->asnItem_id;
-            $asnItemExist = DB::table('tbl_asnItem')
-                ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
-                ->select('tbl_asnItem.*', 'tbl_asn.school_id', 'tbl_asn.teacher_id')
-                ->where('tbl_asnItem.asnItem_id', $asnItem_id)
-                ->first();
-            if ($asnItemExist) {
-                $timesheetExist = DB::table('teacher_timesheet')
-                    ->select('teacher_timesheet.*')
-                    ->where('asn_id', $asnItemExist->asn_id)
-                    ->where('school_id', $asnItemExist->school_id)
-                    ->where('teacher_id', $asnItemExist->teacher_id)
-                    ->where('start_date', '<=', $asnItemExist->asnDate_dte)
-                    ->where('end_date', '>=', $asnItemExist->asnDate_dte)
-                    ->first();
-                if ($timesheetExist) {
-                    DB::table('teacher_timesheet_item')
-                        ->insertGetId([
-                            'teacher_timesheet_id' => $timesheetExist->teacher_timesheet_id,
-                            'asn_id' => $asnItemExist->asn_id,
-                            'asnItem_id' => $asnItemExist->asnItem_id,
-                            'school_id' => $asnItemExist->school_id,
-                            'teacher_id' => $asnItemExist->teacher_id,
-                            'asnDate_dte' => date('Y-m-d', strtotime($asnItemExist->asnDate_dte)),
-                            'dayPart_int' => 4,
-                            'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
-                            'start_tm' => date("H:i:s", strtotime($request->start_tm)),
-                            'end_tm' => date("H:i:s", strtotime($request->end_tm)),
-                            'lunch_time' => $request->lunch_time,
-                            'timestamp_ts' => date('Y-m-d H:i:s')
-                        ]);
-                }
-            }
         }
+        // else if ($request->asnItem_id) {
+        //     $asnItem_id = $request->asnItem_id;
+        //     $asnItemExist = DB::table('tbl_asnItem')
+        //         ->LeftJoin('tbl_asn', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+        //         ->select('tbl_asnItem.*', 'tbl_asn.school_id', 'tbl_asn.teacher_id')
+        //         ->where('tbl_asnItem.asnItem_id', $asnItem_id)
+        //         ->first();
+        //     if ($asnItemExist) {
+        //         $timesheetExist = DB::table('teacher_timesheet')
+        //             ->select('teacher_timesheet.*')
+        //             ->where('asn_id', $asnItemExist->asn_id)
+        //             ->where('school_id', $asnItemExist->school_id)
+        //             ->where('teacher_id', $asnItemExist->teacher_id)
+        //             ->where('start_date', '<=', $asnItemExist->asnDate_dte)
+        //             ->where('end_date', '>=', $asnItemExist->asnDate_dte)
+        //             ->first();
+        //         if ($timesheetExist) {
+        //             DB::table('teacher_timesheet_item')
+        //                 ->insertGetId([
+        //                     'teacher_timesheet_id' => $timesheetExist->teacher_timesheet_id,
+        //                     'asn_id' => $asnItemExist->asn_id,
+        //                     'asnItem_id' => $asnItemExist->asnItem_id,
+        //                     'school_id' => $asnItemExist->school_id,
+        //                     'teacher_id' => $asnItemExist->teacher_id,
+        //                     'asnDate_dte' => date('Y-m-d', strtotime($asnItemExist->asnDate_dte)),
+        //                     'dayPart_int' => 4,
+        //                     // 'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
+        //                     'start_tm' => date("H:i:s", strtotime($request->start_tm)),
+        //                     'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+        //                     'lunch_time' => $request->lunch_time,
+        //                     'timestamp_ts' => date('Y-m-d H:i:s')
+        //                 ]);
+        //         }
+        //     }
+        // }
 
         return redirect()->back()->with('success', "Record updated successfully.");
     }
@@ -6372,12 +6399,12 @@ class TeacherController extends Controller
                 ]);
         }
 
-        $start  = new Carbon($request->start_tm);
-        $end    = new Carbon($request->end_tm);
-        $totalDuration = $end->diffInSeconds($start);
-        // $diff = gmdate('H', $totalDuration);
-        $totalDurationInHours = $totalDuration / 3600;
-        $diff = round($totalDurationInHours, 1);
+        // $start  = new Carbon($request->start_tm);
+        // $end    = new Carbon($request->end_tm);
+        // $totalDuration = $end->diffInSeconds($start);
+        // // $diff = gmdate('H', $totalDuration);
+        // $totalDurationInHours = $totalDuration / 3600;
+        // $diff = round($totalDurationInHours, 1);
 
         if ($teacher_timesheet_id) {
             DB::table('teacher_timesheet_item')
@@ -6389,9 +6416,11 @@ class TeacherController extends Controller
                     'teacher_id' => $request->teacher_id,
                     'asnDate_dte' => date('Y-m-d', strtotime($request->asnDate_dte)),
                     'dayPart_int' => 4,
-                    'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
-                    'start_tm' => date("H:i:s", strtotime($request->start_tm)),
-                    'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                    // 'hours_dec' => $request->hours_dec ? $request->hours_dec : $diff,
+                    // 'start_tm' => date("H:i:s", strtotime($request->start_tm)),
+                    // 'end_tm' => date("H:i:s", strtotime($request->end_tm)),
+                    'start_tm' => $request->start_tm,
+                    'end_tm' => $request->end_tm,
                     'lunch_time' => $request->lunch_time,
                     'timestamp_ts' => date('Y-m-d H:i:s')
                 ]);
@@ -6553,6 +6582,122 @@ class TeacherController extends Controller
             return redirect()->intended('/teacher');
         }
     }
+
+    public function forgetPassword(Request $request)
+    {
+        $title = array('pageTitle' => "Forget Password");
+        return view("web.teacherPortal.forget_password", ['title' => $title]);
+    }
+
+    public function forgetPasswordSendOtp(Request $request)
+    {
+        $validator = Validator::make(
+            array(
+                'email' => $request->email
+            ),
+            array(
+                'email' => 'required'
+            )
+        );
+        if ($validator->fails()) {
+            return redirect()->back()->with('fp_error', $validator);
+        } else {
+            $email = $request->email;
+            $userExist = DB::table('tbl_teacher')
+                ->where('is_delete', "=", 0)
+                ->where('login_mail', '=', $email)
+                ->first();
+            // echo "<pre>";
+            // print_r($userExist);exit;
+
+            if ($userExist) {
+                // $rand_otp = 1234;
+                $rand_otp = mt_rand(100000, 999999);
+                $userExist->otp_check = $rand_otp;
+
+                DB::table('tbl_teacher')->where('teacher_id', $userExist->teacher_id)->update(['otp_check' => $rand_otp]);
+
+                $companyDetail = DB::table('company')
+                    ->select('company.*')
+                    ->where('company.company_id', $userExist->company_id)
+                    ->first();
+                /************/
+                $mailData['companyDetail'] = $companyDetail;
+                $mailData['userExist'] = $userExist;
+                $mailData['rand_otp'] = $rand_otp;
+                $mailData['mail'] = $email;
+                $myVar = new AlertController();
+                $alertSetting = $myVar->fPasswordOtpAlert($mailData);
+                /************/
+
+                Session::put('forget_pass_teacher_id', $userExist->teacher_id);
+
+                return redirect('/teacher/forget-password-otp')->with('otp_success', "An OTP has been sent to your mail address.");
+            } else {
+                return redirect()->back()->with('fp_error', "Email address does not exist.");
+            }
+        }
+    }
+
+    public function forgetPasswordOtp(Request $request)
+    {
+        $title = array('pageTitle' => "Forget Password Otp");
+
+        return view("web.teacherPortal.forget_password_otp", ['title' => $title]);
+    }
+
+    public function forgetPasswordOtpVerify(Request $request)
+    {
+
+        $validator = Validator::make(
+            array(
+                'f_pass_otp' => $request->f_pass_otp
+            ),
+            array(
+                'f_pass_otp' => 'required'
+            )
+        );
+        if ($validator->fails()) {
+            return redirect()->back()->with('otp_error', $validator);
+        } else {
+            $f_pass_otp = $request->f_pass_otp;
+            $teacher_id = $request->forget_user_id;
+
+            $userExist = DB::table('tbl_teacher')
+                ->where('otp_check', '=', $f_pass_otp)
+                ->where('teacher_id', '=', $teacher_id)
+                ->get();
+            // print_r($userExist);
+
+            if (count($userExist) > 0) {
+                return redirect('/teacher/forget-password-generate')->with('up_password_success', "OTP matched. Please generate new password.");
+            } else {
+                return redirect()->back()->with('otp_error', "OTP does not match. Please try again.");
+            }
+        }
+    }
+
+    public function forgetPasswordGenerate(Request $request)
+    {
+        $title = array('pageTitle' => "Forget Password Otp");
+
+        return view("web.teacherPortal.forget_password_generate", ['title' => $title]);
+    }
+
+    public function processPassword(Request $request)
+    {
+        $password = $request->password;
+        $confirm_password = $request->confirm_password;
+        $user_id = $request->forget_user_id;
+
+        if ($password != $confirm_password) {
+            return redirect()->back()->with('up_password_error', "Confirm password not match. Please try again.")->with('user_id', $user_id);
+        } else {
+            $hash_pass = Hash::make($password);
+            DB::table('tbl_teacher')->where('teacher_id', $user_id)->update(['password' => $hash_pass]);
+            return redirect('/teacher')->with('loginSuccess', "Password has been updated.");
+        }
+    }
     /********* Teacher Portal *********/
 
     public function testMail(Request $request)
@@ -6560,5 +6705,40 @@ class TeacherController extends Controller
         $mail = 'sanjoy.websadroit@gmail.com';
         $myVar = new AlertController();
         $alertSetting = $myVar->test_mail($mail);
+    }
+
+    public function teacherDbsExpire(Request $request)
+    {
+        $twentyOneDaysBeforeToday = Carbon::now()->toDateString();
+
+        $adminList = DB::table('tbl_user')
+            ->where('tbl_user.title_int', 1)
+            ->where('tbl_user.company_id', 1)
+            ->get();
+
+        $expiredCertificates = DB::table('tbl_teacher')
+            ->join('tbl_teacherdbs', 'tbl_teacherdbs.teacher_id', '=', 'tbl_teacher.teacher_id')
+            ->select('tbl_teacher.*', 'tbl_teacherdbs.DBSDate_dte', 'tbl_teacherdbs.certificateNumber_txt', DB::raw('DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR) AS expiry_date'))
+            ->whereRaw('DATE_SUB(DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR), INTERVAL -21 DAY) = ?', [$twentyOneDaysBeforeToday])
+            ->where('tbl_teacher.is_delete', 0)
+            ->where('tbl_teacher.isCurrent_status', '<>', 0)
+            ->where('tbl_teacher.company_id', 1)
+            ->get();
+        // dd($adminList);
+        // echo "<pre>";
+        // print_r($expiredCertificates);
+        // exit;
+        if (count($expiredCertificates) > 0) {
+            foreach ($adminList as $key => $value) {
+                $mailData['subject'] = "Teacher DBS Record";
+                $mailData['mail'] = $value->user_name;
+                // $mailData['mail'] = 'sanjoy.websadroit@gmail.com';
+                $mailData['expiredCertificates'] = $expiredCertificates;
+                $myVar = new AlertController();
+                $myVar->dbsExpireAdmin($mailData);
+            }
+        }
+
+        return 1;
     }
 }

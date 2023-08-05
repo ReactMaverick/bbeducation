@@ -467,7 +467,7 @@
 
                             <div class="finance-timesheet-left-sec mt-4">
 
-                                <div class="finance-timesheet-contact-first-sec" style="width: 50%;">
+                                <div class="finance-timesheet-contact-first-sec" style="width: 55%;">
                                     <div class="contact-heading">
                                         <div class="contact-heading-text">
                                             <h2>Previous Timesheet list</h2>
@@ -481,8 +481,8 @@
                                                     <th>Date</th>
                                                     <th>Part</th>
                                                     {{-- <th>Student</th> --}}
-                                                    {{-- <th>Start Time</th>
-                                                    <th>End Time</th> --}}
+                                                    <th>Start Time</th>
+                                                    <th>Finish Time</th>
                                                     <th>Status</th>
                                                 </tr>
                                             </thead>
@@ -526,14 +526,14 @@
                                 <input type="hidden" name="" id="asnItemIds" value="">
 
                                 <div class="finance-timesheet-contact-second-sec"
-                                    style="display: none;margin-top: 25px;width: 47%;" id="teacherTimesheetDiv">
+                                    style="display: none;margin-top: 25px;width: 43%;" id="teacherTimesheetDiv">
                                     <div class="finance-timesheet-table-section" style="margin-top: 30px;">
                                         <table class="table finance-timesheet-page-table" id="">
                                             <thead>
                                                 <tr class="school-detail-table-heading">
                                                     <th>Teacher</th>
                                                     <th>Date</th>
-                                                    <th>Part</th>
+                                                    {{-- <th>Part</th> --}}
                                                     <th>Start Time - Finish Time</th>
                                                     {{-- <th>End Time</th> --}}
                                                     <th>Status</th>
@@ -1395,6 +1395,7 @@
         });
 
         $(document).on('click', '#ajaxAssignmentEventBtn', function() {
+            var schoolId = $('#selectedSchoolId').val();
             var error = "";
             $(".field-validate").each(function() {
                 if (this.value == '') {
@@ -1425,11 +1426,12 @@
                     dataType: "json",
                     asynch: false,
                     success: function(data) {
-                        $('#teacherListDiv').html('');
-                        $('#teacherListDiv').html(data.html);
-                        if (data.eventId) {
-                            $('#selectTeacherRow' + data.eventId).addClass('tableRowActive');
-                        }
+                        // $('#teacherListDiv').html('');
+                        // $('#teacherListDiv').html(data.html);
+                        // if (data.eventId) {
+                        //     $('#selectTeacherRow' + data.eventId).addClass('tableRowActive');
+                        // }
+                        fetchTecher('{{ $p_maxDate }}', schoolId);
                         $('#eventEditModal').modal("hide");
                     }
                 });

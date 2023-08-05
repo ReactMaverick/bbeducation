@@ -332,7 +332,7 @@
                 <tr>
                     <th class="qty">Date</th>
                     <th class="qty">Start Time</th>
-                    <th class="qty">End Time</th>
+                    <th class="qty">Finish Time</th>
                     {{-- <th class=""></th> --}}
                     <th class="unit">Part</th>
                 </tr>
@@ -344,10 +344,12 @@
                             {{ $item->asnDate_dte }}
                         </td>
                         <td class="qty">
-                            {{ $item->start_tm ? date('h:i a', strtotime($item->start_tm)) : '' }}
+                            {{-- {{ $item->start_tm ? date('h:i a', strtotime($item->start_tm)) : '' }} --}}
+                            {{ $item->start_tm ? $item->start_tm : '' }}
                         </td>
                         <td class="qty">
-                            {{ $item->end_tm ? date('h:i a', strtotime($item->end_tm)) : '' }}
+                            {{-- {{ $item->end_tm ? date('h:i a', strtotime($item->end_tm)) : '' }} --}}
+                            {{ $item->end_tm ? $item->end_tm : '' }}
                         </td>
                         {{-- <td class="unit"></td> --}}
                         <td class="total">

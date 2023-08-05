@@ -34,15 +34,15 @@
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                            <td style="padding: 10px 20px;">
+                            <td style="padding: 10px 20px;width:33.33%;text-align: left;">
                                 <img src="{{ $mailData['companyDetail'] ? asset($mailData['companyDetail']->company_logo) : '' }}"
-                                    style="width: 100px;" />
+                                    style="width: 70px;" />
                             </td>
-                            <td style="padding: 10px 20px; text-align: right;">
+                            <td style="padding: 10px 20px; width:33.33%; text-align: left;">
                                 <p style="color: #2c2b2b; font-size: 25px;">
                                     {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</p>
                             </td>
-                            <td style="padding: 10px 20px; text-align: right;">
+                            <td style="padding: 10px 20px; width:33.33%; text-align: left;">
                                 <p style="color: #888; font-size: 25px;">Confirmation of Work</p>
                             </td>
                         </tr>

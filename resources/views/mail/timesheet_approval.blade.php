@@ -54,7 +54,7 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <p>Hi <strong>{{ $mailData['contactDet']->firstName_txt }}
+                                <p>Dear <strong>{{ $mailData['contactDet']->firstName_txt }}
                                         {{ $mailData['contactDet']->surname_txt }},</strong></p>
                                 <p>Please check the timesheet(s).</p>
                                 {{-- <p>{{ isset($mailData['itemList'][0]) ? $mailData['itemList'][0]->name_txt : '' }}</p> --}}
@@ -145,6 +145,11 @@
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm1)) }})
                                                             @endif --}}
+                                                            @if ($item->start_tm1 && $item->end_tm1)
+                                                                ({{ $item->start_tm1 }}
+                                                                -
+                                                                {{ $item->end_tm1 }})
+                                                            @endif
                                                             @if ($item->lunch_time1)
                                                                 ({{ $item->lunch_time1 }})
                                                             @endif
@@ -159,6 +164,11 @@
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm2)) }})
                                                             @endif --}}
+                                                            @if ($item->start_tm2 && $item->end_tm2)
+                                                                ({{ $item->start_tm2 }}
+                                                                -
+                                                                {{ $item->end_tm2 }})
+                                                            @endif
                                                             @if ($item->lunch_time2)
                                                                 ({{ $item->lunch_time2 }})
                                                             @endif
@@ -173,6 +183,11 @@
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm3)) }})
                                                             @endif --}}
+                                                            @if ($item->start_tm3 && $item->end_tm3)
+                                                                ({{ $item->start_tm3 }}
+                                                                -
+                                                                {{ $item->end_tm3 }})
+                                                            @endif
                                                             @if ($item->lunch_time3)
                                                                 ({{ $item->lunch_time3 }})
                                                             @endif
@@ -187,6 +202,11 @@
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm4)) }})
                                                             @endif --}}
+                                                            @if ($item->start_tm4 && $item->end_tm4)
+                                                                ({{ $item->start_tm4 }}
+                                                                -
+                                                                {{ $item->end_tm4 }})
+                                                            @endif
                                                             @if ($item->lunch_time4)
                                                                 ({{ $item->lunch_time4 }})
                                                             @endif
@@ -201,6 +221,11 @@
                                                                 -
                                                                 {{ date('h:i a', strtotime($item->end_tm5)) }})
                                                             @endif --}}
+                                                            @if ($item->start_tm5 && $item->end_tm5)
+                                                                ({{ $item->start_tm5 }}
+                                                                -
+                                                                {{ $item->end_tm5 }})
+                                                            @endif
                                                             @if ($item->lunch_time5)
                                                                 ({{ $item->lunch_time5 }})
                                                             @endif
