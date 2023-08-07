@@ -1302,6 +1302,11 @@ class AssignmentController extends Controller
                 $sidebar = '';
             }
 
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
             if ($editVettingId) {
                 $onlineRefCount = DB::table('tbl_teacherReference')
                     ->select('teacherReference_id')
@@ -1378,6 +1383,16 @@ class AssignmentController extends Controller
                     $f_location = $pFile[0]->file_location;
                 }
 
+                $faoEmail_txt = '';
+                if ($request->faoEmail_txt) {
+                    $schContactDet = DB::table('tbl_contactItemSch')
+                        ->where('contactItemSch_id', $request->faoEmail_txt)
+                        ->first();
+                    if ($schContactDet) {
+                        $faoEmail_txt = $schContactDet->contactItem_txt;
+                    }
+                }
+
                 DB::table('tbl_asnVetting')
                     ->join('tbl_teacher', 'tbl_asnVetting.teacher_id', '=', 'tbl_teacher.teacher_id')
                     ->leftJoin(
@@ -1436,7 +1451,8 @@ class AssignmentController extends Controller
                         'qualificationSeen_dte' => DB::raw('tbl_teacher.vetQualification_dte'),
                         'imageLocation_txt' => $f_location,
                         'fao_txt' => $request->fao_txt,
-                        'faoEmail_txt' => $request->faoEmail_txt
+                        'faoEmail_id' => $request->faoEmail_txt,
+                        'faoEmail_txt' => $faoEmail_txt
                     ]);
 
                 DB::table('tbl_asnVetting')
@@ -1491,7 +1507,158 @@ class AssignmentController extends Controller
                         ->where('tbl_contactItemSch.type_int', '=', 1)
                         ->where('tbl_schoolContact.receiveVetting_status', '=', '-1')
                         ->get();
-                    $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id, 'sidebar' => $sidebar])->render();
+
+                    $schoolContent = "<p>Please find attached Vetting Checklist for the above candidate.</p>";
+
+                    $teacherAddress = "";
+                    $teacherName = "";
+                    $teacherDet = DB::table('tbl_teacher')
+                        ->where('teacher_id', $vettingDetail->teacher_id)
+                        ->first();
+                    if ($teacherDet) {
+                        $teacherName = $teacherDet->firstName_txt . ' ' . $teacherDet->surname_txt;
+                        if ($teacherDet->address1_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address1_txt;
+                        }
+                        if ($teacherDet->address2_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address2_txt;
+                        }
+                        if ($teacherDet->address3_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address3_txt;
+                        }
+                        if ($teacherDet->address4_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->address4_txt;
+                        }
+                        if ($teacherDet->postcode_txt) {
+                            if ($teacherAddress != '') {
+                                $teacherAddress .= ", ";
+                            }
+                            $teacherAddress .= $teacherDet->postcode_txt;
+                        }
+                    }
+
+                    $schAddress = "";
+                    $schName = "";
+                    $schoolDetail = DB::table('tbl_school')
+                        ->join('tbl_asn', 'tbl_school.school_id', '=', 'tbl_asn.school_id')
+                        ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                        ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                            $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                        })
+                        ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                        ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                            $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                                ->where(function ($query) {
+                                    $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as religion', function ($join) {
+                            $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                                ->where(function ($query) {
+                                    $query->where('religion.descriptionGroup_int', '=', 29);
+                                });
+                        })
+                        ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                            $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                                ->where(function ($query) {
+                                    $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                                });
+                        })
+                        ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                        ->where('tbl_asn.asn_id', $vettingDetail->asn_id)
+                        ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                        ->first();
+                    if ($schoolDetail) {
+                        $schName = $schoolDetail->name_txt;
+                        if ($schoolDetail->address1_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address1_txt;
+                        }
+                        if ($schoolDetail->address2_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address2_txt;
+                        }
+                        if ($schoolDetail->address3_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address3_txt;
+                        }
+                        if ($schoolDetail->address4_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address4_txt;
+                        }
+                        if ($schoolDetail->address5_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->address5_txt;
+                        }
+                        if ($schoolDetail->postcode_txt) {
+                            if ($schAddress != '') {
+                                $schAddress .= ", ";
+                            }
+                            $schAddress .= $schoolDetail->postcode_txt;
+                        }
+                    }
+
+                    $lUrl = '"' . 'https://www.google.com/maps/dir/' . urlencode($teacherAddress) . '/' . urlencode($schAddress) . '"';
+
+                    $minMaxDates = DB::table('tbl_asnItem')
+                        ->leftJoin('tbl_asn', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
+                        ->selectRaw("MIN(asnDate_dte) AS minDate, MAX(asnDate_dte) AS maxDate")
+                        ->where('tbl_asnItem.asn_id', $vettingDetail->asn_id)
+                        ->get();
+                    $minimumDate = '';
+                    $maximumDate = '';
+                    if (count($minMaxDates) > 0) {
+                        if ($minMaxDates[0]->minDate) {
+                            $minimumDate = date('d/m/Y', strtotime($minMaxDates[0]->minDate));
+                        }
+                        if ($minMaxDates[0]->maxDate) {
+                            $maximumDate = date('d/m/Y', strtotime($minMaxDates[0]->maxDate));
+                        }
+                    }
+
+                    $comName = '';
+                    if ($companyDetail) {
+                        $comName = $companyDetail->company_name;
+                    }
+
+                    $teacherContent = "<p>Dear
+                                    <strong>$teacherName,</strong>
+                                </p><br>
+                                <p>$comName has confirmed the position at
+                                    $schName starting
+                                    on $minimumDate and ending on $maximumDate.
+                                </p>
+                                <p>
+                                    The address of the school : $schAddress .
+                                </p>
+                                <p>Please attend with your hard copy of your DBS and photo ID.</p>
+                                <p>At the end of every week (Friday) you will need to complete an online timesheet through your candidate portal.</p>
+                                <p>*<b>Please note failure to submit a timesheet by the end of Friday (5pm latest) will result in payments being delayed.</b>*</p>
+                                <p>Please call us at $comName if you have any questions</p>";
+
+                    $view = view("web.assignment.candidate_vetting_view", ['vettingDetail' => $vettingDetail, 'contactItems' => $contactItems, 'schoolId' => $schoolId, 'teacherId' => $teacherId, 'asn_id' => $asn_id, 'sidebar' => $sidebar, 'schoolContent' => $schoolContent, 'teacherContent' => $teacherContent])->render();
                     return response()->json(['html' => $view]);
                 } else {
                     return false;
@@ -1515,10 +1682,20 @@ class AssignmentController extends Controller
             $faoMail = $input['faoMail'];
             $result['exist'] = 'No';
 
+            $faoEmail_txt = '';
+            if ($request->faoMail) {
+                $schContactDet = DB::table('tbl_contactItemSch')
+                    ->where('contactItemSch_id', $request->faoMail)
+                    ->first();
+                if ($schContactDet) {
+                    $faoEmail_txt = $schContactDet->contactItem_txt;
+                }
+            }
             DB::table('tbl_asnVetting')
                 ->where('vetting_id', $vetting_id)
                 ->update([
-                    'faoEmail_txt' => $faoMail
+                    'faoEmail_id' => $request->faoMail,
+                    'faoEmail_txt' => $faoEmail_txt
                 ]);
 
             $vettingDetail = DB::table('tbl_asnVetting')

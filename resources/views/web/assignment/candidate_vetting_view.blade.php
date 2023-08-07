@@ -56,12 +56,16 @@
                             <select class="form-control vetting-field-validate" id="faoMailAjaxNew" name="faoEmail_txt">
                                 <option value="">Choose one</option>
                                 @foreach ($contactItems as $key1 => $contact)
-                                    <option value="{{ $contact->contactItem_txt }}"
+                                    {{-- <option value="{{ $contact->contactItem_txt }}"
                                         {{ $vettingDetail->faoEmail_txt == $contact->contactItem_txt ? 'selected' : '' }}>
+                                        {{ $contact->contactItem_txt }}
+                                    </option> --}}
+                                    <option value="{{ $contact->contactItemSch_id }}"
+                                        {{ $vettingDetail->faoEmail_id == $contact->contactItemSch_id ? 'selected' : '' }}>
                                         {{ $contact->contactItem_txt }}
                                     </option>
                                     <?php
-                                    if ($emailExist == 'No' && $vettingDetail->faoEmail_txt == $contact->contactItem_txt) {
+                                    if ($emailExist == 'No' && $vettingDetail->faoEmail_id == $contact->contactItemSch_id) {
                                         $emailExist = 'Yes';
                                     }
                                     ?>
