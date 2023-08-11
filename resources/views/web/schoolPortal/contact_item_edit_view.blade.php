@@ -14,10 +14,10 @@
         </div>
 
         <div class="modal-side-field">
+            <label class="form-check-label" for="editInvoiceContact">Invoice Contact</label>
             <input type="checkbox" class="" name="receiveInvoices_status" id="editInvoiceContact" value="1"
                 {{ $contactItemDetail->receiveInvoices_status == '-1' ? 'checked' : '' }}
                 {{ $contactItemDetail->type_int == 1 ? '' : 'disabled' }}>
-            <label class="form-check-label" for="editInvoiceContact">Invoice Contact</label>
         </div>
 
         <div class="form-group modal-input-field">

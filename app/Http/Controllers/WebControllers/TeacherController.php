@@ -6741,4 +6741,132 @@ class TeacherController extends Controller
 
         return 1;
     }
+
+    public function testTeacherFileUpload(Request $request)
+    {
+        $teacher_id = '11287';
+        $user_id = '1002';
+
+        $teacherOld = DB::table('tbl_teacherDocument')
+            ->select('tbl_teacherDocument.*')
+            ->where('teacher_id', $teacher_id)
+            ->where('fileLocation_txt', '!=', null)
+            ->where('fileName_txt', '!=', null)
+            ->orderBy('teacherDocument_id', 'ASC')
+            ->get();
+
+        foreach ($teacherOld as $key => $value) {
+            $oldPath = $value->fileLocation_txt;
+            $replacementPath = "C:\\Users\\sanjo\\OneDrive\\Pictures\\";
+            $newPath = preg_replace("#[A-Z]:\\\\#", $replacementPath, $oldPath, 1);
+
+            $filePath = $newPath . $value->fileName_txt;
+            if (file_exists($filePath)) {
+                // echo "File exists at: " . $filePath;
+                $rand = mt_rand(100000, 999999);
+                $name = time() . "_" . $rand . "_" . $value->fileName_txt;
+                $fPath = 'images/teacher/' . $name;
+                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                $fType = $extension;
+
+                $destinationPath = public_path('images/teacher');
+                $uploaded = \File::copy($filePath, $destinationPath . '\\' . $name);
+
+                $typeDetail = DB::table('tbl_description')
+                    ->select('tbl_description.*')
+                    ->where('tbl_description.descriptionGroup_int', 19)
+                    ->where('tbl_description.description_int', $value->type_int)
+                    ->first();
+                $fileName = '';
+                if ($typeDetail) {
+                    $fileName = $typeDetail->description_txt;
+                }
+
+                $profilePicExist = DB::table('tbl_teacherDocument')
+                    ->select('tbl_teacherDocument.*')
+                    ->where('teacher_id', $teacher_id)
+                    ->where('type_int', 1)
+                    ->orderBy('teacherDocument_id', 'DESC')
+                    ->first();
+
+                if ($value->type_int == 1 && $profilePicExist) {
+                    DB::table('tbl_teacherDocument')
+                        ->where('teacherDocument_id', '=', $profilePicExist->teacherDocument_id)
+                        ->update([
+                            'file_location' => $fPath,
+                            'file_name' => $fileName,
+                            'file_type' => $fType,
+                            'uploadOn_dtm' => date('Y-m-d H:i:s')
+                        ]);
+                } else {
+                    DB::table('tbl_teacherDocument')
+                        ->insert([
+                            'teacher_id' => $teacher_id,
+                            'file_location' => $fPath,
+                            'file_name' => $fileName,
+                            'type_int' => $value->type_int,
+                            'file_type' => $fType,
+                            'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                            'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                            'loggedBy_id' => $user_id,
+                            'timestamp_ts' => date('Y-m-d H:i:s')
+                        ]);
+                }
+
+                if ($fPath) {
+                    $eData = array();
+                    if ($value->type_int == 3) {
+                        $eData['docPassport_status'] = -1;
+                    }
+                    if ($value->type_int == 4) {
+                        $eData['docDriversLicence_status'] = -1;
+                    }
+                    if ($value->type_int == 5) {
+                        $eData['docBankStatement_status'] = -1;
+                    }
+                    if ($value->type_int == 6) {
+                        $eData['docDBS_status'] = -1;
+                    }
+                    if ($value->type_int == 8) {
+                        $eData['docDisqualForm_status'] = -1;
+                    }
+                    if ($value->type_int == 9) {
+                        $eData['docHealthDec_status'] = -1;
+                    }
+                    if ($value->type_int == 10) {
+                        $eData['docEUCard_status'] = -1;
+                    }
+                    if ($value->type_int == 11) {
+                        $eData['docUtilityBill_status'] = -1;
+                    }
+                    if ($value->type_int == 12) {
+                        $eData['docTelephoneBill_status'] = -1;
+                    }
+                    if ($value->type_int == 13) {
+                        $eData['docBenefitStatement_status'] = -1;
+                    }
+                    if ($value->type_int == 14) {
+                        $eData['docCreditCardBill_status'] = -1;
+                    }
+                    if ($value->type_int == 15 || $value->type_int == 17) {
+                        $eData['docP45P60_status'] = -1;
+                    }
+                    if ($value->type_int == 16) {
+                        $eData['docCouncilTax_status'] = -1;
+                    }
+
+                    if ($eData) {
+                        DB::table('tbl_teacher')
+                            ->where('teacher_id', '=', $teacher_id)
+                            ->update($eData);
+                    }
+                }
+            }
+            //  else {
+            //     echo "File does not exist at: " . $filePath;
+            // }
+        }
+
+        return "success";
+    }
 }

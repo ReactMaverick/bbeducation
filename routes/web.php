@@ -160,6 +160,8 @@ Route::get('/teacher/reference-request/{id}/{mail}', [TeacherController::class, 
 Route::post('/addReferenceRequest', [TeacherController::class, 'addReferenceRequest']);
 
 Route::get('/teacherDbsExpire', [TeacherController::class, 'teacherDbsExpire']);
+
+Route::get('/testTeacherFileUpload', [TeacherController::class, 'testTeacherFileUpload']);
 // Teacher
 
 // School
@@ -217,6 +219,8 @@ Route::get('/school-calendar/{id}', [SchoolController::class, 'schoolCalendar'])
 Route::post('/schoolHeaderFabAdd', [SchoolController::class, 'schoolHeaderFabAdd']);
 Route::post('/addAsnCandRate', [SchoolController::class, 'addAsnCandRate']);
 Route::post('/addAllCandRate', [SchoolController::class, 'addAllCandRate']);
+
+Route::get('/testSchoolFileUpload', [SchoolController::class, 'testSchoolFileUpload']);
 // School
 
 // Finance

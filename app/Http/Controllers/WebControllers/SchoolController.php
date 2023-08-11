@@ -2654,7 +2654,7 @@ class SchoolController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 13)
                 ->get();
 
-            return view("web.schoolPortal.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $school_id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList, 'contactMethodList' => $contactMethodList]);
+            return view("web.schoolPortal.school_detail", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $school_id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList, 'contactMethodList' => $contactMethodList]);
         } else {
             return redirect()->intended('/school');
         }
@@ -3067,7 +3067,7 @@ class SchoolController extends Controller
                 ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
                 ->get();
 
-            return view("web.schoolPortal.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList, 'schoolPaidInvoices' => $schoolPaidInvoices, 'teacherList' => $teacherList]);
+            return view("web.schoolPortal.school_finance", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList, 'schoolPaidInvoices' => $schoolPaidInvoices, 'teacherList' => $teacherList]);
         } else {
             return redirect()->intended('/school');
         }
@@ -4576,4 +4576,44 @@ class SchoolController extends Controller
         }
     }
     /********* School Portal *********/
+
+    public function testSchoolFileUpload(Request $request)
+    {
+        $user_id = '1002';
+        $school_id = '124423';
+
+        $fPath = '';
+        $fType = '';
+        $allowed_types = array('jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx', 'txt');
+        if ($image = $request->file('file')) {
+            $extension = $image->getClientOriginalExtension();
+            $file_name = $image->getClientOriginalName();
+            if (in_array(strtolower($extension), $allowed_types)) {
+                $rand = mt_rand(100000, 999999);
+                $name = time() . "_" . $rand . "_" . $file_name;
+                $image->move(public_path('images/school'), $name);
+                $fPath = 'images/school/' . $name;
+                $fType = $extension;
+            } else {
+                return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
+            }
+        } else {
+            return redirect('/school-document/' . $school_id)->with('error', "Please upload valid file.");
+        }
+
+        DB::table('tbl_schooldocument')
+            ->insert([
+                'school_id' => $school_id,
+                'file_location' => $fPath,
+                'file_name' => $request->file_name ? $request->file_name : $request->file_name_hidden,
+                'documentType' => $request->documentType,
+                'othersText' => $request->othersText,
+                'file_type' => $fType,
+                'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                'loggedBy_id' => $user_id,
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+
+        return "Document added successfully.";
+    }
 }
