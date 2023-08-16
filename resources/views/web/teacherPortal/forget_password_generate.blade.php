@@ -59,7 +59,7 @@
                     }
                     ?>
 
-                    <form method="POST" action="{{ url('/teacher/processPassword') }}" class="form-validate">
+                    <form method="POST" action="{{ url('/candidate/processPassword') }}" class="form-validate">
                         @csrf
                         <input type="hidden" name="forget_user_id" value="{{ $forget_user_id }}">
 

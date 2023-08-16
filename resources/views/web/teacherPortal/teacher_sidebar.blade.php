@@ -47,7 +47,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Detail') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher/detail') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate/detail') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-address-book"></i>
                 </div>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Timesheet') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher/timesheet') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate/timesheet') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-address-book"></i>
                 </div>
@@ -69,7 +69,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Profession') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher/profession-qualification') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate/profession-qualification') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
@@ -80,7 +80,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Health') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher/preference-health/') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate/preference-health/') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-desktop"></i>
                 </div>
@@ -91,7 +91,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Documents') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher/all-documents') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate/all-documents') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-file-lines"></i>
                 </div>
@@ -102,7 +102,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Payroll') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher/payroll') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate/payroll') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-money-bills"></i>
                 </div>
@@ -113,7 +113,7 @@
         </div>
 
         {{-- <div class="sidebar-pages-section">
-            <a href="{{ URL::to('/teacher/logout') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate/logout') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </div>
@@ -141,7 +141,7 @@
                 <h2>Add Profile Image</h2>
             </div>
 
-            <form action="{{ url('/teacher/logTeacherProfilePicAdd') }}" method="post" class="form-validate-6"
+            <form action="{{ url('/candidate/logTeacherProfilePicAdd') }}" method="post" class="form-validate-6"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-input-field-section">
@@ -199,7 +199,7 @@
                         case "Yes":
                             $.ajax({
                                 type: 'POST',
-                                url: '{{ url('/teacher/logTeacherProfilePicDelete') }}',
+                                url: '{{ url('/candidate/logTeacherProfilePicDelete') }}',
                                 data: {
                                     "_token": "{{ csrf_token() }}",
                                     teacherDocument_id: teacherDocument_id

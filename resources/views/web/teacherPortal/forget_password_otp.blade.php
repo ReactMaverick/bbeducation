@@ -26,7 +26,7 @@
                     <div class="login-page-img">
                         <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="">
                     </div>
-                    <h2>Forget Password</h2>
+                    <h2>Forgot Password</h2>
 
                     @if (count($errors) > 0)
                         @foreach ($errors->all() as $error)
@@ -59,7 +59,7 @@
                     }
                     ?>
 
-                    <form method="POST" action="{{ url('/teacher/forgetPasswordOtpVerify') }}" class="form-validate">
+                    <form method="POST" action="{{ url('/candidate/forgetPasswordOtpVerify') }}" class="form-validate">
                         @csrf
                         <input type="hidden" name="forget_user_id" value="{{ $forget_user_id }}">
                         <div class="form-group row login-form-sec">

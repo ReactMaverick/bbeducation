@@ -1,52 +1,5 @@
 @extends('web.schoolPortal.layout')
 @section('content')
-    {{-- <style>
-        .disabled-link {
-            pointer-events: none;
-        }
-
-        .date-left-teacher-calendar {
-            width: 13%;
-        }
-
-        .teacher-calendar-days-text {
-            width: 13%;
-        }
-
-        .teacher-calendar-days-field3 p {
-            text-align: center;
-        }
-
-        .teacher-calendar-days-text p {
-            /* border-bottom: 1px solid #A0C5E7; */
-            padding-bottom: 3px;
-        }
-
-        .teacher-calendar-days-sec {
-            border: 1px solid #afabab;
-            padding-right: 21px;
-        }
-
-        .teacher-calendar-table-section {
-            padding: 0 5px;
-        }
-
-        .calendar-outer-sec:hover {
-            cursor: pointer;
-        }
-
-        .calendar-section {
-            padding: 0 5px;
-        }
-
-        .invoice-top-section {
-            justify-content: flex-end;
-        }
-
-        .finance-contact-icon-sec i {
-            font-size: 25px;
-        }
-    </style> --}}
 
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -226,20 +179,20 @@
                         <div class="school-finance-right-sec">
                             <div class="school-finance-section">
 
-                                <div class="finance-timesheet-contact-first-sec" style="width: 100%">
+                                <div class="finance-timesheet-contact-first-sec sec_box_edit p-3" style="width: 100%">
                                     <div class="contact-heading mb-2">
                                         <div class="contact-heading-text">
                                             <h2>Teacher Timesheets</h2>
                                         </div>
 
-                                        <div class="contact-icon-sec">
+                                        <div class="contact-icon">
                                             <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
                                                 title="Reject timesheet">
-                                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                                <i class="fas fa-window-close"></i>
                                             </a>
                                             <a style="cursor: pointer;" class="disabled-link" id="logTimesheetBtn"
                                                 title="Log timesheet">
-                                                <i class="fa-solid fa-square-check"></i>
+                                                <i class="fas fa-check-square"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -434,25 +387,25 @@
 
                         <div class="school-finance-right-sec">
                             <div class="school-finance-section">
-                                <div class="finance-timesheet-contact-first-sec" style="width: 100%">
-                                    <div class="contact-heading mb-2">
+                                <div class="finance-timesheet-contact-first-sec sec_box_edit p-3" style="width: 100%">
+                                    <div class="contact-heading mb-2 details-heading">
                                         <div class="contact-heading-text">
                                             <h2>Teacher Timesheets(Submitted by teacher)</h2>
                                         </div>
 
-                                        <div class="contact-icon-sec">
+                                        <div class="contact-icon">
                                             <a style="cursor: pointer" class="disabled-link" id="itemSheetRejectBtn"
                                                 title="Reject timesheet">
-                                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                                <i class="fas fa-window-close"></i>
                                             </a>
                                             <a style="cursor: pointer;" class="disabled-link" id="itemSheetApproveBtn"
                                                 title="Approve timesheet">
-                                                <i class="fa-solid fa-square-check"></i>
+                                                <i class="fas fa-check-square"></i>
                                             </a>
                                         </div>
                                     </div>
                                     <input type="hidden" name="" id="logTeacherTimeItemIds" value="">
-                                    <table class="table finance-timesheet-page-table" id="">
+                                    <table class="table table-striped" id="">
                                         <thead>
                                             <tr class="school-detail-table-heading">
                                                 <th>Teacher</th>

@@ -71,7 +71,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'School Teacher') sidebar-active @endif">
-            <a href="{{ URL::to('/school-teacher/' . $school_id . '?status=all') }}" class="sidebar-pages">
+            <a href="{{ URL::to('/school-candidate/' . $school_id . '?status=all') }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-person"></i>
                 </div>

@@ -97,7 +97,7 @@
                     <h2>Edit Bank/Payroll</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherPayrollUpdate') }}" method="post" class="">
+                <form action="{{ url('/candidate/logTeacherPayrollUpdate') }}" method="post" class="">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>

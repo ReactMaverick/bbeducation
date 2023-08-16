@@ -38,7 +38,7 @@
                             <a href="{{ URL::to('/school-detail/' . $schoolId) }}" target="_blank">
                                 <i class="fa-solid fa-school-flag"></i>
                             </a>
-                            <a href="{{ URL::to('/teacher-detail/' . $teacherId) }}" target="_blank">
+                            <a href="{{ URL::to('/candidate-detail/' . $teacherId) }}" target="_blank">
                                 <i class="fa-solid fa-person"></i>
                             </a>
                             <a href="{{ URL::to('/assignment-details/' . $asn_id) }}" target="_blank">

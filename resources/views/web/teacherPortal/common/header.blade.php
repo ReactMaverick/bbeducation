@@ -23,8 +23,8 @@
                     {{ $teacherLoginData ? $teacherLoginData->surname_txt : '' }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="{{ URL::to('/teacher/change-password') }}">Change Password</a>
-                <a class="dropdown-item" href="{{ URL::to('/teacher/logout') }}">Logout</a>
+                <a class="dropdown-item" href="{{ URL::to('/candidate/change-password') }}">Change Password</a>
+                <a class="dropdown-item" href="{{ URL::to('/candidate/logout') }}">Logout</a>
             </div>
         </div>
 
@@ -32,14 +32,14 @@
 
     {{-- <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item @if ($headerTitle == 'Teachers') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/teacher/detail') }}">
+            <a class="nav-link" href="{{ URL::to('/candidate/detail') }}">
                 <i class="fa-solid fa-person-chalkboard">
                     <span class="tab-section-text">Teachers</span>
                 </i>
             </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Logout') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/teacher/logout') }}">
+            <a class="nav-link" href="{{ URL::to('/candidate/logout') }}">
                 <i class="fa-solid fa-arrow-right-from-bracket">
                     <span class="tab-section-text">Logout</span>
                 </i>

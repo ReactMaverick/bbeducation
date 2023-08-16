@@ -258,7 +258,7 @@
                     <h2>Edit Detail</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherDetailUpdate') }}" method="post" class="form-validate">
+                <form action="{{ url('/candidate/logTeacherDetailUpdate') }}" method="post" class="form-validate">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>
@@ -371,7 +371,7 @@
                     <h2>Edit Address</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherAddressUpdate') }}" method="post" class="form-validate-2">
+                <form action="{{ url('/candidate/logTeacherAddressUpdate') }}" method="post" class="form-validate-2">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>
@@ -447,7 +447,7 @@
                     <h2>Edit Emergency Contact</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherEmerContactUpdate') }}" method="post" class="">
+                <form action="{{ url('/candidate/logTeacherEmerContactUpdate') }}" method="post" class="">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>
@@ -527,8 +527,8 @@
                     <h2>Add Contact Item</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherContactItemInsert') }}" method="post" class="form-validate-3"
-                    enctype="multipart/form-data">
+                <form action="{{ url('/candidate/logTeacherContactItemInsert') }}" method="post"
+                    class="form-validate-3" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>
@@ -595,8 +595,8 @@
                     <h2>Edit Contact Item</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherContactItemUpdate') }}" method="post" class="form-validate-4"
-                    enctype="multipart/form-data">
+                <form action="{{ url('/candidate/logTeacherContactItemUpdate') }}" method="post"
+                    class="form-validate-4" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>

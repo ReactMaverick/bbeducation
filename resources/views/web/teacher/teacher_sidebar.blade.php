@@ -36,7 +36,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Detail') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher-detail/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate-detail/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-address-book"></i>
                 </div>
@@ -69,7 +69,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Reference') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher-references/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate-references/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-file-lines"></i>
                 </div>
@@ -79,7 +79,7 @@
             </a>
         </div>
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Documents') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher-documents/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate-documents/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-file-lines"></i>
                 </div>
@@ -90,7 +90,7 @@
         </div>
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Contact Log') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher-contact-log/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate-contact-log/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-comment"></i>
                 </div>
@@ -112,7 +112,7 @@
         </div> --}}
 
         <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Payroll') sidebar-active @endif">
-            <a href="{{ URL::to('/teacher-payroll/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
+            <a href="{{ URL::to('/candidate-payroll/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
                 <div class="page-icon-sec">
                     <i class="fa-solid fa-money-bills"></i>
                 </div>

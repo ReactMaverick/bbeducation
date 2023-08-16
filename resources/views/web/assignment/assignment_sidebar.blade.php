@@ -81,7 +81,7 @@
 
         <div class="teacher-name">
             @if ($assignmentDetail->teacher_id)
-                <a href="{{ URL::to('/teacher-detail/' . $assignmentDetail->teacher_id) }}" class=""
+                <a href="{{ URL::to('/candidate-detail/' . $assignmentDetail->teacher_id) }}" class=""
                     target="_blank">
                     <span>{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}</span>
                 </a>

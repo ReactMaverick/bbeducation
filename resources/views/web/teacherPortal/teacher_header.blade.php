@@ -28,7 +28,7 @@
                 <h2>Edit Details</h2>
             </div>
 
-            <form action="{{ url('/teacher/LogTeacherStatusUpdateHead') }}" method="post" class="">
+            <form action="{{ url('/candidate/LogTeacherStatusUpdateHead') }}" method="post" class="">
                 @csrf
                 <div class="modal-input-field-section">
                     <h6>

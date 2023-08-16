@@ -242,7 +242,7 @@ class AlertController extends Controller
         if ($mailData['mail']) {
             try {
                 Mail::send('/mail/tForgetPasswordMail', ['mailData' => $mailData], function ($m) use ($mailData) {
-                    $m->to($mailData['mail'])->subject("Forget Password")->getSwiftMessage()
+                    $m->to($mailData['mail'])->subject("Forgot Password")->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });

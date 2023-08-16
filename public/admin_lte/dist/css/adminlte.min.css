@@ -56143,6 +56143,7 @@ button.btn.btn-secondary {
 
 .table-striped tbody tr:hover {
     background-color: #D0D0FD;
+    cursor: pointer;
 }
 
 thead,
@@ -56216,10 +56217,10 @@ th {
     transition: 0.3s all ease-in-out;
 }
 
-.school-name-section:hover {
+/* .school-name-section:hover {
     background: #D0D0FD;
     padding: 5px;
-}
+} */
 
 /* .school-name-text {
     display: flex;
@@ -56436,4 +56437,8 @@ ul.pagination li a {
     font-size: 12px !important;
     padding: 7px;
     line-height: 1;
+}
+
+.disabled-link {
+    pointer-events: none;
 }

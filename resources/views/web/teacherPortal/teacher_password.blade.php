@@ -26,7 +26,7 @@
                             <h2>Update Password</h2>
                         </div>
 
-                        <form action="{{ url('/teacher/LogTeacherPasswordUpdate') }}" method="post" class="form-validate">
+                        <form action="{{ url('/candidate/LogTeacherPasswordUpdate') }}" method="post" class="form-validate">
                             @csrf
 
                             <div class="modal-input-field-section">

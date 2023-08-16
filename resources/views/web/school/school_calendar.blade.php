@@ -245,10 +245,10 @@
 
             if (calendar_mode == 'teacher') {
                 // if (type == 'teacher') {
-                //     var rUrl1 = '<?php echo url('/teacher-detail/'); ?>' + '/' + teacher_id;
+                //     var rUrl1 = '<?php echo url('/candidate-detail/'); ?>' + '/' + teacher_id;
                 //     window.open(rUrl1, '_blank');
                 // }
-                var rUrl1 = '<?php echo url('/teacher-detail/'); ?>' + '/' + teacher_id;
+                var rUrl1 = '<?php echo url('/candidate-detail/'); ?>' + '/' + teacher_id;
                 window.open(rUrl1, '_blank');
             }
         }

@@ -59,7 +59,7 @@
                                         @if (count($mailData['expiredCertificates']) > 0)
                                             @foreach ($mailData['expiredCertificates'] as $item)
                                                 <?php
-                                                $rUrl = url('/teacher-documents') . '/' . $item->teacher_id;
+                                                $rUrl = url('/candidate-documents') . '/' . $item->teacher_id;
                                                 
                                                 $name = '';
                                                 if ($item->knownAs_txt == null && $item->knownAs_txt == '') {

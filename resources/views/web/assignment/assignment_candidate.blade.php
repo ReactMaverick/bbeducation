@@ -435,7 +435,7 @@
                     var candidateLongId = $(this).attr('teacher-long');
                     $('#candidateLatId').val(candidateLatId);
                     $('#candidateLongId').val(candidateLongId);
-                    var location = "{{ url('/teacher-detail') }}" + '/' + teacherId;
+                    var location = "{{ url('/candidate-detail') }}" + '/' + teacherId;
                     window.open(location);
                 });
         });

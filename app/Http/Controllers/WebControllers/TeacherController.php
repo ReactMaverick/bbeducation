@@ -186,12 +186,12 @@ class TeacherController extends Controller
                 $mailData['firstName_txt'] = $request->firstName_txt;
                 $mailData['surname_txt'] = $request->surname_txt;
                 $mailData['mail'] = $request->login_mail;
-                $mailData['rUrl'] = url('/teacher/set-password') . '/' . $uID;
+                $mailData['rUrl'] = url('/candidate/set-password') . '/' . $uID;
                 $myVar = new AlertController();
                 $myVar->reset_password($mailData);
             }
 
-            return redirect('/teacher-detail/' . $teacher_id)->with('success', "Teacher added successfully.");
+            return redirect('/candidate-detail/' . $teacher_id)->with('success', "Teacher added successfully.");
         } else {
             return redirect()->intended('/');
         }
@@ -215,7 +215,7 @@ class TeacherController extends Controller
             $mailData['firstName_txt'] = $teacherDetail->firstName_txt;
             $mailData['surname_txt'] = $teacherDetail->surname_txt;
             $mailData['mail'] = $teacherDetail->login_mail;
-            $mailData['rUrl'] = url('/teacher/set-password') . '/' . $uID;
+            $mailData['rUrl'] = url('/candidate/set-password') . '/' . $uID;
             $myVar = new AlertController();
             $myVar->reset_password($mailData);
 
@@ -2351,7 +2351,7 @@ class TeacherController extends Controller
                 $mailData['teacherName'] = $teacherName;
                 $mailData['refereeName'] = $request->refereeName_txt;
                 $mailData['mail'] = $request->refereeEmail_txt;
-                $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID . '/' . $adminMailEnc;
+                $mailData['refUrl'] = url('/candidate/reference-request') . '/' . $refID . '/' . $adminMailEnc;
                 $mailData['companyDetail'] = $companyDetail;
                 $myVar = new AlertController();
                 $myVar->referenceRequestMail($mailData);
@@ -2412,7 +2412,7 @@ class TeacherController extends Controller
                     $mailData['teacherName'] = $teacherName;
                     $mailData['refereeName'] = $refDetails->refereeName_txt;
                     $mailData['mail'] = $refDetails->refereeEmail_txt;
-                    $mailData['refUrl'] = url('/teacher/reference-request') . '/' . $refID . '/' . $adminMailEnc;
+                    $mailData['refUrl'] = url('/candidate/reference-request') . '/' . $refID . '/' . $adminMailEnc;
                     $mailData['companyDetail'] = $companyDetail;
                     $myVar = new AlertController();
                     $myVar->referenceRequestMail($mailData);
@@ -4474,7 +4474,7 @@ class TeacherController extends Controller
                 ->update([
                     'password' => Hash::make($request->password)
                 ]);
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -4482,7 +4482,7 @@ class TeacherController extends Controller
     {
         $teacherLoginData = Session::get('teacherLoginData');
         if ($teacherLoginData) {
-            return redirect()->intended('/teacher/detail');
+            return redirect()->intended('/candidate/detail');
         } else {
             $title = array('pageTitle' => "Teacher Login");
             return view("web.teacherPortal.teacher_login", ['title' => $title]);
@@ -4519,7 +4519,7 @@ class TeacherController extends Controller
                         return redirect()->back()->withInput()->with('loginError', "You are not an active user.");
                     } else {
                         Session::put('teacherLoginData', $user_exist[0]);
-                        return redirect()->intended('/teacher/detail');
+                        return redirect()->intended('/candidate/detail');
                     }
                 }
             } else {
@@ -4531,7 +4531,7 @@ class TeacherController extends Controller
     public function teacherLogout()
     {
         Session::forget('teacherLoginData');
-        return redirect('/teacher');
+        return redirect('/candidate');
     }
 
     public function logTeacherDetail(Request $request)
@@ -4671,7 +4671,7 @@ class TeacherController extends Controller
 
             return view("web.teacherPortal.teacher_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'contactItemList' => $contactItemList, 'titleList' => $titleList, 'nationalityList' => $nationalityList, 'ralationshipList' => $ralationshipList, 'contactTypeList' => $contactTypeList, 'headerStatusList' => $headerStatusList]);
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -4706,7 +4706,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Details updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -4735,7 +4735,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Address updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -4764,7 +4764,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Contact item added successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -4793,7 +4793,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Contact item updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -4814,7 +4814,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Emergency contact updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -4985,7 +4985,7 @@ class TeacherController extends Controller
 
             return view("web.teacherPortal.teacher_profession", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications, 'candidateList' => $candidateList, 'agerangeList' => $agerangeList, 'interviewQualityList' => $interviewQualityList, 'languageSkillList' => $languageSkillList, 'subjectList' => $subjectList, 'typeList' => $typeList, 'subTypeList' => $subTypeList, 'headerStatusList' => $headerStatusList]);
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5093,7 +5093,7 @@ class TeacherController extends Controller
 
             return view("web.teacherPortal.teacher_health", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5146,7 +5146,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Preference updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5170,7 +5170,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Health updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5309,7 +5309,7 @@ class TeacherController extends Controller
 
             return view("web.teacherPortal.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list, 'documentList' => $documentList, 'typeList' => $typeList, 'headerStatusList' => $headerStatusList]);
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5422,7 +5422,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Document added successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5524,7 +5524,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Document updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5702,7 +5702,7 @@ class TeacherController extends Controller
 
             return view("web.teacherPortal.teacher_payroll", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'bankList' => $bankList, 'headerStatusList' => $headerStatusList]);
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5729,7 +5729,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Bank/Payroll updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -5803,7 +5803,7 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Profile image added successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -6083,7 +6083,7 @@ class TeacherController extends Controller
 
             return view("web.teacherPortal.teacher_timesheet", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList1, 'weekEndDate' => $weekEndDate, 'plusFiveDate' => $plusFiveDate, 'dayPartList' => $dayPartList, 'headerStatusList' => $headerStatusList]);
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -6533,7 +6533,7 @@ class TeacherController extends Controller
 
             return view("web.teacherPortal.teacher_password", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -6555,7 +6555,7 @@ class TeacherController extends Controller
                 return redirect()->back()->with('success', "Password updated successfully.");
             }
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
@@ -6579,13 +6579,13 @@ class TeacherController extends Controller
 
             return redirect()->back()->with('success', "Details updated successfully.");
         } else {
-            return redirect()->intended('/teacher');
+            return redirect()->intended('/candidate');
         }
     }
 
     public function forgetPassword(Request $request)
     {
-        $title = array('pageTitle' => "Forget Password");
+        $title = array('pageTitle' => "Forgot Password");
         return view("web.teacherPortal.forget_password", ['title' => $title]);
     }
 
@@ -6632,7 +6632,7 @@ class TeacherController extends Controller
 
                 Session::put('forget_pass_teacher_id', $userExist->teacher_id);
 
-                return redirect('/teacher/forget-password-otp')->with('otp_success', "An OTP has been sent to your mail address.");
+                return redirect('/candidate/forget-password-otp')->with('otp_success', "An OTP has been sent to your mail address.");
             } else {
                 return redirect()->back()->with('fp_error', "Email address does not exist.");
             }
@@ -6641,7 +6641,7 @@ class TeacherController extends Controller
 
     public function forgetPasswordOtp(Request $request)
     {
-        $title = array('pageTitle' => "Forget Password Otp");
+        $title = array('pageTitle' => "Forgot Password Otp");
 
         return view("web.teacherPortal.forget_password_otp", ['title' => $title]);
     }
@@ -6670,7 +6670,7 @@ class TeacherController extends Controller
             // print_r($userExist);
 
             if (count($userExist) > 0) {
-                return redirect('/teacher/forget-password-generate')->with('up_password_success', "OTP matched. Please generate new password.");
+                return redirect('/candidate/forget-password-generate')->with('up_password_success', "OTP matched. Please generate new password.");
             } else {
                 return redirect()->back()->with('otp_error', "OTP does not match. Please try again.");
             }
@@ -6679,7 +6679,7 @@ class TeacherController extends Controller
 
     public function forgetPasswordGenerate(Request $request)
     {
-        $title = array('pageTitle' => "Forget Password Otp");
+        $title = array('pageTitle' => "Forgot Password Otp");
 
         return view("web.teacherPortal.forget_password_generate", ['title' => $title]);
     }
@@ -6695,7 +6695,7 @@ class TeacherController extends Controller
         } else {
             $hash_pass = Hash::make($password);
             DB::table('tbl_teacher')->where('teacher_id', $user_id)->update(['password' => $hash_pass]);
-            return redirect('/teacher')->with('loginSuccess', "Password has been updated.");
+            return redirect('/candidate')->with('loginSuccess', "Password has been updated.");
         }
     }
     /********* Teacher Portal *********/
@@ -6742,22 +6742,31 @@ class TeacherController extends Controller
         return 1;
     }
 
+    public function candidateFileUpload(Request $request)
+    {
+        $title = array('pageTitle' => "File upload");
+        return view("web.teacherPortal.candidate_file_up_test", ['title' => $title]);
+    }
+
     public function testTeacherFileUpload(Request $request)
     {
-        $teacher_id = '11287';
+        // return "test";
+        // $teacher_id = '10100';
         $user_id = '1002';
 
         $teacherOld = DB::table('tbl_teacherDocument')
             ->select('tbl_teacherDocument.*')
-            ->where('teacher_id', $teacher_id)
+            // ->where('teacher_id', $teacher_id)
             ->where('fileLocation_txt', '!=', null)
             ->where('fileName_txt', '!=', null)
+            ->where('file_location', '=', null)
             ->orderBy('teacherDocument_id', 'ASC')
             ->get();
 
         foreach ($teacherOld as $key => $value) {
             $oldPath = $value->fileLocation_txt;
-            $replacementPath = "C:\\Users\\sanjo\\OneDrive\\Pictures\\";
+            // $replacementPath = "C:\\Users\\sanjo\\OneDrive\\Pictures\\";
+            $replacementPath = $request->local_path;
             $newPath = preg_replace("#[A-Z]:\\\\#", $replacementPath, $oldPath, 1);
 
             $filePath = $newPath . $value->fileName_txt;
@@ -6782,36 +6791,45 @@ class TeacherController extends Controller
                     $fileName = $typeDetail->description_txt;
                 }
 
-                $profilePicExist = DB::table('tbl_teacherDocument')
-                    ->select('tbl_teacherDocument.*')
-                    ->where('teacher_id', $teacher_id)
-                    ->where('type_int', 1)
-                    ->orderBy('teacherDocument_id', 'DESC')
-                    ->first();
+                // $profilePicExist = DB::table('tbl_teacherDocument')
+                //     ->select('tbl_teacherDocument.*')
+                //     ->where('teacher_id', $teacher_id)
+                //     ->where('type_int', 1)
+                //     ->orderBy('teacherDocument_id', 'DESC')
+                //     ->first();
 
-                if ($value->type_int == 1 && $profilePicExist) {
-                    DB::table('tbl_teacherDocument')
-                        ->where('teacherDocument_id', '=', $profilePicExist->teacherDocument_id)
-                        ->update([
-                            'file_location' => $fPath,
-                            'file_name' => $fileName,
-                            'file_type' => $fType,
-                            'uploadOn_dtm' => date('Y-m-d H:i:s')
-                        ]);
-                } else {
-                    DB::table('tbl_teacherDocument')
-                        ->insert([
-                            'teacher_id' => $teacher_id,
-                            'file_location' => $fPath,
-                            'file_name' => $fileName,
-                            'type_int' => $value->type_int,
-                            'file_type' => $fType,
-                            'uploadOn_dtm' => date('Y-m-d H:i:s'),
-                            'loggedOn_dtm' => date('Y-m-d H:i:s'),
-                            'loggedBy_id' => $user_id,
-                            'timestamp_ts' => date('Y-m-d H:i:s')
-                        ]);
-                }
+                // if ($value->type_int == 1 && $profilePicExist) {
+                //     DB::table('tbl_teacherDocument')
+                //         ->where('teacherDocument_id', '=', $profilePicExist->teacherDocument_id)
+                //         ->update([
+                //             'file_location' => $fPath,
+                //             'file_name' => $fileName,
+                //             'file_type' => $fType,
+                //             'uploadOn_dtm' => date('Y-m-d H:i:s')
+                //         ]);
+                // } else {
+                //     DB::table('tbl_teacherDocument')
+                //         ->insert([
+                //             'teacher_id' => $teacher_id,
+                //             'file_location' => $fPath,
+                //             'file_name' => $fileName,
+                //             'type_int' => $value->type_int,
+                //             'file_type' => $fType,
+                //             'uploadOn_dtm' => date('Y-m-d H:i:s'),
+                //             'loggedOn_dtm' => date('Y-m-d H:i:s'),
+                //             'loggedBy_id' => $user_id,
+                //             'timestamp_ts' => date('Y-m-d H:i:s')
+                //         ]);
+                // }
+
+                DB::table('tbl_teacherDocument')
+                    ->where('teacherDocument_id', '=', $value->teacherDocument_id)
+                    ->update([
+                        'file_location' => $fPath,
+                        'file_name' => $fileName,
+                        'file_type' => $fType,
+                        'uploadOn_dtm' => date('Y-m-d H:i:s')
+                    ]);
 
                 if ($fPath) {
                     $eData = array();
@@ -6857,7 +6875,7 @@ class TeacherController extends Controller
 
                     if ($eData) {
                         DB::table('tbl_teacher')
-                            ->where('teacher_id', '=', $teacher_id)
+                            ->where('teacher_id', '=', $value->teacher_id)
                             ->update($eData);
                     }
                 }

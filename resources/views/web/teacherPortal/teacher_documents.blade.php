@@ -91,7 +91,7 @@
                     <h2>Add Document</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherDocInsert') }}" method="post" class="form-validate-3"
+                <form action="{{ url('/candidate/logTeacherDocInsert') }}" method="post" class="form-validate-3"
                     enctype="multipart/form-data">
                     @csrf
                     <div class="modal-input-field-section">
@@ -170,7 +170,7 @@
                     <h2>Edit Document</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherDocUpdate') }}" method="post" class="form-validate-4"
+                <form action="{{ url('/candidate/logTeacherDocUpdate') }}" method="post" class="form-validate-4"
                     enctype="multipart/form-data">
                     @csrf
                     <div class="modal-input-field-section">
@@ -258,7 +258,7 @@
                             case "Yes":
                                 $.ajax({
                                     type: 'POST',
-                                    url: '{{ url('/teacher/logTeacherDocDelete') }}',
+                                    url: '{{ url('/candidate/logTeacherDocDelete') }}',
                                     data: {
                                         "_token": "{{ csrf_token() }}",
                                         DocumentId: DocumentId

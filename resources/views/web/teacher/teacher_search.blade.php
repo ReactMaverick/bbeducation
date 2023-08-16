@@ -17,7 +17,7 @@
                                     value="{{ app('request')->input('search_input') }}">
                                 <button type="submit" class="btn btn-primary school-search-btn"
                                     id="normalSearchBtn">Search</button>
-                                <a href="{{ URL::to('/teacher-search') }}"><i class="fa-solid fa-arrows-rotate"></i></a>
+                                <a href="{{ URL::to('/candidate-search') }}"><i class="fa-solid fa-arrows-rotate"></i></a>
                             </div>
 
                         </div>
@@ -59,7 +59,7 @@
                         <div class="search-form-button">
                             <button id="advanceSearch">Advance Search</button>
                         </div>
-                        <form action="{{ url('/teacher-search') }}" method="get" id="advanceSearchForm">
+                        <form action="{{ url('/candidate-search') }}" method="get" id="advanceSearchForm">
                             @csrf
                             <input type="hidden" name="search" value="true">
                             <input type="hidden" name="advance_search" id="advance_search"
@@ -236,7 +236,7 @@
         });
 
         function teacherDetail(teacher_id) {
-            window.location.href = "{{ URL::to('/teacher-detail') }}" + '/' + teacher_id;
+            window.location.href = "{{ URL::to('/candidate-detail') }}" + '/' + teacher_id;
         }
 
         $(document).on('click', '#advanceSearch', function() {

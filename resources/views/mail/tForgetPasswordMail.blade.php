@@ -46,7 +46,7 @@
                                         {{ $mailData['userExist']->surname_txt }},</strong>
                                 </p>
                                 <p>Your login user name is '{{ $mailData['mail'] }}'</p>
-                                <p>Your forget password OTP is '{{ $mailData['rand_otp'] }}'</p>
+                                <p>Your forgot password OTP is '{{ $mailData['rand_otp'] }}'</p>
                             </td>
                         </tr>
                     </table>

@@ -40,7 +40,7 @@
             </a>
         </li>
         <li class="nav-item @if ($headerTitle == 'Teachers') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/teachers') }}">
+            <a class="nav-link" href="{{ URL::to('/candidates') }}">
                 <i class="fa-solid fa-person-chalkboard">
                     <span class="tab-section-text">Teachers</span>
                 </i>

@@ -3493,7 +3493,7 @@ class SchoolController extends Controller
                 // ->take(1)
                 ->first();
 
-            return view("web.schoolPortal.school_password", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'school_id' => $school_id]);
+            return view("web.schoolPortal.school_password", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'school_id' => $school_id]);
         } else {
             return redirect()->intended('/school');
         }

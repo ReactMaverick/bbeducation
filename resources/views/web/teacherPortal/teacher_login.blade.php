@@ -66,7 +66,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ url('/teacher/processLogin') }}" class="form-validate">
+                    <form method="POST" action="{{ url('/candidate/processLogin') }}" class="form-validate">
                         @csrf
                         <div class="form-group row login-form-sec">
                             <label for="user_name" class="col-sm-3 col-form-label">Username</label>
@@ -103,7 +103,7 @@
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                         <div class="forget_pass_btn">
-                            <a href="{{ URL::to('/teacher/forget-password') }}">Forget password</a>
+                            <a href="{{ URL::to('/candidate/forget-password') }}">Forgot password?</a>
                         </div>
                     </form>
                 </div>

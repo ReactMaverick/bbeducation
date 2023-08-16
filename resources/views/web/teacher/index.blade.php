@@ -15,13 +15,13 @@
                     </div>
                     <div class="teacher-left-sec">
                         <div class="about-teacher">
-                            <a href="{{ URL::to('/teacher-search') }}"> <i class="fa-solid fa-magnifying-glass"></i>
+                            <a href="{{ URL::to('/candidate-search') }}"> <i class="fa-solid fa-magnifying-glass"></i>
                                 <p>Find Teacher</p>
                             </a>
                         </div>
 
                         <div class="about-teacher">
-                            <a href="{{ URL::to('/teacher-calendar') }}"> <i class="fa-regular fa-calendar-days"></i>
+                            <a href="{{ URL::to('/candidate-calendar') }}"> <i class="fa-regular fa-calendar-days"></i>
                                 <p>Teacher</p>
                                 <p>Calendar</p>
                             </a>
@@ -42,7 +42,8 @@
                         </div> --}}
 
                         <div class="about-teacher">
-                            <a href="{{ URL::to('/teacher-pending-reference') }}"> <i class="fa-regular fa-file-lines"></i>
+                            <a href="{{ URL::to('/candidate-pending-reference') }}"> <i
+                                    class="fa-regular fa-file-lines"></i>
                                 <p>Pending</p>
                                 <p>References</p>
                             </a>
@@ -282,7 +283,7 @@
         });
 
         function teacherDetail(teacher_id) {
-            window.location.href = "{{ URL::to('/teacher-detail') }}" + '/' + teacher_id;
+            window.location.href = "{{ URL::to('/candidate-detail') }}" + '/' + teacher_id;
         }
 
         $(document).on('click', '#addNewTeacherBttn', function() {

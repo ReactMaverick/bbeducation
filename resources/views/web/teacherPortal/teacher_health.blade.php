@@ -197,7 +197,7 @@
                     <h2>Edit Preferences</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherPrefUpdate') }}" method="post" class="">
+                <form action="{{ url('/candidate/logTeacherPrefUpdate') }}" method="post" class="">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>
@@ -320,7 +320,7 @@
                     <h2>Edit Health</h2>
                 </div>
 
-                <form action="{{ url('/teacher/logTeacherHealthUpdate') }}" method="post" class="">
+                <form action="{{ url('/candidate/logTeacherHealthUpdate') }}" method="post" class="">
                     @csrf
                     <div class="modal-input-field-section">
                         <h6>

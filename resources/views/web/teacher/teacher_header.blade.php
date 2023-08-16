@@ -14,7 +14,7 @@
         <i class="fa-solid fa-star {{ $teacherDetail->favourite_id ? 'topbar-star-icon' : '' }}"></i>
     </a>
 
-    <a href="{{ URL::to('/teacher-calendar-list/' . $teacherDetail->teacher_id) }}">
+    <a href="{{ URL::to('/candidate-calendar-list/' . $teacherDetail->teacher_id) }}">
         <i class="fa-regular fa-calendar-days">
             <span class="topbar-text">Calendar</span>
         </i>
@@ -143,7 +143,7 @@
                             },
                             dataType: "json",
                             success: function(data) {
-                                window.location.href = "{{ URL::to('/teachers') }}";
+                                window.location.href = "{{ URL::to('/candidates') }}";
                             }
                         });
                 }

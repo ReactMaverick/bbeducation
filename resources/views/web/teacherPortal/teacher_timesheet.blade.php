@@ -34,7 +34,7 @@
                                     <div class="total-days-text">
                                         <div class="assignment-date">
                                             <a
-                                                href="{{ URL::to('/teacher/timesheet?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
+                                                href="{{ URL::to('/candidate/timesheet?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
                                                 <i class="fa-solid fa-caret-left"></i>
                                             </a>
                                         </div>
@@ -43,7 +43,7 @@
                                         </div>
                                         <div class="assignment-date2">
                                             <a
-                                                href="{{ URL::to('/teacher/timesheet?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
+                                                href="{{ URL::to('/candidate/timesheet?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
                                                 <i class="fa-solid fa-caret-right"></i>
                                             </a>
                                         </div>
@@ -87,7 +87,7 @@
                                 </div>
 
                                 @foreach ($calenderList as $key1 => $calender)
-                                    <form action="{{ url('/teacher/logTeacherTimesheetAdd') }}" method="post"
+                                    <form action="{{ url('/candidate/logTeacherTimesheetAdd') }}" method="post"
                                         id="teacherTimesheetForm_{{ $calender->teacher_id }}_{{ $calender->school_id }}_{{ $calender->asn_id }}"
                                         style="width: 100%; margin: 0;">
                                         @csrf
@@ -382,7 +382,7 @@
                     <h2>Add Assignment Day</h2>
                 </div>
 
-                <form action="{{ url('/teacher/teacherTimesheetAddNew') }}" method="post" class="form-validate-2"
+                <form action="{{ url('/candidate/teacherTimesheetAddNew') }}" method="post" class="form-validate-2"
                     id="eventAddForm">
                     @csrf
 
@@ -458,7 +458,7 @@
                     <h2>Edit Assignment Day</h2>
                 </div>
 
-                <form action="{{ url('/teacher/teacherTimesheetUpdate') }}" method="post" class="form-validate"
+                <form action="{{ url('/candidate/teacherTimesheetUpdate') }}" method="post" class="form-validate"
                     id="ajaxAssignmentEventForm">
                     @csrf
 
@@ -576,7 +576,7 @@
                             case "Yes":
                                 $.ajax({
                                     type: 'POST',
-                                    url: '{{ url('/teacher/teacherTimesheetDelete') }}',
+                                    url: '{{ url('/candidate/teacherTimesheetDelete') }}',
                                     data: {
                                         timesheet_item_id: eTeacherTimesheetId
                                     },

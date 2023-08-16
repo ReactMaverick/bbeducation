@@ -34,7 +34,7 @@
                             <div class="total-days-text">
                                 <div class="assignment-date">
                                     <a
-                                        href="{{ URL::to('/teacher-calendar?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
+                                        href="{{ URL::to('/candidate-calendar?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
                                         <i class="fa-solid fa-caret-left"></i>
                                     </a>
                                 </div>
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="assignment-date2">
                                     <a
-                                        href="{{ URL::to('/teacher-calendar?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
+                                        href="{{ URL::to('/candidate-calendar?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
                                         <i class="fa-solid fa-caret-right"></i>
                                     </a>
                                 </div>
@@ -261,7 +261,7 @@
             }
 
             if (calendar_mode == 'teacher') {
-                var rUrl1 = '<?php echo url('/teacher-detail/'); ?>' + '/' + teacher_id;
+                var rUrl1 = '<?php echo url('/candidate-detail/'); ?>' + '/' + teacher_id;
                 window.open(rUrl1, '_blank');
             }
 

@@ -29,7 +29,7 @@
             <img src="{{ count($companyDetail) > 0 ? asset($companyDetail[0]->company_logo) : '' }}" alt="">
             <h1>{{ count($companyDetail) > 0 ? $companyDetail[0]->company_name : '' }}</h1>
             <span>Reset Your Password?</span>
-            <form action="{{ url('/teacher/teacherPasswordUpdate') }}" method="post"
+            <form action="{{ url('/candidate/teacherPasswordUpdate') }}" method="post"
                 class="reset-password-form-sec form-validate">
                 @csrf
                 <input type="hidden" name="teacher_id" value="{{ $teacher_id }}">
