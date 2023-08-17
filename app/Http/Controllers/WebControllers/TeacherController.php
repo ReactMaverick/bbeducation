@@ -6751,12 +6751,12 @@ class TeacherController extends Controller
     public function testTeacherFileUpload(Request $request)
     {
         // return "test";
-        // $teacher_id = '10100';
+        $teacher_id = '10100';
         $user_id = '1002';
 
         $teacherOld = DB::table('tbl_teacherDocument')
             ->select('tbl_teacherDocument.*')
-            // ->where('teacher_id', $teacher_id)
+            ->where('teacher_id', $teacher_id)
             ->where('fileLocation_txt', '!=', null)
             ->where('fileName_txt', '!=', null)
             ->where('file_location', '=', null)

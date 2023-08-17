@@ -56,7 +56,7 @@
                                             </a>
                                             <a style="cursor: pointer;" class="disabled-link" id="addPaymentMethodBtn"
                                                 title="Add Payment Method">
-                                                <i class="fas fa-check-square"></i>
+                                                <i class="fas fa-check"></i>
 
                                             </a>
                                         </div>
@@ -179,233 +179,233 @@
                         <div class="school-finance-right-sec">
                             <div class="school-finance-section">
 
-                                <div class="finance-timesheet-contact-first-sec sec_box_edit p-3" style="width: 100%">
-                                    <div class="contact-heading mb-2">
+                                <div class="finance-timesheet-contact-first-sec sec_box_edit" style="width: 100%">
+                                    <div class="contact-heading details-heading">
                                         <div class="contact-heading-text">
                                             <h2>Teacher Timesheets</h2>
                                         </div>
 
-                                        <div class="contact-icon">
+                                        <div class="contact-icon header_icon">
                                             <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
                                                 title="Reject timesheet">
-                                                <i class="fas fa-window-close"></i>
+                                                <i class="fas fa-times"></i>
                                             </a>
                                             <a style="cursor: pointer;" class="disabled-link" id="logTimesheetBtn"
                                                 title="Log timesheet">
-                                                <i class="fas fa-check-square"></i>
+                                                <i class="fas fa-check"></i>
                                             </a>
                                         </div>
                                     </div>
-
-                                    <div class="total-days-slider-sec">
-                                        <div class="total-days-text">
-                                            <div class="assignment-date">
-                                                <a
-                                                    href="{{ URL::to('school/finance?include=' . app('request')->input('include') . '&method=' . app('request')->input('method') . '&date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
-                                                    <i class="fa-solid fa-caret-left"></i>
-                                                </a>
+                                    <div class="day_sec about-school-section">
+                                        <div class="total-days-slider-sec ">
+                                            <div class="total-days-text">
+                                                <div class="assignment-date">
+                                                    <a
+                                                        href="{{ URL::to('school/finance?include=' . app('request')->input('include') . '&method=' . app('request')->input('method') . '&date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
+                                                        <i class="fas fa-caret-left"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="teacher-calendar-date-text">
+                                                    <span>{{ date('D d M Y', strtotime($weekStartDate)) }}</span>
+                                                </div>
+                                                <div class="assignment-date2">
+                                                    <a
+                                                        href="{{ URL::to('school/finance?include=' . app('request')->input('include') . '&method=' . app('request')->input('method') . '&date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
+                                                        <i class="fas fa-caret-right"></i>
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div class="teacher-calendar-date-text">
-                                                <span>{{ date('D d M Y', strtotime($weekStartDate)) }}</span>
+                                        </div>
+
+                                        <?php
+                                        $day1Amount_total1 = 0;
+                                        $day2Amount_total1 = 0;
+                                        $day3Amount_total1 = 0;
+                                        $day4Amount_total1 = 0;
+                                        $day5Amount_total1 = 0;
+                                        foreach ($calenderList as $key => $cal) {
+                                            $day1Amount_total1 += $cal->day1Amount_dec;
+                                            $day2Amount_total1 += $cal->day2Amount_dec;
+                                            $day3Amount_total1 += $cal->day3Amount_dec;
+                                            $day4Amount_total1 += $cal->day4Amount_dec;
+                                            $day5Amount_total1 += $cal->day5Amount_dec;
+                                        }
+                                        ?>
+
+                                        <div class="teacher-calendar-days-sec">
+                                            <div class="teacher-calendar-days-text">
+                                                <p>School</p>
                                             </div>
-                                            <div class="assignment-date2">
-                                                <a
-                                                    href="{{ URL::to('school/finance?include=' . app('request')->input('include') . '&method=' . app('request')->input('method') . '&date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
-                                                    <i class="fa-solid fa-caret-right"></i>
-                                                </a>
+                                            <div class="teacher-calendar-days-text">
+                                                <p>Teacher</p>
+                                            </div>
+                                            <div class="teacher-calendar-days-text">
+                                                <p>Monday</p>
+                                                <p class="teacher-calendar-bottom-text">{{ $day1Amount_total1 }}</p>
+                                            </div>
+                                            <div class="teacher-calendar-days-text">
+                                                <p>Tuesday</p>
+                                                <p class="teacher-calendar-bottom-text">{{ $day2Amount_total1 }}</p>
+                                            </div>
+                                            <div class="teacher-calendar-days-text">
+                                                <p>Wednesday</p>
+                                                <p class="teacher-calendar-bottom-text">{{ $day3Amount_total1 }}</p>
+                                            </div>
+                                            <div class="teacher-calendar-days-text">
+                                                <p>Thursday</p>
+                                                <p class="teacher-calendar-bottom-text">{{ $day4Amount_total1 }}</p>
+                                            </div>
+                                            <div class="teacher-calendar-days-text">
+                                                <p>Friday</p>
+                                                <p class="teacher-calendar-bottom-text">{{ $day5Amount_total1 }}</p>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <?php
-                                    $day1Amount_total1 = 0;
-                                    $day2Amount_total1 = 0;
-                                    $day3Amount_total1 = 0;
-                                    $day4Amount_total1 = 0;
-                                    $day5Amount_total1 = 0;
-                                    foreach ($calenderList as $key => $cal) {
-                                        $day1Amount_total1 += $cal->day1Amount_dec;
-                                        $day2Amount_total1 += $cal->day2Amount_dec;
-                                        $day3Amount_total1 += $cal->day3Amount_dec;
-                                        $day4Amount_total1 += $cal->day4Amount_dec;
-                                        $day5Amount_total1 += $cal->day5Amount_dec;
-                                    }
-                                    ?>
+                                        <div class="finance-list-text-section">
+                                            <div class="teacher-calendar-table-section">
 
-                                    <div class="teacher-calendar-days-sec">
-                                        <div class="teacher-calendar-days-text">
-                                            <p>School</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>Teacher</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>Monday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day1Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>Tuesday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day2Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>Wednesday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day3Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>Thursday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day4Amount_total1 }}</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text">
-                                            <p>Friday</p>
-                                            <p class="teacher-calendar-bottom-text">{{ $day5Amount_total1 }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="finance-list-text-section">
-                                        <div class="teacher-calendar-table-section">
-
-                                            @foreach ($calenderList as $key1 => $calender)
-                                                <div class="calendar-outer-sec editApprovTimesheetDiv"
-                                                    id="editApprovTimesheetDiv{{ $calender->asn_id }}"
-                                                    onclick="timesheetApprovRow('{{ $calender->asn_id }}')">
-                                                    <div class="calendar-section">
-                                                        <div class="date-left-teacher-calendar">
-                                                            <div class="teacher-calendar-days-field3">
-                                                                <p>
-                                                                    {{ $calender->name_txt }}
-                                                                </p>
+                                                @foreach ($calenderList as $key1 => $calender)
+                                                    <div class="calendar-outer-sec editApprovTimesheetDiv"
+                                                        id="editApprovTimesheetDiv{{ $calender->asn_id }}"
+                                                        onclick="timesheetApprovRow('{{ $calender->asn_id }}')">
+                                                        <div class="calendar-section">
+                                                            <div class="date-left-teacher-calendar">
+                                                                <div class="teacher-calendar-days-field3">
+                                                                    <p>
+                                                                        {{ $calender->name_txt }}
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            <div class="teacher-calendar-days-field3">
-                                                                <p>
-                                                                    @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
-                                                                        {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
-                                                                    @else
-                                                                        {{ $calender->knownAs_txt . ' ' . $calender->surname_txt }}
-                                                                    @endif
-                                                                </p>
+                                                            <div class="date-left-teacher-calendar">
+                                                                <div class="teacher-calendar-days-field3">
+                                                                    <p>
+                                                                        @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
+                                                                            {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
+                                                                        @else
+                                                                            {{ $calender->knownAs_txt . ' ' . $calender->surname_txt }}
+                                                                        @endif
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>
-                                                                        {{ $calender->day1Avail_txt }}
-                                                                        @if ($calender->start_tm1 && $calender->end_tm1)
-                                                                            ({{ date('h:i a', strtotime($calender->start_tm1)) }}
-                                                                            -
-                                                                            {{ date('h:i a', strtotime($calender->end_tm1)) }})
-                                                                        @endif
-                                                                    </p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>
-                                                                        {{ $calender->day2Avail_txt }}
-                                                                        @if ($calender->start_tm2 && $calender->end_tm2)
-                                                                            ({{ date('h:i a', strtotime($calender->start_tm2)) }}
-                                                                            -
-                                                                            {{ date('h:i a', strtotime($calender->end_tm2)) }})
-                                                                        @endif
-                                                                    </p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>
-                                                                        {{ $calender->day3Avail_txt }}
-                                                                        @if ($calender->start_tm3 && $calender->end_tm3)
-                                                                            ({{ date('h:i a', strtotime($calender->start_tm3)) }}
-                                                                            -
-                                                                            {{ date('h:i a', strtotime($calender->end_tm3)) }})
-                                                                        @endif
-                                                                    </p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>
-                                                                        {{ $calender->day4Avail_txt }}
-                                                                        @if ($calender->start_tm4 && $calender->end_tm4)
-                                                                            ({{ date('h:i a', strtotime($calender->start_tm4)) }}
-                                                                            -
-                                                                            {{ date('h:i a', strtotime($calender->end_tm4)) }})
-                                                                        @endif
-                                                                    </p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
-                                                        </div>
-                                                        <div class="date-left-teacher-calendar">
-                                                            @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
-                                                                <div
-                                                                    class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
-                                                                    <p>
-                                                                        {{ $calender->day5Avail_txt }}
-                                                                        @if ($calender->start_tm5 && $calender->end_tm5)
-                                                                            ({{ date('h:i a', strtotime($calender->start_tm5)) }}
-                                                                            -
-                                                                            {{ date('h:i a', strtotime($calender->end_tm5)) }})
-                                                                        @endif
-                                                                    </p>
-                                                                </div>
-                                                            @else
-                                                                <div class="teacher-calendar-days-field3"></div>
-                                                            @endif
+                                                            <div class="date-left-teacher-calendar">
+                                                                @if ($calender->day1Avail_txt && $calender->day1asnDate_dte)
+                                                                    <div
+                                                                        class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
+                                                                        <p>
+                                                                            {{ $calender->day1Avail_txt }}
+                                                                            @if ($calender->start_tm1 && $calender->end_tm1)
+                                                                                ({{ date('h:i a', strtotime($calender->start_tm1)) }}
+                                                                                -
+                                                                                {{ date('h:i a', strtotime($calender->end_tm1)) }})
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="teacher-calendar-days-field3"></div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="date-left-teacher-calendar">
+                                                                @if ($calender->day2Avail_txt && $calender->day2asnDate_dte)
+                                                                    <div
+                                                                        class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
+                                                                        <p>
+                                                                            {{ $calender->day2Avail_txt }}
+                                                                            @if ($calender->start_tm2 && $calender->end_tm2)
+                                                                                ({{ date('h:i a', strtotime($calender->start_tm2)) }}
+                                                                                -
+                                                                                {{ date('h:i a', strtotime($calender->end_tm2)) }})
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="teacher-calendar-days-field3"></div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="date-left-teacher-calendar">
+                                                                @if ($calender->day3Avail_txt && $calender->day3asnDate_dte)
+                                                                    <div
+                                                                        class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
+                                                                        <p>
+                                                                            {{ $calender->day3Avail_txt }}
+                                                                            @if ($calender->start_tm3 && $calender->end_tm3)
+                                                                                ({{ date('h:i a', strtotime($calender->start_tm3)) }}
+                                                                                -
+                                                                                {{ date('h:i a', strtotime($calender->end_tm3)) }})
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="teacher-calendar-days-field3"></div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="date-left-teacher-calendar">
+                                                                @if ($calender->day4Avail_txt && $calender->day4asnDate_dte)
+                                                                    <div
+                                                                        class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
+                                                                        <p>
+                                                                            {{ $calender->day4Avail_txt }}
+                                                                            @if ($calender->start_tm4 && $calender->end_tm4)
+                                                                                ({{ date('h:i a', strtotime($calender->start_tm4)) }}
+                                                                                -
+                                                                                {{ date('h:i a', strtotime($calender->end_tm4)) }})
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="teacher-calendar-days-field3"></div>
+                                                                @endif
+                                                            </div>
+                                                            <div class="date-left-teacher-calendar">
+                                                                @if ($calender->day5Avail_txt && $calender->day5asnDate_dte)
+                                                                    <div
+                                                                        class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}">
+                                                                        <p>
+                                                                            {{ $calender->day5Avail_txt }}
+                                                                            @if ($calender->start_tm5 && $calender->end_tm5)
+                                                                                ({{ date('h:i a', strtotime($calender->start_tm5)) }}
+                                                                                -
+                                                                                {{ date('h:i a', strtotime($calender->end_tm5)) }})
+                                                                            @endif
+                                                                        </p>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="teacher-calendar-days-field3"></div>
+                                                                @endif
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @endforeach
+                                                @endforeach
 
+                                            </div>
+
+                                            <input type="hidden" name="" id="approveAsnId" value="">
                                         </div>
-
-                                        <input type="hidden" name="" id="approveAsnId" value="">
                                     </div>
-
                                 </div>
                             </div>
                         </div>
 
                         <div class="school-finance-right-sec">
                             <div class="school-finance-section">
-                                <div class="finance-timesheet-contact-first-sec sec_box_edit p-3" style="width: 100%">
-                                    <div class="contact-heading mb-2 details-heading">
+                                <div class="finance-timesheet-contact-first-sec sec_box_edit" style="width: 100%">
+                                    <div class="contact-heading details-heading">
                                         <div class="contact-heading-text">
                                             <h2>Teacher Timesheets(Submitted by teacher)</h2>
                                         </div>
 
-                                        <div class="contact-icon">
+                                        <div class="contact-icon header_icon">
                                             <a style="cursor: pointer" class="disabled-link" id="itemSheetRejectBtn"
                                                 title="Reject timesheet">
-                                                <i class="fas fa-window-close"></i>
+                                                <i class="fas fa-times"></i>
                                             </a>
                                             <a style="cursor: pointer;" class="disabled-link" id="itemSheetApproveBtn"
                                                 title="Approve timesheet">
-                                                <i class="fas fa-check-square"></i>
+                                                <i class="fas fa-check"></i>
                                             </a>
                                         </div>
                                     </div>
                                     <input type="hidden" name="" id="logTeacherTimeItemIds" value="">
-                                    <table class="table table-striped" id="">
+                                    <table class="table table-bordered table-striped" id="myTable3">
                                         <thead>
                                             <tr class="school-detail-table-heading">
                                                 <th>Teacher</th>
@@ -504,14 +504,31 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
+                scrollY: '300px',
+                paging: false,
+                // footer: false,
+                info: false,
                 "order": [
                     [1, "desc"]
                 ]
             });
             $('#myTable2').DataTable({
+                scrollY: '300px',
+                paging: false,
+                // footer: false,
+                info: false,
                 "order": [
                     [6, "desc"]
                 ]
+            });
+
+            $('#myTable3').DataTable({
+                scrollY: '300px',
+                paging: false,
+                // footer: false,
+                info: false,
+                ordering: false,
+                searching: false
             });
         });
 
