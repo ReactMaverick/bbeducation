@@ -475,8 +475,8 @@
 
     <!-- Invoice Payment method Modal -->
     <div class="modal fade" id="invoicePaymentMethodModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:75%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -484,17 +484,19 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Invoice</h2>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Invoice</h2>
+                    </div>
+
+                    <form action="{{ url('/school/logSchoolInvoicePayMethodEdit') }}" method="post"
+                        class="form-validate-2" enctype="multipart/form-data">
+                        @csrf
+
+                        <div id="invoicePaymentMethodAjax"></div>
+                    </form>
                 </div>
-
-                <form action="{{ url('/school/logSchoolInvoicePayMethodEdit') }}" method="post" class="form-validate-2"
-                    enctype="multipart/form-data">
-                    @csrf
-
-                    <div id="invoicePaymentMethodAjax"></div>
-                </form>
 
             </div>
         </div>

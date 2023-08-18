@@ -1,12 +1,46 @@
-<script src="{!! asset('plugins/select2/select2.full.min.js') !!}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.min.js"
-    integrity="sha512-XKa9Hemdy1Ui3KSGgJdgMyYlUg1gM+QhL6cnlyTe2qzMCYm4nAZ1PsVerQzTTXzonUR+dmswHqgJPuwCq1MaAg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="{{ asset('admin_lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- ChartJS -->
+{{-- <script src="{{ asset('admin_lte/plugins/chart.js/Chart.min.js') }}"></script> --}}
+<!-- Sparkline -->
+{{-- <script src="{{ asset('admin_lte/plugins/sparklines/sparkline.js') }}"></script> --}}
+<!-- JQVMap -->
+{{-- <script src="{{ asset('admin_lte/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script> --}}
+<!-- jQuery Knob Chart -->
+{{-- <script src="{{ asset('admin_lte/plugins/jquery-knob/jquery.knob.min.js') }}"></script> --}}
+<!-- daterangepicker -->
+<script src="{{ asset('admin_lte/plugins/moment/moment.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{{ asset('admin_lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+<!-- Summernote -->
+{{-- <script src="{{ asset('admin_lte/plugins/summernote/summernote-bs4.min.js') }}"></script> --}}
+<!-- overlayScrollbars -->
+{{-- <script src="{{ asset('admin_lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script> --}}
+<!-- AdminLTE App -->
+<script src="{{ asset('admin_lte/dist/js/adminlte.js') }}"></script>
+<!-- AdminLTE for demo purposes -->
+{{-- <script src="{{ asset('admin_lte/dist/js/demo.js') }}"></script> --}}
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+{{-- <script src="{{ asset('admin_lte/dist/js/pages/dashboard.js') }}"></script> --}}
+
+<script src="{{ asset('admin_lte/plugins/select2/js/select2.full.min.js') }}"></script>
 <script src="{!! asset('plugins/sweetalert/sweetalert.min.js') !!}"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.0/jquery.timepicker.js"
-    integrity="sha512-v84GNWs/NREzyztDm0s2NCXR9tIXH4aD/pe3uktyJeCWICr+/J38obdjXx1wxPRzTXHY54Hf0zBD5fbuRSNvGw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{!! asset('admin_lte/plugins/datatables/jquery.dataTables.min.js') !!}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('admin_lte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 
 <?php if (Session::has('success')){ ?>
 <script>
@@ -36,6 +70,10 @@
     $(document).ready(function() {
         $('#fullLoader').hide();
         $(".select2").select2();
+
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
 
         $('.datePickerPaste').datepicker({
             format: 'dd/mm/yyyy',
@@ -154,6 +192,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -359,6 +398,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -574,6 +614,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -789,6 +830,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -979,6 +1021,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -1160,6 +1203,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 

@@ -1,97 +1,96 @@
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('web/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('web/css/responsive.css') }}">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed&family=Inter&family=Merriweather:ital,wght@1,300&family=Montserrat:ital,wght@0,400;1,300&family=Raleway:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Forgot Password</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <style>
-        .forget_pass_btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .forget_pass_btn a {
-            color: #bb0404;
-            text-decoration: none;
-        }
-    </style>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('admin_lte/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{{ asset('admin_lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('admin_lte/dist/css/adminlte.min.css') }}">
 </head>
 
-<body>
-    <div id="fullLoader">
-        <div class="loadingDiv"></div>
+<body class="hold-transition login-page">
+    <div class="skd_loder_box" id="fullLoader">
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
     </div>
-    <div class="container-fluid">
-        <div class="container login-container">
-            <div class="login-row">
-                <div class="login-section">
-                    <div class="login-page-img">
-                        <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="">
-                    </div>
-                    <h2>Forgot Password</h2>
+    <div class="login-box">
+        <!-- /.login-logo -->
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="" style="width: 60%;">
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">FORGOT PASSWORD</p>
 
-                    @if (count($errors) > 0)
-                        @foreach ($errors->all() as $error)
-                            <div class="alert alert-danger" role="alert">
-                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                <span class="sr-only">Error:</span>
-                                {{ $error }}
-                            </div>
-                        @endforeach
-                    @endif
-
-                    @if (Session::has('fp_error'))
+                @if (count($errors) > 0)
+                    @foreach ($errors->all() as $error)
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            {!! session('fp_error') !!}
+                            <span class="sr-only">Error:</span>
+                            {{ $error }}
                         </div>
-                    @endif
+                    @endforeach
+                @endif
 
-                    @if (Session::has('loginSuccess'))
-                        <div class="alert alert-success" role="alert">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            {!! session('loginSuccess') !!}
-                        </div>
-                    @endif
+                @if (Session::has('loginError'))
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        {!! session('loginError') !!}
+                    </div>
+                @endif
 
-                    <form method="POST" action="{{ url('/candidate/forgetPasswordSendOtp') }}" class="form-validate">
-                        @csrf
-                        <div class="form-group row login-form-sec">
-                            <label for="" class="col-sm-3 col-form-label">Email</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control email-validate" id="" name="email"
-                                    autofocus placeholder="Enter email">
+                <form method="POST" action="{{ url('/candidate/forgetPasswordSendOtp') }}" class="form-validate">
+                    @csrf
+                    <div class="input-group form-group mb-3">
+                        <input type="text" class="form-control field-validate @error('email') is-invalid @enderror"
+                            id="email" name="email" value="{{ old('email') }}" autocomplete="email" autofocus
+                            placeholder="Enter your mail">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="login-button-sec" style="justify-content: center">
-                            <button type="submit" class="btn btn-primary" id="fPassBtn">Submit</button>
+                    <div class="row">
+                        <div class="col-8">
                         </div>
-
-                        <div class="forget_pass_btn">
-                            <span><a href="{{ URL::to('/candidate') }}">Login</a></span>
+                        <!-- /.col -->
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block" id="fPassBtn">Submit</button>
                         </div>
-                    </form>
-                </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
 
+                <p class="mb-1">
+                    <a href="{{ URL::to('/candidate') }}">Sign In</a>
+                </p>
             </div>
+            <!-- /.card-body -->
         </div>
+        <!-- /.card -->
     </div>
+    <!-- /.login-box -->
+
+    <!-- jQuery -->
+    <script src="{{ asset('admin_lte/plugins/jquery/jquery.min.js') }}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset('admin_lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('admin_lte/dist/js/adminlte.min.js') }}"></script>
 
     @include('web.teacherPortal.common.scripts')
 
@@ -100,7 +99,6 @@
             $('#fullLoader').show();
         });
     </script>
-
 </body>
 
 </html>

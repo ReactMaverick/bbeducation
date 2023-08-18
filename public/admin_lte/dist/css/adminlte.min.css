@@ -56594,3 +56594,15 @@ span.input_icon i.fa-eye {
 .row.assignment-detail-row {
     justify-content: center;
 }
+
+.card-footer {
+    text-align: center;
+}
+
+.school-edit-icon {
+    color: #1e2f65;
+}
+
+.calendar-heading-sec.card-header {
+    background: #e9ebf752 !important;
+}

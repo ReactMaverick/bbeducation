@@ -154,6 +154,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -359,6 +360,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -574,6 +576,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -789,6 +792,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 
@@ -979,6 +983,7 @@
         });
 
         if (error == "has error") {
+            $('#fullLoader').hide();
             return false;
         }
 

@@ -4669,7 +4669,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'contactItemList' => $contactItemList, 'titleList' => $titleList, 'nationalityList' => $nationalityList, 'ralationshipList' => $ralationshipList, 'contactTypeList' => $contactTypeList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_detail", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'contactItemList' => $contactItemList, 'titleList' => $titleList, 'nationalityList' => $nationalityList, 'ralationshipList' => $ralationshipList, 'contactTypeList' => $contactTypeList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/candidate');
         }

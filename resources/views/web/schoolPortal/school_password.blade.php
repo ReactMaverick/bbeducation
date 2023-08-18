@@ -31,12 +31,12 @@
 
                     <div class="col-md-6 topbar-sec">
 
-                        <div class="sec_box_edit">
-                            <div class="calendar-heading-sec mb-4 details-heading">
+                        <div class="card card-primary">
+                            <div class="calendar-heading-sec card-header">
                                 <h2>Update Password</h2>
                                 <i class="fas fa-pen-fancy school-edit-icon"></i>
                             </div>
-                            <div class="about-school-section">
+                            <div class="card-body">
 
 
                                 <form action="{{ url('/school/LogSchoolPasswordUpdate') }}" method="post"
@@ -66,12 +66,12 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer calendar-modal-footer form_ftr_area">
-                                        <button type="submit" class="btn btn-secondary">Update</button>
-                                    </div>
                             </div>
+                            <!-- Modal footer -->
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+
                             </form>
                         </div>
 

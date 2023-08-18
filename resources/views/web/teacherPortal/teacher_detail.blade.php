@@ -1,246 +1,272 @@
 @extends('web.teacherPortal.layout')
 @section('content')
-    <style>
-        .disabled-link {
-            pointer-events: none;
-        }
-    </style>
-    <div class="assignment-detail-page-section">
-        <div class="row assignment-detail-row">
-
-            @include('web.teacherPortal.teacher_sidebar')
-
-            <div class="col-md-10 topbar-sec">
-
-                @include('web.teacherPortal.teacher_header')
-
-                <div class="school-detail-right-sec">
-                    <div class="school-details-first-sec">
-                        <div class="details-heading">
-                            <h2>Details</h2>
-                        </div>
-
-                        <div class="about-school-section">
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>ID</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    <p>{{ $teacherDetail->teacher_id }}</p>
-                                </div>
-                            </div>
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Title</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    <p>{{ $teacherDetail->title_txt }}</p>
-                                </div>
-                            </div>
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>First Name</h2>
-                                </div>
-                                <div class="grid-refs-sec">
-                                    <div class="grid-refs-text1">
-                                        <p>{{ $teacherDetail->firstName_txt }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Surname</h2>
-                                </div>
-                                <div class="grid-refs-sec">
-                                    <div class="grid-refs-text1">
-                                        <p>{{ $teacherDetail->surname_txt }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Known As</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    <p>{{ $teacherDetail->knownAs_txt }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Maiden Name</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    <p>{{ $teacherDetail->maidenPreviousNames_txt }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Date of Birth</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    <p>{{ date('d-m-Y', strtotime($teacherDetail->DOB_dte)) }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Nationality</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    <p>{{ $teacherDetail->nationality_txt }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="school-details-second-sec">
-                        <div>
-                            <div class="details-heading">
-                                <h2>Address</h2>
-                            </div>
-
-                            <!-- <div class="about-school-section"> -->
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Full Address</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    @if ($teacherDetail->address1_txt)
-                                        <p>{{ $teacherDetail->address1_txt }}</p>
-                                    @endif
-                                    @if ($teacherDetail->address2_txt)
-                                        <p>{{ $teacherDetail->address2_txt }}</p>
-                                    @endif
-                                    @if ($teacherDetail->address3_txt)
-                                        <p>{{ $teacherDetail->address3_txt }}</p>
-                                    @endif
-                                    @if ($teacherDetail->address4_txt)
-                                        <p>{{ $teacherDetail->address4_txt }}</p>
-                                    @endif
-                                    @if ($teacherDetail->postcode_txt)
-                                        <p>{{ $teacherDetail->postcode_txt }}</p>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Grid Refs</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    @if ($teacherDetail->lat_txt)
-                                        <p>{{ $teacherDetail->lat_txt }}</p>
-                                    @endif
-                                    @if ($teacherDetail->lon_txt)
-                                        <p>{{ $teacherDetail->lon_txt }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('web.teacherPortal.teacher_header')
                 </div>
-
-                <div class="school-detail-right-sec">
-
-                    <div class="school-details-contact-second-sec">
-                        <div class="contact-heading">
-                            <div class="contact-heading-text">
-                                <h2>Contacts</h2>
-                            </div>
-                            <div class="contact-icon-sec">
-                                <a data-toggle="modal" data-target="#ContactItemAddModal" style="cursor: pointer;">
-                                    <i class="fa-solid fa-plus"></i>
-                                </a>
-                                <a style="cursor: pointer;" class="disabled-link" id="editContactItemBttn">
-                                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="assignment-finance-table-section">
-                            <table class="table school-detail-page-table" id="myTable">
-                                <thead>
-                                    <tr class="school-detail-table-heading">
-                                        <th>Type</th>
-                                        <th>Item</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-body-sec">
-                                    @foreach ($contactItemList as $key => $contactItem)
-                                        <tr class="school-detail-table-data editContactRow"
-                                            id="editContactRow{{ $contactItem->contactItemTch_id }}"
-                                            onclick="contactItemRowSelect({{ $contactItem->contactItemTch_id }})">
-                                            <td>{{ $contactItem->type_txt }}</td>
-                                            <td>{{ $contactItem->contactItem_txt }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <input type="hidden" name="" id="teacherContactItemId" value="">
-
-                    <div class="school-details-first-sec">
-                        <div class="details-heading">
-                            <h2>Emergency Contact</h2>
-                            <a data-toggle="modal" data-target="#editEmergencyContactModal" style="cursor: pointer;"><i
-                                    class="fa-solid fa-pencil"></i></a>
-                        </div>
-
-                        <div class="about-school-section">
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Emergency Contact</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    @if ($teacherDetail->emergencyContactName_txt)
-                                        <p>{{ $teacherDetail->emergencyContactName_txt }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Relationship</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    @if ($teacherDetail->emergencyContactRelation_txt)
-                                        <p>{{ $teacherDetail->emergencyContactRelation_txt }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Contact Num 1</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    @if ($teacherDetail->emergencyContactNum1_txt)
-                                        <p>{{ $teacherDetail->emergencyContactNum1_txt }}</p>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="school-heading-text">
-                                    <h2>Contact Num 2</h2>
-                                </div>
-                                <div class="school-name-text">
-                                    @if ($teacherDetail->emergencyContactNum2_txt)
-                                        <p>{{ $teacherDetail->emergencyContactNum2_txt }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- /.content-header -->
+            <div class="assignment-detail-page-section">
+                <div class="row assignment-detail-row">
+
+                    <div class="col-md-12 topbar-sec">
+
+                        <div class="school-detail-right-sec">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="school-details-first-sec sec_box_edit">
+                                        <div class="details-heading">
+                                            <h2>Details</h2>
+                                        </div>
+
+                                        <div class="about-school-section">
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>ID</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    <p>{{ $teacherDetail->teacher_id }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Title</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    <p>{{ $teacherDetail->title_txt }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>First Name</h2>
+                                                </div>
+                                                <div class="grid-refs-sec">
+                                                    <div class="grid-refs-text1">
+                                                        <p>{{ $teacherDetail->firstName_txt }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Surname</h2>
+                                                </div>
+                                                <div class="grid-refs-sec">
+                                                    <div class="grid-refs-text1">
+                                                        <p>{{ $teacherDetail->surname_txt }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Known As</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    <p>{{ $teacherDetail->knownAs_txt }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Maiden Name</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    <p>{{ $teacherDetail->maidenPreviousNames_txt }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Date of Birth</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    <p>{{ date('d-m-Y', strtotime($teacherDetail->DOB_dte)) }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Nationality</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    <p>{{ $teacherDetail->nationality_txt }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="school-details-second-sec sec_box_edit">
+                                        <div>
+                                            <div class="details-heading">
+                                                <h2>Address</h2>
+                                            </div>
+
+                                            <div class="about-school-section">
+                                                <div class="school-name-section">
+                                                    <div class="school-heading-text">
+                                                        <h2>Full Address</h2>
+                                                    </div>
+                                                    <div class="school-name-text">
+                                                        <p>
+                                                            @if ($teacherDetail->address1_txt)
+                                                                {{ $teacherDetail->address1_txt }}
+                                                            @endif
+                                                            @if ($teacherDetail->address2_txt)
+                                                                {{ ', ' . $teacherDetail->address2_txt }}
+                                                            @endif
+                                                            @if ($teacherDetail->address3_txt)
+                                                                {{ ', ' . $teacherDetail->address3_txt }}
+                                                            @endif
+                                                            @if ($teacherDetail->address4_txt)
+                                                                {{ ', ' . $teacherDetail->address4_txt }}
+                                                            @endif
+                                                            @if ($teacherDetail->postcode_txt)
+                                                                {{ ', ' . $teacherDetail->postcode_txt }}
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="school-name-section">
+                                                    <div class="school-heading-text">
+                                                        <h2>Grid Refs</h2>
+                                                    </div>
+                                                    <div class="school-name-text">
+                                                        <p>
+                                                            @if ($teacherDetail->lat_txt)
+                                                                {{ $teacherDetail->lat_txt }}
+                                                            @endif
+                                                            @if ($teacherDetail->lon_txt)
+                                                                {{ ', ' . $teacherDetail->lon_txt }}
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="school-detail-right-sec mt-3">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="school-details-first-sec sec_box_edit">
+                                        <div class="details-heading">
+                                            <div class="contact-heading-text">
+                                                <h2>Contacts</h2>
+                                            </div>
+                                            <div class="contact-icon-sec header_icon">
+                                                <a data-toggle="modal" data-target="#ContactItemAddModal"
+                                                    style="cursor: pointer;">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                </a>
+                                                <a style="cursor: pointer;" class="disabled-link" id="editContactItemBttn">
+                                                    <i class="fas fa-edit school-edit-icon"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="assignment-finance-table-section">
+                                            <table class="table table-bordered table-striped" id="myTable">
+                                                <thead>
+                                                    <tr class="school-detail-table-heading">
+                                                        <th>Type</th>
+                                                        <th>Item</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-body-sec">
+                                                    @foreach ($contactItemList as $key => $contactItem)
+                                                        <tr class="school-detail-table-data editContactRow"
+                                                            id="editContactRow{{ $contactItem->contactItemTch_id }}"
+                                                            onclick="contactItemRowSelect({{ $contactItem->contactItemTch_id }})">
+                                                            <td>{{ $contactItem->type_txt }}</td>
+                                                            <td>{{ $contactItem->contactItem_txt }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="" id="teacherContactItemId" value="">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="school-details-first-sec sec_box_edit">
+                                        <div class="details-heading">
+                                            <h2>Emergency Contact</h2>
+                                            <a data-toggle="modal" data-target="#editEmergencyContactModal"
+                                                style="cursor: pointer;"><i class="fas fa-edit school-edit-icon"></i></a>
+                                        </div>
+
+                                        <div class="about-school-section">
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Emergency Contact</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    @if ($teacherDetail->emergencyContactName_txt)
+                                                        <p>{{ $teacherDetail->emergencyContactName_txt }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Relationship</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    @if ($teacherDetail->emergencyContactRelation_txt)
+                                                        <p>{{ $teacherDetail->emergencyContactRelation_txt }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Contact Num 1</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    @if ($teacherDetail->emergencyContactNum1_txt)
+                                                        <p>{{ $teacherDetail->emergencyContactNum1_txt }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="school-heading-text">
+                                                    <h2>Contact Num 2</h2>
+                                                </div>
+                                                <div class="school-name-text">
+                                                    @if ($teacherDetail->emergencyContactNum2_txt)
+                                                        <p>{{ $teacherDetail->emergencyContactNum2_txt }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
     <!-- Detail Edit Modal -->
     <div class="modal fade" id="editDetailModal">
@@ -629,7 +655,13 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                scrollY: '200px',
+                paging: false,
+                // footer: false,
+                info: false,
+                ordering: false
+            });
         });
 
         function contactItemRowSelect(contactItemTch_id) {

@@ -269,8 +269,6 @@
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-
-
                                 <div class="calendar-heading-sec">
                                     <i class="fas fa-edit school-edit-icon"></i>
                                     <h2>Edit Address</h2>
