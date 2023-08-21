@@ -10,33 +10,31 @@
         </li>
 
         <li class="user_log"><a class="log_item" href="#">
-                <span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <g>
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M9.55851 21.4562C5.88651 21.4562 2.74951 20.9012 2.74951 18.6772C2.74951 16.4532 5.86651 14.4492 9.55851 14.4492C13.2305 14.4492 16.3665 16.4342 16.3665 18.6572C16.3665 20.8802 13.2505 21.4562 9.55851 21.4562Z"
-                                    stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                </path>
-                                <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M9.55849 11.2776C11.9685 11.2776 13.9225 9.32356 13.9225 6.91356C13.9225 4.50356 11.9685 2.54956 9.55849 2.54956C7.14849 2.54956 5.19449 4.50356 5.19449 6.91356C5.18549 9.31556 7.12649 11.2696 9.52749 11.2776H9.55849Z"
-                                    stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                </path>
-                                <path
-                                    d="M16.8013 10.0789C18.2043 9.70388 19.2383 8.42488 19.2383 6.90288C19.2393 5.31488 18.1123 3.98888 16.6143 3.68188"
-                                    stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                </path>
-                                <path
-                                    d="M17.4608 13.6536C19.4488 13.6536 21.1468 15.0016 21.1468 16.2046C21.1468 16.9136 20.5618 17.6416 19.6718 17.8506"
-                                    stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                </path>
-                            </g>
-                        </g>
-                    </svg>
-                </span>{{ $teacherLoginData ? $teacherLoginData->firstName_txt : '' }}
-                {{ $teacherLoginData ? $teacherLoginData->surname_txt : '' }}</a>
+                <div class="image elevation-2 img-circle">
+                    @if ($teacherDetail->file_location != null || $teacherDetail->file_location != '')
+                        <img src="{{ asset($teacherDetail->file_location) }}" class="img-fluid" alt="">
+                    @else
+                        <img src="{{ asset('web/images/user-img.png') }}" class="img-fluid" alt="">
+                    @endif
+                </div>
+                @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
+                    {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                @else
+                    {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                @endif
+            </a>
             <ul class="dropdown">
+                <li><a data-toggle="modal" data-target="#profilePicAddModal" style="cursor: pointer;"><span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-settings">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path
+                                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                                </path>
+                            </svg>
+                        </span> Change Profile Image</a>
+                </li>
                 <li><a href="{{ URL::to('/candidate/change-password') }}"><span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -66,3 +64,64 @@
 
 
 </nav>
+
+<!-- Profile Pic Add Modal -->
+<div class="modal fade" id="profilePicAddModal">
+    <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-content calendar-modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header calendar-modal-header">
+                <h4 class="modal-title">Add Profile Image</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="calendar-heading-sec">
+                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <h2>Add Profile Image</h2>
+                </div>
+
+                <form action="{{ url('/candidate/logTeacherProfilePicAdd') }}" method="post" class="form-validate-6"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-input-field-section">
+                        <h6>
+                            @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
+                                {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                            @else
+                                {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                            @endif
+                        </h6>
+                        {{-- <span>ID</span>
+                            <p>{{ $teacherDetail->teacher_id }}</p> --}}
+                        <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
+                        <input type="hidden" name="teacherDocument_id"
+                            value="{{ $teacherDetail->teacherDocument_id }}">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="modal-input-field form-group">
+                                    <label class="form-check-label">Upload Profile Image</label><span
+                                        style="color: red;">*</span>
+                                    <input type="file" class="form-control file-validate-6" name="file"
+                                        id="" value=""><span> *Only file type 'jpg', 'png',
+                                        'jpeg'</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Profile Pic Add Modal -->

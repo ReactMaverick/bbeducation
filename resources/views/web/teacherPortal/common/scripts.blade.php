@@ -15,7 +15,7 @@
 {{-- <script src="{{ asset('admin_lte/plugins/jquery-knob/jquery.knob.min.js') }}"></script> --}}
 <!-- daterangepicker -->
 <script src="{{ asset('admin_lte/plugins/moment/moment.min.js') }}"></script>
-<script src="{{ asset('admin_lte/plugins/daterangepicker/daterangepicker.js') }}"></script>
+{{-- <script src="{{ asset('admin_lte/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{ asset('admin_lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <!-- Summernote -->
@@ -41,6 +41,8 @@
 <script src="{{ asset('admin_lte/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('admin_lte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('admin_lte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 <?php if (Session::has('success')){ ?>
 <script>

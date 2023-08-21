@@ -1,185 +1,211 @@
 @extends('web.teacherPortal.layout')
 @section('content')
-    <style>
-        .disabled-link {
-            pointer-events: none;
-        }
-    </style>
-    <div class="assignment-detail-page-section">
-        <div class="row assignment-detail-row">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('web.teacherPortal.teacher_header')
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
 
-            @include('web.teacherPortal.teacher_sidebar')
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
 
-            <div class="col-md-10 topbar-sec">
+            <div class="assignment-detail-page-section">
+                <div class="row assignment-detail-row">
 
-                @include('web.teacherPortal.teacher_header')
+                    <div class="col-md-12 topbar-sec">
 
-                <div class="school-detail-right-sec">
-                    <div class="teacher-health-first-sec">
-                        <div class="details-heading">
-                            <h2>Preferences</h2>
-                            <a data-toggle="modal" data-target="#preferenceEditModal" style="cursor: pointer;"><i
-                                    class="fa-solid fa-pencil"></i></a>
+                        <div class="school-detail-right-sec">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="teacher-health-first-sec sec_box_edit">
+                                        <div class="details-heading">
+                                            <h2>Preferences</h2>
+                                            <a data-toggle="modal" data-target="#preferenceEditModal"
+                                                style="cursor: pointer;"><i class="fas fa-pencil"></i></a>
+                                        </div>
+
+                                        <div class="about-school-section">
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <label for="vehicle1">Can Drive</label>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <input type="checkbox" id="" name="" value="1"
+                                                        disabled
+                                                        {{ $teacherDetail->prefDrive_status == '-1' ? 'checked' : '' }}>
+                                                </div>
+                                            </div>
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <label for="vehicle1">Daily Supply</label>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <input type="checkbox" id="" name="" value="1"
+                                                        disabled
+                                                        {{ $teacherDetail->prefDailySupply_status == '-1' ? 'checked' : '' }}>
+                                                </div>
+                                            </div>
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <label for="vehicle1">Long Term</label>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <input type="checkbox" id="" name="" value="1"
+                                                        disabled
+                                                        {{ $teacherDetail->prefLongTerm_status == '-1' ? 'checked' : '' }}>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <label for="vehicle1">Early Morning Calls</label>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <input type="checkbox" id="" name="" value="1"
+                                                        disabled
+                                                        {{ $teacherDetail->prefEarlyMorningCall_status == '-1' ? 'checked' : '' }}>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <label for="vehicle1">SEN Interested</label>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <input type="checkbox" id="" name="" value="1"
+                                                        disabled
+                                                        {{ $teacherDetail->prefSEN_status == '-1' ? 'checked' : '' }}>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <label for="vehicle1">SEN Experience</label>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <input type="checkbox" id="" name="" value="1"
+                                                        disabled
+                                                        {{ $teacherDetail->prefSENExperience_status == '-1' ? 'checked' : '' }}>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Max. Distance</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->prefDistance_int }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Pref. Year Group</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->prefYearGroup_int }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Ideal job</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->prefIdealJob_txt }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Other Agencies</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->otherAgencies_txt }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Current Rate</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->currentRate_dec }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Previous Schools</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->previousSchools_txt }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="teacher-health-second-sec sec_box_edit">
+
+                                        <div class="details-heading">
+                                            <h2>Health</h2>
+                                            <a data-toggle="modal" data-target="#healthEditModal"
+                                                style="cursor: pointer;"><i class="fas fa-pencil"></i></a>
+                                        </div>
+
+                                        <div class="about-school-section">
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Occupational Health</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->occupationalHealth_txt }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Health Issues</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->healthIssues_txt }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="school-name-section">
+                                                <div class="teacher-prefernce-heading-text">
+                                                    <h2>Health Decoration Date</h2>
+                                                </div>
+                                                <div class="teacher-prefernce-name-text">
+                                                    <p>{{ $teacherDetail->healthDeclaration_dte != null ? date('d-m-Y', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                         </div>
-
-                        <div class="about-school-section">
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <label for="vehicle1">Can Drive</label>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <input type="checkbox" id="" name="" value="1" disabled
-                                        {{ $teacherDetail->prefDrive_status == '-1' ? 'checked' : '' }}>
-                                </div>
-                            </div>
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <label for="vehicle1">Daily Supply</label>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <input type="checkbox" id="" name="" value="1" disabled
-                                        {{ $teacherDetail->prefDailySupply_status == '-1' ? 'checked' : '' }}>
-                                </div>
-                            </div>
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <label for="vehicle1">Long Term</label>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <input type="checkbox" id="" name="" value="1" disabled
-                                        {{ $teacherDetail->prefLongTerm_status == '-1' ? 'checked' : '' }}>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <label for="vehicle1">Early Morning Calls</label>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <input type="checkbox" id="" name="" value="1" disabled
-                                        {{ $teacherDetail->prefEarlyMorningCall_status == '-1' ? 'checked' : '' }}>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <label for="vehicle1">SEN Interested</label>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <input type="checkbox" id="" name="" value="1" disabled
-                                        {{ $teacherDetail->prefSEN_status == '-1' ? 'checked' : '' }}>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <label for="vehicle1">SEN Experience</label>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <input type="checkbox" id="" name="" value="1" disabled
-                                        {{ $teacherDetail->prefSENExperience_status == '-1' ? 'checked' : '' }}>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Max. Distance</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->prefDistance_int }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Pref. Year Group</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->prefYearGroup_int }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Ideal job</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->prefIdealJob_txt }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Other Agencies</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->otherAgencies_txt }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Current Rate</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->currentRate_dec }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Previous Schools</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->previousSchools_txt }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="teacher-health-second-sec">
-                        <div>
-                            <div class="details-heading">
-                                <h2>Health</h2>
-                                <a data-toggle="modal" data-target="#healthEditModal" style="cursor: pointer;"><i
-                                        class="fa-solid fa-pencil"></i></a>
-                            </div>
-
-                            <!-- <div class="about-school-section"> -->
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Occupational Health</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->occupationalHealth_txt }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Health Issues</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->healthIssues_txt }}</p>
-                                </div>
-                            </div>
-
-                            <div class="school-name-section">
-                                <div class="teacher-prefernce-heading-text">
-                                    <h2>Health Decoration Date</h2>
-                                </div>
-                                <div class="teacher-prefernce-name-text">
-                                    <p>{{ $teacherDetail->healthDeclaration_dte != null ? date('d-m-Y', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 
     <!-- Preference Edit Modal -->
     <div class="modal fade" id="preferenceEditModal">
@@ -193,7 +219,7 @@
                 </div>
 
                 <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <i class="fas fa-pencil school-edit-icon"></i>
                     <h2>Edit Preferences</h2>
                 </div>
 
@@ -316,7 +342,7 @@
                 </div>
 
                 <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                    <i class="fas fa-pencil school-edit-icon"></i>
                     <h2>Edit Health</h2>
                 </div>
 

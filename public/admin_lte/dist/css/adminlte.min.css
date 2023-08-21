@@ -1,16 +1,3 @@
-/*!
- *   AdminLTE v3.2.0
- *   Author: Colorlib
- *   Website: AdminLTE.io <https://adminlte.io>
- *   License: Open source - MIT <https://opensource.org/licenses/MIT>
- */
-/*!
- * Bootstrap v4.6.1 (https://getbootstrap.com/)
- * Copyright 2011-2021 The Bootstrap Authors
- * Copyright 2011-2021 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;700;800;900&display=swap');
 
 :root {
@@ -183,7 +170,7 @@ a {
     color: #194aec;
     text-decoration: none;
     background-color: transparent;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 a:hover {
@@ -14102,8 +14089,9 @@ span.brand-text.font-weight-light {
 }
 
 .user-panel img {
-    height: auto;
-    width: 40px
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
 }
 
 .user-panel .info {
@@ -16767,7 +16755,8 @@ span.brand-text.font-weight-light {
 }
 
 .nav-sidebar .nav-item>.nav-link {
-    position: relative
+    position: relative;
+    display: flex;
 }
 
 .nav-sidebar .nav-item>.nav-link>.float-right {
@@ -55914,10 +55903,10 @@ a.text-muted:hover {
     box-shadow: none;
 }
 
-.has-error {
+/* .has-error {
     border: 1px solid #f22 !important;
     border-radius: .25rem !important;
-}
+} */
 
 .card-header {
     background-color: #495057 !important;
@@ -55955,7 +55944,7 @@ a.text-muted:hover {
 }
 
 div.skd_ldr {
-    background-color: #3a221669;
+    background-color: rgb(6 183 249 / 47%);
     border-radius: 50%;
     position: absolute;
     margin: auto auto;
@@ -56605,4 +56594,107 @@ span.input_icon i.fa-eye {
 
 .calendar-heading-sec.card-header {
     background: #e9ebf752 !important;
+}
+
+.grid_7 {
+    display: grid;
+    align-items: stretch;
+    text-align: center;
+    grid-template-columns: repeat(6, 1fr);
+    transition: 0.3s all ease-in-out;
+    border: 1px solid #dee2e6;
+}
+
+.skd_date {
+    padding: 10px;
+    border-right: 1px solid #dee2e6;
+}
+
+.new_teacher_calendar_inner {
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+}
+
+.new_teacher_calendar_outer2 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.new_teacher_calendar_outer2 p {
+    font-size: 12px;
+}
+
+.teacher-calendar-sec5 {
+    padding: 15px;
+}
+
+.school-detail-right-sec.sec_box_edit:hover {
+    scale: 1;
+}
+
+.teacher-calendar-days-field,
+.teacher-calendar-days-field3,
+.teacher-calendar-days-field2 {
+    padding: 10px;
+    transition: 0.3s all ease-in-out;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    min-height: 60px;
+}
+
+.teacher-calendar-days-field {
+    background-color: #ffa601;
+    width: 100%;
+}
+
+.teacher-calendar-days-field3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    width: 100%;
+}
+
+.teacher-calendar-days-field2 {
+    width: 100%;
+    border-radius: 5%;
+    border: 1px solid #9dc3e6;
+    background-color: #ffff99;
+}
+
+button.ml_at {
+    display: table;
+    margin-left: auto;
+}
+
+.image {
+    height: 40px;
+    width: 40px;
+    overflow: hidden;
+}
+
+a.log_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.about-school-section label,
+.about-school-section h2 {
+    font-size: 14px;
+    line-height: 1;
+    margin: 0;
+    font-weight: 500 !important;
 }

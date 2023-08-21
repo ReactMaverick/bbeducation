@@ -4983,7 +4983,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_profession", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications, 'candidateList' => $candidateList, 'agerangeList' => $agerangeList, 'interviewQualityList' => $interviewQualityList, 'languageSkillList' => $languageSkillList, 'subjectList' => $subjectList, 'typeList' => $typeList, 'subTypeList' => $subTypeList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_profession", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications, 'candidateList' => $candidateList, 'agerangeList' => $agerangeList, 'interviewQualityList' => $interviewQualityList, 'languageSkillList' => $languageSkillList, 'subjectList' => $subjectList, 'typeList' => $typeList, 'subTypeList' => $subTypeList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/candidate');
         }
@@ -5091,7 +5091,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_health", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_health", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/candidate');
         }
@@ -5307,7 +5307,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list, 'documentList' => $documentList, 'typeList' => $typeList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_documents", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list, 'documentList' => $documentList, 'typeList' => $typeList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/candidate');
         }
@@ -5700,7 +5700,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_payroll", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'bankList' => $bankList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_payroll", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'bankList' => $bankList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/candidate');
         }
@@ -6081,7 +6081,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_timesheet", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList1, 'weekEndDate' => $weekEndDate, 'plusFiveDate' => $plusFiveDate, 'dayPartList' => $dayPartList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_timesheet", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList1, 'weekEndDate' => $weekEndDate, 'plusFiveDate' => $plusFiveDate, 'dayPartList' => $dayPartList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/candidate');
         }
@@ -6531,7 +6531,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacherPortal.teacher_password", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacherPortal.teacher_password", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/candidate');
         }
