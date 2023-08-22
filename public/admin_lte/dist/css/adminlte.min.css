@@ -13001,7 +13001,7 @@ body.sidebar-collapse:not(.sidebar-mini-xs):not(.sidebar-mini-md):not(.sidebar-m
     body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer,
     body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
         transition: margin-left .3s ease-in-out;
-        margin-left: 250px
+        margin-left: 265px
     }
 }
 
@@ -13126,7 +13126,7 @@ body.sidebar-collapse:not(.sidebar-mini-xs):not(.sidebar-mini-md):not(.sidebar-m
 .main-sidebar,
 .main-sidebar::before {
     transition: margin-left .3s ease-in-out, width .3s ease-in-out;
-    width: 250px
+    width: 265px
 }
 
 @media (prefers-reduced-motion:reduce) {
@@ -13144,7 +13144,7 @@ body.sidebar-collapse:not(.sidebar-mini-xs):not(.sidebar-mini-md):not(.sidebar-m
 
 .sidebar-collapse .main-sidebar,
 .sidebar-collapse .main-sidebar::before {
-    margin-left: -250px
+    margin-left: -265px
 }
 
 .sidebar-collapse .main-sidebar .nav-sidebar.nav-child-indent .nav-treeview {
@@ -13156,7 +13156,7 @@ body.sidebar-collapse:not(.sidebar-mini-xs):not(.sidebar-mini-md):not(.sidebar-m
     .main-sidebar,
     .main-sidebar::before {
         box-shadow: none !important;
-        margin-left: -250px
+        margin-left: -265px
     }
 
     .sidebar-open .main-sidebar,
@@ -13177,7 +13177,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 }
 
 .layout-fixed .brand-link {
-    width: 250px
+    width: 100%;
 }
 
 .layout-fixed .main-sidebar {
@@ -13227,7 +13227,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .main-footer {
     background-color: #fff;
-    border-top: 1px solid #dee2e6;
+    border: none;
     color: #869099;
     padding: 1rem;
 }
@@ -16353,7 +16353,7 @@ span.brand-text.font-weight-light {
 .sidebar-mini .main-sidebar .nav-link,
 .sidebar-mini-md .main-sidebar .nav-link,
 .sidebar-mini-xs .main-sidebar .nav-link {
-    width: calc(250px - .5rem * 2);
+    width: max-content;
     transition: width ease-in-out .3s
 }
 
@@ -16757,6 +16757,8 @@ span.brand-text.font-weight-light {
 .nav-sidebar .nav-item>.nav-link {
     position: relative;
     display: flex;
+    justify-content: start;
+    width: 100%;
 }
 
 .nav-sidebar .nav-item>.nav-link>.float-right {
@@ -37679,9 +37681,22 @@ body.iframe-mode-fullscreen .content-wrapper.iframe-mode {
     padding-left: 20px
 }
 
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 38px !important;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 31px;
-    right: 6px
+    height: 26px;
+    position: absolute;
+    top: 50% !important;
+    transform: translateY(-50%);
+    right: 1px;
+    width: 20px;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
@@ -37697,6 +37712,15 @@ body.iframe-mode-fullscreen .content-wrapper.iframe-mode {
 .select2-container--default .select2-search--inline .select2-search__field:focus {
     outline: 0;
     border: 1px solid #80bdff
+}
+
+.teacher-prefernce-name-text p {
+    text-align: end;
+}
+
+.payroll-bottom-text {
+    margin-top: 10px;
+    text-align: center;
 }
 
 .select2-container--default .select2-dropdown.select2-dropdown--below {
@@ -56068,7 +56092,7 @@ line {
     display: flex !important;
     gap: 5px;
     flex-direction: column;
-    z-index: 9;
+    z-index: -2;
     box-shadow: 0 0 20px rgba(89, 102, 122, 0.1);
     border-radius: 5px;
 }
@@ -56080,6 +56104,7 @@ line {
     display: block;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
+    z-index: 12;
 }
 
 .skd_header ul.navbar-nav li.user_log ul.dropdown li {
@@ -56227,7 +56252,8 @@ th {
     margin: 0;
 }
 
-section.content {
+section.content,
+.main-footer {
     background: #f4f6fd;
 }
 
@@ -56280,6 +56306,7 @@ i.fas.fa-edit.school-edit-icon {
     justify-content: center;
     align-items: center;
     gap: 10px;
+    margin-bottom: 10px;
 }
 
 .calendar-heading-sec i.fas.fa-edit.school-edit-icon {
@@ -56444,6 +56471,7 @@ ul.pagination li a {
 
 .dataTables_scrollBody::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
     background-color: #F5F5F5;
 }
 
@@ -56697,4 +56725,228 @@ a.log_item {
     line-height: 1;
     margin: 0;
     font-weight: 500 !important;
+}
+
+
+
+/* responsive  */
+@media only screen and (min-width: 200px) and (max-width: 319px) {
+    .col-md-12.topbar-sec {
+        display: block;
+        padding: 10px;
+    }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 479px) {
+    .school-detail-right-sec .row {
+        gap: 15px;
+    }
+
+    .col-md-12.topbar-sec {
+        display: block;
+        padding: 10px;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: right !important;
+    }
+
+    h4.modal-title {
+        font-size: 16px;
+    }
+
+    .calendar-heading-sec h2 {
+        font-size: 16px;
+    }
+
+    .user_log a {
+        color: #6362e7;
+        font-size: 14px;
+    }
+
+    .image {
+        height: 30px;
+        width: 30px;
+        overflow: hidden;
+    }
+
+    span.topbar-text {
+        font-size: 12px;
+    }
+
+    .details-heading h2 {
+        font-size: 14px;
+        line-height: 14px;
+    }
+
+    .teacher-calendar-date-text span {
+        font-size: 14px;
+        line-height: 1;
+    }
+
+    button.btn.btn-outline-success {
+        font-size: 12px;
+    }
+
+    .teacher-calendar-slider {
+        overflow-x: scroll;
+        margin-top: 10px;
+        padding: 0;
+    }
+
+    .teacher-calendar-table-section1 {
+        width: 600px;
+    }
+
+    .grid_7 {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: flex-end;
+    }
+
+    .new_teacher_calendar_outer2 {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .new_teacher_calendar_inner {
+        display: flex;
+        /* flex-direction: column; */
+        justify-content: center;
+        width: 15%;
+    }
+
+    .skd_date {
+        width: 30%;
+    }
+
+    .dataTables_scrollHeadInner {
+        width: 100%;
+    }
+
+    .content-header {
+        padding: 0;
+        background: rgba(99, 98, 231, 0.08);
+        box-shadow: 0px 4px 30px rgba(95, 94, 231, 0.07);
+    }
+
+    .topbar-Section {
+        display: grid;
+        justify-content: space-between;
+        align-items: center;
+        overflow-x: scroll;
+        width: 100%;
+        gap: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 10px 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .menu_item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 170px;
+        justify-content: center;
+    }
+
+    .topbar-Section::-webkit-scrollbar {
+        width: 6px;
+        height: 5px;
+        background-color: transparent;
+    }
+
+    .topbar-Section::-webkit-scrollbar-thumb {
+        background: linear-gradient(60deg, #89f7fe 0%, #66a6ff 100%);
+        border-radius: 10px;
+    }
+
+    .topbar-Section::-webkit-scrollbar-track {
+        /* -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 18%); */
+        background-color: transparent;
+        border-radius: 10px;
+    }
+
+    .heading_finance {
+        display: grid;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: rgba(99, 98, 231, 0.08);
+        border-radius: 20px;
+        margin-bottom: 10px;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .heading_finance .finance_lft_box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+    }
+
+    .heading_finance .form-group.payment-method-type {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        justify-content: space-between;
+    }
+
+    .school-finance-contact-icon-sec {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+    }
+
+    .school-finance-right-sec {
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .school-detail-right-sec {
+        margin-top: 15px;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .school-detail-right-sec .row {
+        gap: 15px;
+    }
+
+    .dataTables_scrollHeadInner {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .login-box,
+    .register-box {
+        width: 600px;
+    }
+
+    .school-detail-right-sec .row {
+        gap: 0px;
+    }
+
+    .dataTables_scrollHeadInner {
+        width: 100%;
+    }
+
+    .school-detail-right-sec .row {
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+
+    .dataTables_scrollHeadInner {
+        width: 100%;
+    }
 }

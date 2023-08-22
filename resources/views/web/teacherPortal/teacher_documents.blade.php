@@ -41,7 +41,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div class="assignment-finance-table-section about-school-section">
+                                <div class="assignment-finance-table-section about-school-section table-responsive">
                                     <table class="table table-bordered table-striped" id="myTable">
                                         <thead>
                                             <tr class="school-detail-table-heading">
