@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('admin_lte/dist/css/adminlte.min.css') }}">
     <script src="{{ asset('web/js/jquery.min.js') }}"></script>
 
     <style>
@@ -53,7 +54,12 @@
 </head>
 
 <body>
-
+    <div class="skd_loder_box" id="fullLoader">
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+    </div>
 </body>
 
 <script src="{!! asset('plugins/sweetalert/sweetalert.min.js') !!}"></script>
@@ -78,6 +84,12 @@
     });
 </script>
 <?php } ?>
+
+<script>
+    $(document).ready(function() {
+        $('#fullLoader').hide();
+    });
+</script>
 
 <?php if(app('request')->input('status') == 'approve'){?>
 <script>

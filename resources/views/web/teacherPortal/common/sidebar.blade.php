@@ -45,22 +45,13 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ URL::to('/candidate/profession-qualification') }}"
-                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Profession') active @endif">
-                        <i class="nav-icon fas fa-graduation-cap"></i>
-                        <p>
-                            Profession / Qualifications
-                        </p>
-                    </a>
-                </li>
 
                 <li class="nav-item">
                     <a href="{{ URL::to('/candidate/preference-health/') }}"
                         class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Health') active @endif">
                         <i class="nav-icon fas fa-desktop"></i>
                         <p>
-                            Preferences / Health
+                            Preferences
                         </p>
                     </a>
                 </li>
@@ -75,15 +66,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ URL::to('/candidate/payroll') }}"
-                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Payroll') active @endif">
-                        <i class="nav-icon fas fa-money-bill"></i>
-                        <p>
-                            Payroll
-                        </p>
-                    </a>
-                </li>
+
 
             </ul>
         </nav>

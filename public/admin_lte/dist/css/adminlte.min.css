@@ -55933,7 +55933,7 @@ a.text-muted:hover {
 } */
 
 .card-header {
-    background-color: #495057 !important;
+    background-color: #e0f3fb !important;
 }
 
 .login-page,
@@ -56727,6 +56727,9 @@ a.log_item {
     font-weight: 500 !important;
 }
 
+.calendar-section2.row {
+    margin-bottom: 20px;
+}
 
 
 /* responsive  */
@@ -56740,6 +56743,8 @@ a.log_item {
 @media only screen and (min-width: 320px) and (max-width: 479px) {
     .school-detail-right-sec .row {
         gap: 15px;
+        flex-direction: column-reverse;
+        margin-bottom: 0px;
     }
 
     .col-md-12.topbar-sec {
@@ -56788,38 +56793,47 @@ a.log_item {
         font-size: 12px;
     }
 
-    .teacher-calendar-slider {
+    /* .teacher-calendar-slider {
         overflow-x: scroll;
         margin-top: 10px;
         padding: 0;
-    }
+    } */
 
-    .teacher-calendar-table-section1 {
+    /* .teacher-calendar-table-section1 {
         width: 600px;
-    }
+    } */
 
     .grid_7 {
-        display: flex;
+        display: grid;
         align-items: center;
         text-align: center;
-        justify-content: flex-end;
+        justify-content: start;
+        grid-template-columns: 1fr;
+        border: none;
     }
 
     .new_teacher_calendar_outer2 {
-        display: flex;
+        display: grid;
         justify-content: space-between;
         flex-wrap: wrap;
+        grid-template-columns: 1fr;
     }
 
     .new_teacher_calendar_inner {
         display: flex;
         /* flex-direction: column; */
         justify-content: center;
-        width: 15%;
+        width: 100%;
+        height: 100%;
     }
 
     .skd_date {
-        width: 30%;
+        width: 100%;
+        border: none;
+        height: 100%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
     }
 
     .dataTables_scrollHeadInner {
@@ -56911,6 +56925,24 @@ a.log_item {
     .school-detail-right-sec {
         margin-top: 15px;
     }
+
+    .new_teacher_wapper {
+        display: grid;
+        grid-template-columns: 107px 1fr;
+    }
+
+    .teacher-calendar-days-field3 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        width: 100%;
+    }
+
+    ul.skd_menu {
+        flex-direction: column;
+    }
 }
 
 @media only screen and (min-width: 480px) and (max-width: 767px) {
@@ -56948,5 +56980,412 @@ a.log_item {
 
     .dataTables_scrollHeadInner {
         width: 100%;
+    }
+}
+
+.sidebar_none {
+    width: 100%;
+    margin-left: 0px !important;
+}
+
+.date-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.date-text h2 {
+    font-size: 14px;
+    margin: 0;
+}
+
+.date-text a {
+    display: flex;
+    font-size: 22px;
+    height: 20px;
+    width: 20px;
+    justify-content: center;
+    align-items: center;
+    color: #1f2d3d;
+    background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    border-radius: 100%;
+}
+
+.bg-dark {
+    background-color: #7d00e8 !important;
+}
+
+.row.pt-3.justify-content-center.content-header.date_sec {
+    padding: 1rem 0px !important;
+}
+
+.date-sec span {
+    font-size: 12px;
+}
+
+ul.skd_menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    gap: 12px;
+}
+
+a.skd_item {
+    padding: 7px 15px;
+    font-weight: 500 !important;
+    font-size: 15px !important;
+    transition: 0.5s all !important;
+    z-index: 3;
+    border-radius: 8px;
+    overflow: hidden;
+    color: #3c0077;
+}
+
+a.skd_item:hover,
+a.skd_active {
+    color: #fff;
+}
+
+a.brand-link.skd_logo {
+    padding: 10px 10px !important;
+}
+
+.image.skd_user_img {
+    height: 35px;
+    width: 35px;
+    overflow: hidden;
+}
+
+
+.fill_menu_bar ul li a {
+    position: relative;
+}
+
+.fill_menu_bar ul li a:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    content: '.';
+    color: transparent;
+    background: #aaa;
+    height: 1px;
+    border-radius: 8px;
+}
+
+.fill_menu_bar ul li a:before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    content: '.';
+    color: transparent;
+    background: #7d00e824;
+    height: 100%;
+    z-index: -1;
+    border-radius: 8px;
+}
+
+.skd_active {
+    width: 100%;
+    height: 100%;
+
+}
+
+/* .skd_active::before {
+    background: #7d00e8 !important;
+} */
+/* 
+.skd_active::after {
+    display: none;
+} */
+
+.fill_menu_bar ul li a {
+    transition: all 0.5s !important;
+}
+
+.fill_menu_bar ul li a:after {
+    text-align: left;
+    content: '.';
+    margin: 0;
+    opacity: 0;
+}
+
+.fill_menu_bar ul li a:before {
+    text-align: left;
+    content: '.';
+    margin: 0;
+    opacity: 1;
+}
+
+.fill_menu_bar ul li a:hover {
+    color: #fff;
+    z-index: 1;
+}
+
+.fill_menu_bar ul li a:hover:after,
+.fill_menu_bar ul li a.skd_active:after {
+    z-index: -10;
+    animation: fill 0.5s forwards;
+    -webkit-animation: fill 0.5s forwards;
+    -moz-animation: fill 0.5s forwards;
+    opacity: 1;
+}
+
+.fill_menu_bar ul li a:hover:before {
+    z-index: -10;
+    animation: bg_top 0.5s forwards;
+    -webkit-animation: bg_top 0.5s forwards;
+    -moz-animation: bg_top 0.5s forwards;
+}
+
+/* Keyframes */
+@keyframes fill {
+    0% {
+        width: 0%;
+        height: 1px;
+    }
+
+    50% {
+        width: 100%;
+        height: 1px;
+    }
+
+    100% {
+        width: 100%;
+        height: 100%;
+        background: #7d00e891;
+    }
+}
+
+@keyframes bg_top {
+    0% {
+        width: 100%;
+        height: 100%;
+    }
+
+    50% {
+        width: 100%;
+        height: 100%;
+    }
+
+    100% {
+        width: 0%;
+        height: 0%;
+
+    }
+}
+
+
+
+@media only screen and (min-width: 320px) and (max-width: 1024px) {
+    .hamburger .line {
+        width: 25px;
+        height: 4px;
+        background-color: #ecf0f1;
+        display: block;
+        margin: 8px auto;
+        -webkit-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+    }
+
+    /* .fill_menu_bar ul li a:hover:after,
+    .fill_menu_bar ul li a.skd_active:after {
+        z-index: auto !important;
+    } */
+
+    .hamburger:hover {
+        cursor: pointer;
+    }
+
+    #hamburger-6.is-active {
+        -webkit-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+        -webkit-transition-delay: 0.6s;
+        -o-transition-delay: 0.6s;
+        transition-delay: 0.6s;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    #hamburger-6.is-active .line:nth-child(2) {
+        width: 0px;
+    }
+
+    #hamburger-6.is-active .line:nth-child(1),
+    #hamburger-6.is-active .line:nth-child(3) {
+        -webkit-transition-delay: 0.5s;
+        -o-transition-delay: 0.5s;
+        transition-delay: 0.5s;
+    }
+
+    #hamburger-6.is-active .line:nth-child(1) {
+        -webkit-transform: translateY(13px);
+        -ms-transform: translateY(13px);
+        -o-transform: translateY(13px);
+        transform: translateY(13px);
+    }
+
+    #hamburger-6.is-active .line:nth-child(3) {
+        -webkit-transform: translateY(-11px) rotate(90deg);
+        -ms-transform: translateY(-11px) rotate(90deg);
+        -o-transform: translateY(-11px) rotate(90deg);
+        transform: translateY(-11px) rotate(90deg);
+    }
+
+    .fill_menu_bar {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        position: relative;
+    }
+
+
+
+    li.skd_list {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .fill_menu_bar ul li a:hover {
+        z-index: auto;
+    }
+
+    a.skd_item.skd_active {
+        z-index: auto;
+    }
+
+    a.skd_item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+    }
+
+    ul.skd_menu {
+        gap: 15px;
+        position: absolute;
+        top: 0;
+        width: 0;
+        background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+        left: 0%;
+        transform: translate(-57%, 0%);
+        z-index: -2;
+        height: 0;
+        padding: 30px;
+        opacity: 0;
+        overflow: hidden;
+        transition: 0.5s all ease-in-out;
+        box-shadow: 0 3px 7px 1px rgb(0 0 0 / 16%);
+        border-radius: 10px;
+        flex-direction: column;
+    }
+
+    ul.skd_menu.active_menu {
+        gap: 15px;
+        position: absolute;
+        top: 0;
+        width: 370px;
+        background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+        left: 22%;
+        transform: translate(-50%, 14%);
+        z-index: 9;
+        height: 60vh;
+        padding: 30px;
+        opacity: 1;
+    }
+
+    span.mob_dp_none {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    ul.skd_menu.active_menu {
+        height: 40vh;
+        width: 1010px;
+        transform: translate(-50%, 10%);
+    }
+}
+
+/* TABLETS PORTRAIT */
+
+@media only screen and (max-width: 920px) {
+    ul.skd_menu.active_menu {
+        height: 35vh;
+        max-width: 870px;
+        transform: translate(-50%, 11%);
+    }
+}
+
+@media only screen and (max-width: 830px) {
+    ul.skd_menu.active_menu {
+        height: 40vh;
+        max-width: 800px;
+        transform: translate(-50%, 12%);
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    ul.skd_menu.active_menu {
+        height: 40vh;
+        max-width: 760px;
+        transform: translate(-50%, 14%);
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    ul.skd_menu.active_menu {
+        height: 50vh;
+        max-width: 510px;
+        transform: translate(-50%, 15%);
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    ul.skd_menu.active_menu {
+        height: 50vh;
+        max-width: 400px;
+        transform: translate(-50%, 12%);
+    }
+}
+
+@media only screen and (max-width: 395px) {
+    ul.skd_menu.active_menu {
+        height: 55vh;
+        max-width: 380px;
+        transform: translate(-50%, 12%);
+    }
+}
+
+@media only screen and (max-width: 376px) {
+    ul.skd_menu.active_menu {
+        height: 70vh;
+        max-width: 360px;
+        transform: translate(-50%, 12%);
+    }
+}
+
+@media only screen and (max-width: 365px) {
+    ul.skd_menu.active_menu {
+        height: 60vh;
+        max-width: 350px;
+        transform: translate(-50%, 12%);
     }
 }

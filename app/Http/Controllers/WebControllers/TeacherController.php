@@ -42,7 +42,7 @@ class TeacherController extends Controller
                         ->where('tbl_userFavourite.type_int', 1)
                         ->get();
                 })
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->where('tbl_teacher.company_id', $company_id)
                 ->get();
             // dd($fabTeacherList);
@@ -78,7 +78,7 @@ class TeacherController extends Controller
         $loginMail = $request->loginMail;
         $teacherDet = DB::table('tbl_teacher')
             ->select('tbl_teacher.*')
-            ->where('tbl_teacher.is_delete', 0)
+            // ->where('tbl_teacher.is_delete', 0)
             ->where('login_mail', $loginMail)
             ->get();
         if (count($teacherDet) > 0) {
@@ -197,9 +197,60 @@ class TeacherController extends Controller
         }
     }
 
+    public function checkCandidateLogMail(Request $request)
+    {
+        $teacher_id = $request->teacher_id;
+        $rData['lMailExist'] = "No";
+        $rData['loginMail'] = "";
+        $rData['contactMail'] = [];
+
+        $teacherDetail = DB::table('tbl_teacher')
+            ->where('tbl_teacher.teacher_id', $teacher_id)
+            ->first();
+        if ($teacherDetail) {
+            // if ($teacherDetail->login_mail) {
+            //     $rData['lMailExist'] = "Yes";
+            //     $rData['loginMail'] = $teacherDetail->login_mail;
+            // } else {
+            $contactItemList = DB::table('tbl_contactItemTch')
+                ->LeftJoin('tbl_description', function ($join) {
+                    $join->on('tbl_description.description_int', '=', 'tbl_contactItemTch.type_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_description.descriptionGroup_int', '=', 9);
+                        });
+                })
+                ->select('tbl_contactItemTch.*', 'tbl_description.description_txt as type_txt')
+                ->where('tbl_contactItemTch.teacher_id', $teacher_id)
+                ->where('tbl_contactItemTch.type_int', 1)
+                ->orderBy('tbl_contactItemTch.type_int')
+                ->get();
+            $rData['contactMail'] = $contactItemList;
+            // }
+        }
+        return response()->json(['rData' => $rData]);
+    }
+
     public function resendTeacherPasswordLink(Request $request)
     {
         $teacher_id = $request->teacher_id;
+        $contactItemTch_id = $request->log_mail;
+        $contDet = DB::table('tbl_contactItemTch')
+            ->where('contactItemTch_id', $contactItemTch_id)
+            ->first();
+        if ($contDet) {
+            $log_mail = $contDet->contactItem_txt;
+            $logContId = $contDet->contactItemTch_id;
+        } else {
+            $log_mail = "";
+            $logContId = "";
+        }
+
+        DB::table('tbl_teacher')
+            ->where('teacher_id', '=', $teacher_id)
+            ->update([
+                'login_mail' => $log_mail,
+                'logContId' => $logContId
+            ]);
 
         $teacherDetail = DB::table('tbl_teacher')
             ->where('tbl_teacher.teacher_id', $teacher_id)
@@ -292,8 +343,8 @@ class TeacherController extends Controller
                     })
                     ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
                     ->where('tbl_teacher.company_id', $company_id)
-                    ->where('tbl_teacher.isCurrent_status', '<>', 0)
-                    ->where('tbl_teacher.is_delete', 0);
+                    ->where('tbl_teacher.isCurrent_status', '<>', 0);
+                // ->where('tbl_teacher.is_delete', 0);
 
                 if ($request->search_input) {
                     $srchCnt = 1;
@@ -401,7 +452,7 @@ class TeacherController extends Controller
                 ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherReference.teacherReference_id', DB::raw("IF(tbl_teacherReference.teacherReference_id IS NULL, 'No References Listed', employer_txt) AS employer_txt"), 'tbl_teacherReference.employedFrom_dte', 'tbl_teacherReference.employedUntil_dte', DB::raw("IF(lastSent_dte IS NULL, 'Not Sent', lastSent_dte) AS lastSent_txt"), DB::raw("IF(totalSent_int IS NULL, 0, totalSent_int) AS totalSent_int"), DB::raw("IF(lastSent_dte IS NULL, '', IF(DATEDIFF(CURDATE(), lastSent_dte) < '$v_overdueDays', '', DATEDIFF(CURDATE(), lastSent_dte) -'$v_overdueDays')) AS overDueDays_int"))
                 ->whereIn('applicationStatus_int', array(1, 2, 7))
                 ->where('receivedOn_dtm', NULL)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacherReference.teacherReference_id')
                 ->orderBy('lastSent_dte', 'ASC')
                 ->get();
@@ -473,7 +524,7 @@ class TeacherController extends Controller
                 )
                 ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherDocument.file_location', 'day1Avail_txt', 'day1Link_id', 'day1LinkType_int', 'day1School_id', 'day1Amount_dec', 'day2Avail_txt', 'day2Link_id', 'day2LinkType_int', 'day2School_id', 'day2Amount_dec', 'day3Avail_txt', 'day3Link_id', 'day3LinkType_int', 'day3School_id', 'day3Amount_dec', 'day4Avail_txt', 'day4Link_id', 'day4LinkType_int', 'day4School_id', 'day4Amount_dec', 'day5Avail_txt', 'day5Link_id', 'day5LinkType_int', 'day5School_id', 'day5Amount_dec', DB::raw("CAST((IFNULL(day1Amount_dec, 0) + IFNULL(day2Amount_dec, 0) + IFNULL(day3Amount_dec, 0) + IFNULL(day4Amount_dec, 0) + IFNULL(day5Amount_dec, 0)) AS DECIMAL(3, 1)) AS totalDays"))
                 ->whereRaw("(t_day1.teacher_id IS NOT NULL OR t_day2.teacher_id IS NOT NULL OR t_day3.teacher_id IS NOT NULL OR t_day4.teacher_id IS NOT NULL OR t_day5.teacher_id IS NOT NULL)")
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->where('tbl_teacher.company_id', $company_id)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->orderBy(DB::raw("IF(knownAs_txt IS NULL OR knownAs_txt = '', CONCAT(firstName_txt, ' ',  IFNULL(surname_txt, '')), CONCAT(firstName_txt, ' (', knownAs_txt, ') ',  IFNULL(surname_txt, '')))"), 'ASC')
@@ -951,7 +1002,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -1173,7 +1224,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -1481,7 +1532,7 @@ class TeacherController extends Controller
             ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
             ->select('tbl_contactItemTch.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt')
             ->where('contactItemTch_id', "=", $teacherContactItemId)
-            ->where('tbl_teacher.is_delete', 0)
+            // ->where('tbl_teacher.is_delete', 0)
             ->first();
 
         return response()->json(['Detail' => $Detail]);
@@ -1496,7 +1547,7 @@ class TeacherController extends Controller
             ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_contactItemTch.teacher_id')
             ->select('tbl_contactItemTch.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt')
             ->where('contactItemTch_id', "=", $teacherContactItemId)
-            ->where('tbl_teacher.is_delete', 0)
+            // ->where('tbl_teacher.is_delete', 0)
             ->first();
 
         return response()->json(['Detail' => $Detail]);
@@ -1550,7 +1601,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -1980,7 +2031,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -2167,7 +2218,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -2278,8 +2329,8 @@ class TeacherController extends Controller
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
-            // $admin_mail = $webUserLoginData->user_name;
-            $admin_mail = 'sanjoy.websadroit@gmail.com';
+            $admin_mail = $webUserLoginData->user_name;
+            // $admin_mail = 'sanjoy.websadroit@gmail.com';
             $teacher_id = $request->teacher_id;
             $validator = Validator::make($request->all(), [
                 'referenceType_id' => 'required',
@@ -2370,8 +2421,8 @@ class TeacherController extends Controller
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
-            // $admin_mail = $webUserLoginData->user_name;
-            $admin_mail = 'sanjoy.websadroit@gmail.com';
+            $admin_mail = $webUserLoginData->user_name;
+            // $admin_mail = 'sanjoy.websadroit@gmail.com';
             $input = $request->all();
             $teacherReferenceId = $input['teacherReferenceId'];
 
@@ -2838,7 +2889,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -3090,10 +3141,12 @@ class TeacherController extends Controller
             $vetUpdateServiceChecked_dte = NULL;
             if ($request->vetUpdateService_status) {
                 $vetUpdateService_status = -1;
-                $vetUpdateServiceChecked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $vetUpdateServiceChecked_dte = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $vetUpdateServiceChecked_dte = date("Y-m-d");
 
                 $nArr['field_name'] = 'vetUpdateServiceChecked_dte';
-                $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                // $nArr['check_date'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->vetUpdateServiceReg_dte)));
+                $nArr['check_date'] = date("Y-m-d");
                 array_push($historyArr, $nArr);
             }
             $vetUpdateServiceReg_dte = NULL;
@@ -3303,7 +3356,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -3903,7 +3956,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -4126,7 +4179,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -4328,6 +4381,7 @@ class TeacherController extends Controller
         if ($request->teacherReference_id) {
             $teacherReference_id = $request->teacherReference_id;
             $adminMail = $request->adminMail;
+            // $adminMail = "sanjoy.websadroit@gmail.com";
 
             $refExist = DB::table('tbl_teacherReference')
                 ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_teacherReference.teacher_id')
@@ -4472,7 +4526,8 @@ class TeacherController extends Controller
             DB::table('tbl_teacher')
                 ->where('teacher_id', '=', $teacher_id)
                 ->update([
-                    'password' => Hash::make($request->password)
+                    'password' => Hash::make($request->password),
+                    'activeStatus' => 1
                 ]);
             return redirect()->intended('/candidate');
         }
@@ -4509,7 +4564,7 @@ class TeacherController extends Controller
                 ->LeftJoin('company', 'company.company_id', '=', 'tbl_teacher.company_id')
                 ->select('tbl_teacher.*', 'company.company_name', 'company.company_logo')
                 ->where('tbl_teacher.login_mail', $request->user_name)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->get();
             if (count($user_exist) > 0) {
                 if (!Hash::check($request->password, $user_exist[0]->password)) {
@@ -4552,7 +4607,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -4837,7 +4892,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -5007,7 +5062,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -5192,7 +5247,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -5611,7 +5666,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -5835,7 +5890,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -6447,7 +6502,7 @@ class TeacherController extends Controller
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
+                    DB::raw("(SELECT teacherDocument_id, teacher_id, file_location FROM tbl_teacherDocument WHERE teacher_id='$teacher_id' AND type_int = 1 AND file_location != '' ORDER BY teacherDocument_id DESC LIMIT 1) AS t_document"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_document.teacher_id');
                     }
@@ -6698,6 +6753,111 @@ class TeacherController extends Controller
             return redirect('/candidate')->with('loginSuccess', "Password has been updated.");
         }
     }
+
+    /******* common login *******/
+    public function teacherCommonLogin(Request $request)
+    {
+        $teacherLoginData = Session::get('teacherLoginData');
+        $commonLoginTeacherData = Session::get('commonLoginTeacherData');
+        if ($teacherLoginData && $commonLoginTeacherData) {
+            return redirect()->intended('/candidate/detail');
+        } else {
+            $title = array('pageTitle' => "Teacher Login");
+            return view("web.teacherPortal.teacher_common_login", ['title' => $title]);
+        }
+    }
+
+    public function teacherProcessCommonLogin(Request $request)
+    {
+        $validator = Validator::make(
+            array(
+                'selected_teacher'    => $request->selected_teacher,
+                'user_name'    => $request->user_name,
+                'password' => $request->password
+            ),
+            array(
+                'selected_teacher'    => 'required',
+                'user_name'    => 'required',
+                'password' => 'required',
+            )
+        );
+        //check validation
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+            if (Auth::guard('subadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'admin_type' => 3], $request->get('remember'))) {
+                $admin = Auth::guard('subadmin')->user();
+
+                if ($admin) {
+                    $administrators = DB::table('tbl_user')
+                        ->LeftJoin('company', 'company.company_id', '=', 'tbl_user.company_id')
+                        ->select('tbl_user.*', 'company.company_name', 'company.company_logo')
+                        ->where('tbl_user.user_id', $admin->user_id)
+                        ->get();
+
+                    $user_exist = DB::table('tbl_teacher')
+                        ->LeftJoin('company', 'company.company_id', '=', 'tbl_teacher.company_id')
+                        ->select('tbl_teacher.*', 'company.company_name', 'company.company_logo')
+                        ->where('tbl_teacher.teacher_id', $request->selected_teacher)
+                        // ->where('tbl_teacher.is_delete', 0)
+                        ->get();
+
+                    if (count($user_exist) > 0) {
+                        // if ($user_exist[0]->activeStatus != 1) {
+                        //     return redirect()->back()->withInput()->with('loginError', "You are not an active user.");
+                        // } else {
+                        Session::put('commonLoginTeacherData', $administrators[0]);
+                        Session::put('teacherLoginData', $user_exist[0]);
+                        return redirect()->intended('/candidate/detail');
+                        // }
+                    } else {
+                        return redirect()->back()->withInput()->with('loginError', "This candidate is not in records.");
+                    }
+                } else {
+                    return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
+                }
+            } else {
+                return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
+            }
+        }
+    }
+
+    public function fetchTeacherAjax(Request $request)
+    {
+        $queryInput = $request->get('q');
+        $teacherQry = DB::table('tbl_teacher')
+            ->LeftJoin('company', 'company.company_id', '=', 'tbl_teacher.company_id')
+            ->select('tbl_teacher.*', 'company.company_name', 'company.company_logo');
+        // ->where('tbl_teacher.is_delete', 0);
+
+        if ($queryInput) {
+            $search_input = str_replace(" ", "", $queryInput);
+            $teacherQry->where(function ($query) use ($search_input) {
+                $query->where('firstName_txt', 'LIKE', '%' . $search_input . '%')
+                    ->orWhere('knownAs_txt', 'LIKE', '%' . $search_input . '%')
+                    ->orWhere('surname_txt', 'LIKE', '%' . $search_input . '%')
+                    ->orWhere(DB::raw("CONCAT(`knownAs_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                    ->orWhere(DB::raw("CONCAT(`firstName_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%")
+                    ->orWhere('middleNames_txt', 'LIKE', '%' . $search_input . '%')
+                    ->orWhere(DB::raw("CONCAT(`firstName_txt`, `middleNames_txt`)"), 'LIKE', "%" . $search_input . "%")
+                    ->orWhere(DB::raw("CONCAT(`knownAs_txt`, `middleNames_txt`)"), 'LIKE', "%" . $search_input . "%")
+                    ->orWhere(DB::raw("CONCAT(`middleNames_txt`, `surname_txt`)"), 'LIKE', "%" . $search_input . "%");
+            });
+        }
+        $data = $teacherQry->limit(15)
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function commonTeacherLogout()
+    {
+        Session::forget('commonLoginTeacherData');
+        Session::forget('teacherLoginData');
+        return redirect('/candidate/supervisor');
+    }
+    /******* common login *******/
+
     /********* Teacher Portal *********/
 
     public function testMail(Request $request)
@@ -6720,7 +6880,7 @@ class TeacherController extends Controller
             ->join('tbl_teacherdbs', 'tbl_teacherdbs.teacher_id', '=', 'tbl_teacher.teacher_id')
             ->select('tbl_teacher.*', 'tbl_teacherdbs.DBSDate_dte', 'tbl_teacherdbs.certificateNumber_txt', DB::raw('DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR) AS expiry_date'))
             ->whereRaw('DATE_SUB(DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR), INTERVAL -21 DAY) = ?', [$twentyOneDaysBeforeToday])
-            ->where('tbl_teacher.is_delete', 0)
+            // ->where('tbl_teacher.is_delete', 0)
             ->where('tbl_teacher.isCurrent_status', '<>', 0)
             ->where('tbl_teacher.company_id', 1)
             ->get();
@@ -6751,12 +6911,12 @@ class TeacherController extends Controller
     public function testTeacherFileUpload(Request $request)
     {
         // return "test";
-        $teacher_id = '10100';
+        // $teacher_id = '10100';
         $user_id = '1002';
 
         $teacherOld = DB::table('tbl_teacherDocument')
             ->select('tbl_teacherDocument.*')
-            ->where('teacher_id', $teacher_id)
+            // ->where('teacher_id', $teacher_id)
             ->where('fileLocation_txt', '!=', null)
             ->where('fileName_txt', '!=', null)
             ->where('file_location', '=', null)
@@ -6779,7 +6939,12 @@ class TeacherController extends Controller
                 $fType = $extension;
 
                 $destinationPath = public_path('images/teacher');
-                $uploaded = \File::copy($filePath, $destinationPath . '\\' . $name);
+
+                try {
+                    $uploaded = \File::copy($filePath, $destinationPath . '\\' . $name);
+                } catch (\Exception $e) {
+                    // echo "Error copying file: " . $e->getMessage();
+                }
 
                 $typeDetail = DB::table('tbl_description')
                     ->select('tbl_description.*')
@@ -6793,7 +6958,7 @@ class TeacherController extends Controller
 
                 // $profilePicExist = DB::table('tbl_teacherDocument')
                 //     ->select('tbl_teacherDocument.*')
-                //     ->where('teacher_id', $teacher_id)
+                //     ->where('teacher_id', $value->teacher_id)
                 //     ->where('type_int', 1)
                 //     ->orderBy('teacherDocument_id', 'DESC')
                 //     ->first();
@@ -6810,7 +6975,7 @@ class TeacherController extends Controller
                 // } else {
                 //     DB::table('tbl_teacherDocument')
                 //         ->insert([
-                //             'teacher_id' => $teacher_id,
+                //             'teacher_id' => $value->teacher_id,
                 //             'file_location' => $fPath,
                 //             'file_name' => $fileName,
                 //             'type_int' => $value->type_int,

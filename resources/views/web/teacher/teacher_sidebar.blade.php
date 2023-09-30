@@ -153,25 +153,93 @@
                             $('#fullLoader').show();
                             $.ajax({
                                 type: 'POST',
-                                url: '{{ url('resendTeacherPasswordLink') }}',
+                                url: '{{ url('checkCandidateLogMail') }}',
                                 data: {
                                     "_token": "{{ csrf_token() }}",
                                     teacher_id: teacher_id
                                 },
                                 success: function(data) {
-                                    $('#fullLoader').hide();
-                                    if (data) {
-                                        swal("",
-                                            "Password reset link has been send successfully to teacher's login email."
-                                        );
+                                    // console.log(data.rData.contactMail.length);
+                                    // if (data.rData.lMailExist == "Yes") {
+                                    //     var log_mail = data.rData.loginMail;
+                                    //     sendCandidatePassLink(teacher_id, log_mail)
+                                    // } else {
+                                    if (data.rData.contactMail.length > 0) {
+                                        // if (data.rData.contactMail.length == 1) {
+                                        //     var log_mail = data.rData.contactMail[0]
+                                        //         .contactItem_txt;
+                                        //     sendCandidatePassLink(teacher_id, log_mail)
+                                        // } else {
+                                        $('#fullLoader').hide();
+                                        var dropdownHtml =
+                                            '<select id="logmailDropdown" class="form-control">';
+                                        $.each(data.rData.contactMail, function(index,
+                                            element) {
+                                            dropdownHtml += '<option value="' + element
+                                                .contactItemTch_id + '">' + element
+                                                .contactItem_txt + '</option>';
+                                        });
+                                        dropdownHtml += '</select>';
+
+                                        swal({
+                                                title: "",
+                                                text: "Need to choose one contact mail to send reset password link. This mail will be use as login mail for this candidate.",
+                                                content: {
+                                                    element: 'div',
+                                                    attributes: {
+                                                        innerHTML: dropdownHtml,
+                                                    }
+                                                },
+                                                buttons: {
+                                                    cancel: "No",
+                                                    Yes: "Yes"
+                                                },
+                                            })
+                                            .then((value) => {
+                                                switch (value) {
+                                                    case "Yes":
+                                                        var log_mail = $(
+                                                            '#logmailDropdown').val();
+                                                        sendCandidatePassLink(teacher_id,
+                                                            log_mail)
+                                                }
+                                            });
+                                        // }
                                     } else {
+                                        $('#fullLoader').hide();
                                         swal("",
-                                            "Something went wrong.");
+                                            "Please add atleast one candidate contact mail first."
+                                        );
                                     }
+                                    // }
                                 }
                             });
                     }
                 });
         }
+    }
+
+    function sendCandidatePassLink(teacher_id, log_mail) {
+        $('#fullLoader').show();
+        $.ajax({
+            type: 'POST',
+            url: '{{ url('resendTeacherPasswordLink') }}',
+            data: {
+                "_token": "{{ csrf_token() }}",
+                teacher_id: teacher_id,
+                log_mail: log_mail
+            },
+            success: function(data) {
+                $('#fullLoader').hide();
+                if (data) {
+                    swal("",
+                        "Password reset link has been send successfully to teacher's mail."
+                    );
+                } else {
+                    swal("",
+                        "Something went wrong.");
+                }
+            }
+        });
     }
 </script>

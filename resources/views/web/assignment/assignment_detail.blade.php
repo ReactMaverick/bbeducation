@@ -576,6 +576,8 @@
         // });
 
         $(document).ready(function() {
+            var asnChrgDec = "{{ $assignmentDetail->charge_dec }}";
+            var asnCostDec = "{{ $assignmentDetail->cost_dec }}";
             var SITEURL = "{{ url('/') }}";
             var asn_id = "{{ $asn_id }}";
             $.ajaxSetup({
@@ -615,6 +617,7 @@
                 unselectAuto: false,
                 droppable: false,
                 allDayDefault: false,
+                longPressDelay: 1,
                 select: function(event_start, event_end, allDay) {
                     var AddEvntSts = 'No';
                     var start = moment(event_start);
@@ -641,40 +644,32 @@
                         var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD");
                         var assignment_mode = $('input[name="assignment_mode"]:checked').val();
                         if (assignment_mode == 'add') {
-                            $.ajax({
-                                url: SITEURL + "/insertAssignmentEvent/" + asn_id,
-                                data: {
-                                    event_start: event_start
-                                },
-                                type: "POST",
-                                dataType: "json",
-                                success: function(data) {
-                                    if (data) {
-                                        // if (data.type == 'Delete') {
-                                        //     calendar.fullCalendar('removeEvents', data
-                                        //         .eventId);
-                                        // } else if (data.type == 'Add') {
-                                        //     calendar.fullCalendar('renderEvent', {
-                                        //         id: data.eventItem.id,
-                                        //         title: data.eventItem.title,
-                                        //         start: data.eventItem.start,
-                                        //         editable: false
-                                        //     }, true);
-                                        // } else if (data.type == 'Update') {
-                                        //     calendar.fullCalendar('removeEvents', data
-                                        //         .eventItem.id);
-                                        //     calendar.fullCalendar('renderEvent', {
-                                        //         id: data.eventItem.id,
-                                        //         title: data.eventItem.title,
-                                        //         start: data.eventItem.start,
-                                        //         editable: false
-                                        //     }, true);
-                                        // }
-                                        calendar.fullCalendar('refetchEvents');
+                            if (asnChrgDec && asnCostDec) {
+                                $.ajax({
+                                    url: SITEURL + "/insertAssignmentEvent/" + asn_id,
+                                    data: {
+                                        event_start: event_start
+                                    },
+                                    type: "POST",
+                                    dataType: "json",
+                                    success: function(data) {
+                                        if (data) {
+                                            if (data.exist && data.exist == 'Yes') {
+                                                $('#editEventId').val(data.eventId)
+                                                $('#AjaxEventEdit').html(data.html);
+                                                $('#eventEditModal').modal("show");
+                                            }
+
+                                            calendar.fullCalendar('refetchEvents');
+                                        }
+                                        calendar.fullCalendar('unselect');
                                     }
-                                    calendar.fullCalendar('unselect');
-                                }
-                            });
+                                });
+                            } else {
+                                swal("",
+                                    "Please update 'Daily Charge' and 'Daily Pay' first."
+                                );
+                            }
                         }
 
                         if (assignment_mode == 'edit') {
@@ -725,32 +720,31 @@
                     // var event_start = $.fullCalendar.formatDate(event_start, "Y-MM-DD");
                     var assignment_mode = $('input[name="assignment_mode"]:checked').val();
                     if (assignment_mode == 'add') {
-                        $.ajax({
-                            type: "POST",
-                            url: SITEURL + "/updateAssignmentEvent/" + asn_id,
-                            data: {
-                                id: event.id
-                            },
-                            dataType: "json",
-                            success: function(data) {
-                                if (data) {
-                                    // if (data.type == 'Delete') {
-                                    //     calendar.fullCalendar('removeEvents', data
-                                    //         .eventId);
-                                    // } else if (data.type == 'Update') {
-                                    //     calendar.fullCalendar('removeEvents', data
-                                    //         .eventItem.id);
-                                    //     calendar.fullCalendar('renderEvent', {
-                                    //         id: data.eventItem.id,
-                                    //         title: data.eventItem.title,
-                                    //         start: data.eventItem.start,
-                                    //         editable: false
-                                    //     }, true);
-                                    // }
-                                    calendar.fullCalendar('refetchEvents');
+                        if (asnChrgDec && asnCostDec) {
+                            $.ajax({
+                                type: "POST",
+                                url: SITEURL + "/updateAssignmentEvent/" + asn_id,
+                                data: {
+                                    id: event.id
+                                },
+                                dataType: "json",
+                                success: function(data) {
+                                    if (data) {
+                                        if (data.exist && data.exist == 'Yes') {
+                                            $('#editEventId').val(data.eventId)
+                                            $('#AjaxEventEdit').html(data.html);
+                                            $('#eventEditModal').modal("show");
+                                        }
+
+                                        calendar.fullCalendar('refetchEvents');
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            swal("",
+                                "Please update 'Daily Charge' and 'Daily Pay' first."
+                            );
+                        }
                     }
 
                     if (assignment_mode == 'edit') {
@@ -922,10 +916,19 @@
         }
 
         $(document).on('click', '#blockBookingBtnId', function() {
-            var CurrentDateObj = new Date();
-            date = moment(CurrentDateObj, "YYYY-MM-DD");
-            $("#full_calendar_events").fullCalendar('gotoDate', date);
-            $('#blockBookingModal').modal('show');
+            var asnChrgDec = "{{ $assignmentDetail->charge_dec }}";
+            var asnCostDec = "{{ $assignmentDetail->cost_dec }}";
+
+            if (asnChrgDec && asnCostDec) {
+                var CurrentDateObj = new Date();
+                date = moment(CurrentDateObj, "YYYY-MM-DD");
+                $("#full_calendar_events").fullCalendar('gotoDate', date);
+                $('#blockBookingModal').modal('show');
+            } else {
+                swal("",
+                    "Please update 'Daily Charge' and 'Daily Pay' first."
+                );
+            }
         });
 
         $(document).on('click', '#addBlockBookingBtn', function() {

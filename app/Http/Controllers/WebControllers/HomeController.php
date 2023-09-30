@@ -21,6 +21,10 @@ class HomeController extends Controller
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
 
             if ($request->date) {
                 $weekStartDate = $request->date;
@@ -29,6 +33,7 @@ class HomeController extends Controller
                 $weekStartDate = $now->startOfWeek()->format('Y-m-d');
             }
             $plusFiveDate = date('Y-m-d', strtotime($weekStartDate . ' +4 days'));
+            $plusSevenDate = date('Y-m-d', strtotime($weekStartDate . ' +6 days'));
 
             $latestAssignment = DB::table('tbl_asn')
                 ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
@@ -50,12 +55,12 @@ class HomeController extends Controller
                 ->select('tbl_asn.*', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'), DB::raw('SUM((tbl_asnItem.charge_dec - tbl_asnItem.cost_dec) * dayPercent_dec) AS predictedGP'), DB::raw('COUNT(DISTINCT tbl_asn.teacher_id) AS teachersWorking'), DB::raw('COUNT(DISTINCT tbl_asn.school_id) AS schoolsUsing'), 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession')
                 // ->where('tbl_asn.status_int', 2)
                 ->where('tbl_asn.company_id', $company_id)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 // ->whereDate('tbl_asnItem.asnDate_dte', '>=', $weekStartDate)
                 // ->whereDate('tbl_asnItem.asnDate_dte', '<=', $plusFiveDate)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_asn.timestamp_ts', 'DESC')
-                ->limit(20)
+                ->limit(100)
                 ->get();
             // $sideBarData = DB::table('tbl_asn')
             //     ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asn_id', '=', 'tbl_asn.asn_id')
@@ -77,7 +82,7 @@ class HomeController extends Controller
                 ->leftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
                 ->where('tbl_asn.status_int', 3)
                 ->where('tbl_asn.company_id', $company_id)
-                ->whereBetween('tbl_asnItem.asnDate_dte', [$weekStartDate, $plusFiveDate])
+                ->whereBetween('tbl_asnItem.asnDate_dte', [$weekStartDate, $plusSevenDate])
                 ->first();
 
             $invoiceSubquery = DB::table('tbl_invoice')
@@ -85,7 +90,7 @@ class HomeController extends Controller
                 ->leftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                 ->join('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
                 ->where('tbl_school.company_id', $company_id)
-                ->whereBetween('tbl_invoice.invoiceDate_dte', [$weekStartDate, $plusFiveDate])
+                ->whereBetween('tbl_invoice.invoiceDate_dte', [$weekStartDate, $plusSevenDate])
                 ->first();
 
             $billedSubquery = DB::table('tbl_invoice')
@@ -93,8 +98,50 @@ class HomeController extends Controller
                 ->leftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                 ->join('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
                 ->where('tbl_school.company_id', $company_id)
-                ->whereBetween('tbl_invoiceItem.dateFor_dte', [$weekStartDate, $plusFiveDate])
+                ->whereBetween('tbl_invoiceItem.dateFor_dte', [$weekStartDate, $plusSevenDate])
                 ->first();
+
+            $resultNew = DB::table(DB::raw("(SELECT
+                    CAST(SUM(dayPercent_dec) AS DECIMAL(9,1)) AS daysThisPeriod_dec,
+                    CAST(SUM((tbl_asnItem.charge_dec - tbl_asnItem.cost_dec) * dayPercent_dec) AS DECIMAL(9,2)) AS predictedGP_dec,
+                    COUNT(DISTINCT tbl_asn.teacher_id) AS teachersWorking_int,
+                    COUNT(DISTINCT tbl_asn.school_id) AS schoolsUsing_int
+                    FROM
+                    tbl_asn
+                    LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id
+                    WHERE
+                    tbl_asn.status_int = 3
+                    AND tbl_asnItem.asnDate_dte BETWEEN ? AND ?) AS t_asn"))
+                ->crossJoin(DB::raw("(SELECT 
+                        IFNULL(CAST(SUM(tbl_invoiceItem.numItems_dec * tbl_invoiceItem.charge_dec) - SUM(tbl_invoiceItem.numItems_dec * tbl_invoiceItem.cost_dec) AS DECIMAL(9,2)), 0) AS actualGP_dec
+                    FROM
+                        tbl_invoice
+                    LEFT JOIN tbl_invoiceItem ON tbl_invoice.invoice_id = tbl_invoiceItem.invoice_id
+                    WHERE
+                        tbl_invoice.invoiceDate_dte BETWEEN ? AND ?) AS t_invoice"))
+                ->crossJoin(DB::raw("(SELECT 
+                        IFNULL(CAST(SUM(tbl_invoiceItem.numItems_dec * tbl_invoiceItem.charge_dec) - SUM(tbl_invoiceItem.numItems_dec * tbl_invoiceItem.cost_dec) AS DECIMAL(9,2)), 0) AS actualBilled_dec
+                    FROM
+                        tbl_invoice
+                    LEFT JOIN tbl_invoiceItem ON tbl_invoice.invoice_id = tbl_invoiceItem.invoice_id
+                    WHERE
+                        tbl_invoiceItem.dateFor_dte BETWEEN ? AND ?) AS t_billed"))
+                ->select([
+                    't_asn.daysThisPeriod_dec',
+                    't_asn.predictedGP_dec',
+                    't_asn.teachersWorking_int',
+                    't_asn.schoolsUsing_int',
+                    't_invoice.actualGP_dec',
+                    't_billed.actualBilled_dec',
+                ])
+                ->setBindings([$weekStartDate, $plusSevenDate, $weekStartDate, $plusSevenDate, $weekStartDate, $plusSevenDate])
+                ->get();
+
+            // echo "<pre>";
+            // print_r($resultNew);
+            // exit;
+
+
 
             // $sideBarData = DB::table(DB::raw("({$asnSubquery->toSql()}) AS t_asn"))
             //     ->mergeBindings($asnSubquery)
@@ -117,15 +164,15 @@ class HomeController extends Controller
             //     ->first();
 
             // dbs expire mail
-            // $adminMail = $webUserLoginData->user_name;
-            $adminMail = 'sanjoy.websadroit@gmail.com';
+            $adminMail = $webUserLoginData->user_name;
+            // $adminMail = 'sanjoy.websadroit@gmail.com';
             $twentyOneDaysBeforeToday = Carbon::now()->toDateString();
 
             $expiredCertificates = DB::table('tbl_teacher')
                 ->join('tbl_teacherdbs', 'tbl_teacherdbs.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_teacher.*', 'tbl_teacherdbs.DBSDate_dte', 'tbl_teacherdbs.certificateNumber_txt', DB::raw('DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR) AS expiry_date'))
                 ->whereRaw('DATE_SUB(DATE_ADD(tbl_teacherdbs.DBSDate_dte, INTERVAL 3 YEAR), INTERVAL -21 DAY) = ?', [$twentyOneDaysBeforeToday])
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->where('tbl_teacher.isCurrent_status', '<>', 0)
                 ->where('tbl_teacher.company_id', $company_id)
                 ->get();
@@ -147,8 +194,10 @@ class HomeController extends Controller
                         'timestamp_ts' => date('Y-m-d H:i:s')
                     ]);
 
-                $mailData['subject'] = "Teacher DBS Record";
+                $mailData['subject'] = "Candidate DBS Record";
                 $mailData['mail'] = $adminMail;
+                $mailData['companyDetail'] = $companyDetail;
+                $mailData['name'] = $webUserLoginData->firstName_txt . ' ' . $webUserLoginData->surname_txt;
                 $mailData['expiredCertificates'] = $expiredCertificates;
                 $myVar = new AlertController();
                 $myVar->dbsExpireAdmin($mailData);

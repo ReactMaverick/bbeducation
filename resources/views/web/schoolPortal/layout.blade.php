@@ -4,12 +4,12 @@
 @include('web.schoolPortal.common.meta')
 
 <body class="hold-transition sidebar-mini layout-fixed">
-    {{-- <div class="skd_loder_box">
+    <div class="skd_loder_box" id="fullLoader">
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
-    </div> --}}
+    </div>
     <div class="wrapper">
         <!-- Preloader -->
         {{-- <div class="preloader flex-column justify-content-center align-items-center">

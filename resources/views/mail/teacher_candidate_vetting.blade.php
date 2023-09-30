@@ -116,8 +116,10 @@
             </tr>
             <tr>
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
-                    <h3 style="margin-bottom: 10px;">PLEASE DO NOT REPLY TO THIS EMAIL
-                        THIS MAILBOX IS NOT MONITORED</h3>
+                    <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
+                        MONITORED.*</h3>
+                    <p>For any queries, please email <a href="mailto:Georgia@bbe-edu.co.uk"
+                            target="_blank">Georgia@bbe-edu.co.uk</a></p>
                 </td>
             </tr>
             <tr>

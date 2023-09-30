@@ -40,17 +40,25 @@
         </div>
 
         <div class="modal-side-field">
-            <label class="form-check-label" for="receiveVetting_status">Receive Vetting
+            <label class="form-check-label" for="receiveVetting_statusEdit">Receive Vetting
                 Confirmations</label>
-            <input type="checkbox" class="" name="receiveVetting_status" id="receiveVetting_status" value="1"
-                {{ $contactDetail->receiveVetting_status == '-1' ? 'checked' : '' }}>
+            <input type="checkbox" class="" name="receiveVetting_status" id="receiveVetting_statusEdit"
+                value="1" {{ $contactDetail->receiveVetting_status == '-1' ? 'checked' : '' }}>
         </div>
 
         <div class="modal-side-field">
-            <label class="form-check-label" for="receiveTimesheets_status">Receive
-                Timesheets/Invoices</label>
-            <input type="checkbox" class="" name="receiveTimesheets_status" id="receiveTimesheets_status"
-                value="1" {{ $contactDetail->receiveTimesheets_status == '-1' ? 'checked' : '' }}>
+            <label class="form-check-label" for="receiveTimesheets_statusEdit">Receive
+                Timesheets</label>
+            <input type="checkbox" class="" name="receiveTimesheets_status" id="receiveTimesheets_statusEdit"
+                value="1" {{ $contactDetail->receiveTimesheets_status == '-1' ? 'checked' : '' }}
+                {{ $sheetContactExit == 1 ? 'disabled' : '' }}>
+        </div>
+
+        <div class="modal-side-field">
+            <label class="form-check-label" for="receiveInvoice_statusEdit">Receive
+                Invoices</label>
+            <input type="checkbox" class="" name="receiveInvoice_status" id="receiveInvoice_statusEdit"
+                value="1" {{ $contactDetail->receiveInvoice_status == '-1' ? 'checked' : '' }}>
         </div>
     </div>
 </div>

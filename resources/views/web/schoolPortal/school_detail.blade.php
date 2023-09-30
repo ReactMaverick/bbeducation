@@ -109,9 +109,9 @@
                                                 <h2>Contacts</h2>
                                             </div>
                                             <div class="contact-icon-sec">
-                                                <a style="cursor: pointer" class="disabled-link" id="deleteContactBttn">
+                                                {{-- <a style="cursor: pointer" class="disabled-link" id="deleteContactBttn">
                                                     <i class="fas fa-trash-alt"></i>
-                                                </a>
+                                                </a> --}}
                                                 <a data-toggle="modal" data-target="#ContactAddModal"
                                                     style="cursor: pointer;">
                                                     <i class="fas fa-plus-circle"></i>
@@ -180,10 +180,10 @@
                                                     <h2>Contact Items</h2>
                                                 </div>
                                                 <div class="contact-icon-sec">
-                                                    <a style="cursor: pointer" class="disabled-link"
+                                                    {{-- <a style="cursor: pointer" class="disabled-link"
                                                         id="deleteContactItemBttn">
                                                         <i class="fas fa-trash-alt"></i>
-                                                    </a>
+                                                    </a> --}}
                                                     <a data-toggle="modal" data-target="#ContactItemAddModal"
                                                         style="cursor: pointer;">
                                                         <i class="fas fa-plus-circle"></i>

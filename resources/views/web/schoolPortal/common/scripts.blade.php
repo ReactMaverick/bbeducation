@@ -70,6 +70,7 @@
 
 <script>
     $(document).ready(function() {
+        $('#fullLoader').hide();
         $(".select2").select2();
 
         $('.datePickerPaste').datepicker({

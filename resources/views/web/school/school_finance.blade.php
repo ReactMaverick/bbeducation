@@ -97,6 +97,7 @@
                                         <th>Gross</th>
                                         <th>Paid On</th>
                                         <th>Payment Method</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -115,6 +116,15 @@
                                                 @endif
                                             </td>
                                             <td>{{ $Invoices->invPaymentMethod_txt }}</td>
+                                            <td>
+                                                @if ($Invoices->paidOn_dte != null)
+                                                    {{ 'Paid' }}
+                                                @elseif (date('Y-m-d', strtotime($Invoices->invoiceDate_dte . ' + 30 days')) < date('Y-m-d'))
+                                                    {{ 'Overdue' }}
+                                                @else
+                                                    {{ 'Due' }}
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -122,7 +132,7 @@
 
                             <hr>
 
-                            <table class="table school-detail-page-table" id="myTable1">
+                            {{-- <table class="table school-detail-page-table" id="myTable1">
                                 <thead>
                                     <tr class="school-detail-table-heading">
                                         <th>Teacher</th>
@@ -143,7 +153,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                            </table>
+                            </table> --}}
                         </div>
                     </div>
                     <div class="billing-details-section">
@@ -187,7 +197,120 @@
                     </div>
                 </div>
 
+                <div class="school-finance-right-sec">
+                    <div class="school-finance-section">
+                        <div class="school-finance-sec">
+                            <div class="school-finance-contact-heading-text" style="width: 100%;">
+                                <h2>Overdue Invoices</h2>
+                            </div>
 
+                            <div class="school-finance-contact-heading" style="width: 100%;">
+                                <div class="school-finance-contact-icon-sec">
+                                    <a style="cursor: pointer" class="disabled-link" id="sendOverdueInvoiceBtn"
+                                        title="Send Invoice">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </a>
+                                    <div class="finance-invoice-icon-sec">
+                                        <a style="cursor: pointer" id="sendAllOverdueInvoiceBtn"
+                                            title="Send All Listed Invoice">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <div class="finance-invoice-second-icon-sec">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="" id="overdueInvoiceId" value="">
+
+                        <div class="school-finance-table-section">
+                            <table class="table school-detail-page-table" id="myTable2">
+                                <thead>
+                                    <tr class="">
+                                        <th>Invoice Number</th>
+                                        <th>Date</th>
+                                        <th>Net</th>
+                                        <th>Vat</th>
+                                        <th>Gross</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body-sec">
+                                    @foreach ($overdueInvoices as $key => $Invoices)
+                                        <tr class="school-detail-table-data editDueInvoiceRow"
+                                            onclick="editDueInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
+                                            id="editDueInvoiceRow{{ $Invoices->invoice_id }}">
+                                            <td>{{ $Invoices->invoice_id }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
+                                            <td>{{ $Invoices->net_dec }}</td>
+                                            <td>{{ $Invoices->vat_dec }}</td>
+                                            <td>{{ $Invoices->gross_dec }}</td>
+                                            <td>
+                                                @if ($Invoices->sentMailDate)
+                                                    {{ 'Sent to school ' }}
+                                                    ({{ date('d-m-Y', strtotime($Invoices->sentMailDate)) }})
+                                                @else
+                                                    {{ '' }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="billing-details-section">
+
+                        <div class="amount-owed-heading-sec">
+                            <h2>Amount Owed</h2>
+                            <div class="amount-owed-price-sec">
+                                <span>Net</span>
+                                @if ($invoiceCal->net_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceCal->net_dec, 2, '.', ',') }}</p>
+                                @endif
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Vat</span>
+                                @if ($invoiceCal->vat_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceCal->vat_dec, 2, '.', ',') }}</p>
+                                @endif
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Gross</span>
+                                @if ($invoiceCal->gross_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceCal->gross_dec, 2, '.', ',') }}</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="amount-owed-heading-sec">
+                            <h2>Amount Overdue</h2>
+                            <div class="amount-owed-price-sec">
+                                <span>Net</span>
+                                @if ($invoiceOverdueCal->net_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceOverdueCal->net_dec, 2, '.', ',') }}</p>
+                                @endif
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Vat</span>
+                                @if ($invoiceOverdueCal->vat_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceOverdueCal->vat_dec, 2, '.', ',') }}</p>
+                                @endif
+                            </div>
+                            <div class="amount-owed-price-sec">
+                                <span>Gross</span>
+                                @if ($invoiceOverdueCal->gross_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceOverdueCal->gross_dec, 2, '.', ',') }}</p>
+                                @endif
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -404,6 +527,14 @@
         $(document).ready(function() {
             $('#myTable, #myTable1').DataTable({
                 ordering: false
+            });
+            $('#myTable2').DataTable({
+                scrollY: '400px', // Set the desired height for the scrolling area
+                paging: false, // Disable pagination
+                // footer: false, // Remove footer
+                info: false, // Disable the info footer
+                ordering: false,
+                searching: false,
             });
         });
 
@@ -792,6 +923,97 @@
                         );
 
                         $('#fullLoader').hide();
+                    }
+                });
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        function editDueInvoiceRowSelect(invoice_id) {
+            if ($('#editDueInvoiceRow' + invoice_id).hasClass('tableRowActive')) {
+                $('#editDueInvoiceRow' + invoice_id).removeClass('tableRowActive');
+                setIdsNew(invoice_id, 'rm');
+            } else {
+                $('#editDueInvoiceRow' + invoice_id).addClass('tableRowActive');
+                setIdsNew(invoice_id, 'add');
+            }
+        }
+
+        function setIdsNew(invoice_id, type) {
+            var ItemId = parseInt(invoice_id);
+            var ids = '';
+            var idsArr = [];
+            var overdueInvoiceIds = $('#overdueInvoiceId').val();
+            if (overdueInvoiceIds) {
+                idsArr = overdueInvoiceIds.split(',');
+            }
+            if (type == 'add') {
+                idsArr.push(ItemId);
+            }
+            if (type == 'rm') {
+                idsArr = jQuery.grep(idsArr, function(value) {
+                    return value != ItemId;
+                });
+            }
+            ids = idsArr.toString();
+            $('#overdueInvoiceId').val(ids);
+            if (ids) {
+                $('#sendOverdueInvoiceBtn').removeClass('disabled-link');
+            } else {
+                $('#sendOverdueInvoiceBtn').addClass('disabled-link');
+            }
+        }
+
+        $(document).on('click', '#sendAllOverdueInvoiceBtn', function() {
+            var school_id = "{{ $school_id }}";
+            if (school_id) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('sendOverdueInvoice') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        school_id: school_id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        swal("",
+                            "Mail have been send successfully."
+                        );
+
+                        $('#fullLoader').hide();
+
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '#sendOverdueInvoiceBtn', function() {
+            var overdueInvoiceId = $('#overdueInvoiceId').val();
+            if (overdueInvoiceId) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('sendOneOverdueInvoice') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        overdueInvoiceId: overdueInvoiceId
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        swal("",
+                            "Mail have been send successfully."
+                        );
+
+                        $('#fullLoader').hide();
+
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
                     }
                 });
             } else {

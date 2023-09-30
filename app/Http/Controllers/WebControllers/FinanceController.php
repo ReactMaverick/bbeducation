@@ -295,15 +295,53 @@ class FinanceController extends Controller
                 ->pluck('tbl_asnItem.asnItem_id')
                 ->toArray();
 
+            // DB::table('tbl_asnItem')
+            //     ->whereIn('asnItem_id', $itemList)
+            //     ->update([
+            //         'send_to_school' => 0,
+            //         'admin_approve' => 2,
+            //         'rejected_by_type' => 'Admin',
+            //         'rejected_by' => $user_id,
+            //         'rejected_text' => $request->remark
+            //     ]);
             DB::table('tbl_asnItem')
                 ->whereIn('asnItem_id', $itemList)
-                ->update([
-                    'send_to_school' => 0,
-                    'admin_approve' => 2,
-                    'rejected_by_type' => 'Admin',
-                    'rejected_by' => $user_id,
-                    'rejected_text' => $request->remark
-                ]);
+                ->delete();
+
+            return true;
+        }
+        return true;
+    }
+
+    public function financeTimesheetDelete(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $input = $request->all();
+            $asnIds = $input['asnIds'];
+            $weekStartDate = $input['weekStartDate'];
+            $weekEndDate = $input['weekEndDate'];
+            $asnIdsArr = explode(",", $asnIds);
+
+            $itemList = DB::table('tbl_asn')
+                ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
+                ->where('timesheet_id', NULL)
+                ->where('status_int', 3)
+                ->whereDate('asnDate_dte', '>=', $weekStartDate)
+                ->whereDate('asnDate_dte', '<=', $weekEndDate)
+                ->whereIn('tbl_asn.asn_id', $asnIdsArr)
+                ->where('company_id', $company_id)
+                ->where('admin_approve', '!=', 1)
+                ->where('send_to_school', 0)
+                ->groupBy('tbl_asnItem.asnItem_id')
+                ->pluck('tbl_asnItem.asnItem_id')
+                ->toArray();
+
+            DB::table('tbl_asnItem')
+                ->whereIn('asnItem_id', $itemList)
+                ->delete();
 
             return true;
         }
@@ -447,25 +485,34 @@ class FinanceController extends Controller
                         ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                         ->where('tbl_schoolContact.isCurrent_status', '-1')
                         ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
-                        ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                        // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                         ->where('tbl_contactItemSch.type_int', 1)
                         ->where('tbl_schoolContact.school_id', $schoolDet->school_id)
-                        ->first();
+                        ->get();
 
                     $companyDetail = DB::table('company')
                         ->select('company.*')
                         ->where('company.company_id', $company_id)
                         ->first();
-                    if ($contactDet && $contactDet->contactItem_txt) {
-                        $mailData['asnIds'] = $asnId;
-                        $mailData['companyDetail'] = $companyDetail;
-                        $mailData['weekStartDate'] = $weekStartDate;
-                        $mailData['weekEndDate'] = $weekEndDate;
-                        $mailData['contactDet'] = $contactDet;
-                        $mailData['itemList'] = $itemList;
-                        $mailData['mail'] = $contactDet->contactItem_txt;
-                        $myVar = new AlertController();
-                        $myVar->sendToSchoolApproval($mailData);
+
+                    $mailArr = array();
+                    foreach ($contactDet as $mKey => $mValue) {
+                        array_push($mailArr, $mValue->contactItem_txt);
+                    }
+                    if (count($mailArr) > 0) {
+                        foreach ($contactDet as $mKey2 => $mValue2) {
+                            if ($mValue2->contactItem_txt) {
+                                $mailData['asnIds'] = $asnId;
+                                $mailData['companyDetail'] = $companyDetail;
+                                $mailData['weekStartDate'] = $weekStartDate;
+                                $mailData['weekEndDate'] = $weekEndDate;
+                                $mailData['contactDet'] = $mValue2;
+                                $mailData['itemList'] = $itemList;
+                                $mailData['mail'] = $mValue2->contactItem_txt;
+                                $myVar = new AlertController();
+                                $myVar->sendToSchoolApproval($mailData);
+                            }
+                        }
                     } else {
                         if ($notMailSchoolName != '') {
                             $notMailSchoolName .= ', ';
@@ -512,30 +559,38 @@ class FinanceController extends Controller
                 ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                 ->where('tbl_schoolContact.isCurrent_status', '-1')
                 ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
-                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                 ->where('tbl_contactItemSch.type_int', 1)
                 ->where('tbl_schoolContact.school_id', $schoolId)
-                ->first();
+                ->get();
+            $mailArr = array();
+            foreach ($contactDet as $mKey => $mValue) {
+                array_push($mailArr, $mValue->contactItem_txt);
+            }
 
             $companyDetail = DB::table('company')
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
-            if (count($teacherList) > 0 && $contactDet && $contactDet->contactItem_txt) {
+            if (count($teacherList) > 0 && count($contactDet) > 0) {
                 DB::table('tbl_asnItem')
                     ->whereIn('tbl_asnItem.asnItem_id', $asnIdsArr)
                     ->update([
                         'send_to_school' => 1
                     ]);
 
-                $mailData['asnIds'] = $asnId;
-                $mailData['companyDetail'] = $companyDetail;
-                $mailData['schoolId'] = $schoolId;
-                $mailData['contactDet'] = $contactDet;
-                $mailData['teacherList'] = $teacherList;
-                $mailData['mail'] = $contactDet->contactItem_txt;
-                $myVar = new AlertController();
-                $myVar->sendToSchoolTimeSheet($mailData);
+                foreach ($contactDet as $mKey2 => $mValue2) {
+                    if ($mValue2->contactItem_txt) {
+                        $mailData['asnIds'] = $asnId;
+                        $mailData['companyDetail'] = $companyDetail;
+                        $mailData['schoolId'] = $schoolId;
+                        $mailData['contactDet'] = $mValue2;
+                        $mailData['teacherList'] = $teacherList;
+                        $mailData['mail'] = $mValue2->contactItem_txt;
+                        $myVar = new AlertController();
+                        $myVar->sendToSchoolTimeSheet($mailData);
+                    }
+                }
             }
 
             return true;
@@ -554,15 +609,18 @@ class FinanceController extends Controller
             $schoolId = $input['schoolId'];
             $asnIdsArr = explode(",", $asnId);
 
+            // DB::table('tbl_asnItem')
+            //     ->whereIn('asnItem_id', $asnIdsArr)
+            //     ->update([
+            //         'send_to_school' => 0,
+            //         'admin_approve' => 2,
+            //         'rejected_by_type' => 'Admin',
+            //         'rejected_by' => $user_id,
+            //         'rejected_text' => $request->remark
+            //     ]);
             DB::table('tbl_asnItem')
                 ->whereIn('asnItem_id', $asnIdsArr)
-                ->update([
-                    'send_to_school' => 0,
-                    'admin_approve' => 2,
-                    'rejected_by_type' => 'Admin',
-                    'rejected_by' => $user_id,
-                    'rejected_text' => $request->remark
-                ]);
+                ->delete();
 
             return true;
         }
@@ -596,30 +654,39 @@ class FinanceController extends Controller
                 ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                 ->where('tbl_schoolContact.isCurrent_status', '-1')
                 ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
-                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                 ->where('tbl_contactItemSch.type_int', 1)
                 ->where('tbl_schoolContact.school_id', $schoolId)
-                ->first();
+                ->get();
+
+            $mailArr = array();
+            foreach ($contactDet as $mKey => $mValue) {
+                array_push($mailArr, $mValue->contactItem_txt);
+            }
 
             $companyDetail = DB::table('company')
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
-            if (count($teacherList) > 0 && $contactDet && $contactDet->contactItem_txt) {
+            if (count($teacherList) > 0 && count($contactDet) > 0) {
                 DB::table('teacher_timesheet_item')
                     ->whereIn('timesheet_item_id', $asnIdsArr)
                     ->update([
                         'send_to_school' => 1
                     ]);
 
-                $mailData['asnIds'] = $asnId;
-                $mailData['companyDetail'] = $companyDetail;
-                $mailData['schoolId'] = $schoolId;
-                $mailData['contactDet'] = $contactDet;
-                $mailData['teacherList'] = $teacherList;
-                $mailData['mail'] = $contactDet->contactItem_txt;
-                $myVar = new AlertController();
-                $myVar->sendToSchoolTeacherItemSheet($mailData);
+                foreach ($contactDet as $mKey2 => $mValue2) {
+                    if ($mValue2->contactItem_txt) {
+                        $mailData['asnIds'] = $asnId;
+                        $mailData['companyDetail'] = $companyDetail;
+                        $mailData['schoolId'] = $schoolId;
+                        $mailData['contactDet'] = $mValue2;
+                        $mailData['teacherList'] = $teacherList;
+                        $mailData['mail'] = $mValue2->contactItem_txt;
+                        $myVar = new AlertController();
+                        $myVar->sendToSchoolTeacherItemSheet($mailData);
+                    }
+                }
             }
 
             return true;
@@ -783,8 +850,10 @@ class FinanceController extends Controller
 
         $webUserLoginData = Session::get('webUserLoginData');
         $companyDetail = array();
+        $user_id = '';
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
             $companyDetail = DB::table('company')
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
@@ -827,6 +896,15 @@ class FinanceController extends Controller
                     ->update([
                         'admin_approve' => 1,
                         'timesheet_id' => $timesheet_id
+                    ]);
+
+                DB::table('teacher_timesheet_item')
+                    ->where('asnItem_id', $id)
+                    ->update([
+                        'admin_approve' => 1,
+                        'approve_by' => $user_id,
+                        'approve_by_type' => 'Admin',
+                        'approve_by_dte' => date('Y-m-d H:i:s'),
                     ]);
             }
             $result['add'] = 'Yes';
@@ -983,7 +1061,7 @@ class FinanceController extends Controller
             ->select('asnItem_id', 'tbl_asn.teacher_id', 'tbl_asn.asn_id', 'tbl_asn.school_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), DB::raw("IF(tbl_asn.student_id IS NOT NULL, CONCAT(tbl_student.firstname_txt, ' ', tbl_student.surname_txt), '') AS studentName_txt"), 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', 'tbl_asnItem.admin_approve', 'tbl_asnItem.send_to_school', 'tbl_asnItem.rejected_text', 'tbl_asnItem.lunch_time')
             ->where('timesheet_id', NULL)
             ->where('status_int', 3)
-            ->whereDate('asnDate_dte', '<=', $weekStartDate)
+            ->whereDate('asnDate_dte', '<', $weekStartDate)
             ->where('school_id', $school_id)
             ->groupBy('tbl_asn.teacher_id', 'asnItem_id', 'asnDate_dte')
             ->orderBy('tbl_asn.teacher_id', 'ASC')
@@ -1017,7 +1095,7 @@ class FinanceController extends Controller
                 if ($teacher->admin_approve == 2) {
                     $tStatus = "Rejected" . $rejectText;
                 } else if ($teacher->send_to_school == 1) {
-                    $tStatus = "Send to school";
+                    $tStatus = "Sent to School";
                 } else {
                     $tStatus = "--";
                 }
@@ -1085,13 +1163,19 @@ class FinanceController extends Controller
     {
         $editEventId = $request->editEventId;
 
+        if ($request->hours_dec) {
+            $dayPercent_dec = intval(($request->hours_dec / 6) * 100) / 100;
+        } else {
+            $dayPercent_dec = $request->dayPercent_dec;
+        }
+
         DB::table('tbl_asnItem')
             ->where('asnItem_id', $editEventId)
             ->update([
                 'dayPart_int' => $request->dayPart_int,
                 'asnDate_dte' => date("Y-m-d", strtotime($request->asnDate_dte)),
                 'charge_dec' => $request->charge_dec,
-                'dayPercent_dec' => $request->dayPercent_dec,
+                'dayPercent_dec' => $dayPercent_dec,
                 'hours_dec' => $request->hours_dec,
                 'start_tm' => $request->start_tm,
                 'end_tm' => $request->end_tm,
@@ -1205,6 +1289,7 @@ class FinanceController extends Controller
             ->where('teacher_timesheet_item.admin_approve', '!=', 1)
             ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
             ->orderBy('teacher_timesheet.teacher_id', 'ASC')
+            ->orderByRaw("FIELD(DATE_FORMAT(teacher_timesheet_item.asnDate_dte, '%a'), 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun') ASC")
             ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
             ->get();
 
@@ -1234,7 +1319,7 @@ class FinanceController extends Controller
                 if ($teacher->t_admin_approve == 2) {
                     $tStatus = "Rejected" . $rejectText;
                 } else if ($teacher->t_send_to_school == 1) {
-                    $tStatus = "Send to school";
+                    $tStatus = "Sent to School";
                 } else {
                     $tStatus = "--";
                 }
@@ -1336,6 +1421,14 @@ class FinanceController extends Controller
             }
             // echo $p_maxDate;
             // exit;
+            $invoiceFromDate = '';
+            if ($request->invoiceFromDate) {
+                $invoiceFromDate = date('Y-m-d', strtotime(str_replace('/', '-', $request->invoiceFromDate)));
+            }
+            $invoiceToDate = '';
+            if ($request->invoiceToDate) {
+                $invoiceToDate = date('Y-m-d', strtotime(str_replace('/', '-', $request->invoiceToDate)));
+            }
 
             $p_invoiceNumberMin = '';
             if ($request->invoiceNumberMin) {
@@ -1372,7 +1465,7 @@ class FinanceController extends Controller
                 ->get();
 
             $invoices = DB::table('tbl_school')
-                ->LeftJoin('tbl_invoice', 'tbl_school.school_id', '=', 'tbl_invoice.school_id')
+                ->join('tbl_invoice', 'tbl_school.school_id', '=', 'tbl_invoice.school_id')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                 ->leftJoin(
                     DB::raw("(SELECT tbl_contactItemSch.school_id, contactItem_txt AS invoiceEmail_txt FROM tbl_contactItemSch LEFT JOIN tbl_schoolContact ON tbl_schoolContact.contact_id = tbl_contactItemSch.schoolContact_id WHERE receiveInvoices_status <> 0 AND (tbl_schoolContact.isCurrent_status = -1 OR tbl_contactItemSch.schoolContact_id IS NULL) GROUP BY tbl_contactItemSch.school_id) AS t_email"),
@@ -1380,7 +1473,7 @@ class FinanceController extends Controller
                         $join->on('tbl_school.school_id', '=', 't_email.school_id');
                     }
                 )
-                ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_invoice.sentMailBy', 'tbl_invoice.sentMailDate', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte');
+                ->select('tbl_invoice.invoice_id', 'tbl_invoice.invoiceDate_dte', 'tbl_invoice.sentMailBy', 'tbl_invoice.sentMailDate', 'tbl_invoice.paidOn_dte', 'tbl_school.school_id', 'tbl_school.name_txt', DB::raw("CAST(SUM((numItems_dec * charge_dec * ((100 + vatRate_dec) / 100))) AS DECIMAL(7, 2)) AS gross_dec"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(7, 2)) AS net_dec"), DB::raw("SUM(numItems_dec) AS days_dec"), DB::raw("COUNT(DISTINCT tbl_invoiceItem.teacher_id) AS teachers_int"), DB::raw("IF(invoiceEmail_txt IS NOT NULL, 'Y', 'N') AS hasEmail_status"), DB::raw("IF(tbl_invoice.factored_status <> 0, 'Y', 'N') AS factored_status"), 'invoiceEmail_txt', 'sentOn_dte');
 
             if ($showSent == 'true') {
                 $invoices->where('tbl_invoice.sentMailDate', '!=', NULL);
@@ -1394,7 +1487,19 @@ class FinanceController extends Controller
                 $invoices->limit(100);
             }
 
-            $invoiceList = $invoices->groupBy('tbl_invoice.invoice_id')
+            if ($invoiceFromDate) {
+                $invoices->whereDate('tbl_invoice.invoiceDate_dte', '>=', $invoiceFromDate);
+            } else {
+                $invoices->limit(100);
+            }
+            if ($invoiceToDate) {
+                $invoices->whereDate('tbl_invoice.invoiceDate_dte', '<=', $invoiceToDate);
+            } else {
+                $invoices->limit(100);
+            }
+
+            $invoiceList = $invoices->where('tbl_invoice.invoice_id', '!=', null)
+                ->groupBy('tbl_invoice.invoice_id')
                 ->orderBy('tbl_invoice.invoice_id', 'DESC')
                 ->orderBy('invoiceDate_dte', 'DESC')
                 ->orderByRaw('SUM(numItems_dec * charge_dec)')
@@ -1441,13 +1546,19 @@ class FinanceController extends Controller
     {
         $editEventId = $request->editEventId;
 
+        if ($request->hours_dec) {
+            $dayPercent_dec = intval(($request->hours_dec / 6) * 100) / 100;
+        } else {
+            $dayPercent_dec = $request->dayPercent_dec;
+        }
+
         DB::table('tbl_asnItem')
             ->where('asnItem_id', $editEventId)
             ->update([
                 'dayPart_int' => $request->dayPart_int,
                 'asnDate_dte' => date("Y-m-d", strtotime(str_replace('/', '-', $request->asnDate_dte))),
                 'charge_dec' => $request->charge_dec,
-                'dayPercent_dec' => $request->dayPercent_dec,
+                'dayPercent_dec' => $dayPercent_dec,
                 'hours_dec' => $request->hours_dec,
                 'cost_dec' => $request->cost_dec
             ]);
@@ -1679,8 +1790,8 @@ class FinanceController extends Controller
 
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
-            $editData['paymentLoggedBy_id'] = $webUserLoginData->user_id;
-            $editData['sentBy_int'] = $webUserLoginData->user_id;
+            // $editData['paymentLoggedBy_id'] = $webUserLoginData->user_id;
+            // $editData['sentBy_int'] = $webUserLoginData->user_id;
         }
         if ($request->factored_status) {
             $editData['factored_status'] = -1;
@@ -1695,7 +1806,7 @@ class FinanceController extends Controller
             $editData['paidOn_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->paidOn_dte)));
         }
         $editData['paymentMethod_int'] = $request->paymentMethod_int;
-        $editData['sentOn_dte'] = date('Y-m-d');
+        // $editData['sentOn_dte'] = date('Y-m-d');
         $editData['timestamp_ts'] = date('Y-m-d H:i:s');
 
         DB::table('tbl_invoice')
@@ -1745,9 +1856,9 @@ class FinanceController extends Controller
                         onclick='invItemRowSelect($invoiceItem->invoiceItem_id)'
                         id='editInvItemRow$invoiceItem->invoiceItem_id'>
                         <td style='width: 50%;'>$invoiceItem->description_txt</td>
-                        <td>" . (int)$invoiceItem->numItems_dec . "</td>
-                        <td>" . (int)$invoiceItem->charge_dec . "</td>
-                        <td>" . (int)$invoiceItem->cost_dec . "</td>
+                        <td>" . $invoiceItem->numItems_dec . "</td>
+                        <td>" . $invoiceItem->charge_dec . "</td>
+                        <td>" . $invoiceItem->cost_dec . "</td>
                         <td>$asn</td>
                         <td>$tch</td>
                     </tr>";
@@ -1819,9 +1930,9 @@ class FinanceController extends Controller
                         onclick='invItemRowSelect($invoiceItem->invoiceItem_id)'
                         id='editInvItemRow$invoiceItem->invoiceItem_id'>
                         <td style='width: 50%;'>$invoiceItem->description_txt</td>
-                        <td>" . (int)$invoiceItem->numItems_dec . "</td>
-                        <td>" . (int)$invoiceItem->charge_dec . "</td>
-                        <td>" . (int)$invoiceItem->cost_dec . "</td>
+                        <td>" . $invoiceItem->numItems_dec . "</td>
+                        <td>" . $invoiceItem->charge_dec . "</td>
+                        <td>" . $invoiceItem->cost_dec . "</td>
                         <td>$asn</td>
                         <td>$tch</td>
                     </tr>";
@@ -1843,15 +1954,18 @@ class FinanceController extends Controller
                     ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                     ->where('tbl_schoolContact.isCurrent_status', '-1')
                     ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
-                    ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                    // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                    // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                     ->where('tbl_contactItemSch.type_int', 1)
                     ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                     ->first();
 
                 $invoiceItemList = DB::table('tbl_invoiceItem')
                     ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                    ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                     ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
                     ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+                    ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                     ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                     ->get();
 
@@ -1945,9 +2059,9 @@ class FinanceController extends Controller
                         onclick='invItemRowSelect($invoiceItem->invoiceItem_id)'
                         id='editInvItemRow$invoiceItem->invoiceItem_id'>
                         <td style='width: 50%;'>$invoiceItem->description_txt</td>
-                        <td>" . (int)$invoiceItem->numItems_dec . "</td>
-                        <td>" . (int)$invoiceItem->charge_dec . "</td>
-                        <td>" . (int)$invoiceItem->cost_dec . "</td>
+                        <td>" . $invoiceItem->numItems_dec . "</td>
+                        <td>" . $invoiceItem->charge_dec . "</td>
+                        <td>" . $invoiceItem->cost_dec . "</td>
                         <td>$asn</td>
                         <td>$tch</td>
                     </tr>";
@@ -1984,14 +2098,18 @@ class FinanceController extends Controller
                     ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
                     ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                     ->where('tbl_schoolContact.isCurrent_status', '-1')
-                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    // ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    ->where('tbl_schoolContact.receiveInvoice_status', '-1')
                     ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                     ->where('tbl_contactItemSch.type_int', 1)
                     ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
-                    ->first();
-                $sendMail = '';
-                if ($contactDet && $contactDet->contactItem_txt) {
-                    $sendMail = $contactDet->contactItem_txt;
+                    ->get();
+                $sendMail = [];
+                // if ($contactDet && $contactDet->contactItem_txt) {
+                //     $sendMail = $contactDet->contactItem_txt;
+                // }
+                foreach ($contactDet as $mKey => $mValue) {
+                    array_push($sendMail, $mValue->contactItem_txt);
                 }
 
                 $fileExist = 'No';
@@ -2009,8 +2127,10 @@ class FinanceController extends Controller
                 } else {
                     $invoiceItemList = DB::table('tbl_invoiceItem')
                         ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                        ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                         ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                         ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+                        ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
 
@@ -2048,7 +2168,18 @@ class FinanceController extends Controller
                         ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+                    $contactDetNew = DB::table('tbl_schoolContact')
+                        ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                        ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                        ->where('tbl_schoolContact.isCurrent_status', '-1')
+                        ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                        // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                        // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                        ->where('tbl_contactItemSch.type_int', 1)
+                        ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                        ->first();
+
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2107,19 +2238,23 @@ class FinanceController extends Controller
                     ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
                     ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                     ->where('tbl_schoolContact.isCurrent_status', '-1')
-                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    // ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    ->where('tbl_schoolContact.receiveInvoice_status', '-1')
                     ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                     ->where('tbl_contactItemSch.type_int', 1)
                     ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
-                    ->first();
+                    ->get();
                 $companyDetail = DB::table('company')
                     ->select('company.*')
                     ->where('company.company_id', $company_id)
                     ->first();
 
-                $sendMail = '';
-                if ($contactDet && $contactDet->contactItem_txt) {
-                    $sendMail = $contactDet->contactItem_txt;
+                $sendMail = [];
+                // if ($contactDet && $contactDet->contactItem_txt) {
+                //     $sendMail = $contactDet->contactItem_txt;
+                // }
+                foreach ($contactDet as $mKey => $mValue) {
+                    array_push($sendMail, $mValue->contactItem_txt);
                 }
 
                 $fileExist = 'No';
@@ -2137,8 +2272,10 @@ class FinanceController extends Controller
                 } else {
                     $invoiceItemList = DB::table('tbl_invoiceItem')
                         ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                        ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                         ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                         ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+                        ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
 
@@ -2171,7 +2308,18 @@ class FinanceController extends Controller
                         ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+                    $contactDetNew = DB::table('tbl_schoolContact')
+                        ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                        ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                        ->where('tbl_schoolContact.isCurrent_status', '-1')
+                        ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                        // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                        // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                        ->where('tbl_contactItemSch.type_int', 1)
+                        ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                        ->first();
+
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2190,14 +2338,298 @@ class FinanceController extends Controller
                 }
 
                 if (file_exists(public_path($fPath))) {
-                    $mailData['subject'] = 'Finance Invoice';
-                    $mailData['mail_description'] = "Please find attached a PDF file containing the finance invoice information. Kindly review it at your earliest convenience.";
-                    $mailData['invoice_path'] = asset($fPath);
-                    $mailData['contactDet'] = $contactDet;
-                    $mailData['mail'] = $sendMail;
-                    $mailData['companyDetail'] = $companyDetail;
-                    $myVar = new AlertController();
-                    $myVar->sendSchFinanceInvoiceMail($mailData);
+                    foreach ($contactDet as $mKey2 => $mValue2) {
+                        if ($mValue2->contactItem_txt) {
+                            $mailData['subject'] = 'Finance Invoice';
+                            $mailData['mail_description'] = "<p>Please find attached your invoice for this weeks agency staff. If you have an queries on this invoice please kindly respond within 24 hours of receiving this email.</p><p><b>*Please note that if we do not receive notification of any adjustments needed within the 24 hour period, this will be accepted as all invoices being authorised and amendments will not be able to be made thereafter.*</b></p><p>*A kind reminder that our payment terms are 14 days from the date of this invoice*</p><p>Many thanks in advance</p>";
+                            $mailData['invoice_path'] = asset($fPath);
+                            $mailData['contactDet'] = $mValue2;
+                            $mailData['mail'] = $mValue2->contactItem_txt;
+                            $mailData['companyDetail'] = $companyDetail;
+                            $myVar = new AlertController();
+                            $myVar->sendSchFinanceInvoiceMail($mailData);
+                        }
+                    }
+                }
+            }
+        } else {
+            $result['exist'] = 'No';
+        }
+        return response()->json($result);
+    }
+
+    public function sendOverdueInvoice(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $school_id = $request->school_id;
+            $result['exist'] = 'No';
+
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
+            $contactDet = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->where('tbl_schoolContact.school_id', $school_id)
+                ->get();
+
+            $sendMail = [];
+            foreach ($contactDet as $mKey => $mValue) {
+                array_push($sendMail, $mValue->contactItem_txt);
+            }
+
+            $schoolDetail = DB::table('tbl_school')
+                ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                    $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                })
+                ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                    $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                        ->where(function ($query) {
+                            $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                        });
+                })
+                ->LeftJoin('tbl_description as religion', function ($join) {
+                    $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                        ->where(function ($query) {
+                            $query->where('religion.descriptionGroup_int', '=', 29);
+                        });
+                })
+                ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                    $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                        ->where(function ($query) {
+                            $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                        });
+                })
+                ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                ->where('tbl_school.school_id', $school_id)
+                ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                ->first();
+
+            $contactDetNew = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->where('tbl_schoolContact.school_id', $school_id)
+                ->first();
+
+            $thresholdDate = Carbon::now()->subDays(30);
+            $dueInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+                ->where('tbl_invoice.school_id', $school_id)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
+                ->groupBy('tbl_invoice.invoice_id')
+                ->orderBy('tbl_invoice.invoiceDate_dte', 'DESC')
+                ->get();
+
+            $invoiceOverdueCal = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
+                ->where('tbl_invoice.school_id', $school_id)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
+                ->first();
+            if (count($dueInvoices) > 0) {
+                $fileArr = [];
+                foreach ($dueInvoices as $key => $value) {
+                    $invoiceItemList = DB::table('tbl_invoiceItem')
+                        ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                        ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
+                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
+                        ->where('tbl_invoiceItem.invoice_id', $value->invoice_id)
+                        ->orderBy('tbl_teacher.firstName_txt', 'ASC')
+                        ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+                        ->get();
+
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
+                    $pdf->save(public_path('pdfs/invoice/' . $pdfName));
+                    $fPath = 'pdfs/invoice/' . $pdfName;
+
+                    DB::table('tbl_invoice')
+                        ->where('invoice_id', '=', $value->invoice_id)
+                        ->update([
+                            'invoice_path' => $fPath,
+                            'sentMailBy' => $user_id,
+                            'sentMailDate' => date('Y-m-d')
+                        ]);
+
+                    if (file_exists(public_path($fPath))) {
+                        $fD['name'] = $pdfName;
+                        $fD['invoice_path'] = asset($fPath);
+                        array_push($fileArr, $fD);
+                    }
+                }
+
+                if (count($fileArr) > 0) {
+                    foreach ($contactDet as $mKey2 => $mValue2) {
+                        if ($mValue2->contactItem_txt) {
+                            $mailData['subject'] = 'Overdue Invoice';
+                            $mailData['mail_description'] = "<p>Please find attached your overdue invoice(s) to date, Could we kindly request that all overdue invoices are paid as a matter of urgency to prevent late payment charges and interest being added.</p><p>*A kind reminder that our payment terms are 14 days from the date of the invoice*</p><p>Many thanks in advance</p>";
+                            $mailData['fileArr'] = $fileArr;
+                            $mailData['contactDet'] = $mValue2;
+                            $mailData['mail'] = $mValue2->contactItem_txt;
+                            $mailData['companyDetail'] = $companyDetail;
+                            $mailData['dueInvoices'] = $dueInvoices;
+                            $mailData['invoiceOverdueCal'] = $invoiceOverdueCal;
+                            $myVar = new AlertController();
+                            $myVar->sendSchOverdueInvoiceMail($mailData);
+                        }
+                    }
+                }
+            }
+        } else {
+            $result['exist'] = 'No';
+        }
+        return response()->json($result);
+    }
+
+    public function sendOneOverdueInvoice(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $overdueInvoiceIds = explode(",", $request->overdueInvoiceId);
+            $result['exist'] = 'No';
+
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $company_id)
+                ->first();
+
+            $dueInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->LeftJoin('tbl_user', 'tbl_user.user_id', '=', 'tbl_invoice.created_by')
+                ->select('tbl_invoice.*', 'tbl_user.firstName_txt as admin_fname', 'tbl_user.surname_txt as admin_sname', 'tbl_user.user_name as admin_email', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'))
+                ->whereIn('tbl_invoice.invoice_id', $overdueInvoiceIds)
+                ->groupBy('tbl_invoice.invoice_id')
+                ->get();
+
+            $invoiceOverdueCal = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
+                ->whereIn('tbl_invoice.invoice_id', $overdueInvoiceIds)
+                ->first();
+            if (count($dueInvoices) > 0) {
+                $contactDet = DB::table('tbl_schoolContact')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                    ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                    ->where('tbl_schoolContact.isCurrent_status', '-1')
+                    ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                    ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                    ->where('tbl_contactItemSch.type_int', 1)
+                    ->where('tbl_schoolContact.school_id', $dueInvoices[0]->school_id)
+                    ->get();
+
+                $sendMail = [];
+                foreach ($contactDet as $mKey => $mValue) {
+                    array_push($sendMail, $mValue->contactItem_txt);
+                }
+
+                $schoolDetail = DB::table('tbl_school')
+                    ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
+                    ->LeftJoin('tbl_schoolContactLog', function ($join) {
+                        $join->on('tbl_schoolContactLog.school_id', '=', 'tbl_school.school_id');
+                    })
+                    ->LeftJoin('tbl_user as contactUser', 'contactUser.user_id', '=', 'tbl_schoolContactLog.contactBy_id')
+                    ->LeftJoin('tbl_description as AgeRange', function ($join) {
+                        $join->on('AgeRange.description_int', '=', 'tbl_school.ageRange_int')
+                            ->where(function ($query) {
+                                $query->where('AgeRange.descriptionGroup_int', '=', 28);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as religion', function ($join) {
+                        $join->on('religion.description_int', '=', 'tbl_school.religion_int')
+                            ->where(function ($query) {
+                                $query->where('religion.descriptionGroup_int', '=', 29);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as SchoolType', function ($join) {
+                        $join->on('SchoolType.description_int', '=', 'tbl_school.type_int')
+                            ->where(function ($query) {
+                                $query->where('SchoolType.descriptionGroup_int', '=', 30);
+                            });
+                    })
+                    ->select('tbl_school.*', 'AgeRange.description_txt as ageRange_txt', 'religion.description_txt as religion_txt', 'SchoolType.description_txt as type_txt', 'tbl_localAuthority.laName_txt', 'contactUser.firstName_txt', 'contactUser.surname_txt', 'tbl_schoolContactLog.schoolContactLog_id', 'tbl_schoolContactLog.spokeTo_id', 'tbl_schoolContactLog.spokeTo_txt', 'tbl_schoolContactLog.contactAbout_int', 'tbl_schoolContactLog.contactOn_dtm', 'tbl_schoolContactLog.contactBy_id', 'tbl_schoolContactLog.notes_txt', 'tbl_schoolContactLog.method_int', 'tbl_schoolContactLog.outcome_int', 'tbl_schoolContactLog.callbackOn_dtm', 'tbl_schoolContactLog.timestamp_ts as contactTimestamp')
+                    ->where('tbl_school.school_id', $dueInvoices[0]->school_id)
+                    ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
+                    ->first();
+
+                $contactDetNew = DB::table('tbl_schoolContact')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                    ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                    ->where('tbl_schoolContact.isCurrent_status', '-1')
+                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    ->where('tbl_contactItemSch.type_int', 1)
+                    ->where('tbl_schoolContact.school_id', $dueInvoices[0]->school_id)
+                    ->first();
+
+                $fileArr = [];
+                foreach ($dueInvoices as $key => $value) {
+                    $invoiceItemList = DB::table('tbl_invoiceItem')
+                        ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                        ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
+                        ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
+                        ->where('tbl_invoiceItem.invoice_id', $value->invoice_id)
+                        ->orderBy('tbl_teacher.firstName_txt', 'ASC')
+                        ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
+                        ->get();
+
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
+                    $pdf->save(public_path('pdfs/invoice/' . $pdfName));
+                    $fPath = 'pdfs/invoice/' . $pdfName;
+
+                    DB::table('tbl_invoice')
+                        ->where('invoice_id', '=', $value->invoice_id)
+                        ->update([
+                            'invoice_path' => $fPath,
+                            'sentMailBy' => $user_id,
+                            'sentMailDate' => date('Y-m-d')
+                        ]);
+
+                    if (file_exists(public_path($fPath))) {
+                        $fD['name'] = $pdfName;
+                        $fD['invoice_path'] = asset($fPath);
+                        array_push($fileArr, $fD);
+                    }
+                }
+
+                if (count($fileArr) > 0) {
+                    foreach ($contactDet as $mKey2 => $mValue2) {
+                        if ($mValue2->contactItem_txt) {
+                            $mailData['subject'] = 'Overdue Invoice';
+                            $mailData['mail_description'] = "<p>Please find attached your overdue invoice(s) to date, Could we kindly request that all overdue invoices are paid as a matter of urgency to prevent late payment charges and interest being added.</p><p><b>*A kind reminder that our payment terms are 14 days from the date of the invoice*</b></p><p>Many thanks in advance</p>";
+                            $mailData['fileArr'] = $fileArr;
+                            $mailData['contactDet'] = $mValue2;
+                            $mailData['mail'] = $mValue2->contactItem_txt;
+                            $mailData['companyDetail'] = $companyDetail;
+                            $mailData['dueInvoices'] = $dueInvoices;
+                            $mailData['invoiceOverdueCal'] = $invoiceOverdueCal;
+                            $myVar = new AlertController();
+                            $myVar->sendSchOverdueInvoiceMail($mailData);
+                        }
+                    }
                 }
             }
         } else {
@@ -2231,20 +2663,24 @@ class FinanceController extends Controller
                     ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
                     ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                     ->where('tbl_schoolContact.isCurrent_status', '-1')
-                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    // ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    ->where('tbl_schoolContact.receiveInvoice_status', '-1')
                     ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                     ->where('tbl_contactItemSch.type_int', 1)
                     ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
-                    ->first();
+                    ->get();
                 $companyDetail = DB::table('company')
                     ->select('company.*')
                     ->where('company.company_id', $company_id)
                     ->first();
 
-                $sendMail = '';
+                $sendMail = [];
                 $invoice_path = '';
-                if ($contactDet && $contactDet->contactItem_txt) {
-                    $sendMail = $contactDet->contactItem_txt;
+                // if ($contactDet && $contactDet->contactItem_txt) {
+                //     $sendMail = $contactDet->contactItem_txt;
+                // }
+                foreach ($contactDet as $mKey => $mValue) {
+                    array_push($sendMail, $mValue->contactItem_txt);
                 }
 
                 $fileExist = 'No';
@@ -2262,8 +2698,10 @@ class FinanceController extends Controller
                 } else {
                     $invoiceItemList = DB::table('tbl_invoiceItem')
                         ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                        ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                         ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                         ->where('tbl_invoiceItem.invoice_id', $editInvoiceId)
+                        ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
 
@@ -2296,7 +2734,18 @@ class FinanceController extends Controller
                         ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+                    $contactDetNew = DB::table('tbl_schoolContact')
+                        ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                        ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                        ->where('tbl_schoolContact.isCurrent_status', '-1')
+                        ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                        // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                        // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                        ->where('tbl_contactItemSch.type_int', 1)
+                        ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                        ->first();
+
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2320,16 +2769,20 @@ class FinanceController extends Controller
                     $invoice_name = end($parts);
                 }
 
-                if ($contactDet && $contactDet->contactItem_txt) {
-                    $mailData['subject'] = "Invoice - " . $editInvoiceId;
-                    $mailData['temp_description'] = $temp_description;
-                    $mailData['invoice_path'] = $invoice_path;
-                    $mailData['invoice_name'] = $invoice_name;
-                    $mailData['contactDet'] = $contactDet;
-                    $mailData['mail'] = $contactDet->contactItem_txt;
-                    $mailData['companyDetail'] = $companyDetail;
-                    $myVar = new AlertController();
-                    $myVar->sendInvoiceToSchool($mailData);
+                if (count($contactDet) > 0) {
+                    foreach ($contactDet as $mKey2 => $mValue2) {
+                        if ($mValue2->contactItem_txt) {
+                            $mailData['subject'] = "Invoice - " . $editInvoiceId;
+                            $mailData['temp_description'] = $temp_description;
+                            $mailData['invoice_path'] = $invoice_path;
+                            $mailData['invoice_name'] = $invoice_name;
+                            $mailData['contactDet'] = $mValue2;
+                            $mailData['mail'] = $mValue2->contactItem_txt;
+                            $mailData['companyDetail'] = $companyDetail;
+                            $myVar = new AlertController();
+                            $myVar->sendInvoiceToSchool($mailData);
+                        }
+                    }
 
                     DB::table('tbl_invoice')
                         ->where('invoice_id', '=', $editInvoiceId)
@@ -2391,21 +2844,25 @@ class FinanceController extends Controller
                         ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
                         ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                         ->where('tbl_schoolContact.isCurrent_status', '-1')
-                        ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                        // ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                        ->where('tbl_schoolContact.receiveInvoice_status', '-1')
                         ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                         ->where('tbl_contactItemSch.type_int', 1)
                         ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
-                        ->first();
+                        ->get();
 
                     $companyDetail = DB::table('company')
                         ->select('company.*')
                         ->where('company.company_id', $company_id)
                         ->first();
 
-                    $sendMail = '';
+                    $sendMail = [];
                     $invoice_path = '';
-                    if ($contactDet && $contactDet->contactItem_txt) {
-                        $sendMail = $contactDet->contactItem_txt;
+                    // if ($contactDet && $contactDet->contactItem_txt) {
+                    //     $sendMail = $contactDet->contactItem_txt;
+                    // }
+                    foreach ($contactDet as $mKey => $mValue) {
+                        array_push($sendMail, $mValue->contactItem_txt);
                     }
 
                     $fileExist = 'No';
@@ -2422,8 +2879,10 @@ class FinanceController extends Controller
                     } else {
                         $invoiceItemList = DB::table('tbl_invoiceItem')
                             ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                            ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                             ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                             ->where('tbl_invoiceItem.invoice_id', $value->invoice_id)
+                            ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                             ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                             ->get();
 
@@ -2456,7 +2915,18 @@ class FinanceController extends Controller
                             ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                             ->first();
 
-                        $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+                        $contactDetNew = DB::table('tbl_schoolContact')
+                            ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                            ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                            ->where('tbl_schoolContact.isCurrent_status', '-1')
+                            ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                            // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                            // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                            ->where('tbl_contactItemSch.type_int', 1)
+                            ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
+                            ->first();
+
+                        $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
                         $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
                         $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                         $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2479,16 +2949,20 @@ class FinanceController extends Controller
                         $invoice_name = end($parts);
                     }
 
-                    if ($contactDet && $contactDet->contactItem_txt) {
-                        $mailData['subject'] = "Invoice - " . $value->invoice_id;
-                        $mailData['invoice_path'] = $invoice_path;
-                        $mailData['temp_description'] = $temp_description;
-                        $mailData['invoice_name'] = $invoice_name;
-                        $mailData['contactDet'] = $contactDet;
-                        $mailData['mail'] = $contactDet->contactItem_txt;
-                        $mailData['companyDetail'] = $companyDetail;
-                        $myVar = new AlertController();
-                        $myVar->sendInvoiceToSchool($mailData);
+                    if (count($contactDet) > 0) {
+                        foreach ($contactDet as $mKey2 => $mValue2) {
+                            if ($mValue2->contactItem_txt) {
+                                $mailData['subject'] = "Invoice - " . $value->invoice_id;
+                                $mailData['invoice_path'] = $invoice_path;
+                                $mailData['temp_description'] = $temp_description;
+                                $mailData['invoice_name'] = $invoice_name;
+                                $mailData['contactDet'] = $mValue2;
+                                $mailData['mail'] = $mValue2->contactItem_txt;
+                                $mailData['companyDetail'] = $companyDetail;
+                                $myVar = new AlertController();
+                                $myVar->sendInvoiceToSchool($mailData);
+                            }
+                        }
 
                         DB::table('tbl_invoice')
                             ->where('invoice_id', '=', $value->invoice_id)
@@ -2747,12 +3221,13 @@ class FinanceController extends Controller
             $headerTitle = "Finance";
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
+            $thresholdDate = Carbon::now()->subDays(30);
 
             $Invoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                 ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
                 ->LeftJoin('tbl_user as paymentLoggedTbl', 'tbl_invoice.paymentLoggedBy_id', '=', 'paymentLoggedTbl.user_id')
-                ->LeftJoin('tbl_user as senderTbl', 'tbl_invoice.sentBy_int', '=', 'senderTbl.user_id')
+                ->LeftJoin('tbl_user as senderTbl', 'tbl_invoice.sentMailBy', '=', 'senderTbl.user_id')
                 ->LeftJoin('tbl_description as SchoolPaymentMethod', function ($join) {
                     $join->on('SchoolPaymentMethod.description_int', '=', 'tbl_invoice.school_paid_method')
                         ->where(function ($query) {
@@ -2765,9 +3240,10 @@ class FinanceController extends Controller
                             $query->where('invPaymentMethod.descriptionGroup_int', '=', 42);
                         });
                 })
-                ->select('tbl_invoice.invoice_id', 'tbl_invoice.school_id', 'tbl_invoice.invoiceDate_dte As invoice_dte', 'tbl_school.name_txt As school_txt', 'tbl_invoice.paidOn_dte As paid_dte', 'tbl_invoice.school_paid_dte', DB::raw("CONCAT(paymentLoggedTbl.firstName_txt, ' ', paymentLoggedTbl.surname_txt) As remittee_txt"), 'tbl_invoice.sentOn_dte As sent_dte', DB::raw("CONCAT(senderTbl.firstName_txt, ' ', senderTbl.surname_txt) As sender_txt"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"), 'SchoolPaymentMethod.description_txt as paymentMethod_txt', 'invPaymentMethod.description_txt as invPaymentMethod_txt');
+                ->select('tbl_invoice.invoice_id', 'tbl_invoice.school_id', 'tbl_invoice.invoiceDate_dte As invoice_dte', 'tbl_school.name_txt As school_txt', 'tbl_invoice.paidOn_dte As paid_dte', 'tbl_invoice.school_paid_dte', DB::raw("CONCAT(paymentLoggedTbl.firstName_txt, ' ', paymentLoggedTbl.surname_txt) As remittee_txt"), 'tbl_invoice.sentOn_dte As sent_dte', DB::raw("CONCAT(senderTbl.firstName_txt, ' ', senderTbl.surname_txt) As sender_txt"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"), 'SchoolPaymentMethod.description_txt as paymentMethod_txt', 'invPaymentMethod.description_txt as invPaymentMethod_txt', 'tbl_invoice.sentMailDate');
             if ($request->include == '') {
                 $Invoices->where('tbl_invoice.paidOn_dte', NULL);
+                // ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate);
             }
             if ($request->method) {
                 $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
@@ -2787,7 +3263,14 @@ class FinanceController extends Controller
                 ->where('tbl_invoice.paidOn_dte', NULL)
                 ->first();
 
-            return view("web.finance.finance_remittance", ['title' => $title, 'headerTitle' => $headerTitle, 'remitInvoices' => $remitInvoices, 'paymentMethodList' => $paymentMethodList, 'invoiceCal' => $invoiceCal]);
+            $invoiceOverdue = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
+                ->first();
+
+            return view("web.finance.finance_remittance", ['title' => $title, 'headerTitle' => $headerTitle, 'remitInvoices' => $remitInvoices, 'paymentMethodList' => $paymentMethodList, 'invoiceCal' => $invoiceCal, 'invoiceOverdue' => $invoiceOverdue]);
         } else {
             return redirect()->intended('/');
         }
@@ -2811,8 +3294,10 @@ class FinanceController extends Controller
                 ->first();
             $invoiceItemList = DB::table('tbl_invoiceItem')
                 ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                 ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
                 ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+                ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                 ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                 ->get();
 
@@ -2855,7 +3340,8 @@ class FinanceController extends Controller
                 ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                 ->where('tbl_schoolContact.isCurrent_status', '-1')
                 ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
-                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                 ->where('tbl_contactItemSch.type_int', 1)
                 ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                 ->first();
@@ -2895,7 +3381,7 @@ class FinanceController extends Controller
                 $invoicesList = DB::table('tbl_invoice')
                     ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                     ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
-                    ->select('tbl_invoice.invoice_id AS InvoiceNo', 'name_txt AS Customer', DB::raw("DATE_FORMAT(invoiceDate_dte, '%d/%m/%Y') AS InvoiceDate"), DB::raw("DATE_FORMAT(DATE_ADD(invoiceDate_dte, INTERVAL 30 DAY), '%d/%m/%Y') AS DueDate"), DB::raw("'Net 30' AS Terms"), DB::raw("'' AS Memo"), DB::raw("'Teachers' AS prodOrService"), DB::raw("'Teachers' AS ItemDescription"), DB::raw("'' AS ItemQuantity"), DB::raw("'' AS ItemRate"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(9,2)) AS ItemAmount"), DB::raw("'20%' AS ItemTaxCode"), DB::raw("CAST(SUM(numItems_dec * charge_dec) * .2 AS DECIMAL(9,2)) AS ItemTaxAmount"))
+                    ->select('tbl_invoice.invoice_id AS InvoiceNo', 'name_txt AS Customer', DB::raw("DATE_FORMAT(invoiceDate_dte, '%d/%m/%Y') AS InvoiceDate"), DB::raw("DATE_FORMAT(DATE_ADD(invoiceDate_dte, INTERVAL 30 DAY), '%d/%m/%Y') AS DueDate"), DB::raw("'Net 30' AS Terms"), DB::raw("'' AS Memo"), DB::raw("'Teachers' AS prodOrService"), DB::raw("'Teachers' AS ItemDescription"), DB::raw("'' AS ItemQuantity"), DB::raw("'' AS ItemRate"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(9,2)) AS ItemAmount"), DB::raw("'20%' AS ItemTaxCode"), DB::raw("CAST(SUM(numItems_dec * charge_dec) * .2 AS DECIMAL(9,2)) AS ItemTaxAmount"), DB::raw("CAST((SUM(numItems_dec * charge_dec)+(SUM(numItems_dec * charge_dec) * .2)) AS DECIMAL(9,2)) AS GrossAmount"))
                     ->whereBetween('tbl_invoice.invoiceDate_dte', [$from, $to])
                     ->groupBy('tbl_invoice.invoice_id')
                     ->get();

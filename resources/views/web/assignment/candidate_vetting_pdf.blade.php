@@ -761,7 +761,7 @@
                 If you require any other information on the above candidate please contact:
             </div>
             <div style="margin-top: 10px;">
-                <a href="mailto:admin@bumblebee-education.co.uk">admin@bumblebee-education.co.uk</a>
+                <a href="mailto:Georgia@bbe-edu.co.uk">Georgia@bbe-edu.co.uk</a>
             </div>
             <div style="margin-top: 10px;">
                 <a href="tel:0208 432 9844">or call 0208 432 9844</a>

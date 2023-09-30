@@ -28,7 +28,7 @@
                                         <div class="details-heading">
                                             <h2>Preferences</h2>
                                             <a data-toggle="modal" data-target="#preferenceEditModal"
-                                                style="cursor: pointer;"><i class="fas fa-pencil"></i></a>
+                                                style="cursor: pointer;"><i class="fas fa-edit school-edit-icon"></i></a>
                                         </div>
 
                                         <div class="about-school-section">
@@ -153,7 +153,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="teacher-health-second-sec sec_box_edit">
+                                    {{-- <div class="teacher-health-second-sec sec_box_edit">
 
                                         <div class="details-heading">
                                             <h2>Health</h2>
@@ -192,7 +192,7 @@
                                         </div>
 
 
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
@@ -209,7 +209,7 @@
 
     <!-- Preference Edit Modal -->
     <div class="modal fade" id="preferenceEditModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -218,112 +218,116 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fas fa-pencil school-edit-icon"></i>
-                    <h2>Edit Preferences</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec">
+                        <i class="fas fa-pencil school-edit-icon"></i>
+                        <h2>Edit Preferences</h2>
+                    </div>
 
-                <form action="{{ url('/candidate/logTeacherPrefUpdate') }}" method="post" class="">
-                    @csrf
-                    <div class="modal-input-field-section">
-                        <h6>
-                            @if ($teacherDetail->knownAs_txt == '' || $teacherDetail->knownAs_txt == null)
-                                {{ $teacherDetail->firstName_txt }} {{ $teacherDetail->surname_txt }}
-                            @else
-                                {{ $teacherDetail->knownAs_txt }} {{ $teacherDetail->surname_txt }}
-                            @endif
-                        </h6>
-                        {{-- <span>ID</span>
+                    <form action="{{ url('/candidate/logTeacherPrefUpdate') }}" method="post" class="">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            <h6>
+                                @if ($teacherDetail->knownAs_txt == '' || $teacherDetail->knownAs_txt == null)
+                                    {{ $teacherDetail->firstName_txt }} {{ $teacherDetail->surname_txt }}
+                                @else
+                                    {{ $teacherDetail->knownAs_txt }} {{ $teacherDetail->surname_txt }}
+                                @endif
+                            </h6>
+                            {{-- <span>ID</span>
                         <p>{{ $teacherDetail->teacher_id }}</p> --}}
-                        <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
+                            <input type="hidden" name="teacher_id" value="{{ $teacherDetail->teacher_id }}">
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="modal-side-field mb-2">
-                                    <label class="form-check-label" for="prefDrive_status">Can Drive</label>
-                                    <input type="checkbox" class="" name="prefDrive_status" id="prefDrive_status"
-                                        value="1" {{ $teacherDetail->prefDrive_status == '-1' ? 'checked' : '' }}>
-                                </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="modal-side-field mb-2">
+                                        <label class="form-check-label" for="prefDrive_status">Can Drive</label>
+                                        <input type="checkbox" class="" name="prefDrive_status"
+                                            id="prefDrive_status" value="1"
+                                            {{ $teacherDetail->prefDrive_status == '-1' ? 'checked' : '' }}>
+                                    </div>
 
-                                <div class="modal-side-field mb-2">
-                                    <label class="form-check-label" for="prefDailySupply_status">Daily Supply</label>
-                                    <input type="checkbox" class="" name="prefDailySupply_status"
-                                        id="prefDailySupply_status" value="1"
-                                        {{ $teacherDetail->prefDailySupply_status == '-1' ? 'checked' : '' }}>
-                                </div>
+                                    <div class="modal-side-field mb-2">
+                                        <label class="form-check-label" for="prefDailySupply_status">Daily Supply</label>
+                                        <input type="checkbox" class="" name="prefDailySupply_status"
+                                            id="prefDailySupply_status" value="1"
+                                            {{ $teacherDetail->prefDailySupply_status == '-1' ? 'checked' : '' }}>
+                                    </div>
 
-                                <div class="modal-side-field mb-2">
-                                    <label class="form-check-label" for="prefLongTerm_status">Long Term</label>
-                                    <input type="checkbox" class="" name="prefLongTerm_status"
-                                        id="prefLongTerm_status" value="1"
-                                        {{ $teacherDetail->prefLongTerm_status == '-1' ? 'checked' : '' }}>
-                                </div>
+                                    <div class="modal-side-field mb-2">
+                                        <label class="form-check-label" for="prefLongTerm_status">Long Term</label>
+                                        <input type="checkbox" class="" name="prefLongTerm_status"
+                                            id="prefLongTerm_status" value="1"
+                                            {{ $teacherDetail->prefLongTerm_status == '-1' ? 'checked' : '' }}>
+                                    </div>
 
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Max. Distance</label>
-                                    <input type="text" class="form-control numberField" name="prefDistance_int"
-                                        id="" value="{{ $teacherDetail->prefDistance_int }}">
-                                </div>
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Max. Distance</label>
+                                        <input type="text" class="form-control numberField" name="prefDistance_int"
+                                            id="" value="{{ $teacherDetail->prefDistance_int }}">
+                                    </div>
 
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Ideal job</label>
-                                    <textarea name="prefIdealJob_txt" id="" cols="30" rows="3" class="form-control">{{ $teacherDetail->prefIdealJob_txt }}</textarea>
-                                </div>
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Ideal job</label>
+                                        <textarea name="prefIdealJob_txt" id="" cols="30" rows="3" class="form-control">{{ $teacherDetail->prefIdealJob_txt }}</textarea>
+                                    </div>
 
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Current Rate</label>
-                                    <input type="text" class="form-control numberField" name="currentRate_dec"
-                                        id="" value="{{ $teacherDetail->currentRate_dec }}">
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Current Rate</label>
+                                        <input type="text" class="form-control numberField" name="currentRate_dec"
+                                            id="" value="{{ $teacherDetail->currentRate_dec }}">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 modal-form-right-sec">
-                                <div class="modal-side-field mb-2">
-                                    <label class="form-check-label" for="prefEarlyMorningCall_status">Early Morning
-                                        Calls</label>
-                                    <input type="checkbox" class="" name="prefEarlyMorningCall_status"
-                                        id="prefEarlyMorningCall_status" value="1"
-                                        {{ $teacherDetail->prefEarlyMorningCall_status == '-1' ? 'checked' : '' }}>
-                                </div>
+                                <div class="col-md-6 modal-form-right-sec">
+                                    <div class="modal-side-field mb-2">
+                                        <label class="form-check-label" for="prefEarlyMorningCall_status">Early Morning
+                                            Calls</label>
+                                        <input type="checkbox" class="" name="prefEarlyMorningCall_status"
+                                            id="prefEarlyMorningCall_status" value="1"
+                                            {{ $teacherDetail->prefEarlyMorningCall_status == '-1' ? 'checked' : '' }}>
+                                    </div>
 
-                                <div class="modal-side-field mb-2">
-                                    <label class="form-check-label" for="prefSEN_status">SEN Interested</label>
-                                    <input type="checkbox" class="" name="prefSEN_status" id="prefSEN_status"
-                                        value="1" {{ $teacherDetail->prefSEN_status == '-1' ? 'checked' : '' }}>
-                                </div>
+                                    <div class="modal-side-field mb-2">
+                                        <label class="form-check-label" for="prefSEN_status">SEN Interested</label>
+                                        <input type="checkbox" class="" name="prefSEN_status" id="prefSEN_status"
+                                            value="1" {{ $teacherDetail->prefSEN_status == '-1' ? 'checked' : '' }}>
+                                    </div>
 
-                                <div class="modal-side-field mb-2">
-                                    <label class="form-check-label" for="prefSENExperience_status">SEN Experience</label>
-                                    <input type="checkbox" class="" name="prefSENExperience_status"
-                                        id="prefSENExperience_status" value="1"
-                                        {{ $teacherDetail->prefSENExperience_status == '-1' ? 'checked' : '' }}>
-                                </div>
+                                    <div class="modal-side-field mb-2">
+                                        <label class="form-check-label" for="prefSENExperience_status">SEN
+                                            Experience</label>
+                                        <input type="checkbox" class="" name="prefSENExperience_status"
+                                            id="prefSENExperience_status" value="1"
+                                            {{ $teacherDetail->prefSENExperience_status == '-1' ? 'checked' : '' }}>
+                                    </div>
 
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Pref. Year Group</label>
-                                    <input type="text" class="form-control numberField" name="prefYearGroup_int"
-                                        id="" value="{{ $teacherDetail->prefYearGroup_int }}">
-                                </div>
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Pref. Year Group</label>
+                                        <input type="text" class="form-control numberField" name="prefYearGroup_int"
+                                            id="" value="{{ $teacherDetail->prefYearGroup_int }}">
+                                    </div>
 
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Other Agencies</label>
-                                    <textarea name="otherAgencies_txt" id="" cols="30" rows="3" class="form-control">{{ $teacherDetail->otherAgencies_txt }}</textarea>
-                                </div>
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Other Agencies</label>
+                                        <textarea name="otherAgencies_txt" id="" cols="30" rows="3" class="form-control">{{ $teacherDetail->otherAgencies_txt }}</textarea>
+                                    </div>
 
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Previous Schools</label>
-                                    <textarea name="previousSchools_txt" id="" cols="30" rows="3" class="form-control">{{ $teacherDetail->previousSchools_txt }}</textarea>
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Previous Schools</label>
+                                        <textarea name="previousSchools_txt" id="" cols="30" rows="3" class="form-control">{{ $teacherDetail->previousSchools_txt }}</textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>

@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-group modal-input-field">
-        <label class="form-check-label">Employed Fromm</label><span style="color: red;">*</span>
+        <label class="form-check-label">Employed From</label><span style="color: red;">*</span>
         <input type="text" class="form-control datePickerPaste datepaste-validate-2" name="employedFrom_dte"
             id="" value="{{ date('d/m/Y', strtotime($Detail->employedFrom_dte)) }}">
     </div>

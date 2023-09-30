@@ -23,7 +23,7 @@
         }
 
         body {
-            position: relative;
+            /* position: relative; */
             /* width: 21cm;
             height: 29.7cm; */
             size: letter;
@@ -50,7 +50,7 @@
         #logo {
             float: right;
             margin-top: 8px;
-            width: 33.33%;
+            width: 30%;
             text-align: right;
         }
 
@@ -60,7 +60,7 @@
 
         #company {
             float: left;
-            width: 33.33%;
+            width: 30%;
             text-align: left;
             font-size: 20px;
             color: #fff;
@@ -69,16 +69,16 @@
 
         #company-name {
             float: left;
-            width: 33.33%;
+            width: 40%;
             text-align: center;
             font-size: 20px;
             color: #fff;
             margin-top: 15px;
         }
 
-        /* #details {
-            margin-bottom: 20px;
-        } */
+        #details {
+            margin-bottom: 10px;
+        }
 
         #client {
             /* padding-left: 6px;
@@ -231,16 +231,33 @@
             font-size: 11px;
         }
 
+        /* main {
+            margin-bottom: 20%;
+        } */
+
         footer {
+
             color: #777777;
             width: 95%;
-            /* height: 30px; */
+            /* height: 30%; */
             position: absolute;
-            bottom: 2%;
+            bottom: 0%;
             /* bottom: 0; */
             /* border-top: 1px solid #AAAAAA; */
             padding: 8px 0;
             text-align: center;
+            /* background: #000; */
+            margin-bottom: 20px;
+        }
+
+        .footer2 {
+            color: #777777;
+            width: 95%;
+            position: absolute;
+            bottom: 0%;
+            padding: 8px 0;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .bg-grey {
@@ -326,6 +343,10 @@
             padding: 0;
             text-align: left;
         }
+
+        .page-break {
+            page-break-before: always;
+        }
     </style>
 </head>
 
@@ -341,196 +362,222 @@
             <img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}">
         </div>
     </header>
-    <main>
-        <div id="details" class="clearfix">
-            <div id="client">
-                <div class="to">Accounts Department</div>
-                <div style="">
-                    @if ($schoolDetail && $schoolDetail->name_txt)
-                        {{ $schoolDetail->name_txt }} <br>
-                    @endif
-                    @if ($schoolDetail && $schoolDetail->address1_txt)
-                        {{ $schoolDetail->address1_txt }} <br>
-                    @endif
-                    @if ($schoolDetail && $schoolDetail->address2_txt)
-                        {{ $schoolDetail->address2_txt }} <br>
-                    @endif
-                    @if ($schoolDetail && $schoolDetail->address3_txt)
-                        {{ $schoolDetail->address3_txt }} <br>
-                    @endif
-                    @if ($schoolDetail && $schoolDetail->address4_txt)
-                        {{ $schoolDetail->address4_txt }} <br>
-                    @endif
-                    @if ($schoolDetail && $schoolDetail->postcode_txt)
-                        {{ $schoolDetail->postcode_txt }}
-                    @endif
-                </div>
-            </div>
-            <div id="invoice">
-                <table class="heading-right-table1">
-                    <tbody>
-                        @if ($companyDetail && $companyDetail->company_name)
-                            <tr>
-                                <td>
-                                    {{ $companyDetail->company_name }}
-                                </td>
-                            </tr>
-                        @endif
-                        <tr>
-                            <td>
-                                @if ($companyDetail && $companyDetail->address1_txt)
-                                    {{ $companyDetail->address1_txt }}
-                                @endif
-                                @if ($companyDetail && $companyDetail->address2_txt)
-                                    {{ ', ' . $companyDetail->address2_txt }}
-                                @endif
-                                @if ($companyDetail && $companyDetail->address3_txt)
-                                    {{ ', ' . $companyDetail->address3_txt }}
-                                @endif
-                                @if ($companyDetail && $companyDetail->address4_txt)
-                                    {{ ', ' . $companyDetail->address4_txt }}
-                                @endif
-                                @if ($companyDetail && $companyDetail->address5_txt)
-                                    {{ ', ' . $companyDetail->address5_txt }}
-                                @endif
-                                @if ($companyDetail && $companyDetail->postcode_txt)
-                                    {{ ', ' . $companyDetail->postcode_txt }}
-                                @endif
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="heading-right-table">
-                    <tbody>
-                        <tr>
-                            <td>
-                                Company Number:
-                            </td>
-                            <td>
-                                {{ $companyDetail ? $companyDetail->company_phone : '' }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                VAT Registration Number:
-                            </td>
-                            <td>
-                                {{ $companyDetail ? $companyDetail->vat_registration : '' }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-top: 5px;">
-                                Invoice Number:
-                            </td>
-                            <td style="padding-top: 5px;">
-                                {{ $schoolInvoices->invoice_id }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Invoice Date:
-                            </td>
-                            <td>
-                                {{ date('d-m-Y') }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Authorized By(Name):
-                            </td>
-                            <td>
-                                {{-- {{ $schoolInvoices->admin_fname . ' ' . $schoolInvoices->admin_sname }} --}}
-                                {{ $contactDet->firstName_txt . ' ' . $contactDet->surname_txt }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Authorized By(Email):
-                            </td>
-                            <td>
-                                {{-- {{ $schoolInvoices->admin_email }} --}}
-                                {{ $contactDet->contactItem_txt }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Approved Date:
-                            </td>
-                            <td>
-                                {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <table border="0" cellspacing="0" cellpadding="0">
-            <thead>
-                <tr>
-                    <th class="desc">DESCRIPTION</th>
-                    {{-- <th class=""></th>
-                    <th class="qty"></th>
-                    <th class=""></th> --}}
-                    <th class="unit">PRICE</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($invoiceItemList as $key => $invoiceItem)
-                    <tr>
-                        <td class="desc">
-                            {{ $invoiceItem->description_txt }}
-                            @if ($invoiceItem->dayAvail_txt)
-                                {{ ' - ' . $invoiceItem->dayAvail_txt }}
-                                @if ($invoiceItem->start_tm && $invoiceItem->end_tm)
-                                    {{-- ( {{ date('h:i a', strtotime($invoiceItem->start_tm)) }} -
-                                    {{ date('h:i a', strtotime($invoiceItem->end_tm)) }} ) --}}
-                                    ( {{ $invoiceItem->start_tm }} -
-                                    {{ $invoiceItem->end_tm }} )
-                                @endif
-                            @else
-                                ({{ (int) $invoiceItem->numItems_dec }} Item(s) X
-                                £{{ (int) $invoiceItem->charge_dec }})
+
+    @php
+        if (count($invoiceItemList) < 25 && count($invoiceItemList) > 15) {
+            $itemsPerPage = count($invoiceItemList) - 1;
+        } else {
+            $itemsPerPage = 25;
+        }
+        $totalItems = count($invoiceItemList);
+        $numPages = ceil($totalItems / $itemsPerPage);
+        $currentPage = 0;
+    @endphp
+
+    @for ($page = 1; $page <= $numPages; $page++) @php $currentPage++; @endphp
+        <main>
+            @if ($page == 1)
+                <div id="details" class="clearfix">
+                    <div id="client">
+                        <div class="to">Accounts Department</div>
+                        <div style="">
+                            @if ($schoolDetail && $schoolDetail->name_txt)
+                                {{ $schoolDetail->name_txt }} <br>
                             @endif
-                        </td>
-                        {{-- <td class=""></td>
-                        <td class="qty"></td>
-                        <td class="unit"></td> --}}
-                        <td class="total">
-                            £{{ (int) $invoiceItem->numItems_dec * $invoiceItem->charge_dec }}
-                        </td>
+                            @if ($schoolDetail && $schoolDetail->address1_txt)
+                                {{ $schoolDetail->address1_txt }} <br>
+                            @endif
+                            @if ($schoolDetail && $schoolDetail->address2_txt)
+                                {{ $schoolDetail->address2_txt }} <br>
+                            @endif
+                            @if ($schoolDetail && $schoolDetail->address3_txt)
+                                {{ $schoolDetail->address3_txt }} <br>
+                            @endif
+                            @if ($schoolDetail && $schoolDetail->address4_txt)
+                                {{ $schoolDetail->address4_txt }} <br>
+                            @endif
+                            @if ($schoolDetail && $schoolDetail->postcode_txt)
+                                {{ $schoolDetail->postcode_txt }}
+                            @endif
+                        </div>
+                    </div>
+                    <div id="invoice">
+                        <table class="heading-right-table1">
+                            <tbody>
+                                @if ($companyDetail && $companyDetail->company_name)
+                                    <tr>
+                                        <td>
+                                            {{ $companyDetail->company_name }}
+                                        </td>
+                                    </tr>
+                                @endif
+                                <tr>
+                                    <td>
+                                        @if ($companyDetail && $companyDetail->address1_txt)
+                                            {{ $companyDetail->address1_txt . ', ' }} <br>
+                                        @endif
+                                        @if ($companyDetail && $companyDetail->address2_txt)
+                                            {{ $companyDetail->address2_txt . ', ' }} <br>
+                                        @endif
+                                        @if ($companyDetail && $companyDetail->address3_txt)
+                                            {{ $companyDetail->address3_txt . ', ' }} <br>
+                                        @endif
+                                        @if ($companyDetail && $companyDetail->address4_txt)
+                                            {{ $companyDetail->address4_txt . ', ' }} <br>
+                                        @endif
+                                        @if ($companyDetail && $companyDetail->address5_txt)
+                                            {{ $companyDetail->address5_txt . ', ' }} <br>
+                                        @endif
+                                        @if ($companyDetail && $companyDetail->postcode_txt)
+                                            {{ $companyDetail->postcode_txt . ', ' }}
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="heading-right-table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Company Number:
+                                    </td>
+                                    <td>
+                                        {{ $companyDetail ? $companyDetail->company_phone : '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        VAT Registration Number:
+                                    </td>
+                                    <td>
+                                        {{ $companyDetail ? $companyDetail->vat_registration : '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 5px;">
+                                        Invoice Number:
+                                    </td>
+                                    <td style="padding-top: 5px;">
+                                        {{ $schoolInvoices->invoice_id }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Invoice Date:
+                                    </td>
+                                    <td>
+                                        {{ date('d-m-Y') }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Authorized By(Name):
+                                    </td>
+                                    <td>
+                                        {{-- {{ $schoolInvoices->admin_fname . ' ' . $schoolInvoices->admin_sname }} --}}
+                                        {{ $contactDet ? $contactDet->firstName_txt . ' ' . $contactDet->surname_txt : '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Authorized By(Email):
+                                    </td>
+                                    <td>
+                                        {{-- {{ $schoolInvoices->admin_email }} --}}
+                                        {{ $contactDet ? $contactDet->contactItem_txt : '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Approved Date:
+                                    </td>
+                                    <td>
+                                        {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
+            <table border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <th class="desc">DESCRIPTION</th>
+                        <th class="unit">PRICE</th>
                     </tr>
-                @endforeach
-            </tbody>
-
-        </table>
-
-        <div id="payment-details" class="clearfix">
-
-            <div id="amounts">
-                <table>
-                    <tbody>
+                </thead>
+                <tbody>
+                    @php
+                        $start = ($page - 1) * $itemsPerPage;
+                        $end = min($page * $itemsPerPage, $totalItems);
+                    @endphp
+                    @for ($i = $start; $i < $end; $i++)
                         <tr>
-                            <td>Net Value</td>
-                            <td>£{{ $schoolInvoices->net_dec }}</td>
+                            <td class="desc">
+                                {{ $invoiceItemList[$i]->description_txt }}
+                                @if ($invoiceItemList[$i]->dayAvail_txt)
+                                    {{ ' - ' . $invoiceItemList[$i]->dayAvail_txt }}
+                                    @if ($invoiceItemList[$i]->start_tm && $invoiceItemList[$i]->end_tm)
+                                        ( {{ $invoiceItemList[$i]->start_tm }} -
+                                        {{ $invoiceItemList[$i]->end_tm }} )
+                                    @endif
+                                @else
+                                    ({{ $invoiceItemList[$i]->numItems_dec }} Item(s) X
+                                    £{{ $invoiceItemList[$i]->charge_dec }})
+                                @endif
+                            </td>
+                            <td class="total">
+                                £{{ number_format($invoiceItemList[$i]->numItems_dec * $invoiceItemList[$i]->charge_dec, 2, '.', '') }}
+                            </td>
                         </tr>
-                        <tr style="background-color: #fff;">
-                            <td>VAT @ 20%</td>
-                            <td>£{{ $schoolInvoices->vat_dec }}</td>
-                        </tr>
-                        <tr style="background-color: #5b9cd7;">
-                            <td style="color: #fff !important;">Gross Value</td>
-                            <td style="color: #fff !important;">£{{ $schoolInvoices->gross_dec }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    @endfor
+                </tbody>
+            </table>
 
+            @if ($page == $currentPage && $currentPage < $numPages)
+                <div class="footer2">
+                    <div style="width: 100%;">
+                        <div> <b>Continued.. </b> Page {{ $page }} of {{ $numPages }}</div>
+                    </div>
+                </div>
+            @endif
 
-    </main>
+            <!-- Add a page break for all pages except the last one -->
+            @if ($page < $numPages)
+                <div class="page-break">
+                </div>
+            @endif
+
+            @if ($page == $numPages)
+                <div id="payment-details" class="clearfix">
+                    <div id="amounts">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Net Value</td>
+                                    <td>£{{ $schoolInvoices->net_dec }}</td>
+                                </tr>
+                                <tr style="background-color: #fff;">
+                                    <td>VAT @ 20%</td>
+                                    <td>£{{ $schoolInvoices->vat_dec }}</td>
+                                </tr>
+                                <tr style="background-color: #5b9cd7;">
+                                    <td style="color: #fff !important;">Gross Value</td>
+                                    <td style="color: #fff !important;">£{{ $schoolInvoices->gross_dec }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+        </main>
+    @endfor
+
     <footer>
         <div style="text-align: left; width: 100%;">
-            <div>By paying this invoice i certify that i have read and agree to be bound to the TC’s
+            <div>By paying this invoice I certify that I have read and agree to be bound to the TC’s
                 of
                 BumbleBee Education</div>
             <div> <b>Payment Terms:</b> Payment within 14 days of invoice date </div>
@@ -568,6 +615,7 @@
         </div>
 
     </footer>
+
 </body>
 
 </html>

@@ -335,7 +335,7 @@ class SchoolController extends Controller
                             $query->where('ContactType.descriptionGroup_int', '=', 13);
                         });
                 })
-                ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
+                ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveInvoice_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
                 ->where('tbl_contactItemSch.school_id', $id)
                 ->where(function ($query) {
                     $query->where('tbl_contactItemSch.schoolContact_id', NULL);
@@ -361,6 +361,97 @@ class SchoolController extends Controller
             return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList, 'contactMethodList' => $contactMethodList]);
         } else {
             return redirect()->intended('/');
+        }
+    }
+
+    public function checkSchoolLogMail(Request $request)
+    {
+        $school_id = $request->school_id;
+        $rData['lMailExist'] = "No";
+        $rData['loginMail'] = "";
+        $rData['contactMail'] = [];
+
+        $schoolDetail = DB::table('tbl_school')
+            ->where('tbl_school.school_id', $school_id)
+            ->first();
+        if ($schoolDetail) {
+            // if ($schoolDetail->login_mail) {
+            //     $rData['lMailExist'] = "Yes";
+            //     $rData['loginMail'] = $schoolDetail->login_mail;
+            // } else {
+
+            // }
+            $contactItemList = DB::table('tbl_contactItemSch')
+                ->LeftJoin('tbl_description', function ($join) {
+                    $join->on('tbl_description.description_int', '=', 'tbl_contactItemSch.type_int')
+                        ->where(function ($query) {
+                            $query->where('tbl_description.descriptionGroup_int', '=', 13);
+                        });
+                })
+                ->select('tbl_contactItemSch.*', 'tbl_description.description_txt as type_txt')
+                ->where('tbl_contactItemSch.school_id', $school_id)
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->orderBy('tbl_contactItemSch.type_int')
+                ->get();
+            $rData['contactMail'] = $contactItemList;
+        }
+        return response()->json(['rData' => $rData]);
+    }
+
+    public function resendSchoolPasswordLink(Request $request)
+    {
+        $school_id = $request->school_id;
+        $contactItemSch_id = $request->log_mail;
+
+        $contDet = DB::table('tbl_contactItemSch')
+            ->where('contactItemSch_id', $contactItemSch_id)
+            ->first();
+        if ($contDet) {
+            $log_mail = $contDet->contactItem_txt;
+            $logContId = $contDet->schoolContact_id;
+            $logContItemId = $contDet->contactItemSch_id;
+        } else {
+            $log_mail = "";
+            $logContId = "";
+            $logContItemId = "";
+        }
+
+        $mailExist = DB::table('tbl_school')
+            ->where('tbl_school.login_mail', $log_mail)
+            ->where('tbl_school.school_id', '!=', $school_id)
+            ->first();
+        if ($mailExist) {
+            return "notEdit";
+        }
+
+        DB::table('tbl_school')
+            ->where('school_id', '=', $school_id)
+            ->update([
+                'login_mail' => $log_mail,
+                'logContId' => $logContId,
+                'logContItemId' => $logContItemId
+            ]);
+
+        $schoolDetail = DB::table('tbl_school')
+            ->where('tbl_school.school_id', $school_id)
+            ->first();
+        if ($schoolDetail && $schoolDetail->login_mail) {
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $schoolDetail->company_id)
+                ->first();
+
+            $uID = base64_encode($school_id);
+            $mailData['companyDetail'] = $companyDetail;
+            $mailData['name_txt'] = $schoolDetail->name_txt;
+            $mailData['mail'] = $schoolDetail->login_mail;
+            $mailData['rUrl'] = url('/school/set-password') . '/' . $uID;
+            $myVar = new AlertController();
+            $myVar->school_reset_password($mailData);
+
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -403,6 +494,10 @@ class SchoolController extends Controller
         if ($request->receiveTimesheets_status) {
             $receiveTimesheets_status = -1;
         }
+        $receiveInvoice_status = 0;
+        if ($request->receiveInvoice_status) {
+            $receiveInvoice_status = -1;
+        }
         DB::table('tbl_schoolContact')
             ->insert([
                 'school_id' => $school_id,
@@ -411,6 +506,7 @@ class SchoolController extends Controller
                 'surname_txt' => $request->surname_txt,
                 'jobRole_int' => $request->jobRole_int,
                 'receiveTimesheets_status' => $receiveTimesheets_status,
+                'receiveInvoice_status' => $receiveInvoice_status,
                 'receiveVetting_status' => $receiveVetting_status,
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
@@ -422,10 +518,22 @@ class SchoolController extends Controller
     {
         $input = $request->all();
         $contact_id = $input['contact_id'];
+        $schoolId = $input['schoolId'];
 
         $contactDetail = DB::table('tbl_schoolContact')
             ->where('contact_id', "=", $contact_id)
             ->first();
+
+        $timesheetContact = DB::table('tbl_schoolContact')
+            ->where('contact_id', "!=", $contact_id)
+            ->where('school_id', "=", $schoolId)
+            ->where('receiveTimesheets_status', "=", '-1')
+            ->first();
+        $sheetContactExit = 0;
+        if ($timesheetContact) {
+            $sheetContactExit = 1;
+        }
+
         $titleList = DB::table('tbl_description')
             ->select('tbl_description.*')
             ->where('tbl_description.descriptionGroup_int', 1)
@@ -436,7 +544,7 @@ class SchoolController extends Controller
             ->where('tbl_description.descriptionGroup_int', 11)
             ->get();
 
-        $view = view("web.school.contact_edit_view", ['contactDetail' => $contactDetail, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList])->render();
+        $view = view("web.school.contact_edit_view", ['contactDetail' => $contactDetail, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList, 'sheetContactExit' => $sheetContactExit])->render();
         return response()->json(['html' => $view]);
     }
 
@@ -453,11 +561,16 @@ class SchoolController extends Controller
         if ($request->receiveTimesheets_status) {
             $receiveTimesheets_status = -1;
         }
+        $receiveInvoice_status = 0;
+        if ($request->receiveInvoice_status) {
+            $receiveInvoice_status = -1;
+        }
         $editData['title_int'] = $request->title_int;
         $editData['firstName_txt'] = $request->firstName_txt;
         $editData['surname_txt'] = $request->surname_txt;
         $editData['jobRole_int'] = $request->jobRole_int;
         $editData['receiveTimesheets_status'] = $receiveTimesheets_status;
+        $editData['receiveInvoice_status'] = $receiveInvoice_status;
         $editData['receiveVetting_status'] = $receiveVetting_status;
         $editData['title_int'] = $request->title_int;
 
@@ -473,8 +586,38 @@ class SchoolController extends Controller
     public function schoolContactDelete(Request $request)
     {
         $contact_id = $request->contact_id;
-        DB::table('tbl_schoolContact')->where('contact_id', '=', $contact_id)
+        $Detail = DB::table('tbl_schoolContact')
+            ->where('contact_id', '=', $contact_id)
+            ->first();
+
+        DB::table('tbl_contactItemSch')
+            ->where('schoolContact_id', '=', $contact_id)
             ->delete();
+
+        DB::table('tbl_schoolContactLog')
+            ->where('spokeTo_id', '=', $contact_id)
+            ->delete();
+
+        DB::table('tbl_schoolContact')
+            ->where('contact_id', '=', $contact_id)
+            ->delete();
+
+        if ($Detail) {
+            $userExist = DB::table('tbl_school')
+                ->where('tbl_school.school_id', $Detail->school_id)
+                ->where('tbl_school.logContId', $contact_id)
+                ->first();
+            if ($userExist) {
+                DB::table('tbl_school')
+                    ->where('school_id', '=', $Detail->school_id)
+                    ->update([
+                        'login_mail' => null,
+                        'logContId' => null,
+                        'logContItemId' => null,
+                        'password' => null
+                    ]);
+            }
+        }
 
         return 1;
     }
@@ -527,7 +670,7 @@ class SchoolController extends Controller
                         $query->where('ContactType.descriptionGroup_int', '=', 13);
                     });
             })
-            ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
+            ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveInvoice_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
             ->where('tbl_contactItemSch.school_id', $school_id);
         if ($selectStat == 'Yes') {
             $contact->where(function ($query) use ($contact_id) {
@@ -684,9 +827,30 @@ class SchoolController extends Controller
     public function schoolContactItemDelete(Request $request)
     {
         $contactItemSch_id = $request->editContactItemId;
+        $Detail = DB::table('tbl_contactItemSch')
+            ->where('contactItemSch_id', '=', $contactItemSch_id)
+            ->first();
+
         DB::table('tbl_contactItemSch')
             ->where('contactItemSch_id', '=', $contactItemSch_id)
             ->delete();
+
+        if ($Detail) {
+            $userExist = DB::table('tbl_school')
+                ->where('tbl_school.school_id', $Detail->school_id)
+                ->where('tbl_school.logContItemId', $contactItemSch_id)
+                ->first();
+            if ($userExist) {
+                DB::table('tbl_school')
+                    ->where('school_id', '=', $Detail->school_id)
+                    ->update([
+                        'login_mail' => null,
+                        'logContId' => null,
+                        'logContItemId' => null,
+                        'password' => null
+                    ]);
+            }
+        }
 
         return 1;
     }
@@ -1016,8 +1180,8 @@ class SchoolController extends Controller
                         });
                 })
                 ->select('tbl_asn.*', 'yearGroupType.description_txt as yearGroupTxt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'assType.description_txt as assignmentType', 'subjectType.description_txt as subjectTxt', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), 'teacherProff.description_txt as teacherProfession', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', DB::raw('MIN(asnDate_dte) AS firstDate_dte'), 'tbl_student.firstName_txt as studentfirstName', 'tbl_student.surname_txt as studentsurname_txt', DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'))
-                ->where('tbl_asn.school_id', $id)
-                ->where('tbl_teacher.is_delete', 0);
+                ->where('tbl_asn.school_id', $id);
+            // ->where('tbl_teacher.is_delete', 0);
             if ($request->include != 1 && $request->status) {
                 $assignment->where('tbl_asn.status_int', $request->status);
             }
@@ -1122,7 +1286,7 @@ class SchoolController extends Controller
                 ->whereDate('tbl_asnItem.asnDate_dte', '<', date('Y-m-d'))
                 ->where('tbl_asn.status_int', 3)
                 ->where('timesheet_id', null)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.teacher_id')
                 ->orderBy(DB::raw('COUNT(asnItem_id)'), 'DESC')
                 ->get();
@@ -1157,8 +1321,41 @@ class SchoolController extends Controller
                 ->get();
 
             // dd($candRateList);
+            $thresholdDate = Carbon::now()->subDays(30);
+            $overdueInvoices = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->LeftJoin('tbl_description as invPaymentMethod', function ($join) {
+                    $join->on('invPaymentMethod.description_int', '=', 'tbl_invoice.paymentMethod_int')
+                        ->where(function ($query) {
+                            $query->where('invPaymentMethod.descriptionGroup_int', '=', 42);
+                        });
+                })
+                ->select('tbl_invoice.*', DB::raw('ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec,
+                ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec'), 'invPaymentMethod.description_txt as invPaymentMethod_txt')
+                ->where('tbl_invoice.school_id', $id)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
+                ->groupBy('tbl_invoice.invoice_id')
+                ->orderBy('tbl_invoice.invoiceDate_dte', 'DESC')
+                ->get();
 
-            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet, 'paymentMethodList' => $paymentMethodList, 'profTypeList' => $profTypeList, 'candRateList' => $candRateList]);
+            $invoiceCal = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
+                ->where('tbl_invoice.school_id', $id)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->first();
+
+            $invoiceOverdueCal = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
+                ->where('tbl_invoice.school_id', $id)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
+                ->first();
+
+            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet, 'paymentMethodList' => $paymentMethodList, 'profTypeList' => $profTypeList, 'candRateList' => $candRateList, 'overdueInvoices' => $overdueInvoices, 'invoiceCal' => $invoiceCal, 'invoiceOverdueCal' => $invoiceOverdueCal]);
         } else {
             return redirect()->intended('/');
         }
@@ -1178,9 +1375,9 @@ class SchoolController extends Controller
             ->insertGetId([
                 'school_id' => $school_id,
                 'invoiceDate_dte' => date('Y-m-d'),
-                'paymentLoggedBy_id' => $user_id,
-                'sentOn_dte' => date('Y-m-d'),
-                'sentBy_int' => $user_id,
+                // 'paymentLoggedBy_id' => $user_id,
+                // 'sentOn_dte' => date('Y-m-d'),
+                // 'sentBy_int' => $user_id,
                 'created_by' => $user_id,
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
@@ -1321,8 +1518,8 @@ class SchoolController extends Controller
 
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
-            $editData['paymentLoggedBy_id'] = $webUserLoginData->user_id;
-            $editData['sentBy_int'] = $webUserLoginData->user_id;
+            // $editData['paymentLoggedBy_id'] = $webUserLoginData->user_id;
+            // $editData['sentBy_int'] = $webUserLoginData->user_id;
         }
         if ($request->factored_status) {
             $editData['factored_status'] = -1;
@@ -1337,7 +1534,7 @@ class SchoolController extends Controller
             $editData['paidOn_dte'] = date("Y-m-d", strtotime(str_replace('/', '-', $request->paidOn_dte)));
         }
         $editData['paymentMethod_int'] = $request->paymentMethod_int;
-        $editData['sentOn_dte'] = date('Y-m-d');
+        // $editData['sentOn_dte'] = date('Y-m-d');
         $editData['timestamp_ts'] = date('Y-m-d H:i:s');
 
         DB::table('tbl_invoice')
@@ -1370,9 +1567,9 @@ class SchoolController extends Controller
             ->insertGetId([
                 'school_id' => $school_id,
                 'invoiceDate_dte' => date('Y-m-d'),
-                'paymentLoggedBy_id' => $user_id,
-                'sentOn_dte' => date('Y-m-d'),
-                'sentBy_int' => $user_id,
+                // 'paymentLoggedBy_id' => $user_id,
+                // 'sentOn_dte' => date('Y-m-d'),
+                // 'sentBy_int' => $user_id,
                 'creditNote_status' => -1,
                 'created_by' => $user_id,
                 'timestamp_ts' => date('Y-m-d H:i:s')
@@ -1440,9 +1637,9 @@ class SchoolController extends Controller
             ->insertGetId([
                 'school_id' => $school_id,
                 'invoiceDate_dte' => date('Y-m-d'),
-                'paymentLoggedBy_id' => $user_id,
-                'sentOn_dte' => date('Y-m-d'),
-                'sentBy_int' => $user_id,
+                // 'paymentLoggedBy_id' => $user_id,
+                // 'sentOn_dte' => date('Y-m-d'),
+                // 'sentBy_int' => $user_id,
                 'created_by' => $user_id,
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
@@ -1527,8 +1724,10 @@ class SchoolController extends Controller
                 ->first();
             $invoiceItemList = DB::table('tbl_invoiceItem')
                 ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                 ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("CONCAT(IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)),IF(lunch_time, CONCAT(' ( ', lunch_time,' )'), '')) AS dayAvail_txt"))
                 ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+                ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                 ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                 ->get();
 
@@ -1542,13 +1741,14 @@ class SchoolController extends Controller
                 ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                 ->where('tbl_schoolContact.isCurrent_status', '-1')
                 ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
-                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                 ->where('tbl_contactItemSch.type_int', 1)
                 ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                 ->first();
 
             $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
-            $pdfName = 'invoice-' . $id . '.pdf';
+            $pdfName = 'invoice-' . $invoice_id . '.pdf';
             // return $pdf->download('test.pdf');
             return $pdf->stream($pdfName);
         } else {
@@ -1581,10 +1781,17 @@ class SchoolController extends Controller
     public function schoolInvoiceDelete(Request $request)
     {
         $editInvoiceId = $request->editInvoiceId;
-        DB::table('tbl_invoice')
+
+        DB::table('tbl_asnItem')
+            ->where('invoice_id', $editInvoiceId)
+            ->update([
+                'invoice_id' => NULL
+            ]);
+
+        DB::table('tbl_invoiceItem')
             ->where('invoice_id', $editInvoiceId)
             ->delete();
-        DB::table('tbl_invoiceItem')
+        DB::table('tbl_invoice')
             ->where('invoice_id', $editInvoiceId)
             ->delete();
 
@@ -1655,8 +1862,8 @@ class SchoolController extends Controller
                         });
                 })
                 ->select('tbl_schoolTeacherList.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacher.applicationStatus_int', 'applicationStatus.description_txt as status_txt', 'daysWorked_dec')
-                ->where('tbl_schoolTeacherList.school_id', $id)
-                ->where('tbl_teacher.is_delete', 0);
+                ->where('tbl_schoolTeacherList.school_id', $id);
+            // ->where('tbl_teacher.is_delete', 0);
             if ($tStatus != 'all') {
                 if ($tStatus == 'preferred') {
                     $teacher->where('tbl_schoolTeacherList.rejectOrPreferred_int', 1);
@@ -1721,7 +1928,7 @@ class SchoolController extends Controller
                     })
                     ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
                     ->where('tbl_teacher.company_id', $company_id)
-                    ->where('tbl_teacher.is_delete', 0)
+                    // ->where('tbl_teacher.is_delete', 0)
                     ->where('tbl_teacher.isCurrent_status', '<>', 0)
                     ->whereNotIn('tbl_teacher.teacher_id', function ($query) use ($school_id) {
                         $query->select('teacher_id')
@@ -1921,7 +2128,7 @@ class SchoolController extends Controller
                     })
                     ->select('tbl_teacher.*', 'daysWorked_dec', 'ageRangeSpecialism.description_txt as ageRangeSpecialism_txt', 'professionalType.description_txt as professionalType_txt', 'applicationStatus.description_txt as appStatus_txt', DB::raw('MAX(tbl_teacherContactLog.contactOn_dtm) AS lastContact_dte'), 'titleTable.description_txt as title_txt', 'tbl_contactItemTch.contactItem_txt')
                     ->where('tbl_teacher.company_id', $company_id)
-                    ->where('tbl_teacher.is_delete', 0)
+                    // ->where('tbl_teacher.is_delete', 0)
                     ->where('tbl_teacher.isCurrent_status', '<>', 0);
 
                 if ($searchTeacherKey) {
@@ -2360,7 +2567,7 @@ class SchoolController extends Controller
                 ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherDocument.file_location', 'day1Avail_txt', 'day1Link_id', 'day1LinkType_int', 'day1School_id', 'day2Avail_txt', 'day2Link_id', 'day2LinkType_int', 'day2School_id', 'day3Avail_txt', 'day3Link_id', 'day3LinkType_int', 'day3School_id', 'day4Avail_txt', 'day4Link_id', 'day4LinkType_int', 'day4School_id', 'day5Avail_txt', 'day5Link_id', 'day5LinkType_int', 'day5School_id', 'day6Avail_txt', 'day6Link_id', 'day6LinkType_int', 'day6School_id', 'day7Avail_txt', 'day7Link_id', 'day7LinkType_int', 'day7School_id', DB::raw("CAST((IFNULL(day1Amount_dec, 0) + IFNULL(day2Amount_dec, 0) + IFNULL(day3Amount_dec, 0) + IFNULL(day4Amount_dec, 0) + IFNULL(day5Amount_dec, 0) + IFNULL(day6Amount_dec, 0) + IFNULL(day7Amount_dec, 0)) AS DECIMAL(3, 1)) AS totalDays"))
                 ->whereRaw("(t_day1.teacher_id IS NOT NULL OR t_day2.teacher_id IS NOT NULL OR t_day3.teacher_id IS NOT NULL OR t_day4.teacher_id IS NOT NULL OR t_day5.teacher_id IS NOT NULL OR t_day6.teacher_id IS NOT NULL OR t_day7.teacher_id IS NOT NULL) AND (day1School_id = '$id' OR day2School_id = '$id' OR day3School_id = '$id' OR day4School_id = '$id' OR day5School_id = '$id' OR day6School_id = '$id' OR day7School_id = '$id')")
                 ->where('tbl_teacher.company_id', $company_id)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->orderBy(DB::raw("(day1Amount_dec + day2Amount_dec + day3Amount_dec + day4Amount_dec + day5Amount_dec + day6Amount_dec + day7Amount_dec)"), 'DESC')
                 ->get();
@@ -2493,7 +2700,8 @@ class SchoolController extends Controller
             DB::table('tbl_school')
                 ->where('school_id', '=', $school_id)
                 ->update([
-                    'password' => Hash::make($request->password)
+                    'password' => Hash::make($request->password),
+                    'activeStatus' => 1
                 ]);
             return redirect()->intended('/school');
         }
@@ -2539,7 +2747,7 @@ class SchoolController extends Controller
                         return redirect()->back()->withInput()->with('loginError', "You are not an active user.");
                     } else {
                         Session::put('schoolLoginData', $user_exist[0]);
-                        return redirect()->intended('/school/detail');
+                        return redirect()->intended('/school/finance?include=&method=');
                     }
                 }
             } else {
@@ -2631,7 +2839,7 @@ class SchoolController extends Controller
                             $query->where('ContactType.descriptionGroup_int', '=', 13);
                         });
                 })
-                ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
+                ->select('tbl_contactItemSch.*', 'JobRole.description_txt as jobRole_txt', 'ContactType.description_txt as type_txt', 'tbl_schoolContact.title_int', 'tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_schoolContact.jobRole_int', 'tbl_schoolContact.receiveTimesheets_status', 'tbl_schoolContact.receiveInvoice_status', 'tbl_schoolContact.receiveVetting_status', 'tbl_schoolContact.isCurrent_status')
                 ->where('tbl_contactItemSch.school_id', $school_id)
                 ->where(function ($query) {
                     $query->where('tbl_contactItemSch.schoolContact_id', NULL);
@@ -2755,8 +2963,38 @@ class SchoolController extends Controller
     public function logSchoolContactDelete(Request $request)
     {
         $contact_id = $request->contact_id;
-        DB::table('tbl_schoolContact')->where('contact_id', '=', $contact_id)
+        $Detail = DB::table('tbl_schoolContact')
+            ->where('contact_id', '=', $contact_id)
+            ->first();
+
+        DB::table('tbl_contactItemSch')
+            ->where('schoolContact_id', '=', $contact_id)
             ->delete();
+
+        DB::table('tbl_schoolContactLog')
+            ->where('spokeTo_id', '=', $contact_id)
+            ->delete();
+
+        DB::table('tbl_schoolContact')
+            ->where('contact_id', '=', $contact_id)
+            ->delete();
+
+        if ($Detail) {
+            $userExist = DB::table('tbl_school')
+                ->where('tbl_school.school_id', $Detail->school_id)
+                ->where('tbl_school.logContId', $contact_id)
+                ->first();
+            if ($userExist) {
+                DB::table('tbl_school')
+                    ->where('school_id', '=', $Detail->school_id)
+                    ->update([
+                        'login_mail' => null,
+                        'logContId' => null,
+                        'logContItemId' => null,
+                        'password' => null
+                    ]);
+            }
+        }
 
         return 1;
     }
@@ -2870,9 +3108,30 @@ class SchoolController extends Controller
     public function logSchoolContactItemDelete(Request $request)
     {
         $contactItemSch_id = $request->editContactItemId;
+        $Detail = DB::table('tbl_contactItemSch')
+            ->where('contactItemSch_id', '=', $contactItemSch_id)
+            ->first();
+
         DB::table('tbl_contactItemSch')
             ->where('contactItemSch_id', '=', $contactItemSch_id)
             ->delete();
+
+        if ($Detail) {
+            $userExist = DB::table('tbl_school')
+                ->where('tbl_school.school_id', $Detail->school_id)
+                ->where('tbl_school.logContItemId', $contactItemSch_id)
+                ->first();
+            if ($userExist) {
+                DB::table('tbl_school')
+                    ->where('school_id', '=', $Detail->school_id)
+                    ->update([
+                        'login_mail' => null,
+                        'logContId' => null,
+                        'logContItemId' => null,
+                        'password' => null
+                    ]);
+            }
+        }
 
         return 1;
     }
@@ -2885,6 +3144,16 @@ class SchoolController extends Controller
             $headerTitle = "Schools";
             $company_id = $schoolLoginData->company_id;
             $school_id = $schoolLoginData->school_id;
+            $contId = $schoolLoginData->logContId;
+            $canUpTimesheet = 0;
+            if ($contId) {
+                $contDet = DB::table('tbl_schoolContact')
+                    ->where('contact_id', $contId)
+                    ->first();
+                if ($contDet && $contDet->receiveTimesheets_status == -1) {
+                    $canUpTimesheet = 1;
+                }
+            }
 
             if ($request->date) {
                 $weekStartDate = $request->date;
@@ -2983,7 +3252,7 @@ class SchoolController extends Controller
                 ->where('teacher_timesheet.reject_status', 0)
                 ->where('teacher_timesheet.approve_by_school', '=', 1)
                 ->where('teacher_timesheet.school_id', '=', $school_id)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('teacher_timesheet.teacher_timesheet_id')
                 ->orderBy('teacher_timesheet.start_date', 'ASC')
                 ->get();
@@ -3048,7 +3317,7 @@ class SchoolController extends Controller
                         ->get();
                 })
                 ->where('tbl_asn.school_id', $school_id)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
@@ -3061,13 +3330,29 @@ class SchoolController extends Controller
                 ->where('teacher_timesheet_item.school_id', $school_id)
                 ->where('teacher_timesheet_item.send_to_school', 1)
                 ->where('teacher_timesheet_item.admin_approve', '!=', 1)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
                 ->orderBy('teacher_timesheet.teacher_id', 'ASC')
                 ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
                 ->get();
 
-            return view("web.schoolPortal.school_finance", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList, 'schoolPaidInvoices' => $schoolPaidInvoices, 'teacherList' => $teacherList]);
+            $thresholdDate = Carbon::now()->subDays(30);
+            $invoiceCal = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
+                ->where('tbl_invoice.school_id', $school_id)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->first();
+
+            $invoiceOverdueCal = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
+                ->where('tbl_invoice.school_id', $school_id)
+                ->where('tbl_invoice.paidOn_dte', NULL)
+                ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
+                ->first();
+
+            return view("web.schoolPortal.school_finance", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $school_id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'paymentMethodList' => $paymentMethodList, 'documentList' => $documentList, 'weekStartDate' => $weekStartDate, 'plusFiveDate' => $plusFiveDate, 'calenderList' => $calenderList, 'schoolPaidInvoices' => $schoolPaidInvoices, 'teacherList' => $teacherList, 'canUpTimesheet' => $canUpTimesheet, 'invoiceCal' => $invoiceCal, 'invoiceOverdueCal' => $invoiceOverdueCal]);
         } else {
             return redirect()->intended('/school');
         }
@@ -3090,7 +3375,7 @@ class SchoolController extends Controller
             ->where('teacher_timesheet_item.school_id', $school_id)
             ->where('teacher_timesheet_item.send_to_school', 1)
             ->where('teacher_timesheet_item.admin_approve', '!=', 1)
-            ->where('tbl_teacher.is_delete', 0)
+            // ->where('tbl_teacher.is_delete', 0)
             ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
             ->orderBy('teacher_timesheet.teacher_id', 'ASC')
             ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
@@ -3122,7 +3407,7 @@ class SchoolController extends Controller
                 if ($teacher->t_admin_approve == 2) {
                     $tStatus = "Rejected" . $rejectText;
                 } else if ($teacher->t_send_to_school == 1) {
-                    $tStatus = "Send to school";
+                    $tStatus = "Sent to School";
                 } else {
                     $tStatus = "--";
                 }
@@ -3254,7 +3539,7 @@ class SchoolController extends Controller
                     ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
                     ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                     ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm')
-                    ->where('tbl_teacher.is_delete', 0)
+                    // ->where('tbl_teacher.is_delete', 0)
                     ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
                     ->groupBy('tbl_asnItem.asnItem_id')
                     ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
@@ -3287,6 +3572,41 @@ class SchoolController extends Controller
                             'timesheet_id' => $timesheet_id
                         ]);
                 }
+
+                // send mail to admin
+                $contactDetNew = DB::table('tbl_schoolContact')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                    ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                    ->where('tbl_schoolContact.isCurrent_status', '-1')
+                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                    ->where('tbl_contactItemSch.type_int', 1)
+                    ->where('tbl_schoolContact.school_id', $school_id)
+                    ->first();
+
+                $adminDet = DB::table('tbl_user')
+                    ->select('tbl_user.*')
+                    ->where('tbl_user.company_id', $company_id)
+                    ->where('tbl_user.admin_type', 1)
+                    ->where('tbl_user.isCurrent_status', '=', -1)
+                    ->get();
+                foreach ($adminDet as $key => $value) {
+                    if ($value->user_name) {
+                        $email = $value->user_name;
+                        $name = $value->firstName_txt . ' ' . $value->surname_txt;
+
+                        $mailData['companyDetail'] = $companyDetail;
+                        $mailData['name'] = $name;
+                        $mailData['mail'] = $email;
+                        $mailData['schoolDet'] = $schoolDet;
+                        $mailData['timesheet_id'] = $timesheet_id;
+                        $mailData['contactDetNew'] = $contactDetNew;
+                        $mailData['date'] = date("d-m-Y H:i");
+                        $myVar = new AlertController();
+                        $myVar->mailAdminAfterApproval($mailData);
+                    }
+                }
+
                 $result['add'] = 'Yes';
                 $result['timesheet_id'] = $timesheet_id;
                 $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
@@ -3349,8 +3669,10 @@ class SchoolController extends Controller
                 ->first();
             $invoiceItemList = DB::table('tbl_invoiceItem')
                 ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'tbl_invoiceItem.asnItem_id')
+                ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_invoiceItem.teacher_id')
                 ->select('tbl_invoiceItem.*', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm', DB::raw("IF(tbl_asnItem.dayPart_int = 4, CONCAT(tbl_asnItem.hours_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = tbl_asnItem.dayPart_int)) AS dayAvail_txt"))
                 ->where('tbl_invoiceItem.invoice_id', $invoice_id)
+                ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                 ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                 ->get();
 
@@ -3364,7 +3686,8 @@ class SchoolController extends Controller
                 ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
                 ->where('tbl_schoolContact.isCurrent_status', '-1')
                 ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
-                ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                // ->where('tbl_schoolContact.receiveInvoice_status', '-1')
+                // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
                 ->where('tbl_contactItemSch.type_int', 1)
                 ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                 ->first();
@@ -3401,7 +3724,7 @@ class SchoolController extends Controller
             ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
             ->select('teacher_timesheet.*', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"))
             ->where('teacher_timesheet.teacher_timesheet_id', $teacher_timesheet_id)
-            ->where('tbl_teacher.is_delete', 0)
+            // ->where('tbl_teacher.is_delete', 0)
             ->groupBy('teacher_timesheet_item.asnDate_dte')
             ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
             ->get();
@@ -3640,7 +3963,7 @@ class SchoolController extends Controller
                     ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                     ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm')
                     ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
-                    ->where('tbl_teacher.is_delete', 0)
+                    // ->where('tbl_teacher.is_delete', 0)
                     ->groupBy('tbl_asnItem.asnItem_id')
                     ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                     ->get();
@@ -3678,6 +4001,41 @@ class SchoolController extends Controller
                             'timesheet_id' => $timesheet_id
                         ]);
                 }
+
+                // send mail to admin
+                $contactDetNew = DB::table('tbl_schoolContact')
+                    ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                    ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                    ->where('tbl_schoolContact.isCurrent_status', '-1')
+                    ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                    // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                    ->where('tbl_contactItemSch.type_int', 1)
+                    ->where('tbl_schoolContact.school_id', $school_id)
+                    ->first();
+
+                $adminDet = DB::table('tbl_user')
+                    ->select('tbl_user.*')
+                    ->where('tbl_user.company_id', $company_id)
+                    ->where('tbl_user.admin_type', 1)
+                    ->where('tbl_user.isCurrent_status', '=', -1)
+                    ->get();
+                foreach ($adminDet as $key => $value) {
+                    if ($value->user_name) {
+                        $email = $value->user_name;
+                        $name = $value->firstName_txt . ' ' . $value->surname_txt;
+
+                        $mailData['companyDetail'] = $companyDetail;
+                        $mailData['name'] = $name;
+                        $mailData['mail'] = $email;
+                        $mailData['schoolDet'] = $schoolDet;
+                        $mailData['timesheet_id'] = $timesheet_id;
+                        $mailData['contactDetNew'] = $contactDetNew;
+                        $mailData['date'] = date("d-m-Y H:i");
+                        $myVar = new AlertController();
+                        $myVar->mailAdminAfterApproval($mailData);
+                    }
+                }
+
                 $result['add'] = 'Yes';
                 $result['timesheet_id'] = $timesheet_id;
                 $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
@@ -3807,7 +4165,7 @@ class SchoolController extends Controller
                         ->get();
                 })
                 ->where('tbl_asn.school_id', $schoolId)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
@@ -3866,21 +4224,33 @@ class SchoolController extends Controller
         $weekStartDate = $request->weekStartDate;
         $weekEndDate = $request->weekEndDate;
 
-        $schoolLoginData = Session::get('schoolLoginData');
+        // $schoolLoginData = Session::get('schoolLoginData');
+        // $companyDetail = array();
+        // if ($schoolLoginData) {
+        //     $company_id = $schoolLoginData->company_id;
+        //     $companyDetail = DB::table('company')
+        //         ->select('company.*')
+        //         ->where('company.company_id', $company_id)
+        //         ->first();
+        // }
+
+        // $schoolDet = DB::table('tbl_asn')
+        //     ->select('tbl_asn.school_id', 'tbl_school.name_txt')
+        //     ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+        //     ->where('tbl_asn.asn_id', $asnId)
+        //     ->first();
+        $schoolDet = DB::table('tbl_school')
+            ->where('school_id', $school_id)
+            ->first();
         $companyDetail = array();
-        if ($schoolLoginData) {
-            $company_id = $schoolLoginData->company_id;
+        $company_id = '';
+        if ($schoolDet) {
+            $company_id = $schoolDet->company_id;
             $companyDetail = DB::table('company')
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
         }
-
-        $schoolDet = DB::table('tbl_asn')
-            ->select('tbl_asn.school_id', 'tbl_school.name_txt')
-            ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
-            ->where('tbl_asn.asn_id', $asnId)
-            ->first();
 
         $idsArr = DB::table('tbl_asn')
             ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
@@ -3904,7 +4274,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm')
                 ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                 ->get();
@@ -3946,6 +4316,41 @@ class SchoolController extends Controller
                         'approve_by_dte' => date('Y-m-d H:i:s'),
                     ]);
             }
+
+            // send mail to admin
+            $contactDetNew = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->where('tbl_schoolContact.school_id', $school_id)
+                ->first();
+
+            $adminDet = DB::table('tbl_user')
+                ->select('tbl_user.*')
+                ->where('tbl_user.company_id', $company_id)
+                ->where('tbl_user.admin_type', 1)
+                ->where('tbl_user.isCurrent_status', '=', -1)
+                ->get();
+            foreach ($adminDet as $key => $value) {
+                if ($value->user_name) {
+                    $email = $value->user_name;
+                    $name = $value->firstName_txt . ' ' . $value->surname_txt;
+
+                    $mailData['companyDetail'] = $companyDetail;
+                    $mailData['name'] = $name;
+                    $mailData['mail'] = $email;
+                    $mailData['schoolDet'] = $schoolDet;
+                    $mailData['timesheet_id'] = $timesheet_id;
+                    $mailData['contactDetNew'] = $contactDetNew;
+                    $mailData['date'] = date("d-m-Y H:i");
+                    $myVar = new AlertController();
+                    $myVar->mailAdminAfterApproval($mailData);
+                }
+            }
+
             $result['add'] = 'Yes';
             $result['timesheet_id'] = $timesheet_id;
             $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
@@ -4034,7 +4439,7 @@ class SchoolController extends Controller
                         ->get();
                 })
                 ->where('tbl_asn.school_id', $schoolId)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
@@ -4095,21 +4500,33 @@ class SchoolController extends Controller
         $weekStartDate = $request->weekStartDate;
         $weekEndDate = $request->weekEndDate;
 
-        $schoolLoginData = Session::get('schoolLoginData');
+        // $schoolLoginData = Session::get('schoolLoginData');
+        // $companyDetail = array();
+        // if ($schoolLoginData) {
+        //     $company_id = $schoolLoginData->company_id;
+        //     $companyDetail = DB::table('company')
+        //         ->select('company.*')
+        //         ->where('company.company_id', $company_id)
+        //         ->first();
+        // }
+
+        // $schoolDet = DB::table('tbl_asn')
+        //     ->select('tbl_asn.school_id', 'tbl_school.name_txt')
+        //     ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
+        //     ->whereIn('tbl_asn.asn_id', $asnIdsArr)
+        //     ->first();
+        $schoolDet = DB::table('tbl_school')
+            ->where('school_id', $school_id)
+            ->first();
         $companyDetail = array();
-        if ($schoolLoginData) {
-            $company_id = $schoolLoginData->company_id;
+        $company_id = '';
+        if ($schoolDet) {
+            $company_id = $schoolDet->company_id;
             $companyDetail = DB::table('company')
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
         }
-
-        $schoolDet = DB::table('tbl_asn')
-            ->select('tbl_asn.school_id', 'tbl_school.name_txt')
-            ->LeftJoin('tbl_school', 'tbl_asn.school_id', '=', 'tbl_school.school_id')
-            ->whereIn('tbl_asn.asn_id', $asnIdsArr)
-            ->first();
 
         $idsArr = DB::table('tbl_asn')
             ->join('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
@@ -4133,7 +4550,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm')
                 ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                 ->get();
@@ -4175,6 +4592,41 @@ class SchoolController extends Controller
                         'approve_by_dte' => date('Y-m-d H:i:s'),
                     ]);
             }
+
+            // send mail to admin
+            $contactDetNew = DB::table('tbl_schoolContact')
+                ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
+                ->select('tbl_schoolContact.firstName_txt', 'tbl_schoolContact.surname_txt', 'tbl_contactItemSch.contactItem_txt')
+                ->where('tbl_schoolContact.isCurrent_status', '-1')
+                ->where('tbl_schoolContact.receiveTimesheets_status', '-1')
+                // ->where('tbl_contactItemSch.receiveInvoices_status', '-1')
+                ->where('tbl_contactItemSch.type_int', 1)
+                ->where('tbl_schoolContact.school_id', $school_id)
+                ->first();
+
+            $adminDet = DB::table('tbl_user')
+                ->select('tbl_user.*')
+                ->where('tbl_user.company_id', $company_id)
+                ->where('tbl_user.admin_type', 1)
+                ->where('tbl_user.isCurrent_status', '=', -1)
+                ->get();
+            foreach ($adminDet as $key => $value) {
+                if ($value->user_name) {
+                    $email = $value->user_name;
+                    $name = $value->firstName_txt . ' ' . $value->surname_txt;
+
+                    $mailData['companyDetail'] = $companyDetail;
+                    $mailData['name'] = $name;
+                    $mailData['mail'] = $email;
+                    $mailData['schoolDet'] = $schoolDet;
+                    $mailData['timesheet_id'] = $timesheet_id;
+                    $mailData['contactDetNew'] = $contactDetNew;
+                    $mailData['date'] = date("d-m-Y H:i");
+                    $myVar = new AlertController();
+                    $myVar->mailAdminAfterApproval($mailData);
+                }
+            }
+
             $result['add'] = 'Yes';
             $result['timesheet_id'] = $timesheet_id;
             $result['schoolName'] = $schoolDet ? $schoolDet->name_txt : '';
@@ -4206,7 +4658,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'teacher_timesheet.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('teacher_timesheet.*', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'teacher_timesheet_item.start_tm as t_start_tm', 'teacher_timesheet_item.end_tm as t_end_tm', 'teacher_timesheet_item.timesheet_item_id', 'teacher_timesheet_item.asn_id as t_asn_id', 'teacher_timesheet_item.asnItem_id as t_asnItem_id', 'teacher_timesheet_item.school_id as t_school_id', 'teacher_timesheet_item.teacher_id as t_teacher_id', 'teacher_timesheet_item.admin_approve as t_admin_approve', 'teacher_timesheet_item.send_to_school as t_send_to_school', 'teacher_timesheet_item.rejected_by_type as t_rejected_by_type', 'teacher_timesheet_item.rejected_by as t_rejected_by', 'teacher_timesheet_item.rejected_text as t_rejected_text')
                 ->whereIn('teacher_timesheet_item.timesheet_item_id', $asnIdsArr)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
                 ->orderBy('teacher_timesheet.teacher_id', 'ASC')
                 ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
@@ -4309,7 +4761,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm')
                 ->whereIn('tbl_asnItem.asnItem_id', $idsArr)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                 ->get();
@@ -4456,7 +4908,7 @@ class SchoolController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_asn.teacher_id', '=', 'tbl_teacher.teacher_id')
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asnItem.asn_id', DB::raw("DATE_FORMAT(asnDate_dte, '%a %D %b %y') AS asnDate_dte"), DB::raw("IF(dayPart_int = 4, CONCAT(hours_dec, ' hrs'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)) AS datePart_txt"), 'tbl_asn.school_id', 'tbl_asn.teacher_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_asnItem.start_tm', 'tbl_asnItem.end_tm')
                 ->whereIn('tbl_asnItem.asnItem_id', $itemIdsArr)
-                ->where('tbl_teacher.is_delete', 0)
+                // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_asnItem.asnItem_id')
                 ->orderBy('tbl_asnItem.asnDate_dte', 'ASC')
                 ->get();
@@ -4575,6 +5027,101 @@ class SchoolController extends Controller
             return redirect()->intended('/school');
         }
     }
+
+    /******* common login *******/
+    public function schoolCommonLogin(Request $request)
+    {
+        $schoolLoginData = Session::get('schoolLoginData');
+        $commonLoginSchoolData = Session::get('commonLoginSchoolData');
+        if ($schoolLoginData && $commonLoginSchoolData) {
+            return redirect()->intended('/school/detail');
+        } else {
+            $title = array('pageTitle' => "School Login");
+            return view("web.schoolPortal.school_common_login", ['title' => $title]);
+        }
+    }
+
+    public function schoolProcessCommonLogin(Request $request)
+    {
+        $validator = Validator::make(
+            array(
+                'selected_school'    => $request->selected_school,
+                'user_name'    => $request->user_name,
+                'password' => $request->password
+            ),
+            array(
+                'selected_school'    => 'required',
+                'user_name'    => 'required',
+                'password' => 'required',
+            )
+        );
+        //check validation
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+            if (Auth::guard('subadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'admin_type' => 2], $request->get('remember'))) {
+                $admin = Auth::guard('subadmin')->user();
+
+                if ($admin) {
+                    $administrators = DB::table('tbl_user')
+                        ->LeftJoin('company', 'company.company_id', '=', 'tbl_user.company_id')
+                        ->select('tbl_user.*', 'company.company_name', 'company.company_logo')
+                        ->where('tbl_user.user_id', $admin->user_id)
+                        ->get();
+
+                    $user_exist = DB::table('tbl_school')
+                        ->LeftJoin('company', 'company.company_id', '=', 'tbl_school.company_id')
+                        ->select('tbl_school.*', 'company.company_name', 'company.company_logo')
+                        ->where('tbl_school.school_id', $request->selected_school)
+                        ->get();
+
+                    if (count($user_exist) > 0) {
+                        // if ($user_exist[0]->activeStatus != 1) {
+                        //     return redirect()->back()->withInput()->with('loginError', "This is not a active school.");
+                        // } else {
+                        Session::put('commonLoginSchoolData', $administrators[0]);
+                        Session::put('schoolLoginData', $user_exist[0]);
+                        return redirect()->intended('/school/detail');
+                        // }
+                    } else {
+                        return redirect()->back()->withInput()->with('loginError', "This school is not in records.");
+                    }
+                } else {
+                    return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
+                }
+            } else {
+                return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
+            }
+        }
+    }
+
+    public function fetchSchoolAjax(Request $request)
+    {
+        $querySch = $request->get('q');
+
+        $schoolQry = DB::table('tbl_school')
+            ->LeftJoin('company', 'company.company_id', '=', 'tbl_school.company_id')
+            ->select('tbl_school.*', 'company.company_name', 'company.company_logo');
+        if ($querySch) {
+            $search_input = str_replace(" ", "", $querySch);
+            $schoolQry->where(function ($query) use ($search_input) {
+                $query->where(DB::raw("REPLACE(name_txt, ' ', '')"), 'LIKE', "%" . $search_input . "%");
+            });
+        }
+        $data = $schoolQry->limit(15)
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function commonSchoolLogout()
+    {
+        Session::forget('commonLoginSchoolData');
+        Session::forget('schoolLoginData');
+        return redirect('/school/supervisor');
+    }
+    /******* common login *******/
+
     /********* School Portal *********/
 
     public function testSchoolFileUpload(Request $request)

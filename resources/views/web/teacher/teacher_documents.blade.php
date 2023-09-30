@@ -676,7 +676,7 @@
 
                                 <div class="form-group modal-input-field">
                                     <label class="form-check-label">Date Register On Update</label>
-                                    <input type="text" class="form-control datePickerPaste field-validate-5"
+                                    <input type="text" class="form-control datePickerPaste "
                                         name="vetUpdateServiceReg_dte" id=""
                                         value="{{ $teacherDetail->vetUpdateServiceReg_dte != null ? date('d/m/Y', strtotime($teacherDetail->vetUpdateServiceReg_dte)) : '' }}">
                                 </div>
@@ -748,7 +748,7 @@
                                 </div>
                                 <div class="form-group modal-input-field rightToWorkDiv"
                                     style="display: {{ $teacherDetail->rightToWork_status == '-1' ? 'block' : 'none' }}">
-                                    <label class="form-check-label">Date On Update</label>
+                                    <label class="form-check-label">Date Checked</label>
                                     <input type="text" class="form-control datePickerPaste" name="rightToWork_dte"
                                         id="rightToWork_dteId"
                                         value="{{ $teacherDetail->rightToWork_dte != null ? date('d/m/Y', strtotime($teacherDetail->rightToWork_dte)) : '' }}">
@@ -776,7 +776,7 @@
                                 </div>
                                 <div class="form-group modal-input-field OverseasPolisyDiv"
                                     style="display: {{ $teacherDetail->overseasPolicy_status == '-1' ? 'block' : 'none' }}">
-                                    <label class="form-check-label">Date On Update</label>
+                                    <label class="form-check-label">Date Checked</label>
                                     <input type="text" class="form-control datePickerPaste" name="overseasPolicy_dte"
                                         id="overseasPolicy_dteId"
                                         value="{{ $teacherDetail->overseasPolicy_dte != null ? date('d/m/Y', strtotime($teacherDetail->overseasPolicy_dte)) : '' }}">

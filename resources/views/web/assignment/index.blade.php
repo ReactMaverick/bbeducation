@@ -25,6 +25,8 @@
                             <th>Teacher</th>
                             <th>Date</th>
                             <th>Weekday</th>
+                            <th>Pay</th>
+                            <th>Charge</th>
                         </tr>
                     </thead>
                     <tbody class="table-body-sec">
@@ -53,6 +55,8 @@
                                         {{ date('l', strtotime($Assignment->asnStartDate_dte)) }}
                                     @endif
                                 </td>
+                                <td>{{ $Assignment->cost_dec }}</td>
+                                <td>{{ $Assignment->charge_dec }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -112,7 +116,10 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                // ordering: false,
+                pageLength: 25
+            });
         });
 
         function assignmentDetail(asn_id) {

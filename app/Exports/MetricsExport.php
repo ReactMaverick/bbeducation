@@ -7,8 +7,9 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Support\Facades\DB;
 use stdClass;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class MetricsExport implements FromCollection, WithHeadings
+class MetricsExport implements FromCollection
 {
     use Exportable;
     private $company_id;
@@ -51,51 +52,82 @@ class MetricsExport implements FromCollection, WithHeadings
             ->whereBetween('tbl_invoiceItem.dateFor_dte', [$this->startOfMonth, $this->endOfMonth])
             ->first();
 
-        // $metricsDetail = DB::table(DB::raw("({$asnSubquery->toSql()}) AS t_asn"))
-        //     ->mergeBindings($asnSubquery)
-        //     ->join(DB::raw("({$invoiceSubquery->toSql()}) AS t_invoice"), function ($join) {
-        //         $join->whereRaw('1 = 1');
-        //     })
-        //     ->mergeBindings($invoiceSubquery)
-        //     ->join(DB::raw("({$billedSubquery->toSql()}) AS t_billed"), function ($join) {
-        //         $join->whereRaw('1 = 1');
-        //     })
-        //     ->mergeBindings($billedSubquery)
-        //     ->select([
-        //         't_asn.daysThisPeriod_dec',
-        //         't_asn.teachersWorking_int',
-        //         't_asn.schoolsUsing_int',
-        //         't_asn.predictedGP_dec',
-        //         't_billed.actualBilled_dec',
-        //         't_invoice.actualGP_dec',
-        //     ])
-        //     ->get();
-        $metricsDetail = array();
-        $obj = new stdClass();
-        $obj->daysThisPeriod_dec = $asnSubquery->daysThisPeriod_dec;
-        $obj->teachersWorking_int = $asnSubquery->teachersWorking_int;
-        $obj->schoolsUsing_int = $asnSubquery->schoolsUsing_int;
-        $obj->predictedGP_dec = $asnSubquery->predictedGP_dec;
-        $obj->actualBilled_dec = $billedSubquery->actualBilled_dec;
-        $obj->actualGP_dec = $invoiceSubquery->actualGP_dec;
-        array_push($metricsDetail, $obj);
-        // echo "<pre>";
-        // print_r($metricsDetail);
-        // exit;
-        $metricsDetail = collect($metricsDetail);
+        // $metricsDetail = array();
+        // $obj = new stdClass();
+        // $obj->daysThisPeriod_dec = $asnSubquery->daysThisPeriod_dec;
+        // $obj->teachersWorking_int = $asnSubquery->teachersWorking_int;
+        // $obj->schoolsUsing_int = $asnSubquery->schoolsUsing_int;
+        // $obj->predictedGP_dec = $asnSubquery->predictedGP_dec;
+        // $obj->actualBilled_dec = $billedSubquery->actualBilled_dec;
+        // $obj->actualGP_dec = $invoiceSubquery->actualGP_dec;
+        // array_push($metricsDetail, $obj);
+        // // echo "<pre>";
+        // // print_r($metricsDetail);
+        // // exit;
+        // $metricsDetail = collect($metricsDetail);
 
-        return $metricsDetail;
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Total Days',
-            'Teachers Working',
-            'School using BB',
-            'Predicted GP',
-            'Billed GP',
-            'Total Turnover',
+        // return $metricsDetail;
+        $startDateRow = [
+            'Start Date:',
+            date("d/m/Y", strtotime($this->startOfMonth)), // Start date
+            '', // Empty columns for alignment
+            '', '', '', '', '',
         ];
+
+        $endDateRow = [
+            'End Date:',
+            date("d/m/Y", strtotime($this->endOfMonth)), // End date
+            '', // Empty columns for alignment
+            '', '', '', '',
+        ];
+
+        $metricsDetail = [
+            $startDateRow,
+            $endDateRow,
+            [
+                'Total Days',
+                'Teachers Working',
+                'School using BB',
+                'Predicted GP',
+                'Billed GP',
+                'Total Turnover',
+            ],
+            [
+                $asnSubquery->daysThisPeriod_dec,
+                $asnSubquery->teachersWorking_int,
+                $asnSubquery->schoolsUsing_int,
+                $asnSubquery->predictedGP_dec,
+                $billedSubquery->actualBilled_dec,
+                $invoiceSubquery->actualGP_dec,
+            ],
+        ];
+
+        return collect($metricsDetail);
     }
+
+    // public function getStartDate()
+    // {
+    //     return $this->startOfMonth;
+    // }
+
+    // public function getEndDate()
+    // {
+    //     return $this->endOfMonth;
+    // }
+
+
+
+    // public function headings(): array
+    // {
+    //     return [
+    //         'Start Date: ' . $this->getStartDate(), // Display start date
+    //         'End Date: ' . $this->getEndDate(), // Display end date
+    //         'Total Days',
+    //         'Teachers Working',
+    //         'School using BB',
+    //         'Predicted GP',
+    //         'Billed GP',
+    //         'Total Turnover',
+    //     ];
+    // }
 }

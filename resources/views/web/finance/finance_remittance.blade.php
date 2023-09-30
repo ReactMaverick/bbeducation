@@ -74,6 +74,7 @@
                                         <th>Gross</th>
                                         <th>Status By School</th>
                                         <th>Paid On (School)</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-body-sec">
@@ -89,7 +90,7 @@
                                             </td>
                                             <td>{{ $Invoices->invPaymentMethod_txt }}</td>
                                             <td>{{ $Invoices->remittee_txt }}</td>
-                                            <td>{{ $Invoices->sent_dte ? date('d-m-Y', strtotime($Invoices->sent_dte)) : '' }}
+                                            <td>{{ $Invoices->sentMailDate ? date('d-m-Y', strtotime($Invoices->sentMailDate)) : '' }}
                                             </td>
                                             <td>{{ $Invoices->sender_txt }}</td>
                                             <td>{{ $Invoices->net_dec }}</td>
@@ -110,6 +111,15 @@
                                                     {{ date('d-m-Y', strtotime($Invoices->school_paid_dte)) }}
                                                 @endif
                                             </td>
+                                            <td>
+                                                @if ($Invoices->paid_dte != null)
+                                                    {{ 'Paid' }}
+                                                @elseif (date('Y-m-d', strtotime($Invoices->invoice_dte . ' + 30 days')) < date('Y-m-d'))
+                                                    {{ 'Overdue' }}
+                                                @else
+                                                    {{ 'Due' }}
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -125,19 +135,19 @@
                             <div class="amount-owed-price-sec">
                                 <span>Net</span>
                                 @if ($invoiceCal->net_dec)
-                                    <p>&#163 {{ $invoiceCal->net_dec }}</p>
+                                    <p>&#163 {{ number_format((float) $invoiceCal->net_dec, 2, '.', ',') }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Vat</span>
                                 @if ($invoiceCal->vat_dec)
-                                    <p>&#163 {{ $invoiceCal->vat_dec }}</p>
+                                    <p>&#163 {{ number_format((float) $invoiceCal->vat_dec, 2, '.', ',') }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Gross</span>
                                 @if ($invoiceCal->gross_dec)
-                                    <p>&#163 {{ $invoiceCal->gross_dec }}</p>
+                                    <p>&#163 {{ number_format((float) $invoiceCal->gross_dec, 2, '.', ',') }}</p>
                                 @endif
                             </div>
                         </div>
@@ -146,20 +156,20 @@
                             <h2>Amount Overdue</h2>
                             <div class="amount-owed-price-sec">
                                 <span>Net</span>
-                                @if ($invoiceCal->net_dec)
-                                    <p>&#163 {{ $invoiceCal->net_dec }}</p>
+                                @if ($invoiceOverdue->net_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceOverdue->net_dec, 2, '.', ',') }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Vat</span>
-                                @if ($invoiceCal->vat_dec)
-                                    <p>&#163 {{ $invoiceCal->vat_dec }}</p>
+                                @if ($invoiceOverdue->vat_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceOverdue->vat_dec, 2, '.', ',') }}</p>
                                 @endif
                             </div>
                             <div class="amount-owed-price-sec">
                                 <span>Gross</span>
-                                @if ($invoiceCal->gross_dec)
-                                    <p>&#163 {{ $invoiceCal->gross_dec }}</p>
+                                @if ($invoiceOverdue->gross_dec)
+                                    <p>&#163 {{ number_format((float) $invoiceOverdue->gross_dec, 2, '.', ',') }}</p>
                                 @endif
                             </div>
 
@@ -179,6 +189,7 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
+                pageLength: 50,
                 "order": [
                     [11, "desc"]
                 ]

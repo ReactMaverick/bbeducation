@@ -128,6 +128,9 @@
                     </div>
                 </div>
 
+                @php
+                    $timesheetContactExit = 0;
+                @endphp
                 <div class="school-detail-right-sec">
 
                     <div class="school-details-contact-second-sec">
@@ -154,6 +157,7 @@
                                     <th>Job Role</th>
                                     <th>Name</th>
                                     <th>T/S</th>
+                                    <th>I/S</th>
                                     <th>Vet.</th>
                                 </tr>
                             </thead>
@@ -178,6 +182,16 @@
                                         </td>
                                         <td>
                                             @if ($Contacts->receiveTimesheets_status != 0)
+                                                {{ 'Y' }}
+                                                @php
+                                                    $timesheetContactExit = 1;
+                                                @endphp
+                                            @else
+                                                {{ 'N' }}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($Contacts->receiveInvoice_status != 0)
                                                 {{ 'Y' }}
                                             @else
                                                 {{ 'N' }}
@@ -444,9 +458,17 @@
 
                                     <div class="modal-side-field">
                                         <label class="form-check-label" for="receiveTimesheets_status">Receive
-                                            Timesheets/Invoices</label>
+                                            Timesheets</label>
                                         <input type="checkbox" class="" name="receiveTimesheets_status"
-                                            id="receiveTimesheets_status" value="1">
+                                            id="receiveTimesheets_status" value="1"
+                                            {{ $timesheetContactExit == 1 ? 'disabled' : '' }}>
+                                    </div>
+
+                                    <div class="modal-side-field">
+                                        <label class="form-check-label" for="receiveInvoice_status">Receive
+                                            Invoices</label>
+                                        <input type="checkbox" class="" name="receiveInvoice_status"
+                                            id="receiveInvoice_status" value="1">
                                     </div>
                                 </div>
                             </div>
@@ -688,13 +710,15 @@
 
         $(document).on('click', '#editContactBttn', function() {
             var contact_id = $('#editContactId').val();
+            var schoolId = "{{ $school_id }}";
             if (contact_id) {
                 $.ajax({
                     type: 'POST',
                     url: '{{ url('getSchoolContactDetail') }}',
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        contact_id: contact_id
+                        contact_id: contact_id,
+                        schoolId: schoolId
                     },
                     success: function(data) {
                         //console.log(data);

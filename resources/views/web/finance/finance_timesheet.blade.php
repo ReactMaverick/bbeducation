@@ -110,6 +110,13 @@
                                         <div class="invoice-top-btn-sec mr-3">
                                             <button id="selectAllBtn">Select All</button>
                                         </div>
+
+                                        <div class="finance-contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link" id="timesheetDeleteBtn"
+                                                title="Remove days from assignment">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </a>
+                                        </div>
                                         <div class="finance-contact-icon-sec">
                                             <a style="cursor: pointer" class="disabled-link" id="timesheetEditBtn"
                                                 title="Edit timesheet">
@@ -395,7 +402,7 @@
                                                                 </div>
                                                             @elseif($sendToSchool == 1)
                                                                 <div class="teacher-calendar-days-field3">
-                                                                    <p>Send to school</p>
+                                                                    <p>Sent to School</p>
                                                                 </div>
                                                             @else
                                                                 <div class="teacher-calendar-days-field3">
@@ -659,11 +666,13 @@
                 $('#timesheetRejectBtn').removeClass('disabled-link');
                 $('#timesheetEditBtn').removeClass('disabled-link');
                 $('#sendToSchoolBttn').removeClass('disabled-link');
+                $('#timesheetDeleteBtn').removeClass('disabled-link');
             } else {
                 $('#timesheetApproveBtn').addClass('disabled-link');
                 $('#timesheetRejectBtn').addClass('disabled-link');
                 $('#timesheetEditBtn').addClass('disabled-link');
                 $('#sendToSchoolBttn').addClass('disabled-link');
+                $('#timesheetDeleteBtn').addClass('disabled-link');
             }
         }
 
@@ -720,6 +729,7 @@
                                             $('#timesheetEditBtn').addClass('disabled-link');
                                             $('#timesheetApproveBtn').addClass('disabled-link');
                                             $('#timesheetRejectBtn').addClass('disabled-link');
+                                            $('#timesheetDeleteBtn').addClass('disabled-link');
                                             var arrAsnId = asnIds.split(',');
                                             for (var i = 0; i < arrAsnId.length; i++) {
                                                 $('#editTimesheetDiv' + arrAsnId[i])
@@ -779,6 +789,41 @@
                                         weekStartDate: "{{ $weekStartDate }}",
                                         weekEndDate: "{{ $plusFiveDate }}",
                                         remark: remark
+                                    },
+                                    success: function(data) {
+                                        location.reload();
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one timesheet.");
+            }
+        });
+
+        $(document).on('click', '#timesheetDeleteBtn', function() {
+            var asnIds = $('#ajaxTimesheetAsnIds').val();
+            if (asnIds) {
+                swal({
+                        title: "",
+                        text: "This will remove the assignment items for any highlighted dates. Are you sure you wish to continue?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $('#fullLoader').show();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('financeTimesheetReject') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        asnIds: asnIds,
+                                        weekStartDate: "{{ $weekStartDate }}",
+                                        weekEndDate: "{{ $plusFiveDate }}",
                                     },
                                     success: function(data) {
                                         location.reload();
@@ -1298,6 +1343,7 @@
                                             $('#logTimesheetBtnNew').addClass('disabled-link');
                                             // $('#selectDocumentRow' + teacher_timesheet_id)
                                             //     .remove();
+                                            fetchTecher('{{ $p_maxDate }}', schoolId);
                                             var popTxt =
                                                 'You have just logged a timesheet for ' + data
                                                 .schoolName +

@@ -220,7 +220,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                pageLength: 25,
+            });
         });
 
         function schoolDetail(school_id) {

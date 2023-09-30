@@ -17,16 +17,16 @@
 
     <table style="padding: 15px; background-color: #40A0ED; margin: auto; width: 90%; margin-top: 50px; ">
         <tr style="padding: 15px;">
-            <th style="text-align:left; font-size: 50px; font-weight: bold; color: #fff; padding-left: 30px;">
+            <th style="text-align:left; font-size: 30px; font-weight: bold; color: #fff; padding-left: 30px;">
                 Invoice
             </th>
             <th style="text-align:right;"><img src="{{ $companyDetail ? asset($companyDetail->company_logo) : '' }}"
-                    alt="" style="width: 20%;">
+                    alt="" style="width: 10%;">
             </th>
         </tr>
     </table>
 
-    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 30px;">
+    <table style="padding: 15px 0; margin: auto; width: 90%; margin-top: 0px;">
         <tr>
             <td style="vertical-align: top; width: 45%;">
                 <table>
@@ -141,6 +141,8 @@
                 Item Tax Code </th>
             <th style="text-align:center; color: #fff; font-size: 14px; font-weight: 400; padding: 4px 0 4px 15px;">
                 Item Tax Amount </th>
+            <th style="text-align:center; color: #fff; font-size: 14px; font-weight: 400; padding: 4px 0 4px 15px;">
+                Gross </th>
         </tr>
 
         @foreach ($invoicesList as $key => $invoices)
@@ -184,6 +186,9 @@
                 <td
                     style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 15px 4px 0; border-left: 2px solid #000;">
                     {{ $invoices->ItemTaxAmount }}</td>
+                <td
+                    style="text-align:center; color: #000; font-size: 14px; font-weight: 400; padding: 4px 15px 4px 0; border-left: 2px solid #000;">
+                    {{ $invoices->GrossAmount }}</td>
             </tr>
         @endforeach
     </table>

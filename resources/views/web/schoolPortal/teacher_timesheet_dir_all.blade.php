@@ -53,7 +53,12 @@
 </head>
 
 <body>
-
+    <div class="skd_loder_box" id="fullLoader">
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+    </div>
 </body>
 
 <script src="{!! asset('plugins/sweetalert/sweetalert.min.js') !!}"></script>
@@ -78,6 +83,12 @@
     });
 </script>
 <?php } ?>
+
+<script>
+    $(document).ready(function() {
+        $('#fullLoader').hide();
+    });
+</script>
 
 <?php if(app('request')->input('status') == 'approve'){?>
 <script>

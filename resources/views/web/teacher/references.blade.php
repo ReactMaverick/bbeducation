@@ -28,11 +28,11 @@
                                     <i class="fa-solid fa-square-check"></i>
                                 </a> --}}
                                 <a style="cursor: pointer;" class="disabled-link" id="saveReferenceBttn"
-                                    title="Save receive reference">
+                                    title="Save received reference">
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                 </a>
                                 <a style="cursor: pointer;" class="disabled-link" id="previewReferenceBttn"
-                                    title="Preview receive reference">
+                                    title="Preview received reference">
                                     <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                                 </a>
                                 <a style="cursor: pointer;" class="disabled-link" id="sendReferenceBttn"

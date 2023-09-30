@@ -1,102 +1,159 @@
-@extends('web.layout')
+{{-- @extends('web.layout') --}}
+@extends('web.layout_dashboard')
 @section('content')
     <div class="tab-content dashboard-tab-content" id="myTabContent">
-        <div>
-            <h2>Home</h2>
-            <div class="total-sec">
-                <div class="first-sec">
-                    <div class="left-sidebar-section">
+        <div class="container-fluid my_container-fluid">
+            <div class="row pt-3 justify-content-center content-header date_sec">
+                <div class="col-lg-3 text-center">
+                    <div class="date_area">
                         <div class="date-sec">
                             <span>Week Beginning</span>
-                            <div class="date-text">
-                                <a
-                                    href="{{ URL::to('/dashboard?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}"><i
-                                        class="fa-solid fa-caret-left"></i></a>
-                                <h2>{{ date('D d M Y', strtotime($weekStartDate)) }}</h2>
-                                <a
-                                    href="{{ URL::to('/dashboard?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}"><i
-                                        class="fa-solid fa-caret-right"></i></a>
-                            </div>
                         </div>
-                        <div class="sidebar-sec">
-                            <div class="sidebar-data">
-                                {{-- <h2>{{ number_format((float)$sideBarData[0]->daysThisWeek, 1, '.', '') }}</h2> --}}
-                                <h2>{{ number_format((float) $asnSubquery->daysThisPeriod_dec, 1, '.', '') }}</h2>
-                            </div>
-                            <div class="sidebar-sec-text">
-                                <span>Days this Week</span>
-                            </div>
-                        </div>
-
-                        <div class="sidebar-sec">
-                            <div class="sidebar-data2">
-                                {{-- <h2>{{ $sideBarData[0]->teachersWorking }}</h2> --}}
-                                <h2>{{ $asnSubquery->teachersWorking_int }}</h2>
-                            </div>
-                            <div class="sidebar-sec-text">
-                                <span>Teachers Working</span>
-                            </div>
-                        </div>
-
-                        <div class="sidebar-sec">
-                            <div class="sidebar-data3">
-                                {{-- <h2>{{ $sideBarData[0]->schoolsUsing }}</h2> --}}
-                                <h2>{{ $asnSubquery->schoolsUsing_int }}</h2>
-                            </div>
-                            <div class="sidebar-sec-text">
-                                <span>Schools Using</span>
-                            </div>
-                        </div>
-                        <div class="price-sec">
-                            <span>Predicted GP (this week)</span>
-                            {{-- <h2>&#163 {{ number_format((float)$sideBarData[0]->predictedGP, 1, '.', '') }}</h2> --}}
-                            <h2>&#163 {{ number_format((float) $asnSubquery->predictedGP_dec, 1, '.', '') }}</h2>
-                            <span>Billed That Week</span>
-                            <h2>&#163 {{ $billedSubquery->actualBilled_dec }}</h2>
-                            <span>Invoices This Week</span>
-                            <h2>&#163 {{ $invoiceSubquery->actualGP_dec }}</h2>
+                        <div class="date-text">
+                            <a
+                                href="{{ URL::to('/dashboard?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}"><i
+                                    class="fas fa-caret-left"></i></a>
+                            <h2>{{ date('D d M Y', strtotime($weekStartDate)) }}</h2>
+                            <a
+                                href="{{ URL::to('/dashboard?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}"><i
+                                    class="fas fa-caret-right"></i></a>
                         </div>
                     </div>
-                </div>
-                <div class="second-sec assignment-col">
-                    <div class="assignment-status-sec">
-                        <h2>{{ count($latestAssignment) }} - Latest Assignments</h2>
-                        {{-- <span>Double click to open the assignment</span> --}}
-                    </div>
-
-                    <table class="table assignment-status-table" id="myTable">
-                        <thead>
-                            <tr class="table-heading">
-                                <th>School</th>
-                                <th>Status</th>
-                                <th>Profession</th>
-                                <th>Candidate</th>
-                                <th>Days</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-body-sec">
-                            @foreach ($latestAssignment as $key => $Assignment)
-                                <tr class="table-data" onclick="assignmentDetail({{ $Assignment->asn_id }})">
-                                    <td>{{ $Assignment->schooleName }}</td>
-                                    <td>
-                                        {{ $Assignment->assignmentStatus }}
-                                    </td>
-                                    <td>{{ $Assignment->teacherProfession }}</td>
-                                    <td>{{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}</td>
-                                    <td>{{ $Assignment->daysThisWeek }} Days</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
                 </div>
             </div>
+            <div class="row ">
+                <div class="col-lg-2 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ number_format((float) $asnSubquery->daysThisPeriod_dec, 1, '.', '') }}</h3>
+                            <p>Days this Week</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-2 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ $asnSubquery->teachersWorking_int }}</h3>
+                            <p>Teachers Working</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-2 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner text-white">
+                            <h3>{{ $asnSubquery->schoolsUsing_int }}</h3>
+                            <p>Schools Using</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-school"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-2 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>&#163 {{ number_format((float) $asnSubquery->predictedGP_dec, 2, '.', ',') }}</h3>
+                            <p>Predicted GP (this week)</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-money-check"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <!-- ./col -->
+                <div class="col-lg-2 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-dark">
+                        <div class="inner">
+                            <h3>&#163 {{ number_format((float) $billedSubquery->actualBilled_dec, 2, '.', ',') }}</h3>
+                            <p>Billed That Week</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-receipt"></i>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <!-- ./col -->
+                <div class="col-lg-2 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3>&#163 {{ number_format((float) $invoiceSubquery->actualGP_dec, 2, '.', ',') }}</h3>
+                            <p>Invoices This Week</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <div class="col-md-12 topbar-sec">
+                <div class="total-sec">
+
+                    <div class="second-sec assignment-col sec_box_edit">
+                        <div class="assignment-status-sec details-heading">
+                            <h2>{{ count($latestAssignment) }} - Latest Assignments</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover dataTable dtr-inline collapsed" id="myTable">
+                                <thead>
+                                    <tr class="table-heading">
+                                        <th>School</th>
+                                        <th>Status</th>
+                                        <th>Profession</th>
+                                        <th>Candidate</th>
+                                        <th>Days</th>
+                                        <th>Pay</th>
+                                        <th>Charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-body-sec">
+                                    @foreach ($latestAssignment as $key => $Assignment)
+                                        <tr class="table-data" onclick="assignmentDetail({{ $Assignment->asn_id }})">
+                                            <td>{{ $Assignment->schooleName }}</td>
+                                            <td>
+                                                {{ $Assignment->assignmentStatus }}
+                                            </td>
+                                            <td>{{ $Assignment->teacherProfession }}</td>
+                                            <td>{{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}</td>
+                                            <td>{{ $Assignment->daysThisWeek }} Days</td>
+                                            <td>{{ $Assignment->cost_dec }}</td>
+                                            <td>{{ $Assignment->charge_dec }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
-                ordering: false
+                ordering: false,
+                pageLength: 25
                 // dom: 'Bfrtip',
                 // buttons: [
                 //     'copy',

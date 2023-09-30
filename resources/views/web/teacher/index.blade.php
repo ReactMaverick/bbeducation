@@ -279,7 +279,9 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                pageLength: 25,
+            });
         });
 
         function teacherDetail(teacher_id) {

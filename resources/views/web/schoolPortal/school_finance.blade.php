@@ -1,6 +1,8 @@
 @extends('web.schoolPortal.layout')
 @section('content')
-
+    @php
+        $schoolLoginData = Session::get('schoolLoginData');
+    @endphp
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
@@ -19,6 +21,103 @@
                 <div class="row assignment-detail-row">
 
                     <div class="col-md-12 topbar-sec">
+
+                        <div class="row school-finance-right-sec">
+                            <div class="col-md-6">
+                                <div class="sec_box_edit">
+                                    <div class="contact-heading details-heading">
+                                        <div class="contact-heading-text">
+                                            <h2>Amount Owed</h2>
+                                        </div>
+                                    </div>
+                                    <div class="about-school-section">
+                                        <div class="school-name-section">
+                                            <div class="school-heading-text">
+                                                <h2>Net</h2>
+                                            </div>
+                                            <div class="school-name-text">
+                                                @if ($invoiceCal->net_dec)
+                                                    <p>&#163
+                                                        {{ number_format((float) $invoiceCal->net_dec, 2, '.', ',') }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="school-name-section">
+                                            <div class="school-heading-text">
+                                                <h2>Vat</h2>
+                                            </div>
+                                            <div class="school-name-text">
+                                                @if ($invoiceCal->vat_dec)
+                                                    <p>&#163
+                                                        {{ number_format((float) $invoiceCal->vat_dec, 2, '.', ',') }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="school-name-section">
+                                            <div class="school-heading-text">
+                                                <h2>Gross</h2>
+                                            </div>
+                                            <div class="school-name-text">
+                                                @if ($invoiceCal->gross_dec)
+                                                    <p>&#163
+                                                        {{ number_format((float) $invoiceCal->gross_dec, 2, '.', ',') }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="sec_box_edit">
+                                    <div class="contact-heading details-heading">
+                                        <div class="contact-heading-text">
+                                            <h2>Amount Overdue</h2>
+                                        </div>
+                                    </div>
+                                    <div class="about-school-section">
+                                        <div class="school-name-section">
+                                            <div class="school-heading-text">
+                                                <h2>Net</h2>
+                                            </div>
+                                            <div class="school-name-text">
+                                                @if ($invoiceOverdueCal->net_dec)
+                                                    <p>&#163
+                                                        {{ number_format((float) $invoiceOverdueCal->net_dec, 2, '.', ',') }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="school-name-section">
+                                            <div class="school-heading-text">
+                                                <h2>Vat</h2>
+                                            </div>
+                                            <div class="school-name-text">
+                                                @if ($invoiceOverdueCal->vat_dec)
+                                                    <p>&#163
+                                                        {{ number_format((float) $invoiceOverdueCal->vat_dec, 2, '.', ',') }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="school-name-section">
+                                            <div class="school-heading-text">
+                                                <h2>Gross</h2>
+                                            </div>
+                                            <div class="school-name-text">
+                                                @if ($invoiceOverdueCal->gross_dec)
+                                                    <p>&#163
+                                                        {{ number_format((float) $invoiceOverdueCal->gross_dec, 2, '.', ',') }}
+                                                    </p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row school-finance-right-sec">
                             <div class="col-md-6">
@@ -72,6 +171,11 @@
                                 <input type="hidden" name="" id="editInvoiceMethodId"
                                     value="{{ app('request')->input('method') }}">
                                 <div class="sec_box_edit">
+                                    <div class="contact-heading details-heading">
+                                        <div class="contact-heading-text">
+                                            <h2>Invoices</h2>
+                                        </div>
+                                    </div>
                                     <div class="school-finance-table-section">
                                         <table class="table table-bordered table-striped" id="myTable">
                                             <thead>
@@ -123,6 +227,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="sec_box_edit">
+                                    <div class="contact-heading details-heading">
+                                        <div class="contact-heading-text">
+                                            <h2>Invoices (Paid by school)</h2>
+                                        </div>
+                                    </div>
                                     <div class="school-finance-table-section">
                                         <table class="table table-bordered table-striped" id="myTable2">
                                             <thead>
@@ -182,18 +291,22 @@
                                 <div class="finance-timesheet-contact-first-sec sec_box_edit" style="width: 100%">
                                     <div class="contact-heading details-heading">
                                         <div class="contact-heading-text">
-                                            <h2>Teacher Timesheets</h2>
+                                            <h2>Teacher Timesheets (Sent from
+                                                "{{ $schoolLoginData->company_name ? $schoolLoginData->company_name : '' }}")
+                                            </h2>
                                         </div>
 
                                         <div class="contact-icon header_icon">
-                                            <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
-                                                title="Reject timesheet">
-                                                <i class="fas fa-times"></i>
-                                            </a>
-                                            <a style="cursor: pointer;" class="disabled-link" id="logTimesheetBtn"
-                                                title="Log timesheet">
-                                                <i class="fas fa-check"></i>
-                                            </a>
+                                            @if ($canUpTimesheet)
+                                                <a style="cursor: pointer" class="disabled-link" id="timesheetRejectBtn"
+                                                    title="Reject timesheet">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                                <a style="cursor: pointer;" class="disabled-link" id="logTimesheetBtn"
+                                                    title="Log timesheet">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="day_sec about-school-section">
@@ -240,22 +353,27 @@
                                                 <p>Teacher</p>
                                             </div>
                                             <div class="teacher-calendar-days-text">
+                                                <p>{{ date('d M Y', strtotime($weekStartDate)) }}</p>
                                                 <p>Monday</p>
                                                 <p class="teacher-calendar-bottom-text">{{ $day1Amount_total1 }}</p>
                                             </div>
                                             <div class="teacher-calendar-days-text">
+                                                <p>{{ date('d M Y', strtotime($weekStartDate . ' +1 days')) }}</p>
                                                 <p>Tuesday</p>
                                                 <p class="teacher-calendar-bottom-text">{{ $day2Amount_total1 }}</p>
                                             </div>
                                             <div class="teacher-calendar-days-text">
+                                                <p>{{ date('d M Y', strtotime($weekStartDate . ' +2 days')) }}</p>
                                                 <p>Wednesday</p>
                                                 <p class="teacher-calendar-bottom-text">{{ $day3Amount_total1 }}</p>
                                             </div>
                                             <div class="teacher-calendar-days-text">
+                                                <p>{{ date('d M Y', strtotime($weekStartDate . ' +3 days')) }}</p>
                                                 <p>Thursday</p>
                                                 <p class="teacher-calendar-bottom-text">{{ $day4Amount_total1 }}</p>
                                             </div>
                                             <div class="teacher-calendar-days-text">
+                                                <p>{{ date('d M Y', strtotime($weekStartDate . ' +4 days')) }}</p>
                                                 <p>Friday</p>
                                                 <p class="teacher-calendar-bottom-text">{{ $day5Amount_total1 }}</p>
                                             </div>
@@ -390,18 +508,20 @@
                                 <div class="finance-timesheet-contact-first-sec sec_box_edit" style="width: 100%">
                                     <div class="contact-heading details-heading">
                                         <div class="contact-heading-text">
-                                            <h2>Teacher Timesheets(Submitted by teacher)</h2>
+                                            <h2>Teacher Timesheets (Submitted by teacher)</h2>
                                         </div>
 
                                         <div class="contact-icon header_icon">
-                                            <a style="cursor: pointer" class="disabled-link" id="itemSheetRejectBtn"
-                                                title="Reject timesheet">
-                                                <i class="fas fa-times"></i>
-                                            </a>
-                                            <a style="cursor: pointer;" class="disabled-link" id="itemSheetApproveBtn"
-                                                title="Approve timesheet">
-                                                <i class="fas fa-check"></i>
-                                            </a>
+                                            @if ($canUpTimesheet)
+                                                <a style="cursor: pointer" class="disabled-link" id="itemSheetRejectBtn"
+                                                    title="Reject timesheet">
+                                                    <i class="fas fa-times"></i>
+                                                </a>
+                                                <a style="cursor: pointer;" class="disabled-link"
+                                                    id="itemSheetApproveBtn" title="Approve timesheet">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            @endif
                                         </div>
                                     </div>
                                     <input type="hidden" name="" id="logTeacherTimeItemIds" value="">
@@ -442,7 +562,7 @@
                                                 if ($teacher->t_admin_approve == 2) {
                                                     $tStatus = 'Rejected' . $rejectText;
                                                 } elseif ($teacher->t_send_to_school == 1) {
-                                                    $tStatus = 'Send to school';
+                                                    $tStatus = 'Sent to School';
                                                 } else {
                                                     $tStatus = '--';
                                                 }
@@ -515,7 +635,7 @@
                 ]
             });
             $('#myTable2').DataTable({
-                scrollY: '300px',
+                scrollY: '280px',
                 paging: false,
                 // footer: false,
                 info: false,
@@ -670,6 +790,7 @@
                     .then((value) => {
                         switch (value) {
                             case "Yes":
+                                $('#fullLoader').show();
                                 $.ajax({
                                     type: 'POST',
                                     url: '{{ url('/school/logSchoolTimesheetLog') }}',
@@ -681,6 +802,7 @@
                                     },
                                     success: function(data) {
                                         if (data.add == 'Yes') {
+                                            $('#fullLoader').hide();
                                             $('#sendToSchoolBttn').addClass('disabled-link');
                                             $('#logTimesheetBtn').addClass('disabled-link');
                                             $('#editApprovTimesheetDiv' + approveAsnId)
@@ -881,7 +1003,6 @@
                                     async: false,
                                     dataType: "json",
                                     success: function(data) {
-                                        $('#fullLoader').hide();
                                         if (data.add == 'Yes') {
                                             var idsArr = [];
                                             if (asnItemIds) {
@@ -900,6 +1021,7 @@
                                                 '. Timesheet ID : ' + data.timesheet_id;
                                             swal("", popTxt);
                                         }
+                                        $('#fullLoader').hide();
                                     }
                                 });
                         }

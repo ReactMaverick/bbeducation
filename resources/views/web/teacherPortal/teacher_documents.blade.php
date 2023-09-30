@@ -29,16 +29,11 @@
                                         <h2>Filed Documents</h2>
                                     </div>
                                     <div class="contact-icon-sec">
-                                        <a style="cursor: pointer" class="disabled-link" id="deleteDocumentBttn">
-                                            {{-- <i class="fas fa-xmark"></i> --}}
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
+
                                         <a data-toggle="modal" data-target="#documentAddModal" style="cursor: pointer;">
                                             <i class="fas fa-plus-circle"></i>
                                         </a>
-                                        <a style="cursor: pointer;" class="disabled-link" id="editDocumentBttn">
-                                            <i class="fas fa-edit school-edit-icon"></i>
-                                        </a>
+
                                     </div>
                                 </div>
                                 <div class="assignment-finance-table-section about-school-section table-responsive">

@@ -152,6 +152,7 @@ Route::post('/teacherFabAdd', [TeacherController::class, 'teacherFabAdd']);
 Route::post('/teacherHeaderStatusUpdate', [TeacherController::class, 'teacherHeaderStatusUpdate']);
 Route::post('/teacherDocumentFetch', [TeacherController::class, 'teacherDocumentFetch']);
 Route::post('/teacherDocumentMail', [TeacherController::class, 'teacherDocumentMail']);
+Route::post('/checkCandidateLogMail', [TeacherController::class, 'checkCandidateLogMail']);
 Route::post('/resendTeacherPasswordLink', [TeacherController::class, 'resendTeacherPasswordLink']);
 Route::post('/checkTeacherUsed', [TeacherController::class, 'checkTeacherUsed']);
 Route::post('/delete_teacher', [TeacherController::class, 'delete_teacher']);
@@ -221,6 +222,9 @@ Route::post('/schoolHeaderFabAdd', [SchoolController::class, 'schoolHeaderFabAdd
 Route::post('/addAsnCandRate', [SchoolController::class, 'addAsnCandRate']);
 Route::post('/addAllCandRate', [SchoolController::class, 'addAllCandRate']);
 
+Route::post('/checkSchoolLogMail', [SchoolController::class, 'checkSchoolLogMail']);
+Route::post('/resendSchoolPasswordLink', [SchoolController::class, 'resendSchoolPasswordLink']);
+
 Route::get('/testSchoolFileUpload', [SchoolController::class, 'testSchoolFileUpload']);
 // School
 
@@ -229,6 +233,7 @@ Route::get('/finance', [FinanceController::class, 'finance']);
 Route::get('/finance-timesheets', [FinanceController::class, 'financeTimesheets']);
 Route::post('/financeTimesheetApprove', [FinanceController::class, 'financeTimesheetApprove']);
 Route::post('/financeTimesheetReject', [FinanceController::class, 'financeTimesheetReject']);
+Route::post('/financeTimesheetDelete', [FinanceController::class, 'financeTimesheetDelete']);
 Route::post('/teacherTimesheetReject', [FinanceController::class, 'teacherTimesheetReject']);
 Route::post('/fetchTeacherById', [FinanceController::class, 'fetchTeacherById']);
 Route::post('/timesheetAsnItemDelete', [FinanceController::class, 'timesheetAsnItemDelete']);
@@ -260,6 +265,8 @@ Route::post('/financeInvoiceItemUpdate', [FinanceController::class, 'financeInvo
 Route::post('/financeInvoiceItemDelete', [FinanceController::class, 'financeInvoiceItemDelete']);
 Route::post('/financeInvoiceSave', [FinanceController::class, 'financeInvoiceSave']);
 Route::post('/financeInvoiceSaveNew', [FinanceController::class, 'financeInvoiceSaveNew']);
+Route::post('/sendOverdueInvoice', [FinanceController::class, 'sendOverdueInvoice']);
+Route::post('/sendOneOverdueInvoice', [FinanceController::class, 'sendOneOverdueInvoice']);
 Route::post('/financeInvoiceMail', [FinanceController::class, 'financeInvoiceMail']);
 Route::post('/financeInvoiceAllMail', [FinanceController::class, 'financeInvoiceAllMail']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
@@ -329,6 +336,12 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'candidate'], functio
     Route::post('/forgetPasswordOtpVerify', [TeacherController::class, 'forgetPasswordOtpVerify']);
     Route::get('/forget-password-generate', [TeacherController::class, 'forgetPasswordGenerate']);
     Route::post('/processPassword', [TeacherController::class, 'processPassword']);
+
+    // common login
+    Route::get('/supervisor', [TeacherController::class, 'teacherCommonLogin']);
+    Route::post('/teacherProcessCommonLogin', [TeacherController::class, 'teacherProcessCommonLogin']);
+    Route::get('/fetchTeacherAjax', [TeacherController::class, 'fetchTeacherAjax']);
+    Route::get('/commonTeacherLogout', [TeacherController::class, 'commonTeacherLogout']);
 });
 
 // School Portal
@@ -379,6 +392,12 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
     Route::get('/timesheet-teacher-approve-all/{asn_ids}/{school_id}', [SchoolController::class, 'teacherTimeSheetDirAll']);
     Route::post('/teacherTimeSheetRejectDir', [SchoolController::class, 'teacherTimeSheetRejectDir']);
     Route::post('/teacherTimeSheetApproveDir', [SchoolController::class, 'teacherTimeSheetApproveDir']);
+
+    // common login
+    Route::get('/supervisor', [SchoolController::class, 'schoolCommonLogin']);
+    Route::post('/schoolProcessCommonLogin', [SchoolController::class, 'schoolProcessCommonLogin']);
+    Route::get('/fetchSchoolAjax', [SchoolController::class, 'fetchSchoolAjax']);
+    Route::get('/commonSchoolLogout', [SchoolController::class, 'commonSchoolLogout']);
 });
 
 Route::get('/approveVettingSendTest', [AssignmentController::class, 'approveVettingSendTest']);

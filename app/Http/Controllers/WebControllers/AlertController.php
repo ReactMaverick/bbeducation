@@ -58,6 +58,22 @@ class AlertController extends Controller
         }
     }
 
+    public function mailAdminAfterApproval($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_mail_after_approve', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Timesheet Approved By School")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
     public function sendToSchoolApproval($mailData)
     {
         if ($mailData['mail']) {
@@ -176,6 +192,27 @@ class AlertController extends Controller
                         ->subject($mailData['subject'])
                         ->attach($mailData['invoice_path'], ['as' => $mailData['subject'] . ".pdf"])
                         ->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function sendSchOverdueInvoiceMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/sch_overdue_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->subject($mailData['subject']);
+                    foreach ($mailData['fileArr'] as $file) {
+                        $m->attach($file['invoice_path'], ['as' => $file['name']]);
+                    }
+                    $m->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });

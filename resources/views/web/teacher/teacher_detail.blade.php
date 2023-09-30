@@ -645,7 +645,14 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                scrollY: '200px', // Set the desired height for the scrolling area
+                paging: false, // Disable pagination
+                // footer: false, // Remove footer
+                info: false, // Disable the info footer
+                ordering: false,
+                searching: false,
+            });
         });
 
         function contactItemRowSelect(contactItemTch_id) {

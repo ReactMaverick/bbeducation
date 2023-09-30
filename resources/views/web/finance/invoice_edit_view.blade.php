@@ -76,9 +76,9 @@
                         onclick="invItemRowSelect({{ $invoiceItem->invoiceItem_id }})"
                         id="editInvItemRow{{ $invoiceItem->invoiceItem_id }}">
                         <td style="width: 50%;">{{ $invoiceItem->description_txt }}</td>
-                        <td>{{ (int) $invoiceItem->numItems_dec }}</td>
-                        <td>{{ (int) $invoiceItem->charge_dec }}</td>
-                        <td>{{ (int) $invoiceItem->cost_dec }}</td>
+                        <td>{{ $invoiceItem->numItems_dec }}</td>
+                        <td>{{ $invoiceItem->charge_dec }}</td>
+                        <td>{{ $invoiceItem->cost_dec }}</td>
                         <td>
                             @if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null)
                                 {{ 'Y' }}
