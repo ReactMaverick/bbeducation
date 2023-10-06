@@ -104,7 +104,7 @@
                 </div>
                 <!-- ./col -->
             </div>
-            <div class="col-md-12 topbar-sec">
+            <div class="col-md-12 topbar-sec pt-0">
                 <div class="total-sec">
 
                     <div class="second-sec assignment-col sec_box_edit">
@@ -112,7 +112,8 @@
                             <h2>{{ count($latestAssignment) }} - Latest Assignments</h2>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover dataTable dtr-inline collapsed" id="myTable">
+                            <table class="table table-bordered table-striped table-hover dataTable dtr-inline collapsed"
+                                id="myTable">
                                 <thead>
                                     <tr class="table-heading">
                                         <th>School</th>

@@ -46,6 +46,10 @@
                                         title="Preview Invoice">
                                         <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
                                     </a>
+                                    <a style="cursor: pointer" class="disabled-link" id="sendRemitInvoiceBtn"
+                                        title="Send Invoice">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </a>
                                 </div>
                             </div>
 
@@ -114,7 +118,7 @@
                                             <td>
                                                 @if ($Invoices->paid_dte != null)
                                                     {{ 'Paid' }}
-                                                @elseif (date('Y-m-d', strtotime($Invoices->invoice_dte . ' + 30 days')) < date('Y-m-d'))
+                                                @elseif (date('Y-m-d', strtotime($Invoices->invoice_dte . ' + 30 days')) <= date('Y-m-d'))
                                                     {{ 'Overdue' }}
                                                 @else
                                                     {{ 'Due' }}
@@ -252,12 +256,14 @@
                 $('#editInvoiceRow' + invoice_id).removeClass('tableRowActive');
                 $('#remitInvoiceBtn').addClass('disabled-link');
                 $('#previewInvoiceBtn').addClass('disabled-link');
+                $('#sendRemitInvoiceBtn').addClass('disabled-link');
             } else {
                 $('#editInvoiceId').val(invoice_id);
                 $('.editInvoiceRow').removeClass('tableRowActive');
                 $('#editInvoiceRow' + invoice_id).addClass('tableRowActive');
                 $('#remitInvoiceBtn').removeClass('disabled-link');
                 $('#previewInvoiceBtn').removeClass('disabled-link');
+                $('#sendRemitInvoiceBtn').removeClass('disabled-link');
             }
         }
 
@@ -314,6 +320,31 @@
             if (editInvoiceId) {
                 var rUrl = '<?php echo url('/finance-invoice-pdf/'); ?>' + '/' + editInvoiceId;
                 window.open(rUrl, '_blank');
+            } else {
+                swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#sendRemitInvoiceBtn', function() {
+            var editInvoiceId = $('#editInvoiceId').val();
+            if (editInvoiceId) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('remitInvoiceSend') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        editInvoiceId: editInvoiceId
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        swal("",
+                            "Mail have been send successfully."
+                        );
+
+                        $('#fullLoader').hide();
+                    }
+                });
             } else {
                 swal("", "Please select one invoice.");
             }

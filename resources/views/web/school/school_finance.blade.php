@@ -43,6 +43,14 @@
                             </div>
                             <div class="school-finance-contact-heading">
                                 <div class="school-finance-contact-icon-sec">
+                                    <div class="finance-invoice-icon-sec">
+                                        <a style="cursor: pointer" id="sendAccountSummaryBtn" title="Send Account Summary">
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <div class="finance-invoice-second-icon-sec">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </div>
+                                        </a>
+                                    </div>
                                     <a style="cursor: pointer" class="disabled-link" id="remitInvoiceBtn"
                                         title="Remit Invoice">
                                         <i class="fa-solid fa-square-check"></i>
@@ -119,7 +127,7 @@
                                             <td>
                                                 @if ($Invoices->paidOn_dte != null)
                                                     {{ 'Paid' }}
-                                                @elseif (date('Y-m-d', strtotime($Invoices->invoiceDate_dte . ' + 30 days')) < date('Y-m-d'))
+                                                @elseif (date('Y-m-d', strtotime($Invoices->invoiceDate_dte . ' + 30 days')) <= date('Y-m-d'))
                                                     {{ 'Overdue' }}
                                                 @else
                                                     {{ 'Due' }}
@@ -1018,6 +1026,33 @@
                 });
             } else {
                 swal("", "Please select one invoice.");
+            }
+        });
+
+        $(document).on('click', '#sendAccountSummaryBtn', function() {
+            var school_id = "{{ $school_id }}";
+            if (school_id) {
+                $('#fullLoader').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('sendAccountSummary') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        school_id: school_id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        swal("",
+                            "Mail have been send successfully."
+                        );
+
+                        $('#fullLoader').hide();
+
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    }
+                });
             }
         });
     </script>

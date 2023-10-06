@@ -28,25 +28,28 @@
                 </div>
                 <ul class="skd_menu">
                     <li class="skd_list">
-                        <a href="#" class="skd_item skd_active">Home</a>
+                        <a href="{{ URL::to('/dashboard') }}"
+                            class="skd_item @if ($headerTitle == 'Dashboard') skd_active @endif">Home</a>
                     </li>
                     <li class="skd_list">
-                        <a href="#" class="skd_item">Assignments</a>
+                        <a href="{{ URL::to('/assignments?include=') }}"
+                            class="skd_item @if ($headerTitle == 'Assignments') skd_active @endif">Assignments</a>
                     </li>
                     <li class="skd_list">
-                        <a href="#" class="skd_item">Teachers</a>
+                        <a href="{{ URL::to('/candidates') }}"
+                            class="skd_item @if ($headerTitle == 'Teachers') skd_active @endif">Teachers</a>
                     </li>
                     <li class="skd_list">
-                        <a href="#" class="skd_item">Schools</a>
+                        <a href="{{ URL::to('/schools') }}"
+                            class="skd_item @if ($headerTitle == 'Schools') skd_active @endif">Schools</a>
                     </li>
                     <li class="skd_list">
-                        <a href="#" class="skd_item">Finance</a>
+                        <a href="{{ URL::to('/finance') }}"
+                            class="skd_item @if ($headerTitle == 'Finance') skd_active @endif">Finance</a>
                     </li>
                     <li class="skd_list">
-                        <a href="#" class="skd_item">Management</a>
-                    </li>
-                    <li class="skd_list">
-                        <a href="#" class="skd_item">Contact</a>
+                        <a href="{{ URL::to('/management') }}"
+                            class="skd_item @if ($headerTitle == 'Management') skd_active @endif">Management</a>
                     </li>
                 </ul>
             </div>

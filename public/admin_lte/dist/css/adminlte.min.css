@@ -632,8 +632,13 @@ pre code {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-right: -7.5px;
-    margin-left: -7.5px
+    margin-left: -7.5px;
 }
+
+/* .row.srj_row {
+    margin-right: 0px;
+    margin-left: 0px;
+} */
 
 .no-gutters {
     margin-right: 0;
@@ -19812,7 +19817,8 @@ body.text-sm .control-sidebar {
 } */
 .navbar-white {
     color: #1f2d3d;
-    background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    /* background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); */
+    background-color: #c2d6ff;
 }
 
 .navbar-white.navbar-light .form-control-navbar::-webkit-input-placeholder {
@@ -56691,8 +56697,8 @@ span.input_icon i.fa-eye {
 
 .teacher-calendar-days-field2 {
     width: 100%;
-    border-radius: 5%;
-    border: 1px solid #9dc3e6;
+    /* border-radius: 5%;
+    border: 1px solid #9dc3e6; */
     background-color: #ffff99;
 }
 
@@ -57387,5 +57393,398 @@ a.brand-link.skd_logo {
         height: 60vh;
         max-width: 350px;
         transform: translate(-50%, 12%);
+    }
+}
+
+.about-teacher.skd_icon_box.small-box a {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.teacher-left-sec.skd_row.dataTables_wrapper {
+    display: grid;
+    align-items: center;
+    gap: 30px 0px;
+    grid-template-columns: repeat(2, 1fr);
+    margin-right: 100px;
+}
+
+.about-teacher.skd_icon_box {
+    width: 80%;
+    min-height: 80px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 15px;
+    margin: 0px;
+    margin-right: auto;
+    box-shadow:
+        0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+        0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+        0 12.5px 10px rgba(0, 0, 0, 0.06),
+        0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+        0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+        0 100px 80px rgba(0, 0, 0, 0.12);
+}
+
+.teacher-left-sec.skd_row.dataTables_wrapper .small-box .icon>i {
+    font-size: 56px;
+    transition: all .4s ease-in-out;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.teacher-left-sec.skd_row.dataTables_wrapper .small-box p {
+    text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4),
+        0px 8px 13px rgba(0, 0, 0, 0.1),
+        0px 18px 23px rgba(0, 0, 0, 0.1);
+}
+
+.about-teacher.skd_icon_box {
+    transition: all .4s ease-in-out;
+    overflow: hidden;
+    transform: scale(1);
+}
+
+.about-teacher.skd_icon_box:hover {
+    transform: scale(1.1);
+}
+
+.about-teacher.skd_icon_box::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 50%;
+    left: -150%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgb(255 255 255 / 30%) 80%);
+    z-index: 1;
+    transition: all .5s ease-in-out;
+    transform: skewX(41deg) translateY(-50%);
+}
+
+.about-teacher.skd_icon_box.small-box:hover::after {
+    left: 200%;
+}
+
+.teacher-left-sec.skd_row.dataTables_wrapper .small-box .inner {
+    width: 70%;
+}
+
+.about-teacher.skd_icon_box.small-box:hover .icon i {
+    animation: toTopFromBottom 0.3s linear;
+}
+
+@keyframes toTopFromBottom {
+    49% {
+        transform: translateY(-100%);
+    }
+
+    50% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    51% {
+        opacity: 1;
+    }
+}
+
+
+.modal-grid-reference-text a {
+    font-size: 13px;
+    color: #fff;
+    font-weight: 500;
+    padding: 10px 7px;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    /* background-color: #afabab; */
+    border-radius: 8px;
+}
+
+.search-form-button {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.srj_formInput {
+    width: 80%;
+
+}
+
+.school-search-btn {
+    height: 38px;
+    padding: 0px;
+    width: 20%;
+}
+
+.school-search-field {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+button#advanceSearch {
+    width: 100%;
+    height: 38px;
+}
+
+.btn-outline-cool {
+    color: #7d00e891;
+    border-color: #7d00e891;
+}
+
+.btn-outline-cool:hover {
+    color: #fff;
+    background-color: #7d00e891;
+    border-color: #7d00e891;
+}
+
+.advance-search-filter-section {
+    padding: 15px;
+    background-color: rgb(248 249 252);
+    margin-top: 10px;
+    box-shadow: 0px 5px 10px 0px rgb(95 94 231 / 20%);
+}
+
+.radio-text {
+    line-height: 23px;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    display: block;
+    padding-left: 8px;
+    padding-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 28px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 28px;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    display: block;
+    padding-left: 8px;
+    padding-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 26px;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 20px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #888 transparent transparent transparent;
+    border-style: solid;
+    border-width: 5px 4px 0 4px;
+    height: 0;
+    left: 50%;
+    margin-left: -4px;
+    margin-top: -2px;
+    position: absolute;
+    top: 50%;
+    width: 0;
+}
+
+.filter-form-group label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+}
+
+.last-contact-text span {
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+}
+
+.filter-radio-field label {
+    font-size: 12px;
+    color: #333;
+}
+
+.filter-row {
+    padding: 5px 0;
+}
+
+.school-search-btn-section {
+    display: flex;
+    margin-top: 10px;
+    justify-content: end;
+}
+
+.field-input-field input {
+    height: 35px;
+    padding: 0px 5px;
+    border-radius: 5px;
+    border: 1px solid #afabab;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.schoolSearchBtn {
+    width: 40%;
+}
+
+.skd_image_calender_box .calendar_first_sec {
+    height: 60px;
+    width: 60px;
+}
+
+.skd_image_calender_box .teacher-calendar-days-field3 {
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    width: 100%;
+    min-height: 60px;
+    grid-template-columns: 60px 1fr;
+    padding: 0;
+    overflow: hidden;
+}
+
+
+.teacher-calendar-sidebar-section.new_teacher-calendar-sidebar {
+    height: 100vh;
+    padding: 50px 15px;
+    width: 70%;
+    background-color: rgb(248 249 252);
+    margin-top: 10px;
+    box-shadow: 0px 5px 10px 0px rgb(95 94 231 / 20%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.new_teacher-calendar-sidebar .sidebar-mode-check {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    padding: 0;
+    color: #3c0077ad;
+}
+
+.calendar-section.skd_image_calender_box {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.sidebar-mode-check label {
+    margin: 0px;
+}
+
+.calendar_first_sec img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 479px) {
+    .teacher-left-sec.skd_row.dataTables_wrapper {
+        gap: 30px 20px;
+        margin-right: 0px;
+    }
+
+    .mob_pr_0 {
+        padding-right: 10px !important;
+    }
+
+    .mob_p_0 {
+        padding: 0px 10px !important;
+    }
+
+    .mr-2.topbar-sec.mob_p_0 {
+        margin: 10px !important;
+    }
+
+    .row.gap_50 {
+        gap: 30px 0px;
+    }
+
+    .teacher-left-sec.skd_row.dataTables_wrapper .small-box .icon {
+        display: block;
+    }
+
+    .teacher-left-sec.skd_row.dataTables_wrapper .small-box .icon>i {
+        font-size: 27px;
+    }
+
+    .about-teacher.skd_icon_box::after {
+        width: 70px;
+        height: 60px;
+    }
+
+    .about-teacher.skd_icon_box {
+        width: 100%;
+        min-height: 55px;
+    }
+
+    .srj_formInput {
+        width: 80%;
+        height: 35px;
+    }
+
+    .school-search-btn {
+        height: 35px;
+        padding: 0px;
+        width: 28%;
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 991px) {
+    .mob_pr_0 {
+        padding-right: 10px !important;
+    }
+
+    .mob_p_0 {
+        padding: 0px 10px !important;
+    }
+
+    .mr-2.topbar-sec.mob_p_0 {
+        margin: 0px !important;
+    }
+
+    .teacher-left-sec.skd_row.dataTables_wrapper {
+        gap: 30px 20px;
+        margin-right: 0px;
+    }
+
+    .about-teacher.skd_icon_box {
+        width: 100%;
+        min-height: 70px;
+    }
+
+    .teacher-left-sec.skd_row.dataTables_wrapper .small-box .icon>i {
+        font-size: 35px;
     }
 }

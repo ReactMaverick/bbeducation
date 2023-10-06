@@ -27,14 +27,14 @@
     <div style="width: 100%; display:block;">
         <p>
             <strong>Best regards,</strong><br>
-            <b>Compliance Team</b><br>
+            <b>Finance Team</b><br>
             <b>{{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</b>
         </p>
         <p>Building 3, North London Business Park</p>
         <p>Oakleigh Road South</p>
         <p>N11 1GN</p>
         <p>Telephone:0208 4329844</p>
-        <p>Head of Compliance Email: <a href="mailto:Saleem@bbe-edu.co.uk" target="_blank">Saleem@bbe-edu.co.uk</a></p>
+        <p>Email: <a href="mailto:finance@bbe-edu.co.uk" target="_blank">finance@bbe-edu.co.uk</a></p>
         <p>Web: <a href="www.bumblebee-education.co.uk" target="_blank">www.bumblebee-education.co.uk</a></p>
     </div>
 
@@ -44,7 +44,7 @@
                 <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                     MONITORED.*</h3>
                 <p>Should you have any queries for this invoice, please promptly email <a
-                        href="mailto:Saleem@bbe-edu.co.uk" target="_blank">Saleem@bbe-edu.co.uk</a></p>
+                        href="mailto:finance@bbe-edu.co.uk" target="_blank">finance@bbe-edu.co.uk</a></p>
             </td>
         </tr>
     </table>

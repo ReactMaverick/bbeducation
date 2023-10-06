@@ -15,22 +15,22 @@
 
 <body>
 
-    <div style="border: 1px solid #ccc; background-color: #fff; width: 100%; margin: 0 auto; padding-top: 50px;">
+    <div style="border: 1px solid #ccc; background-color: #fff; width: 60%; margin: 0 auto; padding-top: 50px;">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                            <td style="padding: 10px 20px; width:30%;">
+                            <td style="padding: 10px 20px; width:20%;">
                                 <img src="{{ $mailData['companyDetail'] ? asset($mailData['companyDetail']->company_logo) : '' }}"
                                     style="width: 100px;" />
                             </td>
-                            <td style="padding: 10px 20px; text-align: left; width:42%;">
+                            <td style="padding: 10px 20px; text-align: left; width:45%;">
                                 <p style="color: #2c2b2b; font-size: 25px;">
                                     {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</p>
                             </td>
                             <td style="padding: 10px 20px; text-align: left;">
-                                <p style="color: #888; font-size: 25px;"><strong>Account Summary</strong></p>
+                                <p style="color: #888; font-size: 25px;"><strong>Overdue Invoices</strong></p>
                             </td>
                         </tr>
                     </table>
@@ -41,7 +41,7 @@
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                            <td style="padding: 10px 20px;">
+                            <td style="padding: 10px 20px 0px 20px;">
                                 <p>Dear <strong>{{ $mailData['contactDet']->firstName_txt }}
                                         {{ $mailData['contactDet']->surname_txt }},</strong></p>
                                 {!! $mailData['mail_description'] !!}
@@ -53,8 +53,8 @@
             </tr>
 
             <tr>
-                <td style="padding: 20px 17px;">
-                    <table border="0" cellpadding="0" cellspacing="0" width="55%"
+                <td style="padding: 0px 17px 20px 17px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="90%"
                         style="border: 1px solid #d80202;">
                         <tr>
                             <td width="100%">
@@ -127,8 +127,8 @@
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                            <td style="padding: 10px 20px;">
-                                <p><strong>Amount Overdue</strong></p>
+                            <td style="padding: 0px 17px 10px 17px;">
+                                <p><strong>Total Amount Overdue</strong></p>
                                 <p>
                                     <b>Net : </b>
                                     @if ($mailData['invoiceOverdueCal']->net_dec)
@@ -146,7 +146,7 @@
                                     @endif
                                 </p>
                                 <p>
-                                    <b>Net : </b>
+                                    <b>Gross : </b>
                                     @if ($mailData['invoiceOverdueCal']->gross_dec)
                                         <span>£
                                             {{ number_format((float) $mailData['invoiceOverdueCal']->gross_dec, 2, '.', ',') }}

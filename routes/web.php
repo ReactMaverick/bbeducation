@@ -267,6 +267,7 @@ Route::post('/financeInvoiceSave', [FinanceController::class, 'financeInvoiceSav
 Route::post('/financeInvoiceSaveNew', [FinanceController::class, 'financeInvoiceSaveNew']);
 Route::post('/sendOverdueInvoice', [FinanceController::class, 'sendOverdueInvoice']);
 Route::post('/sendOneOverdueInvoice', [FinanceController::class, 'sendOneOverdueInvoice']);
+Route::post('/sendAccountSummary', [FinanceController::class, 'sendAccountSummary']);
 Route::post('/financeInvoiceMail', [FinanceController::class, 'financeInvoiceMail']);
 Route::post('/financeInvoiceAllMail', [FinanceController::class, 'financeInvoiceAllMail']);
 Route::get('/finance-payroll', [FinanceController::class, 'financePayroll']);
@@ -278,6 +279,7 @@ Route::get('/exportPayroll/{date}', [FinanceController::class, 'exportPayroll'])
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
 Route::get('/exportInvoiceByDate/{from}/{to}/{type}', [FinanceController::class, 'exportInvoiceByDate']);
+Route::post('/remitInvoiceSend', [FinanceController::class, 'remitInvoiceSend']);
 // Finance
 
 // Management

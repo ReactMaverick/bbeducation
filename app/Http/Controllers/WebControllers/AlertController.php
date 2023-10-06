@@ -190,7 +190,26 @@ class AlertController extends Controller
                 Mail::send('/mail/sch_finance_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
                     $m->to($mailData['mail'])
                         ->subject($mailData['subject'])
-                        ->attach($mailData['invoice_path'], ['as' => $mailData['subject'] . ".pdf"])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['pdfName']])
+                        ->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function sendSchRemitInvoiceMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/sch_finance_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->subject($mailData['subject'])
+                        ->attach($mailData['invoice_path'], ['as' => $mailData['pdfName']])
                         ->getSwiftMessage()
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
@@ -207,6 +226,27 @@ class AlertController extends Controller
         if ($mailData['mail']) {
             try {
                 Mail::send('/mail/sch_overdue_invoice', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])
+                        ->subject($mailData['subject']);
+                    foreach ($mailData['fileArr'] as $file) {
+                        $m->attach($file['invoice_path'], ['as' => $file['name']]);
+                    }
+                    $m->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function sendSchAccountSummary($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/sch_account_summary', ['mailData' => $mailData], function ($m) use ($mailData) {
                     $m->to($mailData['mail'])
                         ->subject($mailData['subject']);
                     foreach ($mailData['fileArr'] as $file) {
