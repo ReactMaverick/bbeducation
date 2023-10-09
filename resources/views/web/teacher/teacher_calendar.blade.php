@@ -15,7 +15,7 @@
 
                         <div class="school-detail-right-sec sec_box_edit">
                             <div class="row teacher-calendar-sec5">
-                                <div class="col-md-1">
+                                <div class="col-lg-1 col-md-12 col-xl-1 col-sm-12 col-12">
                                     <div class="teacher-calendar-sidebar-section new_teacher-calendar-sidebar">
                                         <div class="form-check sidebar-mode-check">
                                             <label for="editMode"><i class="fas fa-edit"></i></label>
@@ -37,7 +37,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-11">
+                                <div class="col-md-12 col-12 col-sm-12 col-lg-11 col-xl-11">
                                     <div class="teacher-calendar-slider">
                                         <div class="teacher-calendar-table-section1">
                                             <div class="total-days-slider-sec1">
@@ -78,40 +78,43 @@
                                             <div class="new_teacher_calendar_outer1">
                                                 <div class="new_teacher_wapper">
                                                     <div class="skd_dates_row grid_7">
-                                                        <div class="teacher-calendar-total-days-text">
+                                                        <div class="teacher-calendar-total-days-text skd_date">
                                                             <p>{{ number_format((float) ($day1Amount_total + $day2Amount_total + $day3Amount_total + $day4Amount_total + $day5Amount_total), 1, '.', '') }}
                                                                 days total:</p>
                                                         </div>
-                                                        <div class="teacher-calendar-days-text">
+                                                        <div class="teacher-calendar-days-text skd_date">
                                                             <p>Monday</p>
                                                             <p class="teacher-calendar-bottom-text">{{ $day1Amount_total }}
                                                             </p>
                                                         </div>
-                                                        <div class="teacher-calendar-days-text">
+                                                        <div class="teacher-calendar-days-text skd_date">
                                                             <p>Tuesday</p>
                                                             <p class="teacher-calendar-bottom-text">{{ $day2Amount_total }}
                                                             </p>
                                                         </div>
-                                                        <div class="teacher-calendar-days-text">
+                                                        <div class="teacher-calendar-days-text skd_date">
                                                             <p>Wednesday</p>
                                                             <p class="teacher-calendar-bottom-text">{{ $day3Amount_total }}
                                                             </p>
                                                         </div>
-                                                        <div class="teacher-calendar-days-text">
+                                                        <div class="teacher-calendar-days-text skd_date">
                                                             <p>Thursday</p>
                                                             <p class="teacher-calendar-bottom-text">{{ $day4Amount_total }}
                                                             </p>
                                                         </div>
-                                                        <div class="teacher-calendar-days-text">
+                                                        <div class="teacher-calendar-days-text skd_date">
                                                             <p>Friday</p>
                                                             <p class="teacher-calendar-bottom-text">{{ $day5Amount_total }}
                                                             </p>
                                                         </div>
                                                     </div>
 
+
                                                     @foreach ($calenderList as $key1 => $calender)
-                                                        <div class="calendar-section skd_image_calender_box">
-                                                            <div class="date-left-teacher-calendar">
+                                                        <div
+                                                            class="calendar-section skd_image_calender_box new_teacher_calendar_outer2">
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 <div class="teacher-calendar-days-field3"
                                                                     style="cursor: pointer;"
                                                                     onclick="calDateClick('teacher', '{{ $calender->teacher_id }}', '', '')">
@@ -136,7 +139,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="date-left-teacher-calendar">
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day1Avail_txt && $calender->day1Link_id)
                                                                     <div class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                                         style="cursor: pointer;"
@@ -149,7 +153,8 @@
                                                                     </div>
                                                                 @endif
                                                             </div>
-                                                            <div class="date-left-teacher-calendar">
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day2Avail_txt && $calender->day2Link_id)
                                                                     <div class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                                         style="cursor: pointer;"
@@ -162,7 +167,8 @@
                                                                     </div>
                                                                 @endif
                                                             </div>
-                                                            <div class="date-left-teacher-calendar">
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day3Avail_txt && $calender->day3Link_id)
                                                                     <div class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                                         style="cursor: pointer;"
@@ -175,7 +181,8 @@
                                                                     </div>
                                                                 @endif
                                                             </div>
-                                                            <div class="date-left-teacher-calendar">
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day4Avail_txt && $calender->day4Link_id)
                                                                     <div class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                                         style="cursor: pointer;"
@@ -188,7 +195,8 @@
                                                                     </div>
                                                                 @endif
                                                             </div>
-                                                            <div class="date-left-teacher-calendar">
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day5Avail_txt && $calender->day5Link_id)
                                                                     <div class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
                                                                         style="cursor: pointer;"
@@ -203,6 +211,7 @@
                                                             </div>
                                                         </div>
                                                     @endforeach
+
                                                 </div>
                                             </div>
 
@@ -221,7 +230,7 @@
 
     <!-- Teacher Calendar Modal -->
     <div class="modal fade" id="TeacherCalendarModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 90%;">
+        <div class="modal-dialog modal-xl modal-dialog-centered calendar-modal-section tab_mob_full">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -230,10 +239,12 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div id="AjaxTeacherCalendar"></div>
+                <div class="modal-body">
+                    <div id="AjaxTeacherCalendar" class="skd_calender_new"></div>
 
-                <div class="modal-footer calendar-modal-footer">
-                    <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
 
             </div>
@@ -243,7 +254,7 @@
 
     <!-- Teacher Calendar Event Edit Modal -->
     <div class="modal fade" id="TeacherCalEventEditModal" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 50%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -252,7 +263,9 @@
                     <button type="button" class="close" id="EventEditModalClose">&times;</button>
                 </div>
 
-                <div id="AjaxTeacherCalEvent"></div>
+                <div class="modal-body">
+                    <div id="AjaxTeacherCalEvent"></div>
+                </div>
 
             </div>
         </div>

@@ -1,30 +1,30 @@
 <div class="row">
-    <div class="col-md-1">
-        <div class="teacher-calendar-sidebar-section school-calendar-sidebar-section">
+    <div class="col-md-12 col-xl-1 col-lg-1 col-12 col-sm-12">
+        <div class="teacher-calendar-sidebar-section new_teacher-calendar-sidebar ">
             <div class="form-check sidebar-mode-check">
-                <label for="viewMode1"><i class="fa-solid fa-eye"></i></label>
+                <label for="viewMode1"><i class="fas fa-eye"></i></label>
                 <input type="radio" id="viewMode1" name="calendar_mode1" value="view" checked>
             </div>
             <div class="form-check sidebar-mode-check">
-                <label for="addMode1"><i class="fa-solid fa-plus"></i></label>
+                <label for="addMode1"><i class="fas fa-plus"></i></label>
                 <input type="radio" id="addMode1" name="calendar_mode1" value="add">
             </div>
             <div class="form-check sidebar-mode-check">
-                <label for="editMode1"><i class="fa-solid fa-pencil"></i></label>
+                <label for="editMode1"><i class="fas fa-pen-nib"></i></label>
                 <input type="radio" id="editMode1" name="calendar_mode1" value="edit">
             </div>
             <div class="form-check sidebar-mode-check">
-                <label for="asnEditMode1"><i class="fa-regular fa-pen-to-square"></i></label>
+                <label for="asnEditMode1"><i class="fas fa-edit"></i></label>
                 <input type="radio" id="asnEditMode1" name="calendar_mode1" value="asnEdit">
             </div>
         </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-12 col-12 col-lg-8 col-xl-8 col-sm-12">
         <div id='full_calendar_events'></div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-12 col-12 col-sm-12 col-xl-3 col-lg-3">
         <div>
             <label>Calendar Item For</label>
             <p id="calItemFor"></p>
@@ -53,7 +53,7 @@
 
 <!-- multiple asn Modal -->
 <div class="modal fade" id="multipleTeacherAsnModal" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 50%;">
+    <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section" style="max-width: 50%;">
         <div class="modal-content calendar-modal-content">
 
             <!-- Modal Header -->
@@ -62,19 +62,21 @@
                 <button type="button" class="close" id="multipleTeacherAsnClose">&times;</button>
             </div>
 
-            <div class="col-md-10 mt-4">
-                <table class="table assignment-page-table add-school-teacher-page-table">
-                    <thead>
-                        <tr class="table-heading add-school-teacher-table">
-                            <th>School</th>
-                            <th>Day Part</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-body-sec" id="multipleTeacherAsnTable">
+            <div class="modal-body">
+                <div class="col-md-10 mt-4">
+                    <table class="table assignment-page-table add-school-teacher-page-table">
+                        <thead>
+                            <tr class="table-heading add-school-teacher-table">
+                                <th>School</th>
+                                <th>Day Part</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body-sec" id="multipleTeacherAsnTable">
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
@@ -131,6 +133,7 @@
             unselectAuto: false,
             droppable: false,
             allDayDefault: false,
+            longPressDelay: 1,
             select: function(event_start, event_end, allDay) {
                 if ((event_end._d.getDate() - 1) != event_start._d.getDate()) {
                     calendar.fullCalendar('unselect');
