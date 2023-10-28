@@ -1,92 +1,88 @@
 @php
     $webUserLoginData = Session::get('webUserLoginData');
 @endphp
-<div class="container-fluid dashboard-tab-section">
-    <!-- <div class="container"> -->
 
-    <!-------HEADER LOGO----------->
+<nav class="main-header skd_header navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
 
-    <div class="header-user-profile-sec">
-        <div class="header-logo">
-            <img src="{{ asset($webUserLoginData->company_logo) }}" alt="">
-            <span>
-                @if ($webUserLoginData && isset($webUserLoginData->company_name))
-                    {{ $webUserLoginData->company_name }}
-                @endif
-            </span>
-        </div>
-        @if ($webUserLoginData)
-            <div class="user-name-sec">
-                <i class="fa-solid fa-user"></i><span>{{ $webUserLoginData->firstName_txt }}
-                    {{ $webUserLoginData->surname_txt }}</span>
+        <li class="nav-item">
+            <div class="hamberger_icon">
+                <div class="hamburger" id="hamburger-6">
+                    <span class="line"></span>
+                    <span class="line"></span>
+                    <span class="line"></span>
+                </div>
             </div>
-        @endif
-    </div>
-
-
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item @if ($headerTitle == 'Dashboard') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/dashboard') }}">
-                <i class="fa-solid fa-house-chimney">
-                    <span class="tab-section-text">Home</span>
-                </i>
-            </a>
-        </li>
-        <li class="nav-item @if ($headerTitle == 'Assignments') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/assignments?include=') }}">
-                <i class="fa-solid fa-id-card">
-                    <span class="tab-section-text">Assignments</span>
-                </i>
-            </a>
-        </li>
-        <li class="nav-item @if ($headerTitle == 'Teachers') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/candidates') }}">
-                <i class="fa-solid fa-person-chalkboard">
-                    <span class="tab-section-text">Teachers</span>
-                </i>
-            </a>
-        </li>
-        <li class="nav-item @if ($headerTitle == 'Schools') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/schools') }}">
-                <i class="fa-solid fa-school">
-                    <span class="tab-section-text">Schools</span>
-                </i>
-            </a>
-        </li>
-        <li class="nav-item @if ($headerTitle == 'Finance') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/finance') }}">
-                <i class="fa-solid fa-money-bills">
-                    <span class="tab-section-text">Finance</span>
-                </i>
-            </a>
-        </li>
-        <li class="nav-item @if ($headerTitle == 'Management') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/management') }}">
-                <i class="fa-solid fa-person">
-                    <span class="tab-section-text">Management</span>
-                </i>
-            </a>
-        </li>
-        {{-- <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="fa-solid fa-gear">
-                    <span class="tab-section-text">Settings</span>
-                </i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="{{ URL::to('/profile') }}">Profile</a>
-                <!-- <div class="dropdown-divider"></div> -->
+            <div class="fill_menu_bar">
+                <ul class="skd_menu">
+                    <li class="skd_list">
+                        <a href="{{ URL::to('/dashboard') }}"
+                            class="skd_item @if ($headerTitle == 'Dashboard') skd_active @endif">Home</a>
+                    </li>
+                    <li class="skd_list">
+                        <a href="{{ URL::to('/assignments?include=') }}"
+                            class="skd_item @if ($headerTitle == 'Assignments') skd_active @endif">Assignments</a>
+                    </li>
+                    <li class="skd_list">
+                        <a href="{{ URL::to('/candidates') }}"
+                            class="skd_item @if ($headerTitle == 'Teachers') skd_active @endif">Teachers</a>
+                    </li>
+                    <li class="skd_list">
+                        <a href="{{ URL::to('/schools') }}"
+                            class="skd_item @if ($headerTitle == 'Schools') skd_active @endif">Schools</a>
+                    </li>
+                    <li class="skd_list">
+                        <a href="{{ URL::to('/finance') }}"
+                            class="skd_item @if ($headerTitle == 'Finance') skd_active @endif">Finance</a>
+                    </li>
+                    <li class="skd_list">
+                        <a href="{{ URL::to('/management') }}"
+                            class="skd_item @if ($headerTitle == 'Management') skd_active @endif">Management</a>
+                    </li>
+                </ul>
             </div>
-        </li> --}}
-        <li class="nav-item @if ($headerTitle == 'Logout') header-active @endif ">
-            <a class="nav-link" href="{{ URL::to('/logout') }}">
-                <i class="fa-solid fa-arrow-right-from-bracket">
-                    <span class="tab-section-text">Logout</span>
-                </i>
+
+        </li>
+
+
+        <li class="user_log">
+            <a class="log_item" href="#">
+                <div class="image skd_user_img elevation-2 img-circle">
+                    <img src="{{ asset('web/images/user-img.png') }}" class="img-fluid" alt="">
+                </div>
+                <span
+                    class="mob_dp_none">{{ $webUserLoginData->firstName_txt . ' ' . $webUserLoginData->surname_txt }}</span>
             </a>
+            <ul class="dropdown">
+                <li><a href="{{ URL::to('/logout') }}">
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-log-in">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10 17 15 12 10 7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                            </svg>
+                        </span>Logout</a>
+                </li>
+
+            </ul>
         </li>
     </ul>
 
-    <!-- </div> -->
-</div>
+
+</nav>
+
+<script>
+    $(document).ready(function() {
+        $(".hamburger").click(function() {
+            $(this).toggleClass("is-active");
+            $(".skd_menu").toggleClass("active_menu");
+            // #(".skd_menu").toggleClass("active_menu");
+        });
+    });
+</script>

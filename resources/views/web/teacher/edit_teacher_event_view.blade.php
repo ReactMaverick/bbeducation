@@ -1,5 +1,5 @@
-<div class="calendar-heading-sec">
-    <i class="fa-solid fa-pencil school-edit-icon"></i>
+<div class="calendar-heading-sec" style="align-items: baseline;">
+    <i class="fas fa-edit school-edit-icon"></i>
     <h2>Edit Calendar Item</h2>
 </div>
 
@@ -48,13 +48,15 @@
                 <div class="form-group modal-input-field">
                     <label class="form-check-label">Start Time (for set hours)</label>
                     <input type="time" class="form-control" name="start_tm" id="start_tm_id"
-                        value="{{ $eventCalDetails->start_tm }}" {{ $eventCalDetails->part_int == 4 ? '' : 'disabled' }}>
+                        value="{{ $eventCalDetails->start_tm }}"
+                        {{ $eventCalDetails->part_int == 4 ? '' : 'disabled' }}>
                 </div>
 
                 <div class="form-group modal-input-field">
                     <label class="form-check-label">End Time (for set hours)</label>
                     <input type="time" class="form-control" name="end_tm" id="end_tm_id"
-                        value="{{ $eventCalDetails->end_tm }}" {{ $eventCalDetails->part_int == 4 ? '' : 'disabled' }}>
+                        value="{{ $eventCalDetails->end_tm }}"
+                        {{ $eventCalDetails->part_int == 4 ? '' : 'disabled' }}>
                 </div>
             </div>
             <div class="col-md-6 modal-form-right-sec">
@@ -65,7 +67,8 @@
 
                 <div class="form-group modal-input-field">
                     <label class="form-check-label">End Date (block booking)</label>
-                    <input type="date" class="form-control" name="block_booking_dte" value="{{ $eventCalDetails->date_dte }}">
+                    <input type="date" class="form-control" name="block_booking_dte"
+                        value="{{ $eventCalDetails->date_dte }}">
                 </div>
 
                 <div class="modal-side-field mb-2">

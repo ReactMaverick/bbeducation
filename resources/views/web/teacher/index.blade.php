@@ -68,10 +68,8 @@
                         </div>
                         <div class="col-md-5 mr-2 px-5 topbar-sec mob_p_0">
                             <div class="sec_box_edit">
-                                <div class="teacher-page-table-section table-responsive">
-                                    <table
-                                        class="table table-bordered table-striped table-hover dataTable dtr-inline collapsed"
-                                        id="myTable">
+                                <div class="teacher-page-table-section">
+                                    <table class="table table-bordered table-striped" id="myTable">
                                         <thead>
                                             <tr class="table-heading">
                                                 <th><i class="fas fa-star"><span>Favourites</span></i></th>
@@ -126,7 +124,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <div class="calendar-heading-sec">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
                         <i class="fas fa-edit school-edit-icon"></i>
                         <h2>Add New Teacher</h2>
                     </div>
@@ -315,6 +313,9 @@
         $(document).ready(function() {
             $('#myTable').DataTable({
                 pageLength: 25,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
 

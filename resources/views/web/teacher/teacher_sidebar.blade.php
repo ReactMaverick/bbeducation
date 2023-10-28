@@ -1,140 +1,289 @@
-<div class="col-md-2 sidebar-col">
-    <div class="assignment-detail-sidebar-sec">
-        <div class="sidebar-top-text">
-            <h2>
-                @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
-                    {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
-                @else
-                    {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
-                @endif
-            </h2>
-            <div class="teacher-detail-user-img-sec">
+@php
+    $webUserLoginData = Session::get('webUserLoginData');
+@endphp
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="{{ URL::to('/school/finance?include=&method=') }}" class="brand-link">
+        <img src="{{ asset($webUserLoginData->company_logo) }}" alt="" class="brand-image img-circle elevation-3"
+            style="opacity: .8">
+        <span class="brand-text font-weight-light">
+            @if ($webUserLoginData && isset($webUserLoginData->company_name))
+                {{ $webUserLoginData->company_name }}
+            @endif
+        </span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="skd_id_box">
+
+            <div class="assignment-detail-user-img-sec">
                 <div class="user-img-sec">
                     @if ($teacherDetail->file_location != null || $teacherDetail->file_location != '')
-                        <img src="{{ asset($teacherDetail->file_location) }}" alt="">
+                        <img class="img-fluid" src="{{ asset($teacherDetail->file_location) }}" alt="">
                     @else
-                        <img src="{{ asset('web/images/user-img.png') }}" alt="">
+                        <img class="img-fluid" src="{{ asset('web/images/user-img.png') }}" alt="">
                     @endif
                 </div>
             </div>
-            <div class="sidebar-top-text">
-                <span>ID: {{ $teacherDetail->teacher_id }}</span>
-                <?php
-                $tDy = date('Y-m-d');
-                $dob = $teacherDetail->DOB_dte;
-                $dobDiff = abs(strtotime($tDy) - strtotime($dob));
-                $dobYears = floor($dobDiff / (365 * 60 * 60 * 24));
-                ?>
-                <p>Age:
-                    @if ($teacherDetail->DOB_dte == null || $teacherDetail->DOB_dte == '')
-                        {{ 'Missing DOB' }}
-                    @else
-                        {{ $dobYears }}
-                    @endif
-                </p>
+            <div class="skd_id_item">
+                <div class="teacher-name">
+                    <span>
+                        @if ($teacherDetail->knownAs_txt == null && $teacherDetail->knownAs_txt == '')
+                            {{ $teacherDetail->firstName_txt . ' ' . $teacherDetail->surname_txt }}
+                        @else
+                            {{ $teacherDetail->firstName_txt . ' (' . $teacherDetail->knownAs_txt . ') ' . $teacherDetail->surname_txt }}
+                        @endif
+                    </span>
+                </div>
+                <div class="sidebar-user-number">
+                    <?php
+                    $tDy = date('Y-m-d');
+                    $dob = $teacherDetail->DOB_dte;
+                    $dobDiff = abs(strtotime($tDy) - strtotime($dob));
+                    $dobYears = floor($dobDiff / (365 * 60 * 60 * 24));
+                    ?>
+                    <span>
+                        ID: {{ $teacherDetail->teacher_id }}
+                        <p>Age:
+                            @if ($teacherDetail->DOB_dte == null || $teacherDetail->DOB_dte == '')
+                                {{ 'Missing DOB' }}
+                            @else
+                                {{ $dobYears }}
+                            @endif
+                        </p>
+                    </span>
+                </div>
             </div>
         </div>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Detail') sidebar-active @endif">
-            <a href="{{ URL::to('/candidate-detail/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-address-book"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Details</span>
-                </div>
-            </a>
-        </div>
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
 
-        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Profession') sidebar-active @endif">
-            <a href="{{ URL::to('/profession-qualification/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Profession / Qualifications</span>
-                </div>
-            </a>
-        </div>
+                <li class="nav-item">
+                    <a href="{{ URL::to('/candidate-detail/' . $teacherDetail->teacher_id) }}"
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Detail') active @endif">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 511 512" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            class="">
+                            <g>
+                                <path
+                                    d="M310.504 222c-48.524 0-88 39.477-88 88s39.476 88 88 88c48.523 0 88-39.477 88-88s-39.477-88-88-88zm0 156c-37.496 0-68-30.504-68-68s30.504-68 68-68 68 30.504 68 68-30.504 68-68 68zm0 0"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                                <path
+                                    d="m502.566 454.113-79.363-79.367c11-19.074 17.3-41.187 17.3-64.746 0-34.77-13.722-66.39-36.03-89.742v-112.27h-.024c0-2.601-.992-5.156-2.902-7.07L303.559 2.93c-1.914-1.914-4.473-2.903-7.075-2.903 0-.011 0-.015.004-.027H30.5C13.957 0 .5 13.457.5 30v452c0 16.543 13.457 30 30 30h343.977c16.539 0 30-13.457 30-30v-30.07l50.136 50.14c6.61 6.61 15.293 9.914 23.98 9.914 8.684 0 17.368-3.304 23.977-9.914 13.22-13.222 13.22-34.734-.004-47.957zM310.504 420c-60.652 0-110-49.348-110-110s49.348-110 110-110 110 49.348 110 110-49.348 110-110 110zm-4.016-385.855 63.844 63.847h-53.844c-5.515 0-10-4.488-10-10zM384.477 482c0 5.516-4.489 10-10 10H30.5c-5.516 0-10-4.484-10-10V30c0-5.516 4.484-10 10-10h255.988v67.988c0 16.543 13.457 30 30 30h67.985v85.172c-21.008-14.594-46.504-23.16-73.97-23.16-71.683 0-130 58.316-130 130 0 13.996 2.235 27.484 6.349 40.129h-122.2c-5.52 0-10 4.476-10 10 0 5.52 4.48 10 10 10h127.696c.941 0 1.855-.14 2.718-.387C216.738 411.445 260.348 440 310.504 440c23.555 0 45.668-6.3 64.742-17.3l9.23 9.23zm103.949 5.926c-5.422 5.426-14.246 5.426-19.668 0l-76.738-76.739a131.133 131.133 0 0 0 19.667-19.667l76.739 76.734c5.426 5.426 5.426 14.25 0 19.672zm0 0"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                                <path
+                                    d="M310.504 265.004c-5.524 0-10 4.476-10 10 0 5.523 4.476 10 10 10 13.781 0 24.996 11.215 24.996 24.996 0 5.523 4.477 10 10 10s10-4.477 10-10c0-24.813-20.184-44.996-44.996-44.996zM154.648 280.793H64.652c-5.52 0-10 4.477-10 10s4.48 10 10 10h89.996c5.524 0 10-4.477 10-10s-4.476-10-10-10zM160.574 211.46H64.652c-5.52 0-10 4.477-10 10 0 5.52 4.48 10 10 10h95.922c5.524 0 10-4.48 10-10 0-5.523-4.476-10-10-10zM190.5 419.46c-2.633 0-5.21 1.067-7.07 2.93a10.073 10.073 0 0 0-2.93 7.07c0 2.63 1.07 5.212 2.93 7.067a10.06 10.06 0 0 0 7.07 2.934c2.629 0 5.21-1.07 7.078-2.934a10.056 10.056 0 0 0 2.922-7.066c0-2.633-1.063-5.211-2.922-7.07a10.095 10.095 0 0 0-7.078-2.93zM149.43 419.46H64.652c-5.52 0-10 4.478-10 10 0 5.52 4.48 10 10 10h84.778c5.52 0 10-4.48 10-10 0-5.522-4.477-10-10-10zM64.648 162.129c2.641 0 5.211-1.07 7.07-2.93a10.043 10.043 0 0 0 2.93-7.07c0-2.629-1.058-5.207-2.93-7.078a10.072 10.072 0 0 0-7.07-2.922c-2.628 0-5.199 1.062-7.07 2.922a10.077 10.077 0 0 0-2.93 7.078c0 2.633 1.07 5.21 2.93 7.07a10.087 10.087 0 0 0 7.07 2.93zM256.5 142.129H107.04c-5.52 0-10 4.476-10 10 0 5.52 4.48 10 10 10H256.5c5.523 0 10-4.48 10-10 0-5.524-4.477-10-10-10zM64.652 92.793H256.5c5.523 0 10-4.477 10-10s-4.477-10-10-10H64.652c-5.52 0-10 4.477-10 10s4.48 10 10 10zm0 0"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                            </g>
+                        </svg>
+                        <p>
+                            Details
+                        </p>
+                    </a>
+                </li>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Health') sidebar-active @endif">
-            <a href="{{ URL::to('/preference-health/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-desktop"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Preferences / Health</span>
-                </div>
-            </a>
-        </div>
+                <li class="nav-item">
+                    <a href="{{ URL::to('/profession-qualification/' . $teacherDetail->teacher_id) }}"
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Profession') active @endif">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 480 480" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            class="">
+                            <g>
+                                <path
+                                    d="M440 0H104C81.918.027 64.027 17.918 64 40v312H8a8 8 0 0 0-8 8v16c.027 22.082 17.918 39.973 40 40h248.191v40a7.999 7.999 0 0 0 12.801 6.398l27.2-20.398 27.199 20.398a7.946 7.946 0 0 0 4.8 1.602 8.074 8.074 0 0 0 3.586-.8 7.995 7.995 0 0 0 4.414-7.2v-40H376c22.082-.027 39.973-17.918 40-40V64h56a8 8 0 0 0 8-8V40c-.027-22.082-17.918-39.973-40-40zM288.191 400H40c-13.254 0-24-10.746-24-24v-8h272.191zm64 40-19.199-14.398a7.992 7.992 0 0 0-9.601 0L304.19 440v-89.352c1.547.122 3.102.094 4.641-.09a24.375 24.375 0 0 0 38.527 0c1.594.192 3.204.223 4.801.09zm10.29-128.16a7.995 7.995 0 0 0-4.711 4.476 7.987 7.987 0 0 0 .168 6.5 8.321 8.321 0 0 1-1.606 9.446 8.318 8.318 0 0 1-9.437 1.66 8.002 8.002 0 0 0-6.5-.176 8.01 8.01 0 0 0-4.485 4.719 8.288 8.288 0 0 1-7.812 5.531 8.29 8.29 0 0 1-7.817-5.531 8.004 8.004 0 0 0-4.48-4.719 8.011 8.011 0 0 0-6.504.176 8.311 8.311 0 0 1-11.04-11.106 7.993 7.993 0 0 0 .169-6.496 7.995 7.995 0 0 0-4.707-4.48c-3.317-1.18-5.535-4.32-5.535-7.84s2.218-6.66 5.535-7.84a7.993 7.993 0 0 0 4.703-4.476 8 8 0 0 0-.164-6.493 8.307 8.307 0 0 1 1.597-9.453 8.316 8.316 0 0 1 9.442-1.66 8.011 8.011 0 0 0 6.504.176 8.004 8.004 0 0 0 4.48-4.719 8.29 8.29 0 0 1 7.817-5.531 8.288 8.288 0 0 1 7.812 5.531 8.01 8.01 0 0 0 4.485 4.719c2.093.863 4.457.8 6.5-.176a8.318 8.318 0 0 1 9.437 1.66 8.321 8.321 0 0 1 1.606 9.446 7.987 7.987 0 0 0-.168 6.5 7.995 7.995 0 0 0 4.71 4.476c3.31 1.188 5.52 4.324 5.52 7.84s-2.21 6.652-5.52 7.84zM407.382 17c-.453.64-.856 1.32-1.27 1.992a40.045 40.045 0 0 0-2.304 4.238c-.36.801-.696 1.54-1.008 2.32a40.595 40.595 0 0 0-1.488 4.802c-.184.746-.418 1.464-.56 2.222A39.869 39.869 0 0 0 400 40v336c0 13.254-10.746 24-24 24a23.81 23.81 0 0 1-7.809-1.473V342.88a23.994 23.994 0 0 0 6.403-19.598 24.438 24.438 0 0 0 0-38.562 24.411 24.411 0 0 0-6.93-20.293 24.392 24.392 0 0 0-20.273-6.985 24.375 24.375 0 0 0-38.527 0 24.404 24.404 0 0 0-20.27 6.989 24.424 24.424 0 0 0-6.93 20.289c-5.945 4.629-9.426 11.746-9.426 19.281s3.48 14.652 9.426 19.281a24.053 24.053 0 0 0 6.574 19.832V352H80V40c0-13.254 10.746-24 24-24h304c-.223.313-.39.672-.617 1zM464 48h-48v-8c0-13.254 10.746-24 24-24s24 10.746 24 24zm0 0"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                                <path
+                                    d="M264 64h32v16h-32zM184 64h64v16h-64zM160 104h160v16H160zM120 152h40v16h-40zM120 192h88v16h-88zM176 152h184v16H176zM224 192h136v16H224zM120 232h160v16H120zM120 272h136v16H120zm0 0"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                            </g>
+                        </svg>
+                        <p>
+                            Profession / Qualifications
+                        </p>
+                    </a>
+                </li>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Reference') sidebar-active @endif">
-            <a href="{{ URL::to('/candidate-references/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-file-lines"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>References</span>
-                </div>
-            </a>
-        </div>
-        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Documents') sidebar-active @endif">
-            <a href="{{ URL::to('/candidate-documents/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-file-lines"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Documents</span>
-                </div>
-            </a>
-        </div>
+                <li class="nav-item">
+                    <a href="{{ URL::to('/preference-health/' . $teacherDetail->teacher_id) }}"
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Health') active @endif">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 96 96" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            class="">
+                            <g>
+                                <path
+                                    d="m76.64 75.144-.655.11c-.844-3.723.974-6.077 2.223-9.853 1.535-4.102 1.541-9.731.025-18.82l-1.035-6.14a3.477 3.477 0 0 0-4.011-2.87 5.941 5.941 0 0 0-2.71.814 3.523 3.523 0 0 0-3.87-2.244 6.088 6.088 0 0 0-2.685.82 3.512 3.512 0 0 0-3.86-2.243 6.044 6.044 0 0 0-2.647.778l-.768-4.576c2.583.276 4.89-1.275 4.933-4V8a4.004 4.004 0 0 0-4-4H38.66a4.004 4.004 0 0 0-4 4v18.92a4.004 4.004 0 0 0 4 4h9.432l1.606 15.524c.227 1.286-.164 7.968-.17 9.398a.238.238 0 0 1-.376.187l-6.842-4.286a6.032 6.032 0 0 0-5.936-.24l-1.067.552a2.265 2.265 0 0 0-.647 3.475l16.275 18.556a9.913 9.913 0 0 1 2.345 4.977l-.658.11a2.01 2.01 0 0 0-1.644 2.303l1.624 9.673a1.002 1.002 0 0 0 1.15.821l25.992-4.36a1.006 1.006 0 0 0 .821-1.151l-1.623-9.675a2.002 2.002 0 0 0-2.302-1.64zM38.66 28.92a2.002 2.002 0 0 1-2-2V8a2.003 2.003 0 0 1 2-2h18.92a2.003 2.003 0 0 1 2 2v18.92a2.003 2.003 0 0 1-2 2h-1.268c-.306-1.545-.315-3.947-1.851-4.866-1.082-.861-2.572-.667-3.834-.389a3.507 3.507 0 0 0-2.876 3.955l.134 1.3zm13.78 43.848L36.163 54.21a.244.244 0 0 1 .07-.383l1.06-.548a4.018 4.018 0 0 1 3.956.159l6.844 4.288a2.254 2.254 0 0 0 3.435-1.826c.007-1.678.414-8.126.158-9.681l-1.687-16.294c.003-.009-.002-.017-.003-.026l-.264-2.545a1.494 1.494 0 0 1 1.227-1.718l1.228-.21a1.493 1.493 0 0 1 1.716 1.221l2.044 12.188 1.26 7.478a1 1 0 1 0 1.972-.332l-1.253-7.444a1.513 1.513 0 0 1 1.237-1.646l1.232-.202a1.504 1.504 0 0 1 1.72 1.224l.406 2.42.007.042v.001l1.021 6.135a1 1 0 0 0 1.973-.328l-1.023-6.144a1.484 1.484 0 0 1 1.229-1.717l1.213-.21a1.512 1.512 0 0 1 1.729 1.222l.411 2.454.823 4.923a1 1 0 1 0 1.973-.33l-.823-4.923v-.002a1.501 1.501 0 0 1 1.217-1.712l1.247-.201a1.483 1.483 0 0 1 1.707 1.225l1.035 6.142c1.455 8.72 1.477 14.04.074 17.79v.002c-1.415 4.056-3.255 6.802-2.322 10.88l-18.76 3.145a11.916 11.916 0 0 0-2.812-5.96zm1.968 17.065-1.457-8.686 21.323-3.58 1.056-.176h.001l1.639-.275 1.458 8.688zM26.446 21.446H13a3.003 3.003 0 0 0-3 3v13.447a3.003 3.003 0 0 0 3 3h13.446a3.003 3.003 0 0 0 3-3V24.446a3.003 3.003 0 0 0-3-3zm1 16.447a1 1 0 0 1-1 1H13a1 1 0 0 1-1-1V24.446a1 1 0 0 1 1-1h13.446a1 1 0 0 1 1 1z"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                                <path
+                                    d="M84 11.477H70.554a3.003 3.003 0 0 0-3 3v13.446a3.003 3.003 0 0 0 3 3H84a3.003 3.003 0 0 0 3-3V14.477a3.003 3.003 0 0 0-3-3zm1 16.446a1 1 0 0 1-1 1H70.554a1 1 0 0 1-1-1V14.477a1 1 0 0 1 1-1H84a1 1 0 0 1 1 1zM55.515 11.316a1 1 0 0 0-1.414 0l-7.224 7.224-3.7-3.7a1 1 0 0 0-1.413 1.415l4.406 4.406a1 1 0 0 0 1.414 0l7.93-7.93a1 1 0 0 0 0-1.415zM19.723 27.677a3.492 3.492 0 0 0 0 6.984 3.492 3.492 0 0 0 0-6.984zm0 4.984a1.492 1.492 0 0 1 0-2.984 1.492 1.492 0 0 1 0 2.984z"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                                <path
+                                    d="M77.277 17.708a3.492 3.492 0 0 0 0 6.984 3.492 3.492 0 0 0 0-6.984zm0 4.984a1.492 1.492 0 0 1 0-2.984 1.492 1.492 0 0 1 0 2.984z"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                            </g>
+                        </svg>
+                        <p>
+                            Preferences / Health
+                        </p>
+                    </a>
+                </li>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Contact Log') sidebar-active @endif">
-            <a href="{{ URL::to('/candidate-contact-log/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-comment"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Contact Logs</span>
-                </div>
-            </a>
-        </div>
+                <li class="nav-item">
+                    <a href="{{ URL::to('/candidate-references/' . $teacherDetail->teacher_id) }}"
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Reference') active @endif">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 64 64" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            class="">
+                            <g>
+                                <path
+                                    d="M57 13h2v2h-2zM53 13h2v2h-2zM49 13h2v2h-2zM37 13h10v2H37zM37 9h22v2H37zM37 5h22v2H37z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M61 1H35c-1.103 0-2 .897-2 2v6.686A19.86 19.86 0 0 0 23 7C11.972 7 3 15.972 3 27c0 5.988 2.658 11.355 6.841 15.023L1.416 56.998A3.258 3.258 0 0 0 1 58.588v.211c0 1.087.54 2.097 1.444 2.699l1.436.957a3.248 3.248 0 0 0 4.636-1.124l8.475-15.257c1.898.6 3.916.926 6.009.926 11.028 0 20-8.972 20-20 0-2.757-.581-5.49-1.675-8h3.207l4.292 5.15c.45.54 1.111.85 1.814.85A2.365 2.365 0 0 0 53 22.638V19h8c1.103 0 2-.897 2-2V3c0-1.103-.897-2-2-2zM19 21c0-2.206 1.794-4 4-4s4 1.794 4 4-1.794 4-4 4-4-1.794-4-4zm12 17.473C28.73 40.061 25.974 41 23 41s-5.73-.939-8-2.527V35c0-4.411 3.589-8 8-8s8 3.589 8 8zm-4.304-12.756A5.989 5.989 0 0 0 29 21c0-3.309-2.691-6-6-6s-6 2.691-6 6c0 1.914.904 3.617 2.304 4.717C15.616 27.19 13 30.792 13 35v1.779C10.53 34.254 9 30.804 9 27c0-7.72 6.28-14 14-14 3.77 0 7.399 1.55 10.025 4.247a1.99 1.99 0 0 0 1.384 1.653A13.878 13.878 0 0 1 37 27c0 3.804-1.53 7.254-4 9.779V35c0-4.208-2.616-7.81-6.304-9.283zM6.768 60.359c-.34.611-1.197.818-1.778.432l-1.436-.957A1.24 1.24 0 0 1 3 58.799v-.211c0-.213.056-.425.159-.61l5.601-9.955 3.646 2.187zm6.61-11.899-3.637-2.182 1.686-2.997a19.97 19.97 0 0 0 3.67 2.084zM41 27c0 9.925-8.075 18-18 18S5 36.925 5 27 13.075 9 23 9a17.87 17.87 0 0 1 10 3.046v2.492C30.178 12.279 26.649 11 23 11c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16c0-2.849-.747-5.577-2.154-8h2.273A18.038 18.038 0 0 1 41 27zm20-10H51v5.638c0 .307-.444.468-.64.231L45.469 17H35V3h26z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M43.955 37h5.02c-.037.75-.117 1.498-.238 2.234-1.128 6.849-5.886 12.183-14.143 15.852l-5.215 2.318 5.692-.407c13.288-.949 21.27-8.178 21.896-19.83.004-.056.007-.111.009-.167h5.068L53 25.371zM55 35v1c0 .354-.009.706-.029 1.058-.481 8.95-5.549 14.874-14.433 17.083 5.723-3.753 9.206-8.719 10.171-14.581A21.94 21.94 0 0 0 51 36v-1h-2.955L53 28.629 57.955 35z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                            </g>
+                        </svg>
+                        <p>
+                            References
+                        </p>
+                    </a>
+                </li>
 
-        {{-- <div class="sidebar-pages-section ">
-            <a href="#" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-person-chalkboard"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Work</span>
-                </div>
-            </a>
-        </div> --}}
+                <li class="nav-item">
+                    <a href="{{ URL::to('/candidate-documents/' . $teacherDetail->teacher_id) }}"
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Documents') active @endif">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 480 480" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            class="">
+                            <g>
+                                <path
+                                    d="M160 344h-16a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16zM384 344H192a8 8 0 0 0 0 16h192a8 8 0 0 0 0-16zM160 296h-16a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16zM384 296H192a8 8 0 0 0 0 16h192a8 8 0 0 0 0-16zM160 248h-16a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16zM384 248H192a8 8 0 0 0 0 16h192a8 8 0 0 0 0-16zM160 200h-16a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16zM384 200H192a8 8 0 0 0 0 16h192a8 8 0 0 0 0-16zM160 152h-16a8 8 0 0 0 0 16h16a8 8 0 0 0 0-16zM384 152H192a8 8 0 0 0 0 16h192a8 8 0 0 0 0-16z"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                                <path
+                                    d="M439.896 119.496a7.557 7.557 0 0 0-.408-2.056c-.088-.256-.152-.504-.264-.752a7.998 7.998 0 0 0-1.6-2.344l-112-112a7.998 7.998 0 0 0-2.344-1.6c-.248-.112-.496-.176-.744-.264a7.967 7.967 0 0 0-2.072-.416C320.328.088 320.176 0 320 0H96a8 8 0 0 0-8 8v24H48a8 8 0 0 0-8 8v432a8 8 0 0 0 8 8h336a8 8 0 0 0 8-8v-40h40a8 8 0 0 0 8-8V120c0-.176-.088-.328-.104-.504zM328 27.312 412.688 112H328V27.312zM376 464H56V48h32v376a8 8 0 0 0 8 8h280v32zm48-48H104V16h208v104a8 8 0 0 0 8 8h104v288z"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                                <path
+                                    d="M192 72h-48a8 8 0 0 0-8 8v48a8 8 0 0 0 8 8h48a8 8 0 0 0 8-8V80a8 8 0 0 0-8-8zm-8 48h-32V88h32v32z"
+                                    fill="#000000" opacity="1" data-original="#000000"></path>
+                            </g>
+                        </svg>
+                        <p>
+                            Documents
+                        </p>
+                    </a>
+                </li>
 
-        <div class="sidebar-pages-section @if ($title['pageTitle'] == 'Teacher Payroll') sidebar-active @endif">
-            <a href="{{ URL::to('/candidate-payroll/' . $teacherDetail->teacher_id) }}" class="sidebar-pages">
-                <div class="page-icon-sec">
-                    <i class="fa-solid fa-money-bills"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Payroll</span>
-                </div>
-            </a>
-        </div>
+                <li class="nav-item">
+                    <a href="{{ URL::to('/candidate-contact-log/' . $teacherDetail->teacher_id) }}"
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Contact Log') active @endif">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 98 96" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            fill-rule="evenodd" class="">
+                            <g>
+                                <path
+                                    d="M65.156 78.187h22.099a4.5 4.5 0 0 0 4.5-4.5V37.593a1.5 1.5 0 0 0-3 0v36.094a1.5 1.5 0 0 1-1.5 1.5H65.156a1.5 1.5 0 0 0 0 3zm26.599-46.573v-9.442a1.5 1.5 0 0 0-3 0v9.442a1.501 1.501 0 0 0 3 0zm0-15.458V5a4.5 4.5 0 0 0-4.5-4.5H23.059a4.5 4.5 0 0 0-4.5 4.5v26.44a1.5 1.5 0 0 0 3 0V5a1.5 1.5 0 0 1 1.5-1.5h64.196a1.5 1.5 0 0 1 1.5 1.5v11.156a1.501 1.501 0 0 0 3 0z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M49.618 17.993c-4.579 0-8.298 3.718-8.298 8.298s3.719 8.298 8.298 8.298c4.58 0 8.299-3.718 8.299-8.298s-3.719-8.298-8.299-8.298zm0 3c2.925 0 5.299 2.374 5.299 5.298s-2.374 5.298-5.299 5.298c-2.924 0-5.298-2.374-5.298-5.298s2.374-5.298 5.298-5.298zM41.205 47.917a10.163 10.163 0 0 1 8.413-4.458c3.497 0 6.583 1.768 8.414 4.458a1.5 1.5 0 0 0 2.48-1.688 13.158 13.158 0 0 0-10.894-5.77 13.157 13.157 0 0 0-10.893 5.77 1.501 1.501 0 0 0 2.48 1.688zM69.978 2v68.687a1.5 1.5 0 0 0 3 0V2a1.5 1.5 0 0 0-3 0zM25.289 48.609a4.491 4.491 0 0 0-.304-6.011 3907.02 3907.02 0 0 0-7.352-7.365 4.5 4.5 0 0 0-6.364 0l-5.312 5.312a17.084 17.084 0 0 0 0 24.161l25.79 25.79c6.672 6.672 17.489 6.672 24.161 0l5.312-5.312a4.5 4.5 0 0 0 0-6.364l-7.393-7.393a4.499 4.499 0 0 0-5.88-.418 1.938 1.938 0 0 0-.099.081c-.593.529-1.182 1.043-1.466 1.192a7.618 7.618 0 0 1-8.927-1.36L25.53 58.998a7.617 7.617 0 0 1-1.113-9.357c.115-.188.476-.589.872-1.032zm-2.277-1.954c-.538.603-.998 1.165-1.155 1.422a10.616 10.616 0 0 0 1.552 13.042l11.924 11.925c3.369 3.368 8.438 3.999 12.445 1.894.384-.202 1.206-.845 2.01-1.559a1.5 1.5 0 0 1 1.918.17l7.393 7.392a1.5 1.5 0 0 1 0 2.121l-5.313 5.313c-5.5 5.5-14.418 5.5-19.918 0l-25.79-25.79a14.087 14.087 0 0 1 0-19.919l5.312-5.312a1.503 1.503 0 0 1 2.122 0 3626.216 3626.216 0 0 1 7.352 7.366 1.49 1.49 0 0 1 .152 1.929zM84.964 17.656h10.583a1.5 1.5 0 0 0 0-3H84.964a1.5 1.5 0 0 0 0 3zM84.964 33.114h10.583a1.5 1.5 0 0 0 0-3H84.964a1.501 1.501 0 0 0 0 3zM84.964 48.573h10.583a1.5 1.5 0 0 0 0-3H84.964a1.5 1.5 0 0 0 0 3zM84.964 64.031h10.583a1.5 1.5 0 0 0 0-3H84.964a1.5 1.5 0 0 0 0 3z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                            </g>
+                        </svg>
+                        <p>
+                            Contact Logs
+                        </p>
+                    </a>
+                </li>
 
-        <div class="sidebar-pages-section">
-            <a style="cursor: pointer;" class="sidebar-pages"
-                onclick="teacherPasswordSendLink('{{ $teacherDetail->teacher_id }}')">
-                <div class="page-icon-sec">
-                    <i class="fa-sharp fa-solid fa-paper-plane"></i>
-                </div>
-                <div class="page-name-sec">
-                    <span>Send Reset Password Link</span>
-                </div>
-            </a>
-        </div>
+                <li class="nav-item">
+                    <a href="{{ URL::to('/candidate-payroll/' . $teacherDetail->teacher_id) }}"
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'Teacher Payroll') active @endif">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 66 66" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            class="">
+                            <g>
+                                <path
+                                    d="M23 33.6c-6.9 0-12.5-5.6-12.5-12.5v-2.9c0-.6.4-1 1-1s1 .4 1 1v2.9c0 5.8 4.7 10.5 10.5 10.5s10.5-4.7 10.5-10.5v-2.8c0-.6.4-1 1-1s1 .4 1 1v2.8c0 6.9-5.6 12.5-12.5 12.5z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M42.6 42.3c-.3 0-.7-.2-.8-.5-.8-1.3-2.2-2.3-3.7-2.6l-7.8-1.8c-.5-.1-.8-.5-.8-1v-6c0-.6.4-1 1-1s1 .4 1 1v5.2l7 1.6c2.1.5 3.8 1.7 4.9 3.5.3.5.2 1.1-.3 1.4-.1.1-.3.2-.5.2zM38.6 65H7.2c-3.3 0-6-2.7-6-6V45c0-3.7 2.6-7 6.2-7.7l7.7-1.7v-5.3c0-.6.4-1 1-1s1 .4 1 1v6.1c0 .5-.3.9-.8 1l-8.5 1.8c-2.7.6-4.7 3-4.7 5.8v14c0 2.2 1.8 4 4 4h31.4c1.4 0 2.8-.8 3.5-2 .3-.5.9-.6 1.4-.4.5.3.6.9.4 1.4-1 1.8-3 3-5.2 3zM11.5 19.3c-.1 0-.2 0-.3-.1-.3-.1-.6-.4-.7-.7s-1.6-7.3 1.7-12.4c1.7-2.6 4.3-4.2 7.9-4.9.2-.1 6.2-1.4 10.2 3 .9 0 2.6.2 4 1.7 2.1 2.3 2.5 6.5 1.1 12.5-.1.5-.5.9-1 .9-.3 0-.5-.1-.7-.4l-5.1-6c-4.5 3.5-9.9 2.6-11.6 2.1l-4.8 4c-.2.2-.4.3-.7.3zM22.6 3c-1.1 0-1.9.2-2 .2-3 .5-5.2 1.9-6.6 4-2 3-1.9 7-1.7 9.2l3.9-3.2c.3-.2.6-.3.9-.2.1 0 6.4 2 11-2.2.2-.2.5-.3.7-.3.3 0 .5.1.7.4l4.4 5.2c.9-5.3 0-7.7-1-8.8-1.2-1.3-2.8-1-2.9-1-.3.1-.7-.1-.9-.3-1.9-2.5-4.7-3-6.5-3z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M16.4 45.6c-.3 0-.6-.2-.8-.4L10.7 38c-.3-.5-.2-1.1.3-1.4s1.1-.2 1.4.3l4.3 6.4 4.3-2.8-5.4-3.2c-.5-.3-.6-.9-.4-1.4.3-.5.9-.6 1.4-.4l6.8 4c.3.2.5.5.5.8s-.2.7-.5.9l-6.5 4.2c-.1.2-.3.2-.5.2z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M29.8 45.6c-.2 0-.4 0-.5-.1l-6.8-4.2c-.3-.2-.5-.5-.5-.9s.2-.7.5-.9l7.1-4c.5-.3 1.1-.1 1.4.4s.1 1.1-.4 1.4L25 40.5l4.6 2.8 4.3-6.4c.3-.5.9-.6 1.4-.3s.6.9.3 1.4l-4.9 7.2c-.3.3-.6.4-.9.4z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M28.2 65H17.4c-.3 0-.6-.1-.8-.4-.2-.2-.3-.6-.2-.9l3.5-13.9c.2-.8.1-1.6-.3-2.2L17.4 44c-.3-.5-.1-1.1.3-1.4.5-.3 1.1-.1 1.4.3l2.2 3.6c.7 1.1.9 2.5.6 3.8L18.7 63h8.2l-3.2-12.7c-.3-1.3-.1-2.6.6-3.8l2.4-3.9c.3-.5.9-.6 1.4-.3s.6.9.3 1.4L26 47.6c-.4.7-.5 1.5-.3 2.2l3.5 13.9c.1.3 0 .6-.2.9s-.5.4-.8.4zM51.1 65c-7.6 0-13.8-6.2-13.8-13.8s6.2-13.8 13.8-13.8 13.8 6.2 13.8 13.8S58.7 65 51.1 65zm0-25.5c-6.5 0-11.8 5.3-11.8 11.8S44.6 63 51.1 63s11.8-5.3 11.8-11.8-5.4-11.7-11.8-11.7z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M51.1 59.1c-2.4 0-4.4-2-4.4-4.4 0-.6.4-1 1-1s1 .4 1 1c0 1.3 1.1 2.4 2.4 2.4s2.4-1.1 2.4-2.4-1.1-2.4-2.4-2.4c-2.4 0-4.4-2-4.4-4.4s2-4.4 4.4-4.4 4.4 2 4.4 4.4c0 .6-.4 1-1 1s-1-.4-1-1c0-1.3-1.1-2.4-2.4-2.4s-2.4 1.1-2.4 2.4 1.1 2.4 2.4 2.4c2.4 0 4.4 2 4.4 4.4s-2 4.4-4.4 4.4z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M51.1 45.4c-.6 0-1-.4-1-1v-1.7c0-.6.4-1 1-1s1 .4 1 1v1.7c0 .5-.5 1-1 1zM51.1 60.8c-.6 0-1-.4-1-1v-1.7c0-.6.4-1 1-1s1 .4 1 1v1.7c0 .5-.5 1-1 1zM56.4 28.9H41.3c-1.6 0-2.9-1.3-2.9-2.9V3.9c0-1.6 1.3-2.9 2.9-2.9h15.1c1.6 0 2.9 1.3 2.9 2.9V26c0 1.6-1.3 2.9-2.9 2.9zM41.3 3c-.5 0-.9.4-.9.9V26c0 .5.4.9.9.9h15.1c.5 0 .9-.4.9-.9V3.9c0-.5-.4-.9-.9-.9z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M58.9 34.5h-.4l-14.9-2.1c-1.6-.2-2.7-1.7-2.5-3.3l.2-1.4c.1-.5.6-.9 1.1-.9.5.1.9.6.9 1.1l-.2 1.4c-.1.5.3 1 .8 1l14.9 2.1c.2 0 .5 0 .7-.2.2-.1.3-.4.4-.6l3-21.9c.1-.5-.3-1-.8-1l-3.8-.5c-.5-.1-.9-.6-.9-1.1.1-.5.6-.9 1.1-.9l3.8.5c1.6.2 2.7 1.7 2.5 3.3l-3 21.9c-.1.8-.5 1.5-1.1 1.9-.6.5-1.2.7-1.8.7z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M48.9 17.2c-1.9 0-3.4-1.5-3.4-3.4 0-.6.4-1 1-1s1 .4 1 1c0 .7.6 1.4 1.4 1.4.7 0 1.4-.6 1.4-1.4 0-.7-.6-1.4-1.4-1.4-1.9 0-3.4-1.5-3.4-3.4s1.5-3.4 3.4-3.4 3.4 1.5 3.4 3.4c0 .6-.4 1-1 1s-1-.4-1-1c0-.7-.6-1.4-1.4-1.4-.7 0-1.4.6-1.4 1.4 0 .7.6 1.4 1.4 1.4 1.9 0 3.4 1.5 3.4 3.4s-1.6 3.4-3.4 3.4z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M48.9 7.8c-.6 0-1-.4-1-1V5.6c0-.6.4-1 1-1s1 .4 1 1v1.1c0 .6-.5 1.1-1 1.1zM48.9 18.4c-.6 0-1-.4-1-1v-1.1c0-.6.4-1 1-1s1 .4 1 1v1.1c0 .5-.5 1-1 1zM49.1 21.9h-5.5c-.6 0-1-.4-1-1s.4-1 1-1h5.5c.6 0 1 .4 1 1s-.4 1-1 1zM54.1 25.3H43.7c-.6 0-1-.4-1-1s.4-1 1-1h10.4c.6 0 1 .4 1 1s-.4 1-1 1z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                            </g>
+                        </svg>
+                        <p>
+                            Payroll
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" onclick="teacherPasswordSendLink('{{ $teacherDetail->teacher_id }}')"
+                        style="cursor: pointer;">
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
+                            viewBox="0 0 66 66" style="enable-background:new 0 0 512 512" xml:space="preserve"
+                            class="">
+                            <g>
+                                <path
+                                    d="M61.3 35H45.2v-6.8l7.7 3.5c.6.3 1.3-.1 1.4-.7C59.4 4.5 61 .1 58.5 1.2L22.2 16.7c-.8.3-.8 1.5 0 1.8l6.2 3H4.7c-2.1 0-3.7 1.7-3.7 3.7V47c0 2.1 1.7 3.7 3.7 3.7h5.8v5.6c0 .9 1 1.3 1.6.8l7.7-6.4h10v4.9c0 2.1 1.7 3.7 3.7 3.7h12.7l7.7 5.4a1 1 0 0 0 1.6-.8v-4.6h5.8c2.1 0 3.7-1.7 3.7-3.7V38.8c0-2.1-1.7-3.8-3.7-3.8zm-8.8-5.6-7.9-3.6-2.8-1.3L57.1 5.9zm-13-5.2c-.1.1-.2.2-.2.4l-1.9 6.7-2.3-8L51.3 9.8zM53.1 5.7 33.8 21.8 25 17.6zm-33.6 43c-.2 0-.5.1-.6.2l-6.3 5.3v-4.5c0-.6-.4-1-1-1H4.7c-.9 0-1.7-.8-1.7-1.7V25.2c0-.9.8-1.7 1.7-1.7h27.8l.6.3 3.3 11.6c.3 1 1.7 1 1.9 0l2.5-9 2.3 1.1V47c0 .9-.8 1.7-1.7 1.7zM63 55.6c0 .9-.8 1.7-1.7 1.7h-6.8c-.6 0-1 .4-1 1V62l-6.4-4.5c-.2-.1-.4-.2-.6-.2h-13c-.9 0-1.7-.8-1.7-1.7v-4.9h9.6c2.1 0 3.7-1.7 3.7-3.7V37h16.1c.9 0 1.7.8 1.7 1.7v16.9z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                                <path
+                                    d="M8.2 31h16.1c.6 0 1-.4 1-1s-.4-1-1-1H8.2c-.6 0-1 .4-1 1s.4 1 1 1zM8.2 37h16.1c.6 0 1-.4 1-1s-.4-1-1-1H8.2c-.6 0-1 .4-1 1s.4 1 1 1zM38 42c0-.6-.4-1-1-1H8.2c-.6 0-1 .4-1 1s.4 1 1 1H37c.6 0 1-.5 1-1zM59.1 42.7h-10c-.6 0-1 .4-1 1s.4 1 1 1h10c.6 0 1-.4 1-1s-.4-1-1-1zM59.1 49.7h-10c-.6 0-1 .4-1 1s.4 1 1 1h10c.6 0 1-.4 1-1s-.4-1-1-1z"
+                                    fill="#000000" opacity="1" data-original="#000000" class=""></path>
+                            </g>
+                        </svg>
+                        <p>
+                            Send Reset Password Link
+                        </p>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+
     </div>
-</div>
+    <!-- /.sidebar -->
+
+</aside>
 
 <script>
     function teacherPasswordSendLink(teacher_id) {

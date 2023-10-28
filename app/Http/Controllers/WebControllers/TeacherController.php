@@ -1200,7 +1200,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.calendar_by_id", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'quickList' => $quickList, 'teacher_id' => $id, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.calendar_by_id", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'quickList' => $quickList, 'teacher_id' => $id, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -1341,7 +1341,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.teacher_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'contactItemList' => $contactItemList, 'titleList' => $titleList, 'nationalityList' => $nationalityList, 'ralationshipList' => $ralationshipList, 'contactTypeList' => $contactTypeList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.teacher_detail", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'contactItemList' => $contactItemList, 'titleList' => $titleList, 'nationalityList' => $nationalityList, 'ralationshipList' => $ralationshipList, 'contactTypeList' => $contactTypeList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -1747,7 +1747,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.teacher_profession", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications, 'candidateList' => $candidateList, 'agerangeList' => $agerangeList, 'interviewQualityList' => $interviewQualityList, 'languageSkillList' => $languageSkillList, 'subjectList' => $subjectList, 'typeList' => $typeList, 'subTypeList' => $subTypeList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.teacher_profession", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherSubjects' => $teacherSubjects, 'teacherQualifications' => $teacherQualifications, 'candidateList' => $candidateList, 'agerangeList' => $agerangeList, 'interviewQualityList' => $interviewQualityList, 'languageSkillList' => $languageSkillList, 'subjectList' => $subjectList, 'typeList' => $typeList, 'subTypeList' => $subTypeList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -2115,7 +2115,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.teacher_health", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.teacher_health", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -2317,7 +2317,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.references", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'referenceList' => $referenceList, 'referenceTypeList' => $referenceTypeList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.references", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'referenceList' => $referenceList, 'referenceTypeList' => $referenceTypeList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -3004,7 +3004,7 @@ class TeacherController extends Controller
                 ->get();
 
 
-            return view("web.teacher.teacher_documents", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list, 'documentList' => $documentList, 'typeList' => $typeList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.teacher_documents", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'RTW_list' => $RTW_list, 'DBS_list' => $DBS_list, 'documentList' => $documentList, 'typeList' => $typeList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -3459,7 +3459,7 @@ class TeacherController extends Controller
 
             // dd($vettingHistory);
 
-            return view("web.teacher.teacher_vetting_history", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList, 'vettingHistory' => $vettingHistory]);
+            return view("web.teacher.teacher_vetting_history", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'headerStatusList' => $headerStatusList, 'vettingHistory' => $vettingHistory]);
         } else {
             return redirect()->intended('/');
         }
@@ -4063,7 +4063,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.teacher_contact_log", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherContactLogs' => $teacherContactLogs, 'methodList' => $methodList, 'quickSettingList' => $quickSettingList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.teacher_contact_log", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'teacherContactLogs' => $teacherContactLogs, 'methodList' => $methodList, 'quickSettingList' => $quickSettingList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -4268,7 +4268,7 @@ class TeacherController extends Controller
                 ->orderBy('tbl_description.description_int', 'ASC')
                 ->get();
 
-            return view("web.teacher.teacher_payroll", ['title' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'bankList' => $bankList, 'headerStatusList' => $headerStatusList]);
+            return view("web.teacher.teacher_payroll", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'teacherDetail' => $teacherDetail, 'bankList' => $bankList, 'headerStatusList' => $headerStatusList]);
         } else {
             return redirect()->intended('/');
         }
@@ -6462,11 +6462,27 @@ class TeacherController extends Controller
         // $diff = round($totalDurationInHours, 1);
 
         if ($teacher_timesheet_id) {
+            $asnItem_id = null;
+            $existItmId = '';
+            $asnItemExist = DB::table('tbl_asnItem')
+                ->where('tbl_asnItem.asn_id', $request->teacher_asn_id)
+                ->whereDate('tbl_asnItem.asnDate_dte', date('Y-m-d', strtotime($request->asnDate_dte)))
+                ->first();
+
+            if ($asnItemExist) {
+                $existItmId = $asnItemExist->asnItem_id;
+            }
+            if ($request->teacher_asn_item_id) {
+                $asnItem_id = $request->teacher_asn_item_id;
+            } elseif ($existItmId) {
+                $asnItem_id = $existItmId;
+            }
+
             DB::table('teacher_timesheet_item')
                 ->insertGetId([
                     'teacher_timesheet_id' => $teacher_timesheet_id,
                     'asn_id' => $request->teacher_asn_id,
-                    'asnItem_id' => $request->teacher_asn_item_id,
+                    'asnItem_id' => $asnItem_id,
                     'school_id' => $request->school_id,
                     'teacher_id' => $request->teacher_id,
                     'asnDate_dte' => date('Y-m-d', strtotime($request->asnDate_dte)),

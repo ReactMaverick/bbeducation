@@ -11,15 +11,14 @@
                                 <h2>References</h2>
                                 <div class="assignment-finance-icon-section">
                                     {{-- <a href="#"><i class="fas fa-envelope"></i></a> --}}
-                                    <a style="cursor: pointer" class="disabled-link" id="editContactItemBttn">
+                                    {{-- <a style="cursor: pointer" class="disabled-link" id="editContactItemBttn">
                                         <i class="fas fa-edit school-edit-icon"></i>
-                                    </a>
+                                    </a> --}}
                                 </div>
 
                             </div>
-                            <div class="assignment-finance-table-section table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable dtr-inline collapsed"
-                                    id="myTable">
+                            <div class="assignment-candidate-table-section">
+                                <table class="table table-bordered table-striped" id="myTable">
                                     <thead>
                                         <tr class="school-detail-table-heading">
                                             <th>Teacher</th>
@@ -66,7 +65,10 @@
         $(document).ready(function() {
             $('#myTable').DataTable({
                 ordering: false,
-                pageLength: 25
+                pageLength: 25,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
     </script>

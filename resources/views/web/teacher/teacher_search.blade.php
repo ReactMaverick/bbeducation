@@ -30,10 +30,8 @@
                                         </div>
 
                                     </div>
-                                    <div class="table-responsive">
-                                        <table
-                                            class="table table-bordered table-striped table-hover dataTable dtr-inline collapsed p-0"
-                                            id="myTable">
+                                    <div class="assignment-candidate-table-section">
+                                        <table class="table table-bordered table-striped p-0" id="myTable">
                                             <thead>
                                                 <tr class="table-heading">
                                                     <th>Name</th>
@@ -255,7 +253,10 @@
                 // paging: false,
                 // ordering: false,
                 info: false,
-                searching: false
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
 
             // $('#advanceSearchDiv').css('display', 'none');

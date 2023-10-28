@@ -59,7 +59,8 @@ class FinanceController extends Controller
                 ->where('status_int', 3)
                 ->whereDate('asnDate_dte', '<=', $weekEndDate)
                 ->groupBy('school_id')
-                ->orderByRaw('COUNT(asnItem_id) DESC')
+                // ->orderByRaw('COUNT(asnItem_id) DESC')
+                ->orderBy('tbl_school.name_txt', 'ASC')
                 ->get();
 
             $documentList = DB::table('teacher_timesheet')
@@ -132,6 +133,7 @@ class FinanceController extends Controller
                 })
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
+                ->orderBy('tbl_teacher.firstName_txt', 'ASC')
                 ->get();
             // dd($calenderList);
             // exit;
@@ -1064,7 +1066,8 @@ class FinanceController extends Controller
             ->whereDate('asnDate_dte', '<', $weekStartDate)
             ->where('school_id', $school_id)
             ->groupBy('tbl_asn.teacher_id', 'asnItem_id', 'asnDate_dte')
-            ->orderBy('tbl_asn.teacher_id', 'ASC')
+            // ->orderBy('tbl_asn.teacher_id', 'ASC')
+            ->orderBy('tbl_teacher.firstName_txt', 'ASC')
             ->orderByRaw("FIELD(DATE_FORMAT(asnDate_dte, '%a'), 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun') ASC")
             ->orderBy('tbl_asnItem.asnDate_dte', 'DESC')
             ->get();
@@ -1281,7 +1284,11 @@ class FinanceController extends Controller
 
         DB::table('teacher_timesheet')
             ->join('teacher_timesheet_item', 'teacher_timesheet.teacher_timesheet_id', '=', 'teacher_timesheet_item.teacher_timesheet_id')
-            ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'teacher_timesheet_item.asnItem_id')
+            // ->LeftJoin('tbl_asnItem', 'tbl_asnItem.asnItem_id', '=', 'teacher_timesheet_item.asnItem_id')
+            ->LeftJoin('tbl_asnItem', function ($join) {
+                $join->on('tbl_asnItem.asn_id', '=', 'teacher_timesheet_item.asn_id')
+                    ->on('tbl_asnItem.asnDate_dte', '=', 'teacher_timesheet_item.asnDate_dte');
+            })
             ->where('teacher_timesheet.submit_status', 1)
             ->whereDate('teacher_timesheet_item.asnDate_dte', '<=', $weekEndDate)
             ->where('teacher_timesheet_item.school_id', $school_id)
@@ -1300,7 +1307,8 @@ class FinanceController extends Controller
             ->where('teacher_timesheet_item.school_id', $school_id)
             ->where('teacher_timesheet_item.admin_approve', '!=', 1)
             ->groupBy('teacher_timesheet.teacher_id', 'teacher_timesheet_item.asnDate_dte')
-            ->orderBy('teacher_timesheet.teacher_id', 'ASC')
+            // ->orderBy('teacher_timesheet.teacher_id', 'ASC')
+            ->orderBy('tbl_teacher.firstName_txt', 'ASC')
             ->orderByRaw("FIELD(DATE_FORMAT(teacher_timesheet_item.asnDate_dte, '%a'), 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun') ASC")
             ->orderBy('teacher_timesheet_item.asnDate_dte', 'DESC')
             ->get();
@@ -3313,6 +3321,7 @@ class FinanceController extends Controller
                 ->where('invoice_id', '!=', NULL)
                 ->where('payroll_id', '=', NULL)
                 ->groupBy(['teacher_id', 'school_id', 'asnItem_id'])
+                ->orderBy('tbl_school.name_txt')
                 ->orderBy('teacher_id')
                 ->orderBy('asnDate_dte')
                 ->get();

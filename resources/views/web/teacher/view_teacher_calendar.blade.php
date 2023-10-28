@@ -113,13 +113,17 @@
             eventBackgroundColor: '#ffa601',
             eventRender: function(event, element, view) {
                 if (event.reason_int == 2 || event.reason_int == 3) {
-                    element.css('background-color', '#37a6ff');
+                    // element.css('background-color', '#37a6ff');
+                    element.addClass('new-event-color-4');
                 } else if (event.reason_int == 4) {
-                    element.css('background-color', '#304556');
+                    // element.css('background-color', '#304556');
+                    element.addClass('new-event-color-3');
                 } else if (event.reason_int == 5) {
-                    element.css('background-color', '#9ca1a5');
+                    // element.css('background-color', '#9ca1a5');
+                    element.addClass('new-event-color-2');
                 } else {
-                    element.css('background-color', '#ffa601');
+                    // element.css('background-color', '#ffa601');
+                    element.addClass('new-event-color-1');
                 }
                 if (event.link_id) {
                     defAsnId = event.link_id;

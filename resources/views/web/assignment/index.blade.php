@@ -89,9 +89,8 @@
                             </div>
                         </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable dtr-inline collapsed"
-                                id="myTable">
+                        <div class="assignment-candidate-table-section">
+                            <table class="table table-bordered table-striped" id="myTable">
                                 <thead>
                                     <tr class="table-heading">
                                         <th>School For</th>
@@ -151,7 +150,10 @@
         $(document).ready(function() {
             $('#myTable').DataTable({
                 // ordering: false,
-                pageLength: 25
+                pageLength: 25,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
 
