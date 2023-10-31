@@ -56652,6 +56652,10 @@ span.input_icon i.fa-eye {
     border: 1px solid #dee2e6;
 }
 
+.grid_8 {
+    grid-template-columns: repeat(8, 1fr);
+}
+
 .skd_date {
     padding: 10px;
     border-right: 1px solid #dee2e6;
@@ -56663,6 +56667,14 @@ span.input_icon i.fa-eye {
     justify-content: center;
 }
 
+.new_teacher_calendar_outer3 {
+    grid-template-columns: repeat(8, 1fr) !important;
+}
+
+.teacher-calendar-days-field4 {
+    display: block !important;
+}
+
 .new_teacher_calendar_outer2 {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -56671,6 +56683,8 @@ span.input_icon i.fa-eye {
     gap: 10px;
     margin-top: 10px;
 }
+
+
 
 .new_teacher_calendar_outer2 p {
     font-size: 12px;
@@ -57744,6 +57758,16 @@ a.brand-link.skd_logo {
         border: none;
     }
 
+    .skd_dates_row.grid_8 {
+        grid-template-columns: repeat(8, 180px);
+        width: 1440px;
+    }
+
+    .new_teacher_calendar_outer3 {
+        grid-template-columns: repeat(8, 180px) !important;
+        width: 1440px !important;
+    }
+
     .teacher-calendar-sidebar-section.new_teacher-calendar-sidebar {
         height: 10vh !important;
         padding: 20px 15px !important;
@@ -57990,11 +58014,19 @@ a.brand-link.skd_logo {
         transform: translate(-50%, 15%);
     }
 
+
+
     .calendar-section.skd_image_calender_box {
         grid-template-columns: repeat(6, 180px) !important;
         gap: 0;
         width: 100% !important;
         min-width: 1081px;
+    }
+
+    .new_teacher_calendar_outer3 {
+        grid-template-columns: repeat(8, 1fr) !important;
+        width: 1440px !important;
+        min-width: 1440px !important;
     }
 
     .teacher-calendar-days-text.skd_date {
@@ -58014,6 +58046,10 @@ a.brand-link.skd_logo {
         text-align: center;
         width: 100% !important;
         min-width: 1081px;
+    }
+
+    .skd_dates_row.grid_8 {
+        grid-template-columns: repeat(8, 180px);
     }
 
     .teacher-calendar-sidebar-section.new_teacher-calendar-sidebar {

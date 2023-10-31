@@ -1,332 +1,394 @@
-@extends('web.layout')
+{{-- @extends('web.layout') --}}
+@extends('web.school.school_layout')
 @section('content')
     <style>
         .disabled-link {
             pointer-events: none;
         }
     </style>
-    <div class="assignment-detail-page-section">
-        <div class="row assignment-detail-row">
-
-            @include('web.school.school_sidebar')
-
-            <div class="col-md-10 topbar-sec">
-
-                @include('web.school.school_header')
-
-                <div class="school-finance-right-sec">
-
-
-                    <div class="school-finance-section">
-
-                        <div class="school-finance-sec">
-                            <div class="school-finance-contact-heading-text">
-                                <h2>Finance</h2>
-                            </div>
-                            <div class="form-check paid-check">
-                                <label for="includePaid">Include paid</label>
-                                <input type="checkbox" id="includePaid" name="include" value="1"
-                                    <?php
-                                    echo app('request')->input('include') == 1 ? 'checked' : ''; ?>><br>
-                            </div>
-
-                            <div class="form-group payment-method-type">
-                                <label>Payment Method</label>
-                                <select id="paymentMethod" name="method" class="form-control">
-                                    <option value="">Choose One</option>
-                                    @foreach ($paymentMethodList as $key1 => $paymentMethod)
-                                        <option value="{{ $paymentMethod->description_int }}" <?php echo app('request')->input('method') == $paymentMethod->description_int ? 'selected' : ''; ?>>
-                                            {{ $paymentMethod->description_txt }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="school-finance-contact-heading">
-                                <div class="school-finance-contact-icon-sec">
-                                    <div class="finance-invoice-icon-sec">
-                                        <a style="cursor: pointer" id="sendAccountSummaryBtn" title="Send Account Summary">
-                                            <i class="fa-solid fa-envelope"></i>
-                                            <div class="finance-invoice-second-icon-sec">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <a style="cursor: pointer" class="disabled-link" id="remitInvoiceBtn"
-                                        title="Remit Invoice">
-                                        <i class="fa-solid fa-square-check"></i>
-                                    </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="creditNoteBttn"
-                                        title="Create Credit Note">
-                                        <img src="{{ asset('web/company_logo/money.png') }}" alt="">
-                                    </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="splitInvoiceBtn"
-                                        title="Split Invoice">
-                                        <img src="{{ asset('web/company_logo/diverge.png') }}" alt="">
-                                    </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="previewInvoiceBtn"
-                                        title="Preview Invoice">
-                                        <img src="{{ asset('web/company_logo/search-file.png') }}" alt="">
-                                    </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="sendInvoiceBtn"
-                                        title="Send Invoice">
-                                        <i class="fa-solid fa-envelope"></i>
-                                    </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="deleteInvoiceBttn">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </a>
-                                    <a style="cursor: pointer" id="invoiceAddBttn"
-                                        onclick="invoiceAdd('<?php echo $school_id; ?>', '<?php echo app('request')->input('include'); ?>', '<?php echo app('request')->input('method'); ?>')"
-                                        title="Create Invoice">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </a>
-                                    <a style="cursor: pointer" class="disabled-link" id="InvoiceEditBttn"
-                                        title="Edit invoice">
-                                        <i class="fa-solid fa-pencil school-edit-icon"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="" id="editInvoiceId" value="">
-                        <input type="hidden" name="" id="editInvoiceSchoolId" value="{{ $school_id }}">
-                        <input type="hidden" name="" id="editInvoiceIncludeId"
-                            value="{{ app('request')->input('include') }}">
-                        <input type="hidden" name="" id="editInvoiceMethodId"
-                            value="{{ app('request')->input('method') }}">
-
-                        <div class="school-finance-table-section">
-                            <table class="table school-detail-page-table" id="myTable">
-                                <thead>
-                                    <tr class="school-detail-table-heading">
-                                        <th>Invoice Number</th>
-                                        <th>Date</th>
-                                        <th>Net</th>
-                                        <th>Vat</th>
-                                        <th>Gross</th>
-                                        <th>Paid On</th>
-                                        <th>Payment Method</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-body-sec">
-                                    @foreach ($schoolInvoices as $key => $Invoices)
-                                        <tr class="school-detail-table-data editInvoiceRow"
-                                            onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
-                                            id="editInvoiceRow{{ $Invoices->invoice_id }}">
-                                            <td>{{ $Invoices->invoice_id }}</td>
-                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
-                                            <td>{{ $Invoices->net_dec }}</td>
-                                            <td>{{ $Invoices->vat_dec }}</td>
-                                            <td>{{ $Invoices->gross_dec }}</td>
-                                            <td>
-                                                @if ($Invoices->paidOn_dte != null)
-                                                    {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
-                                                @endif
-                                            </td>
-                                            <td>{{ $Invoices->invPaymentMethod_txt }}</td>
-                                            <td>
-                                                @if ($Invoices->paidOn_dte != null)
-                                                    {{ 'Paid' }}
-                                                @elseif (date('Y-m-d', strtotime($Invoices->invoiceDate_dte . ' + 30 days')) <= date('Y-m-d'))
-                                                    {{ 'Overdue' }}
-                                                @else
-                                                    {{ 'Due' }}
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
-                            <hr>
-
-                            {{-- <table class="table school-detail-page-table" id="myTable1">
-                                <thead>
-                                    <tr class="school-detail-table-heading">
-                                        <th>Teacher</th>
-                                        <th>Days</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-body-sec">
-                                    @foreach ($schoolTimesheet as $key => $Timesheet)
-                                        <tr class="school-detail-table-data">
-                                            <td>
-                                                @if ($Timesheet->knownAs_txt == null || $Timesheet->knownAs_txt == '')
-                                                    {{ $Timesheet->firstName_txt . ' ' . $Timesheet->surname_txt }}
-                                                @else
-                                                    {{ $Timesheet->knownAs_txt . ' ' . $Timesheet->surname_txt }}
-                                                @endif
-                                            </td>
-                                            <td>{{ $Timesheet->items_int }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table> --}}
-                        </div>
-                    </div>
-                    <div class="billing-details-section">
-                        <div class="billing-details-heading">
-                            <span>Billing Details</span>
-                            <a data-toggle="modal" data-target="#editBillingAddressModal" style="cursor: pointer;"
-                                title="Edit billing address"><i class="fa-solid fa-pencil school-edit-icon"></i></a>
-                        </div>
-                        <div class="invoice-timesheet-checkbox">
-                            <input type="checkbox" id="includeTimesheetId" name="" value="1"
-                                @if ($schoolDetail->timesheetWithInvoice_status == -1) checked @endif class="disabled-link">
-                            <label for="includeTimesheetId" class="disabled-link">Include Timesheet with Invoice</label>
-                        </div>
-                        <div class="billing-address-section">
-                            <h2>Billing Address</h2>
-                            @if ($schoolDetail->billingAddress1_txt)
-                                <p>{{ $schoolDetail->billingAddress1_txt }}</p>
-                            @endif
-                            @if ($schoolDetail->billingAddress2_txt)
-                                <p>{{ $schoolDetail->billingAddress2_txt }}</p>
-                            @endif
-                            @if ($schoolDetail->billingAddress3_txt)
-                                <p>{{ $schoolDetail->billingAddress3_txt }}</p>
-                            @endif
-                            @if ($schoolDetail->billingAddress4_txt)
-                                <p>{{ $schoolDetail->billingAddress4_txt }}</p>
-                            @endif
-                            @if ($schoolDetail->billingAddress5_txt)
-                                <p>{{ $schoolDetail->billingAddress5_txt }}</p>
-                            @endif
-                            @if ($schoolDetail->billingPostcode_txt)
-                                <p>{{ $schoolDetail->billingPostcode_txt }}</p>
-                            @endif
-                        </div>
-
-                        <div class="billing-button" data-toggle="modal" data-target="#editCandidateRateModal"
-                            style="cursor: pointer;">
-                            <button>Candidate Rates</button>
-                        </div>
-
-                    </div>
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('web.school.school_header')
                 </div>
-
-                <div class="school-finance-right-sec">
-                    <div class="school-finance-section">
-                        <div class="school-finance-sec">
-                            <div class="school-finance-contact-heading-text" style="width: 100%;">
-                                <h2>Overdue Invoices</h2>
-                            </div>
-
-                            <div class="school-finance-contact-heading" style="width: 100%;">
-                                <div class="school-finance-contact-icon-sec">
-                                    <a style="cursor: pointer" class="disabled-link" id="sendOverdueInvoiceBtn"
-                                        title="Send Invoice">
-                                        <i class="fa-solid fa-envelope"></i>
-                                    </a>
-                                    <div class="finance-invoice-icon-sec">
-                                        <a style="cursor: pointer" id="sendAllOverdueInvoiceBtn"
-                                            title="Send All Listed Invoice">
-                                            <i class="fa-solid fa-envelope"></i>
-                                            <div class="finance-invoice-second-icon-sec">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="" id="overdueInvoiceId" value="">
-
-                        <div class="school-finance-table-section">
-                            <table class="table school-detail-page-table" id="myTable2">
-                                <thead>
-                                    <tr class="">
-                                        <th>Invoice Number</th>
-                                        <th>Date</th>
-                                        <th>Net</th>
-                                        <th>Vat</th>
-                                        <th>Gross</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-body-sec">
-                                    @foreach ($overdueInvoices as $key => $Invoices)
-                                        <tr class="school-detail-table-data editDueInvoiceRow"
-                                            onclick="editDueInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
-                                            id="editDueInvoiceRow{{ $Invoices->invoice_id }}">
-                                            <td>{{ $Invoices->invoice_id }}</td>
-                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
-                                            <td>{{ $Invoices->net_dec }}</td>
-                                            <td>{{ $Invoices->vat_dec }}</td>
-                                            <td>{{ $Invoices->gross_dec }}</td>
-                                            <td>
-                                                @if ($Invoices->sentMailDate)
-                                                    {{ 'Sent to school ' }}
-                                                    ({{ date('d-m-Y', strtotime($Invoices->sentMailDate)) }})
-                                                @else
-                                                    {{ '' }}
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="billing-details-section">
-
-                        <div class="amount-owed-heading-sec">
-                            <h2>Amount Owed</h2>
-                            <div class="amount-owed-price-sec">
-                                <span>Net</span>
-                                @if ($invoiceCal->net_dec)
-                                    <p>&#163 {{ number_format((float) $invoiceCal->net_dec, 2, '.', ',') }}</p>
-                                @endif
-                            </div>
-                            <div class="amount-owed-price-sec">
-                                <span>Vat</span>
-                                @if ($invoiceCal->vat_dec)
-                                    <p>&#163 {{ number_format((float) $invoiceCal->vat_dec, 2, '.', ',') }}</p>
-                                @endif
-                            </div>
-                            <div class="amount-owed-price-sec">
-                                <span>Gross</span>
-                                @if ($invoiceCal->gross_dec)
-                                    <p>&#163 {{ number_format((float) $invoiceCal->gross_dec, 2, '.', ',') }}</p>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="amount-owed-heading-sec">
-                            <h2>Amount Overdue</h2>
-                            <div class="amount-owed-price-sec">
-                                <span>Net</span>
-                                @if ($invoiceOverdueCal->net_dec)
-                                    <p>&#163 {{ number_format((float) $invoiceOverdueCal->net_dec, 2, '.', ',') }}</p>
-                                @endif
-                            </div>
-                            <div class="amount-owed-price-sec">
-                                <span>Vat</span>
-                                @if ($invoiceOverdueCal->vat_dec)
-                                    <p>&#163 {{ number_format((float) $invoiceOverdueCal->vat_dec, 2, '.', ',') }}</p>
-                                @endif
-                            </div>
-                            <div class="amount-owed-price-sec">
-                                <span>Gross</span>
-                                @if ($invoiceOverdueCal->gross_dec)
-                                    <p>&#163 {{ number_format((float) $invoiceOverdueCal->gross_dec, 2, '.', ',') }}</p>
-                                @endif
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="assignment-detail-page-section">
+                <div class="row assignment-detail-row">
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 topbar-sec">
+
+                        <div class="school-finance-right-sec">
+                            <div class="row my_row_gap">
+                                <div class="col-md-9 col-lg-9 col-xl-9 col-12 col-sm-12">
+                                    <div class="school-finance-section sec_box_edit">
+
+                                        <div class="school-finance-sec details-heading">
+                                            <div class="school-finance-contact-heading-text">
+                                                <h2>Finance</h2>
+                                            </div>
+                                            <div class="form-check paid-check">
+                                                <label for="includePaid">Include paid</label>
+                                                <input type="checkbox" id="includePaid" name="include" value="1"
+                                                    <?php
+                                                    echo app('request')->input('include') == 1 ? 'checked' : ''; ?>><br>
+                                            </div>
+
+                                            <div class="form-group payment-method-type">
+                                                <label>Payment Method</label>
+                                                <select id="paymentMethod" name="method" class="form-control">
+                                                    <option value="">Choose One</option>
+                                                    @foreach ($paymentMethodList as $key1 => $paymentMethod)
+                                                        <option value="{{ $paymentMethod->description_int }}"
+                                                            <?php echo app('request')->input('method') == $paymentMethod->description_int ? 'selected' : ''; ?>>
+                                                            {{ $paymentMethod->description_txt }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="school-finance-contact-heading">
+                                                <div class="school-finance-contact-icon-sec contact-icon-sec">
+                                                    <div class="finance-invoice-icon-sec">
+                                                        <a style="cursor: pointer" id="sendAccountSummaryBtn"
+                                                            title="Send Account Summary" class="icon_all">
+                                                            <i class="fas fa-envelope"></i>
+                                                            <div class="finance-invoice-second-icon-sec">
+                                                                <i class="fas fa-plus"></i>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="remitInvoiceBtn" title="Remit Invoice">
+                                                        <i class="far fa-check-square"></i>
+                                                    </a>
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="creditNoteBttn" title="Create Credit Note">
+                                                        <img src="{{ asset('web/company_logo/money.png') }}" alt="">
+                                                    </a>
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="splitInvoiceBtn" title="Split Invoice">
+                                                        <img src="{{ asset('web/company_logo/diverge.png') }}"
+                                                            alt="">
+                                                    </a>
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="previewInvoiceBtn" title="Preview Invoice">
+                                                        <img src="{{ asset('web/company_logo/search-file.png') }}"
+                                                            alt="">
+                                                    </a>
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="sendInvoiceBtn" title="Send Invoice">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </a>
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="deleteInvoiceBttn">
+                                                        <i class="fas fa-trash-alt trash-icon"></i>
+                                                    </a>
+                                                    <a style="cursor: pointer" id="invoiceAddBttn"
+                                                        onclick="invoiceAdd('<?php echo $school_id; ?>', '<?php echo app('request')->input('include'); ?>', '<?php echo app('request')->input('method'); ?>')"
+                                                        title="Create Invoice" class="icon_all">
+                                                        <i class="fas fa-plus-circle"></i>
+                                                    </a>
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="InvoiceEditBttn" title="Edit invoice">
+                                                        <i class="fas fa-edit school-edit-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="" id="editInvoiceId" value="">
+                                        <input type="hidden" name="" id="editInvoiceSchoolId"
+                                            value="{{ $school_id }}">
+                                        <input type="hidden" name="" id="editInvoiceIncludeId"
+                                            value="{{ app('request')->input('include') }}">
+                                        <input type="hidden" name="" id="editInvoiceMethodId"
+                                            value="{{ app('request')->input('method') }}">
+
+                                        <div class="school-finance-table-section">
+                                            <table class="table table-bordered table-striped" id="myTable">
+                                                <thead>
+                                                    <tr class="school-detail-table-heading">
+                                                        <th>Invoice Number</th>
+                                                        <th>Date</th>
+                                                        <th>Net</th>
+                                                        <th>Vat</th>
+                                                        <th>Gross</th>
+                                                        <th>Paid On</th>
+                                                        <th>Payment Method</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-body-sec">
+                                                    @foreach ($schoolInvoices as $key => $Invoices)
+                                                        <tr class="school-detail-table-data editInvoiceRow"
+                                                            onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
+                                                            id="editInvoiceRow{{ $Invoices->invoice_id }}">
+                                                            <td>{{ $Invoices->invoice_id }}</td>
+                                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}
+                                                            </td>
+                                                            <td>{{ $Invoices->net_dec }}</td>
+                                                            <td>{{ $Invoices->vat_dec }}</td>
+                                                            <td>{{ $Invoices->gross_dec }}</td>
+                                                            <td>
+                                                                @if ($Invoices->paidOn_dte != null)
+                                                                    {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $Invoices->invPaymentMethod_txt }}</td>
+                                                            <td>
+                                                                @if ($Invoices->paidOn_dte != null)
+                                                                    {{ 'Paid' }}
+                                                                @elseif (date('Y-m-d', strtotime($Invoices->invoiceDate_dte . ' + 30 days')) <= date('Y-m-d'))
+                                                                    {{ 'Overdue' }}
+                                                                @else
+                                                                    {{ 'Due' }}
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+
+                                            {{-- <table class="table school-detail-page-table" id="myTable1">
+                                                <thead>
+                                                    <tr class="school-detail-table-heading">
+                                                        <th>Teacher</th>
+                                                        <th>Days</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-body-sec">
+                                                    @foreach ($schoolTimesheet as $key => $Timesheet)
+                                                        <tr class="school-detail-table-data">
+                                                            <td>
+                                                                @if ($Timesheet->knownAs_txt == null || $Timesheet->knownAs_txt == '')
+                                                                    {{ $Timesheet->firstName_txt . ' ' . $Timesheet->surname_txt }}
+                                                                @else
+                                                                    {{ $Timesheet->knownAs_txt . ' ' . $Timesheet->surname_txt }}
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $Timesheet->items_int }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table> --}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-lg-3 col-xl-3 col-12 col-sm-12">
+                                    <div class="billing-details-section sec_box_edit">
+                                        <div class="billing-details-heading details-heading">
+                                            <h2>Billing Details</h2>
+                                            <a data-toggle="modal" data-target="#editBillingAddressModal"
+                                                style="cursor: pointer;" title="Edit billing address" class="icon_all"><i
+                                                    class="fas fa-edit school-edit-icon"></i></a>
+                                        </div>
+
+                                        <div class="about-school-section">
+                                            <div class="invoice-timesheet-checkbox">
+                                                <input type="checkbox" id="includeTimesheetId" name=""
+                                                    value="1" @if ($schoolDetail->timesheetWithInvoice_status == -1) checked @endif
+                                                    class="disabled-link">
+                                                <label for="includeTimesheetId" class="disabled-link">Include Timesheet
+                                                    with
+                                                    Invoice</label>
+                                            </div>
+                                        </div>
+                                        <div class="about-school-section">
+                                            <div class="billing-address-section">
+                                                <b>Billing Address</b>
+                                                @if ($schoolDetail->billingAddress1_txt)
+                                                    <p>{{ $schoolDetail->billingAddress1_txt }}</p>
+                                                @endif
+                                                @if ($schoolDetail->billingAddress2_txt)
+                                                    <p>{{ $schoolDetail->billingAddress2_txt }}</p>
+                                                @endif
+                                                @if ($schoolDetail->billingAddress3_txt)
+                                                    <p>{{ $schoolDetail->billingAddress3_txt }}</p>
+                                                @endif
+                                                @if ($schoolDetail->billingAddress4_txt)
+                                                    <p>{{ $schoolDetail->billingAddress4_txt }}</p>
+                                                @endif
+                                                @if ($schoolDetail->billingAddress5_txt)
+                                                    <p>{{ $schoolDetail->billingAddress5_txt }}</p>
+                                                @endif
+                                                @if ($schoolDetail->billingPostcode_txt)
+                                                    <p>{{ $schoolDetail->billingPostcode_txt }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="about-school-section school-search-btn-section">
+                                            <div class="billing-button" data-toggle="modal"
+                                                data-target="#editCandidateRateModal" style="cursor: pointer;">
+                                                <button class=" btn btn-info">Candidate Rates</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="school-finance-right-sec mt-3">
+                            <div class="row my_row_gap">
+                                <div class="col-md-9 col-lg-9 col-xl-9 col-12 col-sm-12">
+                                    <div class="school-finance-section sec_box_edit">
+                                        <div class="school-finance-sec details-heading">
+                                            <h2>Overdue Invoices</h2>
+
+                                            <div class="contact-icon-sec">
+                                                <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    id="sendOverdueInvoiceBtn" title="Send Invoice">
+                                                    <i class="fas fa-envelope-open-text"></i>
+                                                </a>
+                                                <div class="finance-invoice-icon-sec">
+                                                    <a style="cursor: pointer" id="sendAllOverdueInvoiceBtn"
+                                                        title="Send All Listed Invoice" class="icon_all">
+                                                        <i class="fas fa-envelope"></i>
+                                                        <div class="finance-invoice-second-icon-sec">
+                                                            <i class="fas fa-plus"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="" id="overdueInvoiceId" value="">
+
+                                        <div class="school-finance-table-section">
+                                            <table class="table table-bordered table-striped" id="myTable2">
+                                                <thead>
+                                                    <tr class="">
+                                                        <th>Invoice Number</th>
+                                                        <th>Date</th>
+                                                        <th>Net</th>
+                                                        <th>Vat</th>
+                                                        <th>Gross</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-body-sec">
+                                                    @foreach ($overdueInvoices as $key => $Invoices)
+                                                        <tr class="school-detail-table-data editDueInvoiceRow"
+                                                            onclick="editDueInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
+                                                            id="editDueInvoiceRow{{ $Invoices->invoice_id }}">
+                                                            <td>{{ $Invoices->invoice_id }}</td>
+                                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}
+                                                            </td>
+                                                            <td>{{ $Invoices->net_dec }}</td>
+                                                            <td>{{ $Invoices->vat_dec }}</td>
+                                                            <td>{{ $Invoices->gross_dec }}</td>
+                                                            <td>
+                                                                @if ($Invoices->sentMailDate)
+                                                                    {{ 'Sent to school ' }}
+                                                                    ({{ date('d-m-Y', strtotime($Invoices->sentMailDate)) }})
+                                                                @else
+                                                                    {{ '' }}
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-lg-3 col-xl-3 col-12 col-sm-12">
+                                    <div class="billing-details-section sec_box_edit">
+
+                                        <div class="amount-owed-heading-sec">
+                                            <div class="details-heading">
+                                                <div class="contact-heading-text">
+                                                    <h2>Amount Owed</h2>
+                                                </div>
+                                            </div>
+                                            <div class="about-school-section">
+                                                <div class="amount-owed-price-sec">
+                                                    <span>Net</span>
+                                                    @if ($invoiceCal->net_dec)
+                                                        <p>&#163
+                                                            {{ number_format((float) $invoiceCal->net_dec, 2, '.', ',') }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                <div class="amount-owed-price-sec">
+                                                    <span>Vat</span>
+                                                    @if ($invoiceCal->vat_dec)
+                                                        <p>&#163
+                                                            {{ number_format((float) $invoiceCal->vat_dec, 2, '.', ',') }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                <div class="amount-owed-price-sec">
+                                                    <span>Gross</span>
+                                                    @if ($invoiceCal->gross_dec)
+                                                        <p>&#163
+                                                            {{ number_format((float) $invoiceCal->gross_dec, 2, '.', ',') }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="amount-owed-heading-sec">
+                                            <div class="details-heading">
+                                                <div class="contact-heading-text">
+                                                    <h2>Amount Overdue</h2>
+                                                </div>
+                                            </div>
+                                            <div class="about-school-section">
+                                                <div class="amount-owed-price-sec">
+                                                    <span>Net</span>
+                                                    @if ($invoiceOverdueCal->net_dec)
+                                                        <p>&#163
+                                                            {{ number_format((float) $invoiceOverdueCal->net_dec, 2, '.', ',') }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                <div class="amount-owed-price-sec">
+                                                    <span>Vat</span>
+                                                    @if ($invoiceOverdueCal->vat_dec)
+                                                        <p>&#163
+                                                            {{ number_format((float) $invoiceOverdueCal->vat_dec, 2, '.', ',') }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                <div class="amount-owed-price-sec">
+                                                    <span>Gross</span>
+                                                    @if ($invoiceOverdueCal->gross_dec)
+                                                        <p>&#163
+                                                            {{ number_format((float) $invoiceOverdueCal->gross_dec, 2, '.', ',') }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 
     <!-- Billing Address Edit Modal -->
     <div class="modal fade" id="editBillingAddressModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -335,69 +397,72 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Billing Detail</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Billing Detail</h2>
+                    </div>
 
-                <form action="{{ url('/schoolBillingAddressUpdate') }}" method="post">
-                    @csrf
-                    <div class="modal-input-field-section">
-                        <h6>{{ $schoolDetail->name_txt }}</h6>
-                        <span>ID</span>
-                        <p>{{ $schoolDetail->school_id }}</p>
-                        <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
-                        <input type="hidden" name="include" value="{{ app('request')->input('include') }}">
-                        <input type="hidden" name="method" value="{{ app('request')->input('method') }}">
+                    <form action="{{ url('/schoolBillingAddressUpdate') }}" method="post">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            <h6>{{ $schoolDetail->name_txt }}</h6>
+                            <span>ID</span>
+                            <p>{{ $schoolDetail->school_id }}</p>
+                            <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
+                            <input type="hidden" name="include" value="{{ app('request')->input('include') }}">
+                            <input type="hidden" name="method" value="{{ app('request')->input('method') }}">
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="modal-input-field">
-                                    <label class="form-check-label">Address</label>
-                                    <input type="text" class="form-control mb-1" name="billingAddress1_txt"
-                                        id="" value="{{ $schoolDetail->billingAddress1_txt }}">
-                                    <input type="text" class="form-control mb-1" name="billingAddress2_txt"
-                                        id="" value="{{ $schoolDetail->billingAddress2_txt }}">
-                                    <input type="text" class="form-control mb-1" name="billingAddress3_txt"
-                                        id="" value="{{ $schoolDetail->billingAddress3_txt }}">
-                                    <input type="text" class="form-control mb-1" name="billingAddress4_txt"
-                                        id="" value="{{ $schoolDetail->billingAddress4_txt }}">
-                                    <input type="text" class="form-control" name="billingAddress5_txt" id=""
-                                        value="{{ $schoolDetail->billingAddress5_txt }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Address</label>
+                                        <input type="text" class="form-control mb-1" name="billingAddress1_txt"
+                                            id="" value="{{ $schoolDetail->billingAddress1_txt }}">
+                                        <input type="text" class="form-control mb-1" name="billingAddress2_txt"
+                                            id="" value="{{ $schoolDetail->billingAddress2_txt }}">
+                                        <input type="text" class="form-control mb-1" name="billingAddress3_txt"
+                                            id="" value="{{ $schoolDetail->billingAddress3_txt }}">
+                                        <input type="text" class="form-control mb-1" name="billingAddress4_txt"
+                                            id="" value="{{ $schoolDetail->billingAddress4_txt }}">
+                                        <input type="text" class="form-control" name="billingAddress5_txt"
+                                            id="" value="{{ $schoolDetail->billingAddress5_txt }}">
+                                    </div>
+
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Postcode</label>
+                                        <input type="text" class="form-control" name="billingPostcode_txt"
+                                            id="" value="{{ $schoolDetail->billingPostcode_txt }}">
+                                    </div>
                                 </div>
+                                <div class="col-md-6 modal-form-right-sec">
+                                    <div class="modal-side-field">
+                                        <input type="checkbox" class="" name="timesheetWithInvoice_status"
+                                            id="timesheetWithInvoice_status" value="1"
+                                            @if ($schoolDetail->timesheetWithInvoice_status == -1) checked @endif>
+                                        <label class="form-check-label" for="timesheetWithInvoice_status">Include
+                                            timesheet
+                                            with invoice</label>
+                                    </div>
 
-                                <div class="modal-input-field">
-                                    <label class="form-check-label">Postcode</label>
-                                    <input type="text" class="form-control" name="billingPostcode_txt" id=""
-                                        value="{{ $schoolDetail->billingPostcode_txt }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6 modal-form-right-sec">
-                                <div class="modal-side-field">
-                                    <input type="checkbox" class="" name="timesheetWithInvoice_status"
-                                        id="timesheetWithInvoice_status" value="1"
-                                        @if ($schoolDetail->timesheetWithInvoice_status == -1) checked @endif>
-                                    <label class="form-check-label" for="timesheetWithInvoice_status">Include timesheet
-                                        with invoice</label>
-                                </div>
-
-                                <div class="modal-side-field">
-                                    <input type="checkbox" class="" name="isFactored_status"
-                                        id="isFactored_status" value="1"
-                                        @if ($schoolDetail->isFactored_status == -1) checked @endif>
-                                    <label class="form-check-label" for="isFactored_status">Factored</label>
+                                    <div class="modal-side-field">
+                                        <input type="checkbox" class="" name="isFactored_status"
+                                            id="isFactored_status" value="1"
+                                            @if ($schoolDetail->isFactored_status == -1) checked @endif>
+                                        <label class="form-check-label" for="isFactored_status">Factored</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -406,8 +471,8 @@
 
     <!-- Split Invoice Modal -->
     <div class="modal fade" id="splitInvoiceModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:100%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -415,30 +480,32 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Split Invoice Id - <span id="spanInvId"></span></h2>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Split Invoice Id - <span id="spanInvId"></span></h2>
+                    </div>
+
+                    <form action="{{ url('/schoolSplitInvoiceCreate') }}" method="post" class=""
+                        enctype="multipart/form-data" id="splitInvoiceForm">
+                        @csrf
+                        <input type="hidden" name="splitInvoiceId" id="splitInvoiceId" value="">
+                        <input type="hidden" name="splitInvoiceSchoolId" id="splitInvoiceSchoolId" value="">
+                        <div class="modal-input-field-section">
+                            <span>School</span>
+                            <p>{{ $schoolDetail->name_txt }}</p>
+
+                            <div class="row" id="invoiceISplitAjax" style="width: 100%;"></div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="splitInvSubmitBtn">Submit</button>
+
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
                 </div>
-
-                <form action="{{ url('/schoolSplitInvoiceCreate') }}" method="post" class=""
-                    enctype="multipart/form-data" id="splitInvoiceForm">
-                    @csrf
-                    <input type="hidden" name="splitInvoiceId" id="splitInvoiceId" value="">
-                    <input type="hidden" name="splitInvoiceSchoolId" id="splitInvoiceSchoolId" value="">
-                    <div class="modal-input-field-section">
-                        <span>School</span>
-                        <p>{{ $schoolDetail->name_txt }}</p>
-
-                        <div class="row" id="invoiceISplitAjax" style="width: 100%;"></div>
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="splitInvSubmitBtn">Submit</button>
-
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
 
             </div>
         </div>
@@ -447,8 +514,8 @@
 
     <!-- Candidate Rate Edit Modal -->
     <div class="modal fade" id="editCandidateRateModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width: 65%;">
+        <div class="modal-dialog modal-md modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -456,75 +523,78 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Assignment Rates</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Assignment Rates</h2>
+                    </div>
 
-                <form action="{{ url('/addAllCandRate') }}" method="post">
-                    @csrf
-                    <div class="modal-input-field-section">
-                        <input type="hidden" name="school_id" id="rateSchoolId"
-                            value="{{ $schoolDetail->school_id }}">
+                    <form action="{{ url('/addAllCandRate') }}" method="post">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            <input type="hidden" name="school_id" id="rateSchoolId"
+                                value="{{ $schoolDetail->school_id }}">
 
-                        <div class="row">
-                            <div class="finance-timesheet-contact-second-sec mb-3" style="width: 100%;">
-                                <div class="contact-heading">
-                                    <div class="contact-heading-text">
-                                        <h2>Profession ( Select one )</h2>
+                            <div class="row">
+                                <div class="finance-timesheet-contact-second-sec mb-3" style="width: 100%;">
+                                    <div class="contact-heading">
+                                        <div class="contact-heading-text">
+                                            <h5>Profession ( Select one )</h5>
+                                        </div>
+                                    </div>
+                                    <div class="finance-list-section">
+                                        <div class="finance-list-text-section">
+                                            <div class="finance-list-text">
+                                                <table class="table table-bordered table-striped" id="">
+                                                    <tbody class="table-body-sec">
+                                                        @foreach ($candRateList as $key => $candRate)
+                                                            <?php $fRate = $candRate->schAsnRate_dec ? $candRate->schAsnRate_dec : $candRate->mainAsnRate_dec;
+                                                            ?>
+
+                                                            <input type="hidden" name="rateDescInt[]"
+                                                                value="{{ $candRate->description_int }}">
+                                                            <input type="hidden" name="rateDescRate[]"
+                                                                value="{{ $fRate }}">
+
+                                                            <tr class="school-detail-table-data selectRateRow"
+                                                                id="selectRateRow{{ $candRate->description_int }}"
+                                                                onclick="selectRateRowSelect({{ $candRate->description_int }}, '{{ $fRate }}')">
+                                                                <td>{{ $candRate->description_txt }}</td>
+                                                                <td>{{ $fRate }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="finance-list-section">
-                                    <div class="finance-list-text-section">
-                                        <div class="finance-list-text">
-                                            <table class="table finance-timesheet-page-table" id="">
-                                                <tbody class="table-body-sec">
-                                                    @foreach ($candRateList as $key => $candRate)
-                                                        <?php $fRate = $candRate->schAsnRate_dec ? $candRate->schAsnRate_dec : $candRate->mainAsnRate_dec;
-                                                        ?>
 
-                                                        <input type="hidden" name="rateDescInt[]"
-                                                            value="{{ $candRate->description_int }}">
-                                                        <input type="hidden" name="rateDescRate[]"
-                                                            value="{{ $fRate }}">
-
-                                                        <tr class="school-detail-table-data selectRateRow"
-                                                            id="selectRateRow{{ $candRate->description_int }}"
-                                                            onclick="selectRateRowSelect({{ $candRate->description_int }}, '{{ $fRate }}')">
-                                                            <td>{{ $candRate->description_txt }}</td>
-                                                            <td>{{ $fRate }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                <div class="modal-input-field row">
+                                    <div class="col-md-8">
+                                        <label class="form-check-label">Profession Rate</label>
+                                        <input type="hidden" id="selectedRateInt" value="">
+                                        <input type="text" class="form-control onlynumber" name="profession_rate"
+                                            id="selectedRateValue" value="">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-check-label">&nbsp;</label>
+                                        <div class="calendar-modal-footer">
+                                            <button type="button" class="btn btn-secondary" id="saveRate">Save</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-md-8">
-                                <div class="modal-input-field">
-                                    <label class="form-check-label">Profession Rate</label>
-                                    <input type="hidden" id="selectedRateInt" value="">
-                                    <input type="text" class="form-control onlynumber" name="profession_rate"
-                                        id="selectedRateValue" value="">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="modal-footer calendar-modal-footer">
-                                    <button type="button" class="btn btn-secondary" id="saveRate">Save</button>
-                                </div>
-                            </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -534,15 +604,21 @@
     <script>
         $(document).ready(function() {
             $('#myTable, #myTable1').DataTable({
-                ordering: false
+                ordering: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
             $('#myTable2').DataTable({
-                scrollY: '400px', // Set the desired height for the scrolling area
-                paging: false, // Disable pagination
-                // footer: false, // Remove footer
-                info: false, // Disable the info footer
+                scrollY: '400px',
+                paging: false,
+                footer: false,
+                info: false,
                 ordering: false,
                 searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
 

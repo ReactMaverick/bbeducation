@@ -1,164 +1,202 @@
-@extends('web.layout')
+{{-- @extends('web.layout') --}}
+@extends('web.school.school_layout')
 @section('content')
     <style>
         .disabled-link {
             pointer-events: none;
         }
     </style>
-    <div class="assignment-detail-page-section">
-        <div class="row assignment-detail-row">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('web.school.school_header')
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
 
-            @include('web.school.school_sidebar')
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="assignment-detail-page-section">
+                <div class="row assignment-detail-row">
 
-            <div class="col-md-10 topbar-sec">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 topbar-sec pt-3">
 
-                @include('web.school.school_header')
-
-
-                <div class="tab-content assignment-tab-content school-calandar">
-                    <div class="row">
-                        <div class="col-md-1">
-                            <div class="teacher-calendar-sidebar-section school-calendar-sidebar-section">
-                                <div class="form-check sidebar-mode-check">
-                                    <label for="editMode"><i class="fa-regular fa-pen-to-square"></i></label>
-                                    <input type="radio" id="editMode" name="calendar_mode" value="edit" checked>
-                                </div>
-                                <div class="form-check sidebar-mode-check">
-                                    <label for="viewMode"><i class="fa-regular fa-calendar-days"></i></label>
-                                    <input type="radio" id="viewMode" name="calendar_mode" value="view">
-                                </div>
-                                <div class="form-check sidebar-mode-check">
-                                    <label for="teacherMode"><i class="fa-solid fa-graduation-cap"></i></label>
-                                    <input type="radio" id="teacherMode" name="calendar_mode" value="teacher">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-11">
-                            <div class="teacher-calendar-slider">
-                                <div class="teacher-calendar-table-section">
-                                    <div class="total-days-slider-sec">
-                                        <div class="total-days-text">
-                                            <div class="assignment-date">
-                                                <a
-                                                    href="{{ URL::to('/school-calendar/' . $school_id . '?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
-                                                    <i class="fa-solid fa-caret-left"></i>
-                                                </a>
-                                            </div>
-                                            <div class="teacher-calendar-date-text">
-                                                <span>{{ date('D d M Y', strtotime($weekStartDate)) }}</span>
-                                            </div>
-                                            <div class="assignment-date2">
-                                                <a
-                                                    href="{{ URL::to('/school-calendar/' . $school_id . '?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
-                                                    <i class="fa-solid fa-caret-right"></i>
-                                                </a>
-                                            </div>
+                        <div class="tab-content assignment-tab-content school-calandar sec_box_edit">
+                            <div class="row teacher-calendar-sec5">
+                                <div class="col-lg-1 col-md-12 col-xl-1 col-sm-12 col-12">
+                                    <div class="teacher-calendar-sidebar-section new_teacher-calendar-sidebar"
+                                        style="width: 90%;">
+                                        <div class="form-check sidebar-mode-check">
+                                            <label for="editMode"><i class="fas fa-edit"></i></label>
+                                            <input type="radio" id="editMode" name="calendar_mode" value="edit"
+                                                checked>
+                                        </div>
+                                        <div class="form-check sidebar-mode-check">
+                                            <label for="viewMode"><i class="fas fa-calendar-alt"></i></label>
+                                            <input type="radio" id="viewMode" name="calendar_mode" value="view">
+                                        </div>
+                                        <div class="form-check sidebar-mode-check">
+                                            <label for="teacherMode"><i class="fas fa-graduation-cap"></i></label>
+                                            <input type="radio" id="teacherMode" name="calendar_mode" value="teacher">
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="teacher-calendar-days-sec school-calendar-days-sec">
-                                        <div class="teacher-calendar-total-days-text school-calendar-total-days-text"></div>
-                                        <div class="teacher-calendar-days-text school-calendar-days-text">
-                                            <p>Mon</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text school-calendar-days-text">
-                                            <p>Tue</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text school-calendar-days-text">
-                                            <p>Wed</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text school-calendar-days-text">
-                                            <p>Thu</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text school-calendar-days-text">
-                                            <p>Fri</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text school-calendar-days-text">
-                                            <p>Sat</p>
-                                        </div>
-                                        <div class="teacher-calendar-days-text school-calendar-days-text">
-                                            <p>Sun</p>
-                                        </div>
-                                    </div>
-
-                                    @foreach ($calenderList as $key => $calender)
-                                        <div class="calendar-section school-calendar-section">
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                <div class="teacher-calendar-days-field3" style="cursor: pointer;"
-                                                    onclick="calDateClick('teacher', '{{ $calender->teacher_id }}', '')">
-                                                    <div class="calendar_right_sec" style="width: 100%">
-                                                        <p>
-                                                            @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
-                                                                {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
-                                                            @else
-                                                                {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
-                                                            @endif
-                                                        </p>
-                                                        <p>{{ $calender->totalDays }} Days</p>
+                                <div class="col-md-12 col-12 col-sm-12 col-lg-11 col-xl-11">
+                                    <div class="teacher-calendar-slider">
+                                        <div class="teacher-calendar-table-section1">
+                                            <div class="total-days-slider-sec1">
+                                                <div class="total-days-text">
+                                                    <div class="assignment-date">
+                                                        <a
+                                                            href="{{ URL::to('/school-calendar/' . $school_id . '?date=' . date('Y-m-d', strtotime($weekStartDate . ' -7 days'))) }}">
+                                                            <i class="fas fa-caret-left"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="teacher-calendar-date-text">
+                                                        <span>{{ date('D d M Y', strtotime($weekStartDate)) }}</span>
+                                                    </div>
+                                                    <div class="assignment-date2">
+                                                        <a
+                                                            href="{{ URL::to('/school-calendar/' . $school_id . '?date=' . date('Y-m-d', strtotime($weekStartDate . ' +7 days'))) }}">
+                                                            <i class="fas fa-caret-right"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                @if ($calender->day1Avail_txt && $calender->day1Link_id)
-                                                    <div class="teacher-calendar-days-field" style="cursor: pointer;"
-                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day1Link_id }}')">
-                                                        <p>{{ $calender->day1Avail_txt }}</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                @if ($calender->day2Avail_txt && $calender->day2Link_id)
-                                                    <div class="teacher-calendar-days-field" style="cursor: pointer;"
-                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day2Link_id }}')">
-                                                        <p>{{ $calender->day2Avail_txt }}</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                @if ($calender->day3Avail_txt && $calender->day3Link_id)
-                                                    <div class="teacher-calendar-days-field" style="cursor: pointer;"
-                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day3Link_id }}')">
-                                                        <p>{{ $calender->day3Avail_txt }}</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                @if ($calender->day4Avail_txt && $calender->day4Link_id)
-                                                    <div class="teacher-calendar-days-field" style="cursor: pointer;"
-                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day4Link_id }}')">
-                                                        <p>{{ $calender->day4Avail_txt }}</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                @if ($calender->day5Avail_txt && $calender->day5Link_id)
-                                                    <div class="teacher-calendar-days-field" style="cursor: pointer;"
-                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day5Link_id }}')">
-                                                        <p>{{ $calender->day5Avail_txt }}</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                @if ($calender->day6Avail_txt && $calender->day6Link_id)
-                                                    <div class="teacher-calendar-days-field" style="cursor: pointer;"
-                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day6Link_id }}')">
-                                                        <p>{{ $calender->day6Avail_txt }}</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="date-left-teacher-calendar date-left-school-calendar">
-                                                @if ($calender->day7Avail_txt && $calender->day7Link_id)
-                                                    <div class="teacher-calendar-days-field" style="cursor: pointer;"
-                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day7Link_id }}')">
-                                                        <p>{{ $calender->day7Avail_txt }}</p>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @endforeach
 
+                                            <div class="new_teacher_calendar_outer1">
+                                                <div class="new_teacher_wapper">
+                                                    <div class="skd_dates_row grid_7 grid_8">
+                                                        <div class="teacher-calendar-total-days-text skd_date">
+                                                        </div>
+                                                        <div class="teacher-calendar-days-text skd_date">
+                                                            <p>Mon</p>
+                                                        </div>
+                                                        <div class="teacher-calendar-days-text skd_date">
+                                                            <p>Tue</p>
+                                                        </div>
+                                                        <div class="teacher-calendar-days-text skd_date">
+                                                            <p>Wed</p>
+                                                        </div>
+                                                        <div class="teacher-calendar-days-text skd_date">
+                                                            <p>Thu</p>
+                                                        </div>
+                                                        <div class="teacher-calendar-days-text skd_date">
+                                                            <p>Fri</p>
+                                                        </div>
+                                                        <div class="teacher-calendar-days-text skd_date">
+                                                            <p>Sat</p>
+                                                        </div>
+                                                        <div class="teacher-calendar-days-text skd_date">
+                                                            <p>Sun</p>
+                                                        </div>
+                                                    </div>
+
+                                                    @foreach ($calenderList as $key => $calender)
+                                                        <div
+                                                            class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 new_teacher_calendar_outer3">
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                <div class="teacher-calendar-days-field3 teacher-calendar-days-field4"
+                                                                    style="cursor: pointer;"
+                                                                    onclick="calDateClick('teacher', '{{ $calender->teacher_id }}', '')">
+                                                                    <div class="calendar_right_sec" style="width: 100%">
+                                                                        <p>
+                                                                            @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
+                                                                                {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
+                                                                            @else
+                                                                                {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
+                                                                            @endif
+                                                                        </p>
+                                                                        <p>{{ $calender->totalDays }} Days</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                @if ($calender->day1Avail_txt && $calender->day1Link_id)
+                                                                    <div class="teacher-calendar-days-field"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day1Link_id }}')">
+                                                                        <p>{{ $calender->day1Avail_txt }}</p>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                @if ($calender->day2Avail_txt && $calender->day2Link_id)
+                                                                    <div class="teacher-calendar-days-field"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day2Link_id }}')">
+                                                                        <p>{{ $calender->day2Avail_txt }}</p>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                @if ($calender->day3Avail_txt && $calender->day3Link_id)
+                                                                    <div class="teacher-calendar-days-field"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day3Link_id }}')">
+                                                                        <p>{{ $calender->day3Avail_txt }}</p>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                @if ($calender->day4Avail_txt && $calender->day4Link_id)
+                                                                    <div class="teacher-calendar-days-field"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day4Link_id }}')">
+                                                                        <p>{{ $calender->day4Avail_txt }}</p>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                @if ($calender->day5Avail_txt && $calender->day5Link_id)
+                                                                    <div class="teacher-calendar-days-field"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day5Link_id }}')">
+                                                                        <p>{{ $calender->day5Avail_txt }}</p>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                @if ($calender->day6Avail_txt && $calender->day6Link_id)
+                                                                    <div class="teacher-calendar-days-field"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day6Link_id }}')">
+                                                                        <p>{{ $calender->day6Avail_txt }}</p>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <div
+                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                @if ($calender->day7Avail_txt && $calender->day7Link_id)
+                                                                    <div class="teacher-calendar-days-field"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day7Link_id }}')">
+                                                                        <p>{{ $calender->day7Avail_txt }}</p>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
 
@@ -166,13 +204,13 @@
                 </div>
 
             </div>
-        </div>
-
-    </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 
     <!-- Teacher Calendar Modal -->
     <div class="modal fade" id="TeacherCalendarModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 90%;">
+        <div class="modal-dialog modal-xl modal-dialog-centered calendar-modal-section tab_mob_full">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -181,10 +219,12 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div id="AjaxTeacherCalendar"></div>
+                <div class="modal-body">
+                    <div id="AjaxTeacherCalendar" class="skd_calender_new"></div>
 
-                <div class="modal-footer calendar-modal-footer">
-                    <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
 
             </div>
@@ -194,7 +234,7 @@
 
     <!-- Teacher Calendar Event Edit Modal -->
     <div class="modal fade" id="TeacherCalEventEditModal" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section" style="max-width: 50%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -203,7 +243,9 @@
                     <button type="button" class="close" id="EventEditModalClose">&times;</button>
                 </div>
 
-                <div id="AjaxTeacherCalEvent"></div>
+                <div class="modal-body">
+                    <div id="AjaxTeacherCalEvent"></div>
+                </div>
 
             </div>
         </div>

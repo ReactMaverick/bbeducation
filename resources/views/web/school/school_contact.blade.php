@@ -1,116 +1,144 @@
-@extends('web.layout')
+{{-- @extends('web.layout') --}}
+@extends('web.school.school_layout')
 @section('content')
     <style>
         .disabled-link {
             pointer-events: none;
         }
     </style>
-    <div class="assignment-detail-page-section">
-        <div class="row assignment-detail-row">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('web.school.school_header')
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
 
-            @include('web.school.school_sidebar')
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="assignment-detail-page-section">
+                <div class="row assignment-detail-row">
 
-            <div class="col-md-10 topbar-sec">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 topbar-sec">
 
-                @include('web.school.school_header')
-
-                <div class="school-assignment-sec">
-                    <div class="school-assignment-section">
-                        {{-- <div class="contact-history-heading-section">
-                            <h2>Contact History</h2>
-                            <a data-toggle="modal" data-target="#ContactHistoryAddModal" style="cursor: pointer;">
-                                <i class="fa-solid fa-plus"></i>
-                            </a>
-                        </div> --}}
-                        <div class="teacher-list-section">
-                            <div class="school-teacher-heading-text">
-                                <h2>Contact History</h2>
-                            </div>
-                            <div class="school-teacher-list-heading">
-                                <div class="school-assignment-contact-icon-sec">
-                                    <a style="cursor: pointer" class="disabled-link" id="deleteContactHistoryBttn">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </a>
+                        <div class="school-assignment-sec">
+                            <div class="school-assignment-section sec_box_edit">
+                                {{-- <div class="contact-history-heading-section">
+                                    <h2>Contact History</h2>
                                     <a data-toggle="modal" data-target="#ContactHistoryAddModal" style="cursor: pointer;">
                                         <i class="fa-solid fa-plus"></i>
                                     </a>
-                                    <a style="cursor: pointer;" class="disabled-link" id="editContactHistoryBttn">
-                                        <i class="fa-solid fa-pencil school-edit-icon"></i>
-                                    </a>
+                                </div> --}}
+                                <div class="teacher-list-section details-heading">
+                                    <div class="school-teacher-heading-text">
+                                        <h2>Contact History</h2>
+                                    </div>
+                                    <div class="school-teacher-list-heading">
+                                        <div class="school-assignment-contact-icon-sec contact-icon-sec">
+                                            <a style="cursor: pointer" class="disabled-link icon_all"
+                                                id="deleteContactHistoryBttn">
+                                                <i class="fas fa-trash-alt trash-icon"></i>
+                                            </a>
+                                            <a data-toggle="modal" data-target="#ContactHistoryAddModal"
+                                                style="cursor: pointer;" class="icon_all">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </a>
+                                            <a style="cursor: pointer;" class="disabled-link icon_all"
+                                                id="editContactHistoryBttn">
+                                                <i class="fas fa-edit school-edit-icon"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="assignment-finance-table-section">
+                                    <table class="table table-bordered table-striped" id="myTable">
+                                        <thead>
+                                            <tr class="school-detail-table-heading">
+                                                <th style="width: 40%">Contact Notes</th>
+                                                <th>Spoke To</th>
+                                                <th>Contact By</th>
+                                                <th>Contact On</th>
+                                                <th>Method</th>
+                                                <th>CB Due</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-body-sec">
+                                            <?php $dueCallCount = 0; ?>
+                                            @foreach ($ContactHistory as $key => $History)
+                                                <tr class="school-detail-table-data editContactHistoryRow"
+                                                    id="editContactHistoryRow{{ $History->schoolContactLog_id }}"
+                                                    onclick="contactHistoryRowSelect({{ $History->schoolContactLog_id }})">
+                                                    <td style="width: 40%">{{ $History->notes_txt }}</td>
+                                                    <td>{{ $History->spokeTo_txt }}</td>
+                                                    <td>{{ $History->firstName_txt . ' ' . $History->surname_txt }}</td>
+                                                    <td>{{ date('d-m-Y H:i', strtotime($History->contactOn_dtm)) }}</td>
+                                                    <td>{{ $History->method_txt }}</td>
+                                                    <td>
+                                                        @if ($History->callbackOn_dtm == null)
+                                                            {{ 'N' }}
+                                                        @elseif ($History->callbackOn_dtm >= date('Y-m-d H:i:s'))
+                                                            {{ 'Y' }}
+                                                            <?php $dueCallCount += 1; ?>
+                                                        @else
+                                                            {{ 'N' }}
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="ContactHistoryId" id="ContactHistoryId" value="">
+                            <input type="hidden" name="editSchoolId" id="editSchoolId" value="{{ $school_id }}">
+
+                            <div class="assignment-first-sec">
+                                <div class="assignment-left-sidebar-section">
+                                    <div class="row pt-3">
+                                        <div class="col-lg-3 col-6">
+                                            <div class="references-bottom-sec small-box bg-info">
+                                                <div class="inner">
+                                                    <h3>{{ count($ContactHistory) }}</h3>
+                                                    <p>Total Contacts</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fas fa-receipt"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-6">
+                                            <div class="references-bottom-sec small-box bg-success">
+                                                <div class="inner">
+                                                    <h3>{{ $dueCallCount }}</h3>
+                                                    <p>Callbacks Due</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fas fa-receipt"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <table class="table school-detail-page-table" id="myTable">
-                            <thead>
-                                <tr class="school-detail-table-heading">
-                                    <th style="width: 40%">Contact Notes</th>
-                                    <th>Spoke To</th>
-                                    <th>Contact By</th>
-                                    <th>Contact On</th>
-                                    <th>Method</th>
-                                    <th>CB Due</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body-sec">
-                                <?php $dueCallCount = 0; ?>
-                                @foreach ($ContactHistory as $key => $History)
-                                    <tr class="school-detail-table-data editContactHistoryRow"
-                                        id="editContactHistoryRow{{ $History->schoolContactLog_id }}"
-                                        onclick="contactHistoryRowSelect({{ $History->schoolContactLog_id }})">
-                                        <td style="width: 40%">{{ $History->notes_txt }}</td>
-                                        <td>{{ $History->spokeTo_txt }}</td>
-                                        <td>{{ $History->firstName_txt . ' ' . $History->surname_txt }}</td>
-                                        <td>{{ date('d-m-Y H:i', strtotime($History->contactOn_dtm)) }}</td>
-                                        <td>{{ $History->method_txt }}</td>
-                                        <td>
-                                            @if ($History->callbackOn_dtm == null)
-                                                {{ 'N' }}
-                                            @elseif ($History->callbackOn_dtm >= date('Y-m-d H:i:s'))
-                                                {{ 'Y' }}
-                                                <?php $dueCallCount += 1; ?>
-                                            @else
-                                                {{ 'N' }}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <input type="hidden" name="ContactHistoryId" id="ContactHistoryId" value="">
-                    <input type="hidden" name="editSchoolId" id="editSchoolId" value="{{ $school_id }}">
-
-                    <div class="assignment-first-sec">
-                        <div class="assignment-left-sidebar-section">
-                            <div class="sidebar-sec">
-                                <div class="assignment-sidebar-data">
-                                    <h2>{{ count($ContactHistory) }}</h2>
-                                </div>
-                                <div class="sidebar-sec-text">
-                                    <span>Total Contacts</span>
-                                </div>
-                            </div>
-                            <div class="sidebar-sec">
-                                <div class="assignment-sidebar-data2">
-                                    <h2>{{ $dueCallCount }}</h2>
-                                </div>
-                                <div class="sidebar-sec-text">
-                                    <span>Callbacks Due</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
             </div>
-        </div>
-    </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 
     <!-- Contact Add Modal -->
     <div class="modal fade" id="ContactHistoryAddModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -119,140 +147,143 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Log School Contact</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Log School Contact</h2>
+                    </div>
 
-                <form action="{{ url('/schoolContactLogInsert') }}" method="post" class="form-validate">
-                    @csrf
-                    <div class="modal-input-field-section">
-                        <h6>{{ $schoolDetail->name_txt }}</h6>
-                        {{-- <h6>ID</h6>
+                    <form action="{{ url('/schoolContactLogInsert') }}" method="post" class="form-validate">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            <h6>{{ $schoolDetail->name_txt }}</h6>
+                            {{-- <h6>ID</h6>
                         <h6>{{ $schoolDetail->school_id }}</h6> --}}
-                        <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
+                            <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group calendar-form-filter">
-                                    <label for="">Spoke to (specific contact)</label>
-                                    <select class="form-control field-validate SpokeToId" name="spokeTo_id" id="SpokeToId"
-                                        onchange="selectSpokeTo(this.value, this.options[this.selectedIndex].getAttribute('sName'))">
-                                        <option value="">Choose one</option>
-                                        @foreach ($schoolContacts as $key1 => $Contacts)
-                                            {{ $name = '' }}
-                                            @if ($Contacts->firstName_txt != '' && $Contacts->surname_txt != '')
-                                                {{ $name = $Contacts->firstName_txt . ' ' . $Contacts->surname_txt }}
-                                            @elseif ($Contacts->firstName_txt != '' && $Contacts->surname_txt == '')
-                                                {{ $name = $Contacts->firstName_txt }}
-                                            @elseif ($Contacts->title_int != '' && $Contacts->surname_txt != '')
-                                                {{ $name = $Contacts->title_txt . ' ' . $Contacts->surname_txt }}
-                                            @elseif ($Contacts->jobRole_int != '')
-                                                {{ $name = $Contacts->jobRole_txt . ' (name unknown)' }}
-                                            @else
-                                                {{ $name = 'Name unknown' }}
-                                            @endif
-                                            <option sName="{{ $name }}" value="{{ $Contacts->contact_id }}">
-                                                {{ $name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="modal-input-field">
-                                    <label class="form-check-label">Spoke to</label>
-                                    <input type="text" class="form-control" name="spokeTo_txt" id="sopkeToText"
-                                        value="">
-                                </div>
-
-                                <div class="form-group calendar-form-filter">
-                                    <label for="">Contact Method</label>
-                                    <select class="form-control field-validate" name="method_int">
-                                        <option value="">Choose one</option>
-                                        @foreach ($methodList as $key2 => $method)
-                                            <option value="{{ $method->description_int }}">
-                                                {{ $method->description_txt }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="form-group calendar-form-filter">
-                                    <label for="">Contact Reason</label>
-                                    <select class="form-control" name="contactAbout_int">
-                                        <option value="">Choose one</option>
-                                        @foreach ($reasonList as $key4 => $reason)
-                                            <option value="{{ $reason->description_int }}">
-                                                {{ $reason->description_txt }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="form-group calendar-form-filter">
-                                    <label for="">Call Outcome</label>
-                                    <select class="form-control" name="outcome_int">
-                                        <option value="">Choose one</option>
-                                        @foreach ($outcomeList as $key5 => $outcome)
-                                            <option value="{{ $outcome->description_int }}">
-                                                {{ $outcome->description_txt }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6 modal-form-right-sec">
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Notes</label>
-                                    <textarea name="notes_txt" id="" cols="30" rows="5" class="form-control field-validate"></textarea>
-                                </div>
-
-                                <div class="modal-side-field">
-                                    <label class="form-check-label" for="callBackId">Callback</label>
-                                    <input type="checkbox" class="" name="callBackCheck" id="callBackId"
-                                        value="1">
-                                </div>
-
-                                <div class="row" id="quickSettingDiv" style="display: none;">
-                                    <div class="form-group calendar-form-filter col-md-12">
-                                        <label for="">Quick Setting</label>
-                                        <select class="form-control" name="quick_setting"
-                                            onchange="quickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))"
-                                            id="quickSettingId">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Spoke to (specific contact)</label>
+                                        <select class="form-control field-validate SpokeToId" name="spokeTo_id"
+                                            id="SpokeToId"
+                                            onchange="selectSpokeTo(this.value, this.options[this.selectedIndex].getAttribute('sName'))">
                                             <option value="">Choose one</option>
-                                            @foreach ($quickSettingList as $key3 => $quickSetting)
-                                                <option settingTxt="{{ $quickSetting->description_txt }}"
-                                                    value="{{ $quickSetting->description_int }}">
-                                                    {{ $quickSetting->description_txt }}
+                                            @foreach ($schoolContacts as $key1 => $Contacts)
+                                                {{ $name = '' }}
+                                                @if ($Contacts->firstName_txt != '' && $Contacts->surname_txt != '')
+                                                    {{ $name = $Contacts->firstName_txt . ' ' . $Contacts->surname_txt }}
+                                                @elseif ($Contacts->firstName_txt != '' && $Contacts->surname_txt == '')
+                                                    {{ $name = $Contacts->firstName_txt }}
+                                                @elseif ($Contacts->title_int != '' && $Contacts->surname_txt != '')
+                                                    {{ $name = $Contacts->title_txt . ' ' . $Contacts->surname_txt }}
+                                                @elseif ($Contacts->jobRole_int != '')
+                                                    {{ $name = $Contacts->jobRole_txt . ' (name unknown)' }}
+                                                @else
+                                                    {{ $name = 'Name unknown' }}
+                                                @endif
+                                                <option sName="{{ $name }}" value="{{ $Contacts->contact_id }}">
+                                                    {{ $name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    <div class="modal-input-field col-md-6">
-                                        <label class="form-check-label">Date</label>
-                                        <input type="date" class="form-control" name="quick_setting_date"
-                                            id="DateId" value="">
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Spoke to</label>
+                                        <input type="text" class="form-control" name="spokeTo_txt" id="sopkeToText"
+                                            value="">
                                     </div>
 
-                                    <div class="modal-input-field col-md-6">
-                                        <label class="form-check-label">Time</label>
-                                        <input type="time" class="form-control" name="quick_setting_time"
-                                            id="timeId" value="">
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Contact Method</label>
+                                        <select class="form-control field-validate" name="method_int">
+                                            <option value="">Choose one</option>
+                                            @foreach ($methodList as $key2 => $method)
+                                                <option value="{{ $method->description_int }}">
+                                                    {{ $method->description_txt }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Contact Reason</label>
+                                        <select class="form-control" name="contactAbout_int">
+                                            <option value="">Choose one</option>
+                                            @foreach ($reasonList as $key4 => $reason)
+                                                <option value="{{ $reason->description_int }}">
+                                                    {{ $reason->description_txt }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group calendar-form-filter">
+                                        <label for="">Call Outcome</label>
+                                        <select class="form-control" name="outcome_int">
+                                            <option value="">Choose one</option>
+                                            @foreach ($outcomeList as $key5 => $outcome)
+                                                <option value="{{ $outcome->description_int }}">
+                                                    {{ $outcome->description_txt }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 modal-form-right-sec">
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Notes</label>
+                                        <textarea name="notes_txt" id="" cols="30" rows="5" class="form-control field-validate"></textarea>
+                                    </div>
+
+                                    <div class="modal-side-field">
+                                        <label class="form-check-label" for="callBackId">Callback</label>
+                                        <input type="checkbox" class="" name="callBackCheck" id="callBackId"
+                                            value="1">
+                                    </div>
+
+                                    <div class="row" id="quickSettingDiv" style="display: none;">
+                                        <div class="form-group calendar-form-filter col-md-12">
+                                            <label for="">Quick Setting</label>
+                                            <select class="form-control" name="quick_setting"
+                                                onchange="quickSettingChange(this.value, this.options[this.selectedIndex].getAttribute('settingTxt'))"
+                                                id="quickSettingId">
+                                                <option value="">Choose one</option>
+                                                @foreach ($quickSettingList as $key3 => $quickSetting)
+                                                    <option settingTxt="{{ $quickSetting->description_txt }}"
+                                                        value="{{ $quickSetting->description_int }}">
+                                                        {{ $quickSetting->description_txt }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="modal-input-field col-md-6">
+                                            <label class="form-check-label">Date</label>
+                                            <input type="date" class="form-control" name="quick_setting_date"
+                                                id="DateId" value="">
+                                        </div>
+
+                                        <div class="modal-input-field col-md-6">
+                                            <label class="form-check-label">Time</label>
+                                            <input type="time" class="form-control" name="quick_setting_time"
+                                                id="timeId" value="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
-                    </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
-
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -261,7 +292,7 @@
 
     <!-- Contact Edit Modal -->
     <div class="modal fade" id="ContactHistoryEditModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -270,31 +301,33 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit School Contact</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit School Contact</h2>
+                    </div>
 
-                <form action="{{ url('/schoolContactLogUpdate') }}" method="post" class="form-validate-2">
-                    @csrf
-                    <div class="modal-input-field-section">
-                        <h6>{{ $schoolDetail->name_txt }}</h6>
-                        {{-- <h6>ID</h6>
+                    <form action="{{ url('/schoolContactLogUpdate') }}" method="post" class="form-validate-2">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            <h6>{{ $schoolDetail->name_txt }}</h6>
+                            {{-- <h6>ID</h6>
                         <h6>{{ $schoolDetail->school_id }}</h6> --}}
-                        <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
-                        <input type="hidden" name="schoolContactLog_id" id="editContactHistoryId" value="">
+                            <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
+                            <input type="hidden" name="schoolContactLog_id" id="editContactHistoryId" value="">
 
-                        <div class="row" id="schoolContactAjax"></div>
+                            <div class="row" id="schoolContactAjax"></div>
 
-                    </div>
+                        </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -304,7 +337,10 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
-                ordering: false
+                ordering: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
 

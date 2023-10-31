@@ -358,7 +358,7 @@ class SchoolController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 13)
                 ->get();
 
-            return view("web.school.school_detail", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList, 'contactMethodList' => $contactMethodList]);
+            return view("web.school.school_detail", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'schoolContacts' => $schoolContacts, 'contactItems' => $contactItems, 'school_id' => $id, 'titleList' => $titleList, 'jobRoleList' => $jobRoleList, 'contactMethodList' => $contactMethodList]);
         } else {
             return redirect()->intended('/');
         }
@@ -951,7 +951,7 @@ class SchoolController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 32)
                 ->get();
 
-            return view("web.school.school_contact", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'ContactHistory' => $ContactHistory, 'schoolContacts' => $schoolContacts, 'quickSettingList' => $quickSettingList, 'methodList' => $methodList, 'reasonList' => $reasonList, 'outcomeList' => $outcomeList]);
+            return view("web.school.school_contact", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'ContactHistory' => $ContactHistory, 'schoolContacts' => $schoolContacts, 'quickSettingList' => $quickSettingList, 'methodList' => $methodList, 'reasonList' => $reasonList, 'outcomeList' => $outcomeList]);
         } else {
             return redirect()->intended('/');
         }
@@ -1199,7 +1199,7 @@ class SchoolController extends Controller
                 ->where('tbl_description.descriptionGroup_int', 33)
                 ->get();
 
-            return view("web.school.school_assignment", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'assignmentList' => $assignmentList, 'statusList' => $statusList, 'completeCount' => $completeCount]);
+            return view("web.school.school_assignment", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'assignmentList' => $assignmentList, 'statusList' => $statusList, 'completeCount' => $completeCount]);
         } else {
             return redirect()->intended('/');
         }
@@ -1355,7 +1355,7 @@ class SchoolController extends Controller
                 ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
                 ->first();
 
-            return view("web.school.school_finance", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet, 'paymentMethodList' => $paymentMethodList, 'profTypeList' => $profTypeList, 'candRateList' => $candRateList, 'overdueInvoices' => $overdueInvoices, 'invoiceCal' => $invoiceCal, 'invoiceOverdueCal' => $invoiceOverdueCal]);
+            return view("web.school.school_finance", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'schoolTimesheet' => $schoolTimesheet, 'paymentMethodList' => $paymentMethodList, 'profTypeList' => $profTypeList, 'candRateList' => $candRateList, 'overdueInvoices' => $overdueInvoices, 'invoiceCal' => $invoiceCal, 'invoiceOverdueCal' => $invoiceOverdueCal]);
         } else {
             return redirect()->intended('/');
         }
@@ -1446,7 +1446,7 @@ class SchoolController extends Controller
                 ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                 ->get();
 
-            return view("web.school.school_invoice_edit", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'invoice_id' => $invoice_id, 'include' => $include, 'method' => $method, 'schoolDetail' => $schoolDetail, 'paymentMethodList' => $paymentMethodList, 'invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList]);
+            return view("web.school.school_invoice_edit", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'invoice_id' => $invoice_id, 'include' => $include, 'method' => $method, 'schoolDetail' => $schoolDetail, 'paymentMethodList' => $paymentMethodList, 'invoiceDetail' => $invoiceDetail, 'invoiceItemList' => $invoiceItemList]);
         } else {
             return redirect()->intended('/');
         }
@@ -2572,7 +2572,7 @@ class SchoolController extends Controller
                 ->orderBy(DB::raw("(day1Amount_dec + day2Amount_dec + day3Amount_dec + day4Amount_dec + day5Amount_dec + day6Amount_dec + day7Amount_dec)"), 'DESC')
                 ->get();
 
-            return view("web.school.school_calendar", ['title' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'school_id' => $id, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList]);
+            return view("web.school.school_calendar", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'schoolDetail' => $schoolDetail, 'school_id' => $id, 'weekStartDate' => $weekStartDate, 'calenderList' => $calenderList]);
         } else {
             return redirect()->intended('/');
         }

@@ -4,14 +4,14 @@
         <input type="date" class="form-control" name="invoiceDate_dte" id=""
             value="{{ $invoiceDetail->invoiceDate_dte != null ? $invoiceDetail->invoiceDate_dte : '' }}">
     </div>
-
+</div>
+<div class="col-md-6">
     <div class="modal-input-field form-group">
         <label class="form-check-label">Paid On</label>
         <input type="date" class="form-control" name="paidOn_dte" id=""
             value="{{ $invoiceDetail->paidOn_dte != null ? $invoiceDetail->paidOn_dte : '' }}">
     </div>
 </div>
-<div class="col-md-6"></div>
 
 <input type="hidden" name="splitInvoiceItemCount" id="splitInvoiceItemCount" value="{{ count($invoiceItemList) }}">
 <input type="hidden" name="splitInvoiceSelectedItems" id="splitInvoiceSelectedItems" value="">

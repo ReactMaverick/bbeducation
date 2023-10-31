@@ -1,154 +1,175 @@
-@extends('web.layout')
+{{-- @extends('web.layout') --}}
+@extends('web.school.school_layout')
 @section('content')
     <style>
         .disabled-link {
             pointer-events: none;
         }
     </style>
-    <div class="assignment-detail-page-section">
-        <div class="row assignment-detail-row">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('web.school.school_header')
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
 
-            @include('web.school.school_sidebar')
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="assignment-detail-page-section">
+                <div class="row assignment-detail-row">
 
-            <div class="col-md-10 topbar-sec">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 topbar-sec">
 
-                <div class="school-finance-right-sec">
+                        <div class="school-finance-right-sec">
 
-                    <div style="width: 100%">
-                        <div class="calendar-heading-sec" style="margin: 0 0 12px 0;">
-                            <i class="fa-solid fa-pencil school-edit-icon"></i>
-                            <h2>Edit Invoice Details</h2>
-                        </div>
+                            <div style="width: 100%">
+                                <div class="calendar-heading-sec" style="align-items: baseline;">
+                                    <i class="fas fa-edit school-edit-icon"></i>
+                                    <h2>Edit Invoice Details</h2>
+                                </div>
 
-                        <form action="{{ url('/schoolFinanceInvoiceUpdate') }}" method="post">
-                            @csrf
-                            <div class="modal-input-field-section">
-                                <h6>{{ $schoolDetail->name_txt }}</h6>
-                                {{-- <span>ID</span>
-                                <p>{{ $schoolDetail->school_id }}</p> --}}
-                                <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
-                                <input type="hidden" name="invoice_id" value="{{ $invoiceDetail->invoice_id }}">
+                                <form action="{{ url('/schoolFinanceInvoiceUpdate') }}" method="post">
+                                    @csrf
+                                    <div class="modal-input-field-section">
+                                        <h6>{{ $schoolDetail->name_txt }}</h6>
+                                        {{-- <span>ID</span>
+                                            <p>{{ $schoolDetail->school_id }}</p> --}}
+                                        <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
+                                        <input type="hidden" name="invoice_id" value="{{ $invoiceDetail->invoice_id }}">
 
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <div class="form-group modal-input-field">
-                                            <label class="form-check-label">Invoice Date</label>
-                                            <input type="text" class="form-control datePickerPaste"
-                                                name="invoiceDate_dte" id=""
-                                                value="{{ date('d/m/Y', strtotime($invoiceDetail->invoiceDate_dte)) }}">
-                                        </div>
-
-                                        <div class="modal-side-field mb-2">
-                                            <label class="form-check-label" for="factored_status">Factored</label>
-                                            <input type="checkbox" class="" name="factored_status"
-                                                id="factored_status" value="1" <?php echo $invoiceDetail->factored_status == '-1' ? 'checked' : ''; ?>>
-                                        </div>
-
-                                        <div class="modal-side-field mb-2">
-                                            <label class="form-check-label" for="creditNote_status">Is Credit Note</label>
-                                            <input type="checkbox" class="" name="creditNote_status"
-                                                id="creditNote_status" value="1" <?php echo $invoiceDetail->creditNote_status == '-1' ? 'checked' : ''; ?>>
-                                        </div>
-
-                                        <div class="form-group modal-input-field">
-                                            <label class="form-check-label">Paid On</label>
-                                            <input type="text" class="form-control datePickerPaste" name="paidOn_dte"
-                                                id=""
-                                                value="{{ $invoiceDetail->paidOn_dte ? date('d/m/Y', strtotime($invoiceDetail->paidOn_dte)) : '' }}">
-                                        </div>
-
-                                        <div class="form-group calendar-form-filter">
-                                            <label for="">Payment Method</label>
-                                            <select class="form-control" name="paymentMethod_int" id="">
-                                                <option value="">Choose one</option>
-                                                @foreach ($paymentMethodList as $key1 => $paymentMethod)
-                                                    <option value="{{ $paymentMethod->description_int }}"
-                                                        <?php echo $invoiceDetail->paymentMethod_int == $paymentMethod->description_int ? 'selected' : ''; ?>>
-                                                        {{ $paymentMethod->description_txt }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7 modal-form-right-sec">
-                                        <div style="width: 100%;">
-                                            <div class="contact-heading mb-2">
-                                                <div class="contact-heading-text">
-                                                    <h2>Invoice Items</h2>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="form-group modal-input-field">
+                                                    <label class="form-check-label">Invoice Date</label>
+                                                    <input type="text" class="form-control datePickerPaste"
+                                                        name="invoiceDate_dte" id=""
+                                                        value="{{ date('d/m/Y', strtotime($invoiceDetail->invoiceDate_dte)) }}">
                                                 </div>
-                                                <div class="contact-icon-sec">
-                                                    <a style="cursor: pointer" class="disabled-link" id="deleteInvItemBttn">
-                                                        <i class="fa-solid fa-xmark"></i>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#invoiceItemAddModal"
-                                                        style="cursor: pointer;">
-                                                        <i class="fa-solid fa-plus"></i>
-                                                    </a>
-                                                    <a style="cursor: pointer;" class="disabled-link" id="editInvItemBttn">
-                                                        <i class="fa-solid fa-pencil school-edit-icon"></i>
-                                                    </a>
+
+                                                <div class="modal-side-field mb-2">
+                                                    <label class="form-check-label" for="factored_status">Factored</label>
+                                                    <input type="checkbox" class="" name="factored_status"
+                                                        id="factored_status" value="1" <?php echo $invoiceDetail->factored_status == '-1' ? 'checked' : ''; ?>>
+                                                </div>
+
+                                                <div class="modal-side-field mb-2">
+                                                    <label class="form-check-label" for="creditNote_status">Is Credit
+                                                        Note</label>
+                                                    <input type="checkbox" class="" name="creditNote_status"
+                                                        id="creditNote_status" value="1" <?php echo $invoiceDetail->creditNote_status == '-1' ? 'checked' : ''; ?>>
+                                                </div>
+
+                                                <div class="form-group modal-input-field">
+                                                    <label class="form-check-label">Paid On</label>
+                                                    <input type="text" class="form-control datePickerPaste"
+                                                        name="paidOn_dte" id=""
+                                                        value="{{ $invoiceDetail->paidOn_dte ? date('d/m/Y', strtotime($invoiceDetail->paidOn_dte)) : '' }}">
+                                                </div>
+
+                                                <div class="form-group calendar-form-filter">
+                                                    <label for="">Payment Method</label>
+                                                    <select class="form-control" name="paymentMethod_int" id="">
+                                                        <option value="">Choose one</option>
+                                                        @foreach ($paymentMethodList as $key1 => $paymentMethod)
+                                                            <option value="{{ $paymentMethod->description_int }}"
+                                                                <?php echo $invoiceDetail->paymentMethod_int == $paymentMethod->description_int ? 'selected' : ''; ?>>
+                                                                {{ $paymentMethod->description_txt }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
+                                            <div class="col-md-7 modal-form-right-sec">
+                                                <div style="width: 100%;">
+                                                    <div class="contact-heading mb-2">
+                                                        <div class="contact-heading-text">
+                                                            <h2>Invoice Items</h2>
+                                                        </div>
+                                                        <div class="contact-icon-sec">
+                                                            <a style="cursor: pointer" class="disabled-link"
+                                                                id="deleteInvItemBttn">
+                                                                <i class="fa-solid fa-xmark"></i>
+                                                            </a>
+                                                            <a data-toggle="modal" data-target="#invoiceItemAddModal"
+                                                                style="cursor: pointer;">
+                                                                <i class="fa-solid fa-plus"></i>
+                                                            </a>
+                                                            <a style="cursor: pointer;" class="disabled-link"
+                                                                id="editInvItemBttn">
+                                                                <i class="fa-solid fa-pencil school-edit-icon"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
 
-                                            <table class="table school-detail-page-table" id="itemTable">
-                                                <thead>
-                                                    <tr class="school-detail-table-heading">
-                                                        <th style="width: 50%;">Description</th>
-                                                        <th>Qty.</th>
-                                                        <th>Charge</th>
-                                                        <th>Cost</th>
-                                                        <th>Asn?</th>
-                                                        <th>Tch?</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="table-body-sec">
-                                                    @foreach ($invoiceItemList as $key => $invoiceItem)
-                                                        <tr class="school-detail-table-data editInvItemRow"
-                                                            onclick="invItemRowSelect({{ $invoiceItem->invoiceItem_id }})"
-                                                            id="editInvItemRow{{ $invoiceItem->invoiceItem_id }}">
-                                                            <td style="width: 50%;">{{ $invoiceItem->description_txt }}
-                                                            </td>
-                                                            <td>{{ $invoiceItem->numItems_dec }}</td>
-                                                            <td>{{ $invoiceItem->charge_dec }}</td>
-                                                            <td>{{ $invoiceItem->cost_dec }}</td>
-                                                            <td>
-                                                                @if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null)
-                                                                    {{ 'Y' }}
-                                                                @else
-                                                                    {{ 'N' }}
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if ($invoiceItem->teacher_id != '' || $invoiceItem->teacher_id != null)
-                                                                    {{ 'Y' }}
-                                                                @else
-                                                                    {{ 'N' }}
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                                    <table class="table school-detail-page-table" id="itemTable">
+                                                        <thead>
+                                                            <tr class="school-detail-table-heading">
+                                                                <th style="width: 50%;">Description</th>
+                                                                <th>Qty.</th>
+                                                                <th>Charge</th>
+                                                                <th>Cost</th>
+                                                                <th>Asn?</th>
+                                                                <th>Tch?</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-body-sec">
+                                                            @foreach ($invoiceItemList as $key => $invoiceItem)
+                                                                <tr class="school-detail-table-data editInvItemRow"
+                                                                    onclick="invItemRowSelect({{ $invoiceItem->invoiceItem_id }})"
+                                                                    id="editInvItemRow{{ $invoiceItem->invoiceItem_id }}">
+                                                                    <td style="width: 50%;">
+                                                                        {{ $invoiceItem->description_txt }}
+                                                                    </td>
+                                                                    <td>{{ $invoiceItem->numItems_dec }}</td>
+                                                                    <td>{{ $invoiceItem->charge_dec }}</td>
+                                                                    <td>{{ $invoiceItem->cost_dec }}</td>
+                                                                    <td>
+                                                                        @if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null)
+                                                                            {{ 'Y' }}
+                                                                        @else
+                                                                            {{ 'N' }}
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>
+                                                                        @if ($invoiceItem->teacher_id != '' || $invoiceItem->teacher_id != null)
+                                                                            {{ 'Y' }}
+                                                                        @else
+                                                                            {{ 'N' }}
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer calendar-modal-footer">
+                                        <button type="submit" class="btn btn-secondary">Save</button>
+
+                                        <a href="{{ url('/school-finance/' . $school_id . '?include=' . $include . '&method=' . $method) }}"
+                                            class="btn btn-danger cancel-btn">Back</a>
+                                    </div>
+                                </form>
                             </div>
 
-                            <!-- Modal footer -->
-                            <div class="modal-footer calendar-modal-footer">
-                                <button type="submit" class="btn btn-secondary">Save</button>
+                        </div>
 
-                                <a href="{{ url('/school-finance/' . $school_id . '?include=' . $include . '&method=' . $method) }}"
-                                    class="btn btn-danger cancel-btn">Back</a>
-                            </div>
-                        </form>
                     </div>
-
                 </div>
-
             </div>
-        </div>
-    </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 
     <!-- Invoice item add Modal -->
     <div class="modal fade" id="invoiceItemAddModal">
@@ -271,7 +292,10 @@
             $('#itemTable').DataTable({
                 searching: false,
                 paging: false,
-                info: false
+                info: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
 

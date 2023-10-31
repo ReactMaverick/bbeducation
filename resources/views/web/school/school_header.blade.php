@@ -1,25 +1,36 @@
 <div class="topbar-Section">
-    <i class="fa-solid fa-users">
+    <div class="menu_item">
+        <i class="fas fa-users"></i>
         <span class="topbar-text">{{ $schoolDetail->ageRange_txt }}</span>
-    </i>
-    <i class="fa-solid fa-school">
-        <span class="topbar-text">{{ $schoolDetail->type_txt }}</span>
-    </i>
-    <i class="fa-solid fa-list-ul">
-        <span class="topbar-text">{{ $schoolDetail->laName_txt }}</span>
-    </i>
-    <i class="fa-solid fa-flag">
-        <span class="topbar-text">{{ $schoolDetail->religion_txt }}</span>
-    </i>
-    <a style="cursor: pointer;" onclick="hAddSchoolFab('{{ $school_id }}')">
-        <i class="fa-solid fa-star {{ $schoolDetail->favourite_id ? 'topbar-star-icon' : '' }}"></i>
-    </a>
+    </div>
 
-    <a href="{{ URL::to('/school-calendar/' . $school_id) }}">
-        <i class="fa-regular fa-calendar-days">
+    <div class="menu_item">
+        <i class="fas fa-school"></i>
+        <span class="topbar-text">{{ $schoolDetail->type_txt }}</span>
+    </div>
+
+    <div class="menu_item">
+        <i class="fas fa-list-ul"></i>
+        <span class="topbar-text">{{ $schoolDetail->laName_txt }}</span>
+    </div>
+
+    <div class="menu_item">
+        <i class="fas fa-flag"></i>
+        <span class="topbar-text">{{ $schoolDetail->religion_txt }}</span>
+    </div>
+
+    <div class="menu_item">
+        <a style="cursor: pointer;" onclick="hAddSchoolFab('{{ $school_id }}')">
+            <i class="fas fa-star {{ $schoolDetail->favourite_id ? 'topbar-star-icon' : '' }}"></i>
+        </a>
+    </div>
+
+    <div class="menu_item">
+        <a href="{{ URL::to('/school-calendar/' . $school_id) }}">
+            <i class="fas fa-calendar-alt"></i>
             <span class="topbar-text">calendar</span>
-        </i>
-    </a>
+        </a>
+    </div>
 </div>
 
 <script>
