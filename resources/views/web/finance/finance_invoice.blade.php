@@ -1,302 +1,337 @@
-@extends('web.layout')
+{{-- @extends('web.layout') --}}
+@extends('web.layout_dashboard')
 @section('content')
     <style>
         .disabled-link {
             pointer-events: none;
         }
-
-        .financeInvoiceTableNew {
-            max-height: 62vh !important;
-            height: 62vh;
-        }
     </style>
-    <div class="assignment-detail-page-section">
-        <div class="row assignment-detail-row">
-            <div class="col-md-12 topbar-sec">
 
-                @include('web.finance.finance_header')
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('web.finance.finance_header')
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
 
-                <div class="finance-invoice-right-sec">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="assignment-detail-page-section">
+                <div class="row assignment-detail-row">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 topbar-sec">
 
-                    <div class="finance-invoice-contact-first-sec">
-                        <div class="invoice-top-section">
-                            <div class="form-group timesheet-top-input-sec">
-                                <form action="{{ url('/finance-invoices') }}" method="get" style="margin-bottom: 0;">
-                                    <label for="" class="col-form-label">Timesheets Until</label>
-                                    <input type="hidden" name="invoiceNumberMin"
-                                        value="{{ app('request')->input('invoiceNumberMin') }}">
-                                    <input type="hidden" name="invoiceNumberMax"
-                                        value="{{ app('request')->input('invoiceNumberMax') }}">
-                                    <input type="text" class="datePickerPaste" name="date"
-                                        value="{{ app('request')->input('date') ? app('request')->input('date') : date('d/m/Y', strtotime($p_maxDate)) }}">
-                                    <input type="hidden" class="datePickerPaste" name="invoiceFromDate"
-                                        value="{{ app('request')->input('invoiceFromDate') ? app('request')->input('invoiceFromDate') : '' }}">
-                                    <input type="hidden" class="datePickerPaste" name="invoiceToDate"
-                                        value="{{ app('request')->input('invoiceToDate') ? app('request')->input('invoiceToDate') : '' }}">
-                                    <input type="hidden" id="" class="onlynumber" name="invoiceNumberMin"
-                                        value="{{ app('request')->input('invoiceNumberMin') }}">
-                                    <input type="hidden" id="" class="onlynumber" name="invoiceNumberMax"
-                                        value="{{ app('request')->input('invoiceNumberMax') }}">
-                                    <input type="hidden" name="showSent"
-                                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
-                                    <button type="submit" class="timesheet-search-btn">Search</button>
-                                </form>
+                        <div class="finance-invoice-right-sec">
+                            <div class="row my_row_gap">
+                                <div class="col-md-5 col-lg-5 col-xl-5 col-12 col-sm-12">
+                                    <div class="finance-invoice-contact-first-sec sec_box_edit">
+                                        <div class="invoice-top-section details-heading">
+                                            <div class="form-group timesheet-top-input-sec">
+                                                <form action="{{ url('/finance-invoices') }}" method="get"
+                                                    style="margin-bottom: 0;">
+                                                    <label for="" class="col-form-label">Timesheets Until</label>
+                                                    <input type="hidden" name="invoiceNumberMin"
+                                                        value="{{ app('request')->input('invoiceNumberMin') }}">
+                                                    <input type="hidden" name="invoiceNumberMax"
+                                                        value="{{ app('request')->input('invoiceNumberMax') }}">
+                                                    <input type="text" class="datePickerPaste" name="date"
+                                                        value="{{ app('request')->input('date') ? app('request')->input('date') : date('d/m/Y', strtotime($p_maxDate)) }}">
+                                                    <input type="hidden" class="datePickerPaste" name="invoiceFromDate"
+                                                        value="{{ app('request')->input('invoiceFromDate') ? app('request')->input('invoiceFromDate') : '' }}">
+                                                    <input type="hidden" class="datePickerPaste" name="invoiceToDate"
+                                                        value="{{ app('request')->input('invoiceToDate') ? app('request')->input('invoiceToDate') : '' }}">
+                                                    <input type="hidden" id="" class="onlynumber"
+                                                        name="invoiceNumberMin"
+                                                        value="{{ app('request')->input('invoiceNumberMin') }}">
+                                                    <input type="hidden" id="" class="onlynumber"
+                                                        name="invoiceNumberMax"
+                                                        value="{{ app('request')->input('invoiceNumberMax') }}">
+                                                    <input type="hidden" name="showSent"
+                                                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
+                                                    <button type="submit" class="timesheet-search-btn">Search</button>
+                                                </form>
+                                            </div>
+                                            <div class="invoice-top-btn-sec">
+                                                <button id="selectNoneBtn">Select None</button>
+                                            </div>
+
+                                            <div class="invoice-top-btn-sec">
+                                                <button id="selectAllBtn">Select All</button>
+                                            </div>
+                                            <div class="invoice-edit-icon">
+                                                <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    id="timesheetEditBtn" title="Edit timesheet">
+                                                    <i class="fas fa-edit school-edit-icon"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <?php
+                                        $asnItemIdsArr = [];
+                                        foreach ($timesheetList as $key => $time) {
+                                            array_push($asnItemIdsArr, $time->asnItem_id);
+                                        }
+                                        $asnItemIds = implode(',', $asnItemIdsArr);
+                                        ?>
+
+                                        <div
+                                            class="finance-invoice-table-section finance-invoice-page-table financeInvoiceTableNew">
+                                            <table class="table table-bordered table-striped" id="myTable">
+                                                <thead>
+                                                    <tr class="school-detail-table-heading">
+                                                        <th>School</th>
+                                                        <th>Teacher</th>
+                                                        <th>Date</th>
+                                                        <th>Part</th>
+                                                        <th>Charge</th>
+                                                        <th>Pay</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-body-sec" id="timesheetTbody">
+                                                    @foreach ($timesheetList as $key1 => $timesheet)
+                                                        <tr class="school-detail-table-data editTimesheetRow"
+                                                            id="editTimesheetRow{{ $timesheet->asnItem_id }}"
+                                                            onclick="timesheetRow('{{ $timesheet->asnItem_id }}')">
+                                                            <td>{{ $timesheet->name_txt }}</td>
+                                                            <td>
+                                                                @if ($timesheet->knownAs_txt == null && $timesheet->knownAs_txt == '')
+                                                                    {{ $timesheet->firstName_txt . ' ' . $timesheet->surname_txt }}
+                                                                @else
+                                                                    {{ $timesheet->knownAs_txt . ' ' . $timesheet->surname_txt }}
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ date('d-m-Y', strtotime($timesheet->asnDate_dte)) }}
+                                                            </td>
+                                                            <td>{{ $timesheet->datePart_txt }}</td>
+                                                            <td>{{ $timesheet->charge_dec }}</td>
+                                                            <td>{{ $timesheet->cost_dec }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="invoice-process-btn">
+                                            <button id="processInvoiceBtn">Process Selected</button>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" name="" id="initialAsnItemIds"
+                                        value="{{ $asnItemIds }}">
+
+                                    <form action="{{ url('/financeProcessInvoice') }}" method="post"
+                                        id="processInvoiceForm">
+                                        @csrf
+                                        <input type="hidden" name="timesheetAsnItemIds" id="timesheetAsnItemIds"
+                                            value="">
+                                        <input type="hidden" name="p_maxDate" id=""
+                                            value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                                    </form>
+                                </div>
+
+                                <div class="col-md-7 col-lg-7 col-xl-7 col-12 col-sm-12">
+                                    <div class="finance-invoice-contact-second-sec sec_box_edit">
+
+                                        <div class="invoice-top-second-section details-heading">
+                                            <div>
+                                                <form action="{{ url('/finance-invoices') }}" method="get"
+                                                    style="margin-bottom: 0;display: flex; align-items: center; width: 100%;"
+                                                    id="invoiceFromToForm">
+
+                                                    <div class="form-group invoice-top-first-input-sec">
+                                                        <label for="" class="col-form-label">Invoice No From</label>
+                                                        <input type="text" id="" class="onlynumber"
+                                                            name="invoiceNumberMin"
+                                                            value="{{ app('request')->input('invoiceNumberMin') }}">
+                                                    </div>
+                                                    <div class="form-group invoice-top-second-input-sec">
+                                                        <label for="" class="col-form-label">to</label>
+                                                        <input type="text" id="" class="onlynumber"
+                                                            name="invoiceNumberMax"
+                                                            value="{{ app('request')->input('invoiceNumberMax') }}">
+                                                    </div>
+
+                                                    <input type="hidden" class="datePickerPaste" name="invoiceFromDate"
+                                                        value="{{ app('request')->input('invoiceFromDate') ? app('request')->input('invoiceFromDate') : '' }}">
+                                                    <input type="hidden" class="datePickerPaste" name="invoiceToDate"
+                                                        value="{{ app('request')->input('invoiceToDate') ? app('request')->input('invoiceToDate') : '' }}">
+
+                                                    <input type="hidden" name="date"
+                                                        value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                                                    <input type="hidden" name="showSent" id="showSentId"
+                                                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
+                                                    <div class="finance-invoice-icon-sec">
+                                                        <button type="submit" class="timesheet-search-btn"
+                                                            style="border: none; background-color: transparent"><i
+                                                                class="fas fa-sync"></i></button>
+                                                    </div>
+
+                                                </form>
+                                                <br>
+                                                <form action="{{ url('/finance-invoices') }}" method="get"
+                                                    style="margin-bottom: 0;display: flex; align-items: center; width: 100%;"
+                                                    id="invoiceFromToForm">
+
+                                                    <div class="form-group invoice-top-first-input-sec">
+                                                        <label for="invoiceFrom" class="col-form-label">Invoice Date
+                                                            From</label>
+                                                        <input type="text" class="datePickerPaste"
+                                                            name="invoiceFromDate"
+                                                            value="{{ app('request')->input('invoiceFromDate') ? app('request')->input('invoiceFromDate') : '' }}">
+                                                    </div>
+                                                    <div class="form-group invoice-top-second-input-sec">
+                                                        <label for="invoiceTo" class="col-form-label">to</label>
+                                                        <input type="text" class="datePickerPaste"
+                                                            name="invoiceToDate"
+                                                            value="{{ app('request')->input('invoiceToDate') ? app('request')->input('invoiceToDate') : '' }}">
+                                                    </div>
+
+                                                    <input type="hidden" id="" class="onlynumber"
+                                                        name="invoiceNumberMin"
+                                                        value="{{ app('request')->input('invoiceNumberMin') }}">
+                                                    <input type="hidden" id="" class="onlynumber"
+                                                        name="invoiceNumberMax"
+                                                        value="{{ app('request')->input('invoiceNumberMax') }}">
+
+                                                    <input type="hidden" name="date"
+                                                        value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                                                    <input type="hidden" name="showSent" id="showSentId"
+                                                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
+                                                    <div class="finance-invoice-icon-sec">
+                                                        <button type="submit" class="timesheet-search-btn"
+                                                            style="border: none; background-color: transparent"><i
+                                                                class="fas fa-sync"></i></button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+
+                                            <div class="invoice-checkbox-top-section">
+                                                <div class="invoice-checkbox-sec">
+                                                    <input type="checkbox" id="show_sent" name="show_sent"
+                                                        value="1"
+                                                        {{ app('request')->input('showSent') == 'true' ? 'checked' : '' }}>
+                                                </div>
+                                                <div class="invoice-checkbox-sec">
+                                                    <label for="show_sent">Show Sent</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="finance-invoice-icon-sec">
+                                                <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    id="saveInvoiceBtn" title="Save Invoice">
+                                                    <i class="fas fa-file-download"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="finance-invoice-icon-sec">
+                                                <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    id="splitInvoiceBtn" title="Split Invoice">
+                                                    <img src="{{ asset('web/company_logo/diverge.png') }}"
+                                                        alt="">
+                                                </a>
+                                            </div>
+
+                                            <div class="finance-invoice-icon-sec">
+                                                <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    id="viewInvoiceBtn" title="View Invoice">
+                                                    <i class="fas fa-search"></i>
+                                                </a>
+                                            </div>
+
+                                            <div class="finance-invoice-icon-sec">
+                                                <a style="cursor: pointer" id="sendAllInvoiceBtn"
+                                                    title="Send All Listed Invoice" class="icon_all">
+                                                    <i class="fas fa-envelope"></i>
+                                                    <div class="finance-invoice-second-icon-sec">
+                                                        <i class="fas fa-plus"></i>
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                            <div class="finance-invoice-icon-sec">
+                                                <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    id="sendSelectedInvoiceBtn" title="Send Selected Invoice">
+                                                    <i class="fas fa-envelope"></i>
+                                                </a>
+                                            </div>
+                                            <div class="invoice-second-edit-icon">
+                                                <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    id="editInvoiceBtn" title="Edit Invoice">
+                                                    <i class="fas fa-edit school-edit-icon"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="finance-invoice-table-section finance-invoice-page-table financeInvoiceTableNew">
+                                            <table class="table table-bordered table-striped" id="myTable">
+                                                <thead>
+                                                    <tr class="school-detail-table-heading">
+                                                        <th>Invoice ID</th>
+                                                        <th>Date</th>
+                                                        <th>School</th>
+                                                        <th>Gross</th>
+                                                        <th>Net</th>
+                                                        <th>Days</th>
+                                                        <th>Tch</th>
+                                                        <th>Email</th>
+                                                        <th>Factor</th>
+                                                        <th>Mail Send</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-body-sec">
+                                                    @foreach ($invoiceList as $key2 => $invoice)
+                                                        <tr class="school-detail-table-data editInvoiceRow"
+                                                            id="editInvoiceRow{{ $invoice->invoice_id }}"
+                                                            onclick="selectInvoiceRow('{{ $invoice->invoice_id }}')">
+                                                            <td>{{ $invoice->invoice_id }}</td>
+                                                            <td>{{ date('d-m-Y', strtotime($invoice->invoiceDate_dte)) }}
+                                                            </td>
+                                                            <td>{{ $invoice->name_txt }}</td>
+                                                            <td>{{ $invoice->gross_dec }}</td>
+                                                            <td>{{ $invoice->net_dec }}</td>
+                                                            <td>{{ $invoice->days_dec }}</td>
+                                                            <td>{{ $invoice->teachers_int }}</td>
+                                                            <td>{{ $invoice->hasEmail_status }}</td>
+                                                            <td>{{ $invoice->factored_status }}</td>
+                                                            <td>
+                                                                @if ($invoice->sentMailDate)
+                                                                    Yes
+                                                                @else
+                                                                    No
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($invoice->paidOn_dte != null)
+                                                                    {{ 'Paid' }}
+                                                                @elseif (date('Y-m-d', strtotime($invoice->invoiceDate_dte . ' + 30 days')) < date('Y-m-d'))
+                                                                    {{ 'Overdue' }}
+                                                                @else
+                                                                    {{ 'Due' }}
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <input type="hidden" name="" id="editInvoiceId" value="">
+
+                                    </div>
+                                </div>
                             </div>
-                            <div class="invoice-top-btn-sec">
-                                <button id="selectNoneBtn">Select None</button>
-                            </div>
-
-                            <div class="invoice-top-btn-sec">
-                                <button id="selectAllBtn">Select All</button>
-                            </div>
-                            <div class="invoice-edit-icon">
-                                <a style="cursor: pointer" class="disabled-link" id="timesheetEditBtn"
-                                    title="Edit timesheet">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <?php
-                        $asnItemIdsArr = [];
-                        foreach ($timesheetList as $key => $time) {
-                            array_push($asnItemIdsArr, $time->asnItem_id);
-                        }
-                        $asnItemIds = implode(',', $asnItemIdsArr);
-                        ?>
-
-                        <div class="finance-invoice-table-section finance-invoice-page-table financeInvoiceTableNew">
-                            <table class="table finance-timesheet-page-table" id="myTable">
-                                <thead>
-                                    <tr class="school-detail-table-heading">
-                                        <th>School</th>
-                                        <th>Teacher</th>
-                                        <th>Date</th>
-                                        <th>Part</th>
-                                        <th>Charge</th>
-                                        <th>Pay</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-body-sec" id="timesheetTbody">
-                                    @foreach ($timesheetList as $key1 => $timesheet)
-                                        <tr class="school-detail-table-data editTimesheetRow"
-                                            id="editTimesheetRow{{ $timesheet->asnItem_id }}"
-                                            onclick="timesheetRow('{{ $timesheet->asnItem_id }}')">
-                                            <td>{{ $timesheet->name_txt }}</td>
-                                            <td>
-                                                @if ($timesheet->knownAs_txt == null && $timesheet->knownAs_txt == '')
-                                                    {{ $timesheet->firstName_txt . ' ' . $timesheet->surname_txt }}
-                                                @else
-                                                    {{ $timesheet->knownAs_txt . ' ' . $timesheet->surname_txt }}
-                                                @endif
-                                            </td>
-                                            <td>{{ date('d-m-Y', strtotime($timesheet->asnDate_dte)) }}</td>
-                                            <td>{{ $timesheet->datePart_txt }}</td>
-                                            <td>{{ $timesheet->charge_dec }}</td>
-                                            <td>{{ $timesheet->cost_dec }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="invoice-process-btn">
-                            <button id="processInvoiceBtn">Process Selected</button>
                         </div>
                     </div>
-
-                    <input type="hidden" name="" id="initialAsnItemIds" value="{{ $asnItemIds }}">
-
-                    <form action="{{ url('/financeProcessInvoice') }}" method="post" id="processInvoiceForm">
-                        @csrf
-                        <input type="hidden" name="timesheetAsnItemIds" id="timesheetAsnItemIds" value="">
-                        <input type="hidden" name="p_maxDate" id=""
-                            value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
-                    </form>
-
-                    <div class="finance-invoice-contact-second-sec">
-
-                        <div class="invoice-top-second-section">
-                            <div>
-                                <form action="{{ url('/finance-invoices') }}" method="get"
-                                    style="margin-bottom: 0;display: flex; align-items: center; width: 100%;"
-                                    id="invoiceFromToForm">
-
-                                    <div class="form-group invoice-top-first-input-sec">
-                                        <label for="" class="col-form-label">Invoice No From</label>
-                                        <input type="text" id="" class="onlynumber" name="invoiceNumberMin"
-                                            value="{{ app('request')->input('invoiceNumberMin') }}">
-                                    </div>
-                                    <div class="form-group invoice-top-second-input-sec">
-                                        <label for="" class="col-form-label">to</label>
-                                        <input type="text" id="" class="onlynumber" name="invoiceNumberMax"
-                                            value="{{ app('request')->input('invoiceNumberMax') }}">
-                                    </div>
-
-                                    <input type="hidden" class="datePickerPaste" name="invoiceFromDate"
-                                        value="{{ app('request')->input('invoiceFromDate') ? app('request')->input('invoiceFromDate') : '' }}">
-                                    <input type="hidden" class="datePickerPaste" name="invoiceToDate"
-                                        value="{{ app('request')->input('invoiceToDate') ? app('request')->input('invoiceToDate') : '' }}">
-
-                                    <input type="hidden" name="date"
-                                        value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
-                                    <input type="hidden" name="showSent" id="showSentId"
-                                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
-                                    <div class="finance-invoice-icon-sec">
-                                        <button type="submit" class="timesheet-search-btn"
-                                            style="border: none; background-color: transparent"><i
-                                                class="fa-solid fa-arrows-rotate"></i></button>
-                                    </div>
-
-                                </form>
-                                <br>
-                                <form action="{{ url('/finance-invoices') }}" method="get"
-                                    style="margin-bottom: 0;display: flex; align-items: center; width: 100%;"
-                                    id="invoiceFromToForm">
-
-                                    <div class="form-group invoice-top-first-input-sec">
-                                        <label for="invoiceFrom" class="col-form-label">Invoice Date From</label>
-                                        <input type="text" class="datePickerPaste" name="invoiceFromDate"
-                                            value="{{ app('request')->input('invoiceFromDate') ? app('request')->input('invoiceFromDate') : '' }}">
-                                    </div>
-                                    <div class="form-group invoice-top-second-input-sec">
-                                        <label for="invoiceTo" class="col-form-label">to</label>
-                                        <input type="text" class="datePickerPaste" name="invoiceToDate"
-                                            value="{{ app('request')->input('invoiceToDate') ? app('request')->input('invoiceToDate') : '' }}">
-                                    </div>
-
-                                    <input type="hidden" id="" class="onlynumber" name="invoiceNumberMin"
-                                        value="{{ app('request')->input('invoiceNumberMin') }}">
-                                    <input type="hidden" id="" class="onlynumber" name="invoiceNumberMax"
-                                        value="{{ app('request')->input('invoiceNumberMax') }}">
-
-                                    <input type="hidden" name="date"
-                                        value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
-                                    <input type="hidden" name="showSent" id="showSentId"
-                                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
-                                    <div class="finance-invoice-icon-sec">
-                                        <button type="submit" class="timesheet-search-btn"
-                                            style="border: none; background-color: transparent"><i
-                                                class="fa-solid fa-arrows-rotate"></i></button>
-                                    </div>
-
-                                </form>
-                            </div>
-
-                            <div class="invoice-checkbox-top-section">
-                                <div class="invoice-checkbox-sec">
-                                    <input type="checkbox" id="show_sent" name="show_sent" value="1"
-                                        {{ app('request')->input('showSent') == 'true' ? 'checked' : '' }}>
-                                </div>
-                                <div class="invoice-checkbox-sec">
-                                    <label for="show_sent">Show Sent</label>
-                                </div>
-                            </div>
-
-                            <div class="finance-invoice-icon-sec">
-                                <a style="cursor: pointer" class="disabled-link" id="saveInvoiceBtn"
-                                    title="Save Invoice">
-                                    <i class="fa-solid fa-file-lines"></i>
-                                </a>
-                            </div>
-
-                            <div class="finance-invoice-icon-sec">
-                                <a style="cursor: pointer" class="disabled-link" id="splitInvoiceBtn"
-                                    title="Split Invoice">
-                                    <img src="{{ asset('web/company_logo/diverge.png') }}" alt="">
-                                </a>
-                            </div>
-
-                            <div class="finance-invoice-icon-sec">
-                                <a style="cursor: pointer" class="disabled-link" id="viewInvoiceBtn"
-                                    title="View Invoice">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </a>
-                            </div>
-
-                            <div class="finance-invoice-icon-sec">
-                                <a style="cursor: pointer" id="sendAllInvoiceBtn" title="Send All Listed Invoice">
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <div class="finance-invoice-second-icon-sec">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </div>
-                                </a>
-                            </div>
-
-                            <div class="finance-invoice-icon-sec">
-                                <a style="cursor: pointer" class="disabled-link" id="sendSelectedInvoiceBtn"
-                                    title="Send Selected Invoice">
-                                    <i class="fa-solid fa-envelope"></i>
-                                </a>
-                            </div>
-                            <div class="invoice-second-edit-icon">
-                                <a style="cursor: pointer" class="disabled-link" id="editInvoiceBtn"
-                                    title="Edit Invoice">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="finance-invoice-table-section finance-invoice-page-table financeInvoiceTableNew">
-                            <table class="table finance-timesheet-page-table" id="myTable">
-                                <thead>
-                                    <tr class="school-detail-table-heading">
-                                        <th>Invoice ID</th>
-                                        <th>Date</th>
-                                        <th>School</th>
-                                        <th>Gross</th>
-                                        <th>Net</th>
-                                        <th>Days</th>
-                                        <th>Tch</th>
-                                        <th>Email</th>
-                                        <th>Factor</th>
-                                        <th>Mail Send</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-body-sec">
-                                    @foreach ($invoiceList as $key2 => $invoice)
-                                        <tr class="school-detail-table-data editInvoiceRow"
-                                            id="editInvoiceRow{{ $invoice->invoice_id }}"
-                                            onclick="selectInvoiceRow('{{ $invoice->invoice_id }}')">
-                                            <td>{{ $invoice->invoice_id }}</td>
-                                            <td>{{ date('d-m-Y', strtotime($invoice->invoiceDate_dte)) }}</td>
-                                            <td>{{ $invoice->name_txt }}</td>
-                                            <td>{{ $invoice->gross_dec }}</td>
-                                            <td>{{ $invoice->net_dec }}</td>
-                                            <td>{{ $invoice->days_dec }}</td>
-                                            <td>{{ $invoice->teachers_int }}</td>
-                                            <td>{{ $invoice->hasEmail_status }}</td>
-                                            <td>{{ $invoice->factored_status }}</td>
-                                            <td>
-                                                @if ($invoice->sentMailDate)
-                                                    Yes
-                                                @else
-                                                    No
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($invoice->paidOn_dte != null)
-                                                    {{ 'Paid' }}
-                                                @elseif (date('Y-m-d', strtotime($invoice->invoiceDate_dte . ' + 30 days')) < date('Y-m-d'))
-                                                    {{ 'Overdue' }}
-                                                @else
-                                                    {{ 'Due' }}
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <input type="hidden" name="" id="editInvoiceId" value="">
-
-                    </div>
-
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Event Edit Modal -->
     <div class="modal fade" id="eventEditModal" aria-hidden="true">

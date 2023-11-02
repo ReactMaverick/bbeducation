@@ -33,18 +33,21 @@
                                     <i class="fas fa-edit school-edit-icon"></i>
                                     <h2>Edit Invoice Details</h2>
                                 </div>
+                                <div class="calendar-heading-sec" style="margin: 0 0 10px 0;">
+                                    <h2>{{ $schoolDetail->name_txt }}</h2>
+                                </div>
 
                                 <form action="{{ url('/schoolFinanceInvoiceUpdate') }}" method="post">
                                     @csrf
                                     <div class="modal-input-field-section">
-                                        <h6>{{ $schoolDetail->name_txt }}</h6>
+
                                         {{-- <span>ID</span>
                                             <p>{{ $schoolDetail->school_id }}</p> --}}
                                         <input type="hidden" name="school_id" value="{{ $schoolDetail->school_id }}">
                                         <input type="hidden" name="invoice_id" value="{{ $invoiceDetail->invoice_id }}">
 
                                         <div class="row">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4 col-lg-4 col-xl-4 col-12 col-sm-12">
                                                 <div class="form-group modal-input-field">
                                                     <label class="form-check-label">Invoice Date</label>
                                                     <input type="text" class="form-control datePickerPaste"
@@ -85,68 +88,70 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-7 modal-form-right-sec">
+                                            <div class="col-md-8 col-lg-8 col-xl-8 col-12 col-sm-12">
                                                 <div style="width: 100%;">
-                                                    <div class="contact-heading mb-2">
+                                                    <div class="contact-heading details-heading">
                                                         <div class="contact-heading-text">
                                                             <h2>Invoice Items</h2>
                                                         </div>
                                                         <div class="contact-icon-sec">
-                                                            <a style="cursor: pointer" class="disabled-link"
+                                                            <a style="cursor: pointer" class="disabled-link icon_all"
                                                                 id="deleteInvItemBttn">
-                                                                <i class="fa-solid fa-xmark"></i>
+                                                                <i class="fas fa-trash-alt trash-icon"></i>
                                                             </a>
                                                             <a data-toggle="modal" data-target="#invoiceItemAddModal"
-                                                                style="cursor: pointer;">
-                                                                <i class="fa-solid fa-plus"></i>
+                                                                style="cursor: pointer;" class="icon_all">
+                                                                <i class="fas fa-plus-circle"></i>
                                                             </a>
-                                                            <a style="cursor: pointer;" class="disabled-link"
+                                                            <a style="cursor: pointer;" class="disabled-link icon_all"
                                                                 id="editInvItemBttn">
-                                                                <i class="fa-solid fa-pencil school-edit-icon"></i>
+                                                                <i class="fas fa-edit school-edit-icon"></i>
                                                             </a>
                                                         </div>
                                                     </div>
 
-                                                    <table class="table school-detail-page-table" id="itemTable">
-                                                        <thead>
-                                                            <tr class="school-detail-table-heading">
-                                                                <th style="width: 50%;">Description</th>
-                                                                <th>Qty.</th>
-                                                                <th>Charge</th>
-                                                                <th>Cost</th>
-                                                                <th>Asn?</th>
-                                                                <th>Tch?</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody class="table-body-sec">
-                                                            @foreach ($invoiceItemList as $key => $invoiceItem)
-                                                                <tr class="school-detail-table-data editInvItemRow"
-                                                                    onclick="invItemRowSelect({{ $invoiceItem->invoiceItem_id }})"
-                                                                    id="editInvItemRow{{ $invoiceItem->invoiceItem_id }}">
-                                                                    <td style="width: 50%;">
-                                                                        {{ $invoiceItem->description_txt }}
-                                                                    </td>
-                                                                    <td>{{ $invoiceItem->numItems_dec }}</td>
-                                                                    <td>{{ $invoiceItem->charge_dec }}</td>
-                                                                    <td>{{ $invoiceItem->cost_dec }}</td>
-                                                                    <td>
-                                                                        @if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null)
-                                                                            {{ 'Y' }}
-                                                                        @else
-                                                                            {{ 'N' }}
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($invoiceItem->teacher_id != '' || $invoiceItem->teacher_id != null)
-                                                                            {{ 'Y' }}
-                                                                        @else
-                                                                            {{ 'N' }}
-                                                                        @endif
-                                                                    </td>
+                                                    <div class="assignment-finance-table-section">
+                                                        <table class="table table-bordered table-striped" id="itemTable">
+                                                            <thead>
+                                                                <tr class="school-detail-table-heading">
+                                                                    <th style="width: 50%;">Description</th>
+                                                                    <th>Qty.</th>
+                                                                    <th>Charge</th>
+                                                                    <th>Cost</th>
+                                                                    <th>Asn?</th>
+                                                                    <th>Tch?</th>
                                                                 </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                            </thead>
+                                                            <tbody class="table-body-sec">
+                                                                @foreach ($invoiceItemList as $key => $invoiceItem)
+                                                                    <tr class="school-detail-table-data editInvItemRow"
+                                                                        onclick="invItemRowSelect({{ $invoiceItem->invoiceItem_id }})"
+                                                                        id="editInvItemRow{{ $invoiceItem->invoiceItem_id }}">
+                                                                        <td style="width: 50%;">
+                                                                            {{ $invoiceItem->description_txt }}
+                                                                        </td>
+                                                                        <td>{{ $invoiceItem->numItems_dec }}</td>
+                                                                        <td>{{ $invoiceItem->charge_dec }}</td>
+                                                                        <td>{{ $invoiceItem->cost_dec }}</td>
+                                                                        <td>
+                                                                            @if ($invoiceItem->asnItem_id != '' || $invoiceItem->asnItem_id != null)
+                                                                                {{ 'Y' }}
+                                                                            @else
+                                                                                {{ 'N' }}
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($invoiceItem->teacher_id != '' || $invoiceItem->teacher_id != null)
+                                                                                {{ 'Y' }}
+                                                                            @else
+                                                                                {{ 'N' }}
+                                                                            @endif
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -173,8 +178,8 @@
 
     <!-- Invoice item add Modal -->
     <div class="modal fade" id="invoiceItemAddModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:65%;">
+        <div class="modal-dialog modal-md modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -182,63 +187,66 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Add Invoice Item</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Add Invoice Item</h2>
+                    </div>
 
-                <form action="{{ url('/schoolFinanceInvItemInsert') }}" method="post" class="form-validate"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-input-field-section">
-                        {{-- <h6>{{ $schoolDetail->name_txt }}</h6>
+                    <form action="{{ url('/schoolFinanceInvItemInsert') }}" method="post" class="form-validate"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-input-field-section">
+                            {{-- <h6>{{ $schoolDetail->name_txt }}</h6>
                         <span>ID</span>
                         <p>{{ $schoolDetail->school_id }}</p> --}}
-                        <input type="hidden" name="invoice_id" value="{{ $invoice_id }}">
+                            <input type="hidden" name="invoice_id" value="{{ $invoice_id }}">
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group modal-input-field">
-                                    <label class="form-check-label">Item Description</label><span
-                                        style="color: red;">*</span>
-                                    <textarea name="description_txt" id="" cols="30" rows="4" class="form-control field-validate"></textarea>
-                                </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group modal-input-field">
+                                        <label class="form-check-label">Item Description</label><span
+                                            style="color: red;">*</span>
+                                        <textarea name="description_txt" id="" cols="30" rows="4" class="form-control field-validate"></textarea>
+                                    </div>
 
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Number of Items</label><span
-                                        style="color: red;">*</span>
-                                    <input type="text" class="form-control number-validate" name="numItems_dec"
-                                        id="" value="">
-                                </div>
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">Number of Items</label><span
+                                            style="color: red;">*</span>
+                                        <input type="text" class="form-control number-validate" name="numItems_dec"
+                                            id="" value="">
+                                    </div>
 
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Linked Date</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control datePickerPaste datepaste-validate"
-                                        name="dateFor_dte" id="" value="">
-                                </div>
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">Linked Date</label><span
+                                            style="color: red;">*</span>
+                                        <input type="text" class="form-control datePickerPaste datepaste-validate"
+                                            name="dateFor_dte" id="" value="">
+                                    </div>
 
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Charge</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control number-validate" name="charge_dec"
-                                        id="" value="">
-                                </div>
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">Charge</label><span style="color: red;">*</span>
+                                        <input type="text" class="form-control number-validate" name="charge_dec"
+                                            id="" value="">
+                                    </div>
 
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Cost</label><span style="color: red;">*</span>
-                                    <input type="text" class="form-control number-validate" name="cost_dec"
-                                        id="" value="">
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">Cost</label><span style="color: red;">*</span>
+                                        <input type="text" class="form-control number-validate" name="cost_dec"
+                                            id="" value="">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -247,8 +255,8 @@
 
     <!-- Invoice item edit Modal -->
     <div class="modal fade" id="invoiceItemEditModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:65%;">
+        <div class="modal-dialog modal-md modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -256,31 +264,33 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Invoice Item</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Invoice Item</h2>
+                    </div>
 
-                <form action="{{ url('/schoolFinanceInvItemUpdate') }}" method="post" class="form-validate-2"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="editInvItemId" id="editInvItemId" value="">
-                    <div class="modal-input-field-section">
-                        {{-- <h6>{{ $schoolDetail->name_txt }}</h6>
+                    <form action="{{ url('/schoolFinanceInvItemUpdate') }}" method="post" class="form-validate-2"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="editInvItemId" id="editInvItemId" value="">
+                        <div class="modal-input-field-section">
+                            {{-- <h6>{{ $schoolDetail->name_txt }}</h6>
                         <span>ID</span>
                         <p>{{ $schoolDetail->school_id }}</p> --}}
-                        <input type="hidden" name="invoice_id" value="{{ $invoice_id }}">
+                            <input type="hidden" name="invoice_id" value="{{ $invoice_id }}">
 
-                        <div class="row" id="invoiceItemEditAjax"></div>
-                    </div>
+                            <div class="row" id="invoiceItemEditAjax"></div>
+                        </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -290,6 +300,7 @@
     <script>
         $(document).ready(function() {
             $('#itemTable').DataTable({
+                scrollY: '350px',
                 searching: false,
                 paging: false,
                 info: false,

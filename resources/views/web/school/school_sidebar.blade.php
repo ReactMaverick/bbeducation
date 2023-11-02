@@ -175,13 +175,9 @@
                     </a>
                 </li>
 
-                {{--
-
-                
-
                 <li class="nav-item">
                     <a href="{{ URL::to('/school-document/' . $school_id) }}"
-                        class="nav-link @if ($title['pageTitle'] == 'School Document') active @endif">
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'School Document') active @endif">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
                             xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
                             viewBox="0 0 480 480" style="enable-background:new 0 0 512 512" xml:space="preserve"
@@ -206,7 +202,7 @@
 
                 <li class="nav-item">
                     <a href="{{ URL::to('/school-candidate/' . $school_id . '?status=all') }}"
-                        class="nav-link @if ($title['pageTitle'] == 'School Teacher') active @endif">
+                        class="nav-link @if ($pagetitle['pageTitle'] == 'School Teacher') active @endif">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
                             xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" x="0" y="0"
                             viewBox="0 0 605.625 605.625" style="enable-background:new 0 0 512 512"
@@ -232,7 +228,7 @@
                             Teacher List
                         </p>
                     </a>
-                </li> --}}
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" onclick="schoolPasswordSendLink('{{ $school_id }}')"

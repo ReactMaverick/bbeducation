@@ -1,70 +1,87 @@
-@extends('web.layout')
+{{-- @extends('web.layout') --}}
+@extends('web.layout_dashboard')
 @section('content')
     <style>
         .disabled-link {
             pointer-events: none;
         }
     </style>
-    <div class="assignment-section-col">
+    <div class="tab-content dashboard-tab-content" id="myTabContent">
+        <div class="assignment-section-col">
+            <div class="teacher-all-section pt-3">
+                <div class="container-fluid">
+                    <div class="row gap_50 justify-content-around">
+                        <div class="col-md-6 pr-5 pl-2 mob_pr_0">
+                            <div class="teacher-section skd_new_edit">
+                                <div class="teacher-page-sec skd_new_edit_heading details-heading">
+                                    <h2>Management</h2>
+                                </div>
+                                <div class="teacher-left-sec skd_row dataTables_wrapper">
+                                    <div class="about-teacher skd_icon_box small-box bg-info">
+                                        <a data-toggle="modal" data-target="#studentAddModal" style="cursor: pointer;">
+                                            <div class="inner text-white">
+                                                <p>Students</p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                        </a>
+                                    </div>
 
-        <div class="teacher-all-section">
-            <div class="finance-section">
-                <div class="teacher-page-sec">
-                    <h2>Management</h2>
-                </div>
-                <div class="teacher-left-sec">
-                    {{-- <div class="about-finance">
-                        <a href="{{ URL::to('/management-user') }}"> <i class="fa-solid fa-magnifying-glass"></i>
-                            <p>Open Users</p>
-                        </a>
-                    </div> --}}
+                                    <div class="about-teacher skd_icon_box small-box bg-success">
+                                        <a data-toggle="modal" data-target="#viewMetricsModal" style="cursor: pointer;">
+                                            <div class="inner text-white">
+                                                <p>View Metrics</p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                        </a>
+                                    </div>
 
-                    {{-- <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-user"></i>
-                            <p>Manage Users</p>
-                        </a>
+                                    {{-- <div class="about-finance">
+                                        <a href="{{ URL::to('/management-user') }}"> <i class="fa-solid fa-magnifying-glass"></i>
+                                            <p>Open Users</p>
+                                        </a>
+                                    </div> --}}
+
+                                    {{-- <div class="about-finance">
+                                        <a href="#"> <i class="fa-solid fa-user"></i>
+                                            <p>Manage Users</p>
+                                        </a>
+                                    </div>
+
+                                    <div class="about-finance">
+                                        <a href="{{ URL::to('/management-mailshot') }}"> <i class="fa-solid fa-envelope"></i>
+                                            <p>Mailshots</p>
+                                        </a>
+                                    </div> --}}
+                                    {{-- <div class="about-finance">
+                                        <a href="#"> <i class="fa-solid fa-gear"></i>
+                                            <p>Assignment</p>
+                                            <p>Rates</p>
+                                        </a>
+                                    </div> --}}
+                                    {{-- <div class="about-finance">
+                                        <a href="#"> <i class="fa-solid fa-id-badge"></i>
+                                            <p>Delete Teacher</p>
+                                        </a>
+                                    </div> --}}
+                                    {{-- <div class="about-finance">
+                                        <a href="#"> <i class="fa-solid fa-user"></i>
+                                            <p>Manage Users</p>
+                                        </a>
+                                    </div> --}}
+                                    {{-- <div class="about-finance">
+                                        <a href="#"> <i class="fa-solid fa-person"></i>
+                                            <p>Export to</p>
+                                            <p>Quickbooks</p>
+                                        </a>
+                                    </div> --}}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="about-finance">
-                        <a href="{{ URL::to('/management-mailshot') }}"> <i class="fa-solid fa-envelope"></i>
-                            <p>Mailshots</p>
-                        </a>
-                    </div> --}}
-                    <div class="about-finance">
-                        <a data-toggle="modal" data-target="#studentAddModal" style="cursor: pointer;">
-                            <i class="fa-solid fa-people-group"></i>
-                            <p>Students</p>
-                        </a>
-                    </div>
-
-                    {{-- <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-gear"></i>
-                            <p>Assignment</p>
-                            <p>Rates</p>
-                        </a>
-                    </div> --}}
-                    {{-- <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-id-badge"></i>
-                            <p>Delete Teacher</p>
-                        </a>
-                    </div> --}}
-                    <div class="about-finance">
-                        <a data-toggle="modal" data-target="#viewMetricsModal" style="cursor: pointer;"> <i
-                                class="fa-solid fa-chart-line"></i>
-                            <p>View Metrics</p>
-                        </a>
-                    </div>
-                    {{-- <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-user"></i>
-                            <p>Manage Users</p>
-                        </a>
-                    </div> --}}
-                    {{-- <div class="about-finance">
-                        <a href="#"> <i class="fa-solid fa-person"></i>
-                            <p>Export to</p>
-                            <p>Quickbooks</p>
-                        </a>
-                    </div> --}}
                 </div>
             </div>
         </div>
@@ -72,7 +89,7 @@
 
     <!-- Student Add Modal -->
     <div class="modal fade" id="studentAddModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -81,67 +98,69 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Add/Edit Students (Double click to edit)</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Add/Edit Students (Double click to edit)</h2>
+                    </div>
 
-                <div class="modal-input-field-section">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div style="text-align: right">
-                                <a style="cursor: pointer;" id="studentDeleteBtn">
-                                    <i class="fa-solid fa-trash trash-icon"></i>
-                                </a>
-                            </div>
+                    <div class="modal-input-field-section">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-xl-6 col-12 col-sm-12">
+                                <div style="text-align: right">
+                                    <a style="cursor: pointer;" id="studentDeleteBtn">
+                                        <i class="fas fa-trash-alt trash-icon"></i>
+                                    </a>
+                                </div>
 
-                            <div class="finance-list-section mb-2">
-                                <div class="finance-list-text-section" style="max-height: 400px; min-height: 400px;">
-                                    <div class="finance-list-text">
-                                        <table class="table finance-timesheet-page-table" id="">
-                                            <thead>
-                                                <tr class="school-detail-table-heading">
-                                                    <th>Name</th>
-                                                    <th>Current</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-body-sec" id="studentTbody">
-                                                @foreach ($studentList as $key => $student)
-                                                    <tr class="school-detail-table-data selectStudentRow"
-                                                        id="selectStudentRow{{ $student->student_id }}"
-                                                        studentId="{{ $student->student_id }}"
-                                                        firstName="{{ $student->firstName_txt }}"
-                                                        surname="{{ $student->surname_txt }}"
-                                                        isCurrent="{{ $student->isCurrent_ysn }}">
-                                                        <td>{{ $student->studentName_txt }}</td>
-                                                        <td>{{ $student->isCurrent_txt }}</td>
+                                <div class="finance-list-section mb-2">
+                                    <div class="finance-list-text-section" style="max-height: 400px; min-height: 400px;">
+                                        <div class="finance-list-text">
+                                            <table class="table table-bordered table-striped" id="">
+                                                <thead>
+                                                    <tr class="school-detail-table-heading">
+                                                        <th>Name</th>
+                                                        <th>Current</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody class="table-body-sec" id="studentTbody">
+                                                    @foreach ($studentList as $key => $student)
+                                                        <tr class="school-detail-table-data selectStudentRow"
+                                                            id="selectStudentRow{{ $student->student_id }}"
+                                                            studentId="{{ $student->student_id }}"
+                                                            firstName="{{ $student->firstName_txt }}"
+                                                            surname="{{ $student->surname_txt }}"
+                                                            isCurrent="{{ $student->isCurrent_ysn }}">
+                                                            <td>{{ $student->studentName_txt }}</td>
+                                                            <td>{{ $student->isCurrent_txt }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6 modal-form-right-sec">
-                            <form action="{{ url('/studentInsert') }}" method="post" class="form-validate"
-                                id="studentAddForm">
-                                @csrf
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">First Name</label>
-                                    <input type="text" class="form-control field-validate" name="firstName_txt"
-                                        id="firstName_txt" value="">
-                                </div>
+                            <div class="col-md-6 col-lg-6 col-xl-6 col-12 col-sm-12">
+                                <form action="{{ url('/studentInsert') }}" method="post" class="form-validate"
+                                    id="studentAddForm">
+                                    @csrf
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">First Name</label>
+                                        <input type="text" class="form-control field-validate" name="firstName_txt"
+                                            id="firstName_txt" value="">
+                                    </div>
 
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Surname</label>
-                                    <input type="text" class="form-control field-validate" name="surname_txt"
-                                        id="surname_txt" value="">
-                                </div>
-                                <div class="modal-footer calendar-modal-footer">
-                                    <button type="button" class="btn btn-secondary" id="studentAddBtn">Add</button>
-                                </div>
-                            </form>
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">Surname</label>
+                                        <input type="text" class="form-control field-validate" name="surname_txt"
+                                            id="surname_txt" value="">
+                                    </div>
+                                    <div class="modal-footer calendar-modal-footer">
+                                        <button type="button" class="btn btn-secondary" id="studentAddBtn">Add</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,8 +172,8 @@
 
     <!-- Student Edit Modal -->
     <div class="modal fade" id="studentEditModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:65%;">
+        <div class="modal-dialog modal-sm modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -162,46 +181,49 @@
                     <button type="button" class="close" id="editStudentClose">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Details</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Details</h2>
+                    </div>
 
-                <form action="{{ url('/studentUpdate') }}" method="post" class="form-validate-2" id="studentEditForm">
-                    @csrf
-                    <input type="hidden" name="student_id" id="editStudentId" value="">
+                    <form action="{{ url('/studentUpdate') }}" method="post" class="form-validate-2"
+                        id="studentEditForm">
+                        @csrf
+                        <input type="hidden" name="student_id" id="editStudentId" value="">
 
-                    <div class="modal-input-field-section">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">First Name</label>
-                                    <input type="text" class="form-control field-validate-2" name="firstName_txt"
-                                        id="firstNameEdit" value="">
-                                </div>
+                        <div class="modal-input-field-section">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">First Name</label>
+                                        <input type="text" class="form-control field-validate-2" name="firstName_txt"
+                                            id="firstNameEdit" value="">
+                                    </div>
 
-                                <div class="modal-input-field form-group">
-                                    <label class="form-check-label">Surname</label>
-                                    <input type="text" class="form-control field-validate-2" name="surname_txt"
-                                        id="surnameEdit" value="">
-                                </div>
+                                    <div class="modal-input-field form-group">
+                                        <label class="form-check-label">Surname</label>
+                                        <input type="text" class="form-control field-validate-2" name="surname_txt"
+                                            id="surnameEdit" value="">
+                                    </div>
 
-                                <div class="modal-side-field">
-                                    <label class="form-check-label" for="CurrentId">Current</label>
-                                    <input type="checkbox" class="" name="isCurrent_ysn" id="CurrentId"
-                                        value="1">
+                                    <div class="modal-side-field">
+                                        <label class="form-check-label" for="CurrentId">Current</label>
+                                        <input type="checkbox" class="" name="isCurrent_ysn" id="CurrentId"
+                                            value="1">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="editStudentBtn">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="editStudentBtn">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" id="editStudentClose">Close</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" id="editStudentClose">Close</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -210,8 +232,8 @@
 
     <!-- View Metrics Modal -->
     <div class="modal fade" id="viewMetricsModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width: 65%;">
+        <div class="modal-dialog modal-md modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -219,88 +241,90 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-chart-line school-edit-icon"></i>
-                    <h2>Metrics Report</h2>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-chart-line"></i>
+                        <h2>Metrics Report</h2>
+                    </div>
+
+                    <form action="{{ url('/viewMetricsExport') }}" method="post">
+                        @csrf
+                        <div class="modal-input-field-section">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">Start Date</label>
+                                        <input type="text" class="form-control datePickerPaste" name="start_date"
+                                            id="metricStartDate" value="{{ date('d/m/Y', strtotime($startOfMonth)) }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="modal-input-field">
+                                        <label class="form-check-label">End Date</label>
+                                        <input type="text" class="form-control datePickerPaste" name="end_date"
+                                            id="metricEndDate" value="{{ date('d/m/Y', strtotime($endOfMonth)) }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="metricSubmitBtn">Submit</button>
+                        </div>
+
+                        <div class="modal-input-field-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p>Total Days</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p id="totalDaysView">{{ $asnSubquery->daysThisPeriod_dec }}</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p>Teachers Working</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p id="teacherWorkView">{{ $asnSubquery->teachersWorking_int }}</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p>School using ( {{ $companyDetail->company_name }} )</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p id="schoolView">{{ $asnSubquery->schoolsUsing_int }}</p>
+                                </div>
+
+
+                                <div class="col-md-6 mt-3">
+                                    <p>Predicted GP</p>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p>£ <span id="predGpView">{{ $asnSubquery->predictedGP_dec }}</span></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p>Billed GP</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>£ <span id="billGpView">{{ $billedSubquery->actualBilled_dec }}</span></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p>Total Turnover</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>£ <span id="turnoverView">{{ $invoiceSubquery->actualGP_dec }}</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Export</button>
+                        </div>
+                    </form>
                 </div>
-
-                <form action="{{ url('/viewMetricsExport') }}" method="post">
-                    @csrf
-                    <div class="modal-input-field-section">
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="modal-input-field">
-                                    <label class="form-check-label">Start Date</label>
-                                    <input type="text" class="form-control datePickerPaste" name="start_date"
-                                        id="metricStartDate" value="{{ date('d/m/Y', strtotime($startOfMonth)) }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="modal-input-field">
-                                    <label class="form-check-label">End Date</label>
-                                    <input type="text" class="form-control datePickerPaste" name="end_date"
-                                        id="metricEndDate" value="{{ date('d/m/Y', strtotime($endOfMonth)) }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="metricSubmitBtn">Submit</button>
-                    </div>
-
-                    <div class="modal-input-field-section">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p>Total Days</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p id="totalDaysView">{{ $asnSubquery->daysThisPeriod_dec }}</p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <p>Teachers Working</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p id="teacherWorkView">{{ $asnSubquery->teachersWorking_int }}</p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <p>School using ( {{ $companyDetail->company_name }} )</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p id="schoolView">{{ $asnSubquery->schoolsUsing_int }}</p>
-                            </div>
-
-
-                            <div class="col-md-6 mt-3">
-                                <p>Predicted GP</p>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                                <p>£ <span id="predGpView">{{ $asnSubquery->predictedGP_dec }}</span></p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <p>Billed GP</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p>£ <span id="billGpView">{{ $billedSubquery->actualBilled_dec }}</span></p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <p>Total Turnover</p>
-                            </div>
-                            <div class="col-md-6">
-                                <p>£ <span id="turnoverView">{{ $invoiceSubquery->actualGP_dec }}</span></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Export</button>
-                    </div>
-                </form>
 
             </div>
         </div>

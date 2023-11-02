@@ -316,25 +316,25 @@
                                                 <div class="amount-owed-price-sec">
                                                     <span>Net</span>
                                                     @if ($invoiceCal->net_dec)
-                                                        <p>&#163
+                                                        <span>&#163
                                                             {{ number_format((float) $invoiceCal->net_dec, 2, '.', ',') }}
-                                                        </p>
+                                                        </span>
                                                     @endif
                                                 </div>
                                                 <div class="amount-owed-price-sec">
                                                     <span>Vat</span>
                                                     @if ($invoiceCal->vat_dec)
-                                                        <p>&#163
+                                                        <span>&#163
                                                             {{ number_format((float) $invoiceCal->vat_dec, 2, '.', ',') }}
-                                                        </p>
+                                                        </span>
                                                     @endif
                                                 </div>
                                                 <div class="amount-owed-price-sec">
                                                     <span>Gross</span>
                                                     @if ($invoiceCal->gross_dec)
-                                                        <p>&#163
+                                                        <span>&#163
                                                             {{ number_format((float) $invoiceCal->gross_dec, 2, '.', ',') }}
-                                                        </p>
+                                                        </span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -350,25 +350,25 @@
                                                 <div class="amount-owed-price-sec">
                                                     <span>Net</span>
                                                     @if ($invoiceOverdueCal->net_dec)
-                                                        <p>&#163
+                                                        <span>&#163
                                                             {{ number_format((float) $invoiceOverdueCal->net_dec, 2, '.', ',') }}
-                                                        </p>
+                                                        </span>
                                                     @endif
                                                 </div>
                                                 <div class="amount-owed-price-sec">
                                                     <span>Vat</span>
                                                     @if ($invoiceOverdueCal->vat_dec)
-                                                        <p>&#163
+                                                        <span>&#163
                                                             {{ number_format((float) $invoiceOverdueCal->vat_dec, 2, '.', ',') }}
-                                                        </p>
+                                                        </span>
                                                     @endif
                                                 </div>
                                                 <div class="amount-owed-price-sec">
                                                     <span>Gross</span>
                                                     @if ($invoiceOverdueCal->gross_dec)
-                                                        <p>&#163
+                                                        <span>&#163
                                                             {{ number_format((float) $invoiceOverdueCal->gross_dec, 2, '.', ',') }}
-                                                        </p>
+                                                        </span>
                                                     @endif
                                                 </div>
                                             </div>

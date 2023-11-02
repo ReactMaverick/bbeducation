@@ -1875,7 +1875,7 @@ class SchoolController extends Controller
             $teacherList = $teacher->groupBy('tbl_schoolTeacherList.teacher_id')
                 ->get();
 
-            return view("web.school.school_teacher", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'teacherList' => $teacherList, 'tStatus' => $tStatus]);
+            return view("web.school.school_teacher", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'teacherList' => $teacherList, 'tStatus' => $tStatus]);
         } else {
             return redirect()->intended('/');
         }
@@ -2283,7 +2283,7 @@ class SchoolController extends Controller
                 ->orderBy('document_type.document_type_id', 'DESC')
                 ->get();
 
-            return view("web.school.school_document", ['title' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'documentList' => $documentList, 'typeList' => $typeList]);
+            return view("web.school.school_document", ['pagetitle' => $title, 'headerTitle' => $headerTitle, 'school_id' => $id, 'schoolDetail' => $schoolDetail, 'documentList' => $documentList, 'typeList' => $typeList]);
         } else {
             return redirect()->intended('/');
         }
