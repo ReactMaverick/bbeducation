@@ -29,11 +29,14 @@
                             <div class="row my_row_gap">
                                 <div class="col-md-5 col-lg-5 col-xl-5 col-12 col-sm-12">
                                     <div class="finance-invoice-contact-first-sec sec_box_edit">
-                                        <div class="invoice-top-section details-heading">
-                                            <div class="form-group timesheet-top-input-sec">
-                                                <form action="{{ url('/finance-invoices') }}" method="get"
+                                        <div class="invoice-top-section details-heading new_invoice_details">
+                                            <div class="form-group timesheet-top-input-sec top-input">
+                                                <form class="finance_timesheets_form top-input_form"
+                                                    action="{{ url('/finance-invoices') }}" method="get"
                                                     style="margin-bottom: 0;">
-                                                    <label for="" class="col-form-label">Timesheets Until</label>
+                                                    <label for=""
+                                                        class="col-form-label finance_timesheets_label">Timesheets
+                                                        Until</label>
                                                     <input type="hidden" name="invoiceNumberMin"
                                                         value="{{ app('request')->input('invoiceNumberMin') }}">
                                                     <input type="hidden" name="invoiceNumberMax"
@@ -52,15 +55,17 @@
                                                         value="{{ app('request')->input('invoiceNumberMax') }}">
                                                     <input type="hidden" name="showSent"
                                                         value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
-                                                    <button type="submit" class="timesheet-search-btn">Search</button>
+                                                    <button
+                                                        type="submit"class="btn btn-secondary timesheet-search-btn">Search</button>
                                                 </form>
                                             </div>
                                             <div class="invoice-top-btn-sec">
-                                                <button id="selectNoneBtn">Select None</button>
+                                                <button class="btn btn-warning btn_nw" id="selectNoneBtn">Select
+                                                    None</button>
                                             </div>
 
                                             <div class="invoice-top-btn-sec">
-                                                <button id="selectAllBtn">Select All</button>
+                                                <button class="btn btn-info btn_nw" id="selectAllBtn">Select All</button>
                                             </div>
                                             <div class="invoice-edit-icon">
                                                 <a style="cursor: pointer" class="disabled-link icon_all"
@@ -80,7 +85,7 @@
 
                                         <div
                                             class="finance-invoice-table-section finance-invoice-page-table financeInvoiceTableNew">
-                                            <table class="table table-bordered table-striped" id="myTable">
+                                            <table class="table table-bordered table-striped" id="myTable1">
                                                 <thead>
                                                     <tr class="school-detail-table-heading">
                                                         <th>School</th>
@@ -115,15 +120,17 @@
                                             </table>
                                         </div>
 
-                                        <div class="invoice-process-btn">
-                                            <button id="processInvoiceBtn">Process Selected</button>
+                                        <div class="invoice-process-btn p-2 finance_timesheets_form"
+                                            style="text-align: center;">
+                                            <button class="btn btn-secondary timesheet-search-btn"
+                                                id="processInvoiceBtn">Process Selected</button>
                                         </div>
                                     </div>
 
                                     <input type="hidden" name="" id="initialAsnItemIds"
                                         value="{{ $asnItemIds }}">
 
-                                    <form action="{{ url('/financeProcessInvoice') }}" method="post"
+                                    <form class="sd_form" action="{{ url('/financeProcessInvoice') }}" method="post"
                                         id="processInvoiceForm">
                                         @csrf
                                         <input type="hidden" name="timesheetAsnItemIds" id="timesheetAsnItemIds"
@@ -136,20 +143,22 @@
                                 <div class="col-md-7 col-lg-7 col-xl-7 col-12 col-sm-12">
                                     <div class="finance-invoice-contact-second-sec sec_box_edit">
 
-                                        <div class="invoice-top-second-section details-heading">
-                                            <div>
-                                                <form action="{{ url('/finance-invoices') }}" method="get"
-                                                    style="margin-bottom: 0;display: flex; align-items: center; width: 100%;"
-                                                    id="invoiceFromToForm">
+                                        <div class="invoice-top-second-section new_details-heading">
+                                            <div class="sd_input_box">
+                                                <form class="sd_form" action="{{ url('/finance-invoices') }}"
+                                                    method="get" id="invoiceFromToForm">
 
                                                     <div class="form-group invoice-top-first-input-sec">
-                                                        <label for="" class="col-form-label">Invoice No From</label>
+                                                        <label for=""
+                                                            class="col-form-label finance_timesheets_label">Invoice No
+                                                            From</label>
                                                         <input type="text" id="" class="onlynumber"
                                                             name="invoiceNumberMin"
                                                             value="{{ app('request')->input('invoiceNumberMin') }}">
                                                     </div>
                                                     <div class="form-group invoice-top-second-input-sec">
-                                                        <label for="" class="col-form-label">to</label>
+                                                        <label for=""
+                                                            class="col-form-label finance_timesheets_label">to</label>
                                                         <input type="text" id="" class="onlynumber"
                                                             name="invoiceNumberMax"
                                                             value="{{ app('request')->input('invoiceNumberMax') }}">
@@ -171,20 +180,21 @@
                                                     </div>
 
                                                 </form>
-                                                <br>
+
                                                 <form action="{{ url('/finance-invoices') }}" method="get"
-                                                    style="margin-bottom: 0;display: flex; align-items: center; width: 100%;"
-                                                    id="invoiceFromToForm">
+                                                    class="sd_form" id="invoiceFromToForm">
 
                                                     <div class="form-group invoice-top-first-input-sec">
-                                                        <label for="invoiceFrom" class="col-form-label">Invoice Date
+                                                        <label for="invoiceFrom"
+                                                            class="col-form-label finance_timesheets_label">Invoice Date
                                                             From</label>
                                                         <input type="text" class="datePickerPaste"
                                                             name="invoiceFromDate"
                                                             value="{{ app('request')->input('invoiceFromDate') ? app('request')->input('invoiceFromDate') : '' }}">
                                                     </div>
                                                     <div class="form-group invoice-top-second-input-sec">
-                                                        <label for="invoiceTo" class="col-form-label">to</label>
+                                                        <label for="invoiceTo"
+                                                            class="col-form-label finance_timesheets_label">to</label>
                                                         <input type="text" class="datePickerPaste"
                                                             name="invoiceToDate"
                                                             value="{{ app('request')->input('invoiceToDate') ? app('request')->input('invoiceToDate') : '' }}">
@@ -209,66 +219,70 @@
 
                                                 </form>
                                             </div>
-
-                                            <div class="invoice-checkbox-top-section">
-                                                <div class="invoice-checkbox-sec">
-                                                    <input type="checkbox" id="show_sent" name="show_sent"
-                                                        value="1"
-                                                        {{ app('request')->input('showSent') == 'true' ? 'checked' : '' }}>
-                                                </div>
-                                                <div class="invoice-checkbox-sec">
-                                                    <label for="show_sent">Show Sent</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="finance-invoice-icon-sec">
-                                                <a style="cursor: pointer" class="disabled-link icon_all"
-                                                    id="saveInvoiceBtn" title="Save Invoice">
-                                                    <i class="fas fa-file-download"></i>
-                                                </a>
-                                            </div>
-
-                                            <div class="finance-invoice-icon-sec">
-                                                <a style="cursor: pointer" class="disabled-link icon_all"
-                                                    id="splitInvoiceBtn" title="Split Invoice">
-                                                    <img src="{{ asset('web/company_logo/diverge.png') }}"
-                                                        alt="">
-                                                </a>
-                                            </div>
-
-                                            <div class="finance-invoice-icon-sec">
-                                                <a style="cursor: pointer" class="disabled-link icon_all"
-                                                    id="viewInvoiceBtn" title="View Invoice">
-                                                    <i class="fas fa-search"></i>
-                                                </a>
-                                            </div>
-
-                                            <div class="finance-invoice-icon-sec">
-                                                <a style="cursor: pointer" id="sendAllInvoiceBtn"
-                                                    title="Send All Listed Invoice" class="icon_all">
-                                                    <i class="fas fa-envelope"></i>
-                                                    <div class="finance-invoice-second-icon-sec">
-                                                        <i class="fas fa-plus"></i>
+                                            <div class="sd_side_items">
+                                                <div class="invoice-checkbox-top-section">
+                                                    <div class="invoice-checkbox-sec">
+                                                        <input type="checkbox" id="show_sent" name="show_sent"
+                                                            value="1"
+                                                            {{ app('request')->input('showSent') == 'true' ? 'checked' : '' }}>
                                                     </div>
-                                                </a>
+                                                    <div class="invoice-checkbox-sec w_100">
+                                                        <label class="col-form-label finance_timesheets_label"
+                                                            for="show_sent">Show
+                                                            Sent</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="finance-invoice-icon-sec">
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="saveInvoiceBtn" title="Save Invoice">
+                                                        <i class="fas fa-file-download"></i>
+                                                    </a>
+                                                </div>
+
+                                                <div class="finance-invoice-icon-sec">
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="splitInvoiceBtn" title="Split Invoice">
+                                                        <img src="{{ asset('web/company_logo/diverge.png') }}"
+                                                            alt="">
+                                                    </a>
+                                                </div>
+
+                                                <div class="finance-invoice-icon-sec">
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="viewInvoiceBtn" title="View Invoice">
+                                                        <i class="fas fa-search"></i>
+                                                    </a>
+                                                </div>
+
+                                                <div class="finance-invoice-icon-sec">
+                                                    <a style="cursor: pointer" id="sendAllInvoiceBtn"
+                                                        title="Send All Listed Invoice" class="nw_icon icon_all">
+                                                        <i class="fas fa-envelope"></i>
+                                                        <div class="finance-invoice-second-icon-sec">
+                                                            <i class="fas fa-plus"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+                                                <div class="finance-invoice-icon-sec">
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="sendSelectedInvoiceBtn" title="Send Selected Invoice">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="invoice-second-edit-icon">
+                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                        id="editInvoiceBtn" title="Edit Invoice">
+                                                        <i class="fas fa-edit school-edit-icon"></i>
+                                                    </a>
+                                                </div>
                                             </div>
 
-                                            <div class="finance-invoice-icon-sec">
-                                                <a style="cursor: pointer" class="disabled-link icon_all"
-                                                    id="sendSelectedInvoiceBtn" title="Send Selected Invoice">
-                                                    <i class="fas fa-envelope"></i>
-                                                </a>
-                                            </div>
-                                            <div class="invoice-second-edit-icon">
-                                                <a style="cursor: pointer" class="disabled-link icon_all"
-                                                    id="editInvoiceBtn" title="Edit Invoice">
-                                                    <i class="fas fa-edit school-edit-icon"></i>
-                                                </a>
-                                            </div>
                                         </div>
                                         <div
                                             class="finance-invoice-table-section finance-invoice-page-table financeInvoiceTableNew">
-                                            <table class="table table-bordered table-striped" id="myTable">
+                                            <table class="table table-bordered table-striped" id="myTable2">
                                                 <thead>
                                                     <tr class="school-detail-table-heading">
                                                         <th>Invoice ID</th>
@@ -538,6 +552,18 @@
             });
             $('#listed_temp_description').ckeditor({
                 toolbar: [],
+            });
+
+            $('#myTable1, #myTable2').DataTable({
+                scrollY: '600px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
 

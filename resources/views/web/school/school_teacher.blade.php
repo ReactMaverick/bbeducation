@@ -145,10 +145,10 @@
                                 <div class="school-search-field add-school-search-field">
                                     <h2>Teacher</h2>
                                 </div>
-                                <div class="about-school-section">
-                                    <label for="">Search For</label>
-                                    <input type="text" class="form-control" id="searchTeacherKey" name="searchTeacherKey"
-                                        value="">
+                                <div class="about-school-section5">
+                                    <label class="sg_label" for="">Search For</label>
+                                    <input type="text" class="form-control section5_input" id="searchTeacherKey"
+                                        name="searchTeacherKey" value="">
                                 </div>
                             </div>
                             <div class="assignment-finance-table-section mt-3">

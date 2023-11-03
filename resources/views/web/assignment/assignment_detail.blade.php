@@ -114,7 +114,7 @@
 
                             <input type="hidden" name="assignmentId" id="" value="{{ $asn_id }}">
 
-                            <div class="assignment-detail-right-sec row">
+                            <div class="assignment-detail-right-sec row nw_row">
                                 <div class="col-lg-4 col-md-4 col-xl-4 col-sm-12 col-12 pr-3">
                                     <div class="filter-section">
                                         <div class="filter-group-sec">

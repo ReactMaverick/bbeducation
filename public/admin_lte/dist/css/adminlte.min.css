@@ -57722,6 +57722,168 @@ a.brand-link.skd_logo {
     position: relative;
 }
 
+label.teacher_svg svg {
+    height: 20px;
+    width: 20px;
+}
+
+label.teacher_svg svg path {
+    fill: #3c0077ad;
+}
+
+.sm_h {
+    min-height: 498px;
+    overflow: auto !important;
+    max-height: 498px;
+}
+
+.f_12 p {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+label.finance_timesheets_label {
+    margin: 0;
+    font-size: 14px;
+}
+
+.invoice-checkbox-top-section {
+    display: grid;
+    align-items: center;
+    gap: 10px;
+    grid-template-columns: 15px 1fr;
+}
+
+.invoice-checkbox-top-section label.col-form-label.finance_timesheets_label {
+    width: 83px;
+    line-height: 1;
+    font-weight: 400;
+}
+
+.finance_timesheets_form input.form-control.datePickerPaste {
+    font-size: 13px;
+    padding: 5px 10px;
+    height: 30px;
+}
+
+.finance_timesheets_form button.btn.btn-secondary {
+    font-size: 13px;
+    padding: 5px 13px;
+    height: 30px;
+}
+
+.table-bottom-text p {
+    font-size: 13px;
+}
+
+.finance_timesheets_form.top-input_form {
+    width: 100%;
+}
+
+.finance_timesheets_form.top-input_form input {
+    width: 140px;
+    height: 30px;
+    border-radius: 2px;
+    border: 1px solid #b1b1b1;
+    font-size: 13px;
+}
+
+.form-group.timesheet-top-input-sec.top-input {
+    margin-bottom: 0;
+}
+
+.sm_h::-webkit-scrollbar,
+.new_scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: #F5F5F5;
+}
+
+.sm_h::-webkit-scrollbar-thumb,
+.new_scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(60deg, #89f7fe 0%, #66a6ff 100%);
+    border-radius: 10px;
+}
+
+.sm_h::-webkit-scrollbar-track,
+.new_scrollbar::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 18%);
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.new_details-heading {
+    display: grid;
+    padding: 15px;
+    background: #e9ebf752;
+    gap: 10px;
+}
+
+button.timesheet-search-btn i {
+    font-size: 14px;
+    color: #1c64e5;
+}
+
+.sd_input_box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sd_form {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.sd_input_box .form-group {
+    margin: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.sd_input_box .form-group input {
+    width: 100px;
+    height: 30px;
+    border-radius: 2px;
+    border: 1px solid #b1b1b1;
+    font-size: 13px;
+}
+
+.sd_side_items {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+    align-items: center;
+}
+
+.nw_icon {
+    position: relative;
+}
+
+a#splitInvoiceBtn img {
+    height: 20px;
+    width: 20px;
+}
+
+.finance-invoice-second-icon-sec {
+    position: absolute;
+    top: -20%;
+    right: -35%;
+    font-size: 9px;
+    border-radius: 100%;
+    background: #c1d4ff;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 /* .topbar-Section.new_top_bar .menu_item.menu_item::before {
     content: "";
@@ -57765,6 +57927,26 @@ button.btn_nw {
     width: 100%;
 }
 
+.about-school-section5 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.about-school-section5 label.sg_label {
+    width: 105px;
+}
+
+input.form-control.section5_input {
+    height: 30px;
+    font-size: 14px;
+}
+
+.new_scrollbar {
+    height: 400px;
+    overflow-y: scroll;
+    width: 100%;
+}
 
 /* Keyframes */
 @keyframes fill {
@@ -57999,7 +58181,7 @@ button.btn_nw {
         background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
         left: 22%;
         transform: translate(-50%, 14%);
-        z-index: 9;
+        z-index: 99;
         height: 60vh;
         padding: 30px;
         opacity: 1;
@@ -58029,6 +58211,17 @@ button.btn_nw {
         height: 35vh;
         max-width: 870px;
         transform: translate(-50%, 11%);
+    }
+
+    .details-heading {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .new_invoice_details {
+        flex-wrap: wrap;
+        justify-content: end;
+        column-gap: 10px;
     }
 
     .tab_mob_full {
@@ -59054,11 +59247,162 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
     z-index: 5 !important;
 }
 
+.finance-payroll-top-sec {
+    gap: 10px;
+    display: flex;
+}
+
+.form-group.finance-remittance-payment-method {
+    margin: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.finance-remittance-top-sec {
+    display: flex;
+    align-items: center;
+    width: 20%;
+}
+
+.form-group.finance-remittance-payment-method {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group.finance-remittance-payment-method select {
+    width: 140px;
+    height: 30px;
+    border-radius: 2px;
+    border: 1px solid #b1b1b1;
+    font-size: 13px;
+}
+
+.w_5 {
+    width: 100px !important;
+}
+
+.fin_remitt:hover {
+    scale: 1.0;
+}
+
+.amount-owed-price-sec span {
+    font-size: 14px;
+}
+
+.new_gh .school-assignment-contact-heading {
+    display: flex;
+}
+
+.new_gh .school-assignment-contact-select-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+label.sg_label {
+    font-size: 14px;
+    font-weight: 400 !important;
+    margin: 0;
+}
+
+.finance_edit .form-group.payment-method-type {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+label.sg_label.w10 {
+    width: 200px;
+}
+
+.new_gh .school-assignment-contact-checkbox {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+select.form-control.nw_formcontrol {
+    font-size: 14px;
+    height: 33px;
+
+}
+
+.new_gh .form-check.paid-check.school-assignment-paid-check {
+    display: flex;
+    padding: 0;
+    gap: 10px;
+    align-items: center;
+}
+
+.new_gh .school-assignment-contact-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.finance_edit .form-check.paid-check {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.finance_edit.form-group.payment-method-type {
+    margin: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 @media screen and (max-width: 767px) {
+
+    .grid-refs-sec,
+    .school-name-text {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: end;
+    }
+
+    .finance_edit .form-group.payment-method-type {
+        gap: 10px;
+    }
+
+    label.sg_label.w10 {
+        width: auto;
+    }
+
+    select.form-control.nw_formcontrol {
+        font-size: 14px;
+        width: 185px;
+    }
+
+    .new_gh .school-assignment-contact-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: end;
+    }
 
     th.sorting.sorting_asc span {
         display: inline-block;
         margin-left: 5px;
+    }
+
+    .finance-remittance-top-sec {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .details-heading {
+        flex-direction: column;
+        gap: 15px;
     }
 }
 
@@ -59066,6 +59410,10 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
     .teacher-left-sec.skd_row.dataTables_wrapper {
         gap: 30px 20px;
         margin-right: 0px;
+    }
+
+    .new_invoice_details {
+        gap: 10px;
     }
 
     /* 
@@ -59139,8 +59487,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
         position: relative;
         padding-left: 30px !important;
         cursor: pointer;
-        max-width: 130px;
-        min-width: 130px;
+        max-width: 100px;
+        min-width: 100px;
         vertical-align: middle;
     }
 
@@ -59220,7 +59568,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
         font-size: 14px;
     }
 
-    .assignment-detail-right-sec.row {
+    .assignment-detail-right-sec.row.nw_row {
         flex-direction: column-reverse;
         gap: 20px;
     }
@@ -59345,6 +59693,35 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
         margin: 0;
     }
 
+    .sd_input_box {
+        flex-direction: column;
+    }
+
+    label.finance_timesheets_label {
+        margin: 0;
+        font-size: 12px;
+    }
+
+    .sd_input_box .form-group {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .sd_form {
+        align-items: flex-end;
+    }
+
+    .new_details-heading {
+        gap: 20px;
+    }
+
+    .sd_input_box .form-group input {
+        width: 100%;
+    }
+
+    .finance_timesheets_label {
+        width: 100%;
+    }
 }
 
 
@@ -59358,8 +59735,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
         position: relative;
         padding-left: 30px !important;
         cursor: pointer;
-        max-width: 100px;
-        min-width: 100px;
+        max-width: 120px;
+        min-width: 120px;
         vertical-align: middle;
     }
 

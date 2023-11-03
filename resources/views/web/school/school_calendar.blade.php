@@ -32,16 +32,60 @@
                                     <div class="teacher-calendar-sidebar-section new_teacher-calendar-sidebar"
                                         style="width: 90%;">
                                         <div class="form-check sidebar-mode-check">
-                                            <label for="editMode"><i class="fas fa-edit"></i></label>
+                                            <label class="teacher_svg" for="editMode">
+                                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512"
+                                                    x="0" y="0" viewBox="0 0 401.523 401"
+                                                    style="enable-background:new 0 0 512 512" xml:space="preserve"
+                                                    class="">
+                                                    <g>
+                                                        <path
+                                                            d="M370.59 250.973c-5.524 0-10 4.476-10 10v88.789c-.02 16.562-13.438 29.984-30 30H50c-16.563-.016-29.98-13.438-30-30V89.172c.02-16.559 13.438-29.98 30-30h88.79c5.523 0 10-4.477 10-10 0-5.52-4.477-10-10-10H50c-27.602.031-49.969 22.398-50 50v260.594c.031 27.601 22.398 49.968 50 50h280.59c27.601-.032 49.969-22.399 50-50v-88.793c0-5.524-4.477-10-10-10zm0 0"
+                                                            fill="#3c0077ad" opacity="1" data-original="#3c0077ad"
+                                                            class=""></path>
+                                                        <path
+                                                            d="M376.629 13.441c-17.574-17.574-46.067-17.574-63.64 0L134.581 191.848a9.997 9.997 0 0 0-2.566 4.402l-23.461 84.7a9.997 9.997 0 0 0 12.304 12.308l84.7-23.465a9.997 9.997 0 0 0 4.402-2.566l178.402-178.41c17.547-17.587 17.547-46.055 0-63.641zM156.37 198.348 302.383 52.332l47.09 47.09-146.016 146.016zm-9.406 18.875 37.62 37.625-52.038 14.418zM374.223 74.676 363.617 85.28l-47.094-47.094 10.61-10.605c9.762-9.762 25.59-9.762 35.351 0l11.739 11.734c9.746 9.774 9.746 25.59 0 35.36zm0 0"
+                                                            fill="#3c0077ad" opacity="1" data-original="#3c0077ad"
+                                                            class=""></path>
+                                                    </g>
+                                                </svg>
+                                            </label>
                                             <input type="radio" id="editMode" name="calendar_mode" value="edit"
                                                 checked>
                                         </div>
                                         <div class="form-check sidebar-mode-check">
-                                            <label for="viewMode"><i class="fas fa-calendar-alt"></i></label>
+                                            <label class="teacher_svg" for="viewMode">
+                                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512"
+                                                    x="0" y="0" viewBox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512" xml:space="preserve"
+                                                    class="">
+                                                    <g>
+                                                        <path
+                                                            d="M452 40h-24V0h-40v40H124V0H84v40H60C26.916 40 0 66.916 0 100v352c0 33.084 26.916 60 60 60h392c33.084 0 60-26.916 60-60V100c0-33.084-26.916-60-60-60zm20 412c0 11.028-8.972 20-20 20H60c-11.028 0-20-8.972-20-20V188h432v264zm0-304H40v-48c0-11.028 8.972-20 20-20h24v40h40V80h264v40h40V80h24c11.028 0 20 8.972 20 20v48z"
+                                                            fill="#000000" opacity="1" data-original="#000000"></path>
+                                                        <path
+                                                            d="M76 230h40v40H76zM156 230h40v40h-40zM236 230h40v40h-40zM316 230h40v40h-40zM396 230h40v40h-40zM76 310h40v40H76zM156 310h40v40h-40zM236 310h40v40h-40zM316 310h40v40h-40zM76 390h40v40H76zM156 390h40v40h-40zM236 390h40v40h-40zM316 390h40v40h-40zM396 310h40v40h-40z"
+                                                            fill="#000000" opacity="1" data-original="#000000"></path>
+                                                    </g>
+                                                </svg>
+                                            </label>
                                             <input type="radio" id="viewMode" name="calendar_mode" value="view">
                                         </div>
                                         <div class="form-check sidebar-mode-check">
-                                            <label for="teacherMode"><i class="fas fa-graduation-cap"></i></label>
+                                            <label class="teacher_svg" for="teacherMode">
+                                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512"
+                                                    x="0" y="0" viewBox="0 0 349.2 349.2"
+                                                    style="enable-background:new 0 0 512 512" xml:space="preserve"
+                                                    class="">
+                                                    <g>
+                                                        <path
+                                                            d="m337.6 114.25-139.2-68c-12-6-32.4-6-44.4 0l-142.4 68c-10 4.8-11.6 11.6-11.6 15.2 0 3.6 1.6 10 11.6 15.2l11.6 5.6v64c-7.2 2.8-12.4 10-12.4 18s5.2 15.2 12 18l-18 57.2h50.4l-18-57.2c7.2-2.8 12-10 12-18 0-8.4-5.2-15.2-12.4-18v-57.2l21.2 10.4v83.2c0 1.2.4 2.4 1.2 3.6 2 2.4 39.2 53.2 115.2 53.2s113.2-51.2 114.8-53.2c.8-1.2 1.2-2.4 1.2-3.6v-82.8l47.2-23.2c10-4.8 11.6-11.6 11.6-15.2-.4-3.6-1.6-10.4-11.6-15.2zm-60 134.4c-6.4 8-40.8 46.4-103.2 46.4-62.4 0-96.8-38.4-103.2-46.4v-75.6l82.8 39.6c6 2.8 14 4.4 22 4.4 8.4 0 16.4-1.6 22.4-4.8l79.2-38.8v75.2zm54.4-115.2-48 23.6c-2 0-3.6.8-4.4 2.4l-86.8 42c-8.4 4.4-24.8 4.4-33.6 0l-106.8-51.2 122.8-14.4c3.6-.4 6-3.6 5.6-6.8-.4-3.6-3.6-6-6.8-5.6l-142.4 16.8-14.4-6.8c-3.6-1.6-4.4-3.6-4.4-3.6 0-.4.8-2 4.4-3.6l142.4-68.4c4.4-2 10.4-3.2 16.4-3.2 6.4 0 12.8 1.2 16.8 3.2l139.2 68c3.6 1.6 4.4 3.2 4.4 4 0 0-1.2 2-4.4 3.6z"
+                                                            fill="#000000" opacity="1" data-original="#000000"></path>
+                                                    </g>
+                                                </svg>
+                                            </label>
                                             <input type="radio" id="teacherMode" name="calendar_mode" value="teacher">
                                         </div>
                                     </div>

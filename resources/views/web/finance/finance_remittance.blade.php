@@ -28,10 +28,11 @@
                         <div class="finance-invoice-right-sec">
                             <div class="row my_row_gap">
                                 <div class="col-md-10 col-lg-10 col-xl-10 col-12 col-sm-12">
-                                    <div class="finance-remittance-contact-first-sec sec_box_edit">
+                                    <div class="finance-remittance-contact-first-sec sec_box_edit fin_remitt">
                                         <div class="invoice-top-section details-heading">
-                                            <div class="form-group finance-remittance-payment-method">
-                                                <label>Payment Method</label>
+                                            <div class="form-group finance-remittance-payment-method ">
+                                                <label class="col-form-label finance_timesheets_label">Payment
+                                                    Method</label>
                                                 <select id="paymentMethod" name="method" class="form-control">
                                                     <option value="">Choose One</option>
                                                     @foreach ($paymentMethodList as $key1 => $paymentMethod)
@@ -50,7 +51,8 @@
                                                             {{ app('request')->input('include') == 1 ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="invoice-checkbox-sec">
-                                                        <label for="includePaid">Include Paid</label>
+                                                        <label class="col-form-label finance_timesheets_label w_5"
+                                                            for="includePaid">Include Paid</label>
                                                     </div>
                                                 </div>
                                                 <div class="school-finance-contact-icon-sec contact-icon-sec">

@@ -114,8 +114,8 @@
                                 </div>
 
                                 <div class="finance-list-section mb-2">
-                                    <div class="finance-list-text-section" style="max-height: 400px; min-height: 400px;">
-                                        <div class="finance-list-text">
+                                    <div class="finance-list-text-section">
+                                        <div class="finance-list-text new_scrollbar">
                                             <table class="table table-bordered table-striped" id="">
                                                 <thead>
                                                     <tr class="school-detail-table-heading">
@@ -187,8 +187,7 @@
                         <h2>Edit Details</h2>
                     </div>
 
-                    <form action="{{ url('/studentUpdate') }}" method="post" class="form-validate-2"
-                        id="studentEditForm">
+                    <form action="{{ url('/studentUpdate') }}" method="post" class="form-validate-2" id="studentEditForm">
                         @csrf
                         <input type="hidden" name="student_id" id="editStudentId" value="">
 

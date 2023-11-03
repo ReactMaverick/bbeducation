@@ -29,22 +29,23 @@
                         <div class="school-finance-right-sec">
                             <div class="row my_row_gap">
                                 <div class="col-md-9 col-lg-9 col-xl-9 col-12 col-sm-12">
-                                    <div class="school-finance-section sec_box_edit">
+                                    <div class="school-finance-section sec_box_edit finance_edit">
 
                                         <div class="school-finance-sec details-heading">
                                             <div class="school-finance-contact-heading-text">
                                                 <h2>Finance</h2>
                                             </div>
                                             <div class="form-check paid-check">
-                                                <label for="includePaid">Include paid</label>
+                                                <label class="sg_label" for="includePaid">Include paid</label>
                                                 <input type="checkbox" id="includePaid" name="include" value="1"
                                                     <?php
                                                     echo app('request')->input('include') == 1 ? 'checked' : ''; ?>><br>
                                             </div>
 
                                             <div class="form-group payment-method-type">
-                                                <label>Payment Method</label>
-                                                <select id="paymentMethod" name="method" class="form-control">
+                                                <label class="sg_label w10">Payment Method</label>
+                                                <select id="paymentMethod" name="method"
+                                                    class="form-control nw_formcontrol">
                                                     <option value="">Choose One</option>
                                                     @foreach ($paymentMethodList as $key1 => $paymentMethod)
                                                         <option value="{{ $paymentMethod->description_int }}"
@@ -58,7 +59,7 @@
                                                 <div class="school-finance-contact-icon-sec contact-icon-sec">
                                                     <div class="finance-invoice-icon-sec">
                                                         <a style="cursor: pointer" id="sendAccountSummaryBtn"
-                                                            title="Send Account Summary" class="icon_all">
+                                                            title="Send Account Summary" class="icon_all nw_icon">
                                                             <i class="fas fa-envelope"></i>
                                                             <div class="finance-invoice-second-icon-sec">
                                                                 <i class="fas fa-plus"></i>

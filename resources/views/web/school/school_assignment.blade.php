@@ -30,14 +30,14 @@
 
 
                             <div class="school-assignment-section sec_box_edit">
-                                <div class="school-assignment-contact-heading-text details-heading">
+                                <div class="school-assignment-contact-heading-text details-heading new_gh">
                                     <h2>Assignments</h2>
 
                                     <div class="school-assignment-contact-heading">
                                         <div class="school-assignment-contact-search">
                                             <div class="form-check paid-check school-assignment-paid-check">
                                                 <div class="school-assignment-contact-checkbox">
-                                                    <label for="includeAll">Include All</label>
+                                                    <label class="sg_label" for="includeAll">Include All</label>
                                                     <input type="checkbox" id="includeAll" name="include" value="1"
                                                         <?php
                                                         echo app('request')->input('include') == 1 ? 'checked' : ''; ?>>
@@ -45,10 +45,11 @@
 
                                                 <div class="school-assignment-contact-select-field">
                                                     <div class="school-assignment-contact-select-label">
-                                                        <label>Status</label>
+                                                        <label class="sg_label">Status</label>
                                                     </div>
                                                     <div class="school-assignment-contact-select-option">
-                                                        <select id="assignmentStatus" name="status" class="form-control">
+                                                        <select id="assignmentStatus" name="status"
+                                                            class="form-control nw_formcontrol">
                                                             <option value="">Choose One</option>
                                                             @foreach ($statusList as $key1 => $status)
                                                                 <option value="{{ $status->description_int }}"

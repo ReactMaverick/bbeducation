@@ -32,11 +32,13 @@
                                         <div class="invoice-top-section details-heading">
                                             <div class="finance-payroll-top-sec">
                                                 <div class="finance-payroll-top-btn-sec">
-                                                    <button id="selectNoneBtn">Select None</button>
+                                                    <button class="btn btn-secondary btn_nw" id="selectNoneBtn">Select
+                                                        None</button>
                                                 </div>
 
                                                 <div class="finance-payroll-top-btn-sec">
-                                                    <button id="selectAllBtn">Select All</button>
+                                                    <button class="btn btn-info btn_nw" id="selectAllBtn">Select
+                                                        All</button>
                                                 </div>
                                             </div>
 
@@ -88,8 +90,10 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div class="invoice-process-btn">
-                                            <button id="processPayrollBtn">Process Selected</button>
+                                        <div class="invoice-process-btn p-2 finance_timesheets_form"
+                                            style="text-align: center;">
+                                            <button class="btn btn-secondary timesheet-search-btn"
+                                                id="processPayrollBtn">Process Selected</button>
                                         </div>
 
                                         <input type="hidden" name="" id="initialAsnItemIds"
@@ -245,8 +249,30 @@
 
     <script>
         $(document).ready(function() {
-            $('#myTable1, #myTable2, #myTable3').DataTable({
-                scrollY: '500px',
+            $('#myTable1').DataTable({
+                scrollY: '466px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
+            });
+            $('#myTable2').DataTable({
+                scrollY: '516px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
+            });
+            $('#myTable3').DataTable({
+                scrollY: '520px',
                 paging: false,
                 footer: false,
                 info: false,

@@ -46,7 +46,7 @@
 
                                         <div class="row my_row_gap">
                                             <div class="col-md-9 col-lg-9 col-xl-9 col-12 col-sm-12">
-                                                <div class="finance-timesheet-contact-first-sec sec_box_edit">
+                                                <div class="finance-timesheet-contact-first-sec sec_box_edit ">
 
                                                     <div class="details-heading">
                                                         <div class="contact-heading-text">
@@ -109,24 +109,24 @@
                                                     $asnIds = implode(',', $asnIdsArr);
                                                     ?>
 
-                                                    <div class="new_teacher_calendar_outer1">
+                                                    <div class="new_teacher_calendar_outer1 dataTables_wrapper sm_h">
                                                         <div class="new_teacher_wapper">
 
                                                             <div class="skd_dates_row grid_7 grid_8">
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>School</p>
                                                                 </div>
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>Teacher</p>
                                                                 </div>
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>{{ date('d M Y', strtotime($weekStartDate)) }}</p>
                                                                     <p>Monday</p>
                                                                     <p class="teacher-calendar-bottom-text">
                                                                         {{ $day1Amount_total }}
                                                                     </p>
                                                                 </div>
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>{{ date('d M Y', strtotime($weekStartDate . ' +1 days')) }}
                                                                     </p>
                                                                     <p>Tuesday</p>
@@ -134,7 +134,7 @@
                                                                         {{ $day2Amount_total }}
                                                                     </p>
                                                                 </div>
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>{{ date('d M Y', strtotime($weekStartDate . ' +2 days')) }}
                                                                     </p>
                                                                     <p>Wednesday</p>
@@ -142,7 +142,7 @@
                                                                         {{ $day3Amount_total }}
                                                                     </p>
                                                                 </div>
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>{{ date('d M Y', strtotime($weekStartDate . ' +3 days')) }}
                                                                     </p>
                                                                     <p>Thursday</p>
@@ -150,7 +150,7 @@
                                                                         {{ $day4Amount_total }}
                                                                     </p>
                                                                 </div>
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>{{ date('d M Y', strtotime($weekStartDate . ' +4 days')) }}
                                                                     </p>
                                                                     <p>Friday</p>
@@ -158,7 +158,7 @@
                                                                         {{ $day5Amount_total }}
                                                                     </p>
                                                                 </div>
-                                                                <div class="teacher-calendar-days-text skd_date">
+                                                                <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>Status</p>
                                                                 </div>
                                                             </div>
@@ -458,7 +458,7 @@
                                     <div class="finance-timesheet-left-sec mt-3">
                                         <div class="row my_row_gap">
                                             <div class="col-md-7 col-lg-7 col-xl-7 col-12 col-sm-12">
-                                                <div class="finance-timesheet-contact-first-sec sec_box_edit">
+                                                <div class="finance-timesheet-contact-first-sec sec_box_edit ">
                                                     <div class="contact-heading details-heading">
                                                         <div class="contact-heading-text">
                                                             <h2>Previous Timesheet list</h2>
@@ -491,7 +491,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="finance-timesheet-table-section">
-                                                        <table class="table finance-timesheet-page-table" id="myTable2">
+                                                        <table class="table table-bordered table-striped" id="myTable2">
                                                             <thead>
                                                                 <tr class="school-detail-table-heading">
                                                                     <th>Teacher</th>
@@ -508,8 +508,8 @@
                                                         </table>
                                                     </div>
                                                     <div class="table-assignment-bottom-text-sec">
-                                                        <div class="table-bottom-text">
-                                                            <span>Double-click to open the assignment</span>
+                                                        <div class="table-bottom-text p-2">
+                                                            <p>Double-click to open the assignment</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -519,7 +519,7 @@
 
                                             <div class="col-md-5 col-lg-5 col-xl-5 col-12 col-sm-12">
                                                 <div class="finance-timesheet-contact-second-sec sec_box_edit"
-                                                    style="display: none;" id="teacherTimesheetDiv">
+                                                    id="teacherTimesheetDiv">
                                                     <div class="contact-heading details-heading">
                                                         <div class="contact-heading-text">
                                                             <h2>Candidate Submitted Timesheets</h2>
@@ -618,30 +618,41 @@
     <!-- Event Edit Modal -->
 
     <script>
-        // $(document).ready(function() {
-        //     $('#myTable1').DataTable({
-        //         scrollY: '400px',
-        //         paging: false,
-        //         footer: false,
-        //         info: false,
-        //         ordering: false,
-        //         searching: false,
-        //         responsive: true,
-        //         lengthChange: true,
-        //         autoWidth: true,
-        //     });
-        //     $('#myTable2, #myTable3').DataTable({
-        //         scrollY: '200px',
-        //         paging: false,
-        //         footer: false,
-        //         info: false,
-        //         ordering: false,
-        //         searching: false,
-        //         responsive: true,
-        //         lengthChange: true,
-        //         autoWidth: true,
-        //     });
-        // });
+        $(document).ready(function() {
+            $('#myTable1').DataTable({
+                scrollY: '400px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
+            });
+            $('#myTable2').DataTable({
+                scrollY: '200px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
+            });
+            $('#myTable3').DataTable({
+                scrollY: '236px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
+            });
+        });
 
         function timesheetRow(asn_id) {
             if ($('#editTimesheetDiv' + asn_id).hasClass('timesheetActive')) {
