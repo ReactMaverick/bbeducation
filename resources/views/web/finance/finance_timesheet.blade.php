@@ -231,13 +231,14 @@
                                                                     }
                                                                 }
                                                                 ?>
-                                                                <div class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 new_teacher_calendar_outer3 editTimesheetDiv"
+                                                                <div class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 new_teacher_calendar_outer3 editTimesheetDiv grid_8"
                                                                     id="editTimesheetDiv{{ $calender->asn_id }}"
                                                                     onclick="timesheetRow('{{ $calender->asn_id }}')">
 
                                                                     <div
                                                                         class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                        <div class="teacher-calendar-days-field3">
+                                                                        <div
+                                                                            class="teacher-calendar-days-field3 field_day_3">
                                                                             <p>
                                                                                 {{ $calender->name_txt }}
                                                                             </p>
@@ -245,7 +246,8 @@
                                                                     </div>
                                                                     <div
                                                                         class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                        <div class="teacher-calendar-days-field3">
+                                                                        <div
+                                                                            class="teacher-calendar-days-field3 field_day_3">
                                                                             <p>
                                                                                 @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
                                                                                     {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
@@ -369,7 +371,7 @@
                                                                         class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                         @if ($adminApprove == 1)
                                                                             <div
-                                                                                class="teacher-calendar-days-field3 rejectDiv">
+                                                                                class="teacher-calendar-days-field3 field_day_3 rejectDiv">
                                                                                 <p>
                                                                                     Reject
                                                                                     @if ($reject_text)
@@ -378,11 +380,13 @@
                                                                                 </p>
                                                                             </div>
                                                                         @elseif($sendToSchool == 1)
-                                                                            <div class="teacher-calendar-days-field3">
+                                                                            <div
+                                                                                class="teacher-calendar-days-field3 field_day_3">
                                                                                 <p>Sent to School</p>
                                                                             </div>
                                                                         @else
-                                                                            <div class="teacher-calendar-days-field3">
+                                                                            <div
+                                                                                class="teacher-calendar-days-field3 field_day_3">
                                                                                 <p>Pending</p>
                                                                             </div>
                                                                         @endif
@@ -620,7 +624,7 @@
     <script>
         $(document).ready(function() {
             $('#myTable1').DataTable({
-                scrollY: '400px',
+                scrollY: '392px',
                 paging: false,
                 footer: false,
                 info: false,

@@ -56262,6 +56262,7 @@ th {
 } */
 .school-name-text p {
     margin: 0;
+    text-align: right;
 }
 
 .grid-refs-text1 p {
@@ -56273,11 +56274,11 @@ section.content,
     background: #f4f6fd;
 }
 
-.grid-refs-sec,
+/* .grid-refs-sec,
 .school-name-text {
     display: flex;
     gap: 10px;
-}
+} */
 
 .school-heading-text h2 {
     font-size: 14px;
@@ -56444,6 +56445,10 @@ span.topbar-text {
     font-size: 12px !important;
     width: 50%;
     height: 32px;
+}
+
+.field_day_3 {
+    grid-template-columns: 1fr !important;
 }
 
 table.table-bordered.dataTable th,
@@ -57142,6 +57147,45 @@ textarea.form-control {
     }
 }
 
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+    .topbar-Section.row_6 {
+        display: grid;
+        justify-content: space-between;
+        align-items: center;
+        overflow-x: scroll;
+        width: 100%;
+        gap: 20px;
+        grid-template-columns: repeat(6, 1fr);
+        padding: 10px 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .topbar-Section.row_6 .menu_item,
+    .topbar-Section.row_6 .menu_item a {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .topbar-Section::-webkit-scrollbar {
+        width: 6px;
+        height: 3px;
+        background-color: transparent;
+    }
+
+    .topbar-Section::-webkit-scrollbar-thumb {
+        background: linear-gradient(60deg, #89f7fe 0%, #66a6ff 100%);
+        border-radius: 10px;
+    }
+
+    .topbar-Section::-webkit-scrollbar-track {
+        /* -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 18%); */
+        background-color: transparent;
+        border-radius: 10px;
+    }
+}
+
 @media only screen and (min-width: 320px) and (max-width: 479px) {
     .school-detail-right-sec .row {
         gap: 15px;
@@ -57327,22 +57371,7 @@ textarea.form-control {
         justify-content: center;
     }
 
-    .topbar-Section::-webkit-scrollbar {
-        width: 6px;
-        height: 5px;
-        background-color: transparent;
-    }
 
-    .topbar-Section::-webkit-scrollbar-thumb {
-        background: linear-gradient(60deg, #89f7fe 0%, #66a6ff 100%);
-        border-radius: 10px;
-    }
-
-    .topbar-Section::-webkit-scrollbar-track {
-        /* -webkit-box-shadow: inset 0 0 6px rgb(0 0 0 / 18%); */
-        background-color: transparent;
-        border-radius: 10px;
-    }
 
     .heading_finance {
         display: grid;
@@ -57732,9 +57761,9 @@ label.teacher_svg svg path {
 }
 
 .sm_h {
-    min-height: 498px;
+    min-height: 490px;
     overflow: auto !important;
-    max-height: 498px;
+    max-height: 490px;
 }
 
 .f_12 p {
@@ -57987,17 +58016,33 @@ input.form-control.section5_input {
 
 }
 
+.timesheetActive {
+    background: #4f9eeb4a;
+}
+
 @media only screen and (min-width: 550px) and (max-width: 1024px) {
 
+    form.finance_timesheets_form {
+        width: 100%;
+    }
+
+    .skd_dates_row.grid_8 {
+        grid-template-columns: repeat(8, 180px);
+        min-width: 1443px;
+    }
+
     .calendar-section.skd_image_calender_box {
-        grid-template-columns: repeat(6, 180px) !important;
+        grid-template-columns: repeat(8, 180px) !important;
         gap: 0;
         justify-content: start;
     }
 
+    .grid_8 {
+        min-width: 1443px;
+    }
+
     .teacher-calendar-days-text.skd_date {
         width: 100%;
-        border: none;
         height: 100%;
         display: flex;
         justify-content: center;
@@ -58010,7 +58055,11 @@ input.form-control.section5_input {
         justify-content: start;
         align-items: center;
         text-align: center;
-        border: none;
+        width: 1080px;
+    }
+
+    .calendar-section.skd_image_calender_box {
+        min-width: 1080px;
     }
 
     .skd_dates_row.grid_8 {
@@ -58035,6 +58084,8 @@ input.form-control.section5_input {
     .row.teacher-calendar-sec5 {
         flex-wrap: wrap;
     }
+
+
 
     .new_teacher-calendar-sidebar .sidebar-mode-check {
         display: flex;
@@ -58194,6 +58245,7 @@ input.form-control.section5_input {
     .assignment-contact-history-heading-section.details-heading {
         padding: 7px 15px;
     }
+
 }
 
 @media only screen and (max-width: 1024px) {
@@ -58280,24 +58332,27 @@ input.form-control.section5_input {
         transform: translate(-50%, 15%);
     }
 
+    .skd_dates_row.grid_7.grid_8 {
+        border: 1px solid #ddd;
+    }
+
 
 
     .calendar-section.skd_image_calender_box {
-        grid-template-columns: repeat(6, 180px) !important;
+        grid-template-columns: repeat(6, 180px);
         gap: 0;
         width: 100% !important;
         min-width: 1081px;
     }
 
     .new_teacher_calendar_outer3 {
-        grid-template-columns: repeat(8, 1fr) !important;
+        grid-template-columns: repeat(8, 1fr);
         width: 1440px !important;
         min-width: 1440px !important;
     }
 
     .teacher-calendar-days-text.skd_date {
         width: 100%;
-        /* border: none; */
         height: 100%;
         display: flex;
         justify-content: center;
@@ -58351,6 +58406,15 @@ input.form-control.section5_input {
         display: flex;
         flex-direction: column;
         overflow-x: scroll;
+    }
+
+    .skd_date {
+        border-right: 1px solid #dee2e6 !important;
+    }
+
+    .grid_8 {
+        grid-template-columns: repeat(8, 180px) !important;
+        min-width: 1440px !important;
     }
 }
 

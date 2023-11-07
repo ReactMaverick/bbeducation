@@ -1,4 +1,4 @@
-<div class="topbar-Section">
+<div class="topbar-Section row_6">
     <div class="menu_item">
         <i class="fas fa-users"></i>
         <span class="topbar-text">{{ $schoolDetail->ageRange_txt }}</span>

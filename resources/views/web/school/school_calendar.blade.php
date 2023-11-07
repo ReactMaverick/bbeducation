@@ -144,7 +144,7 @@
 
                                                     @foreach ($calenderList as $key => $calender)
                                                         <div
-                                                            class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 new_teacher_calendar_outer3">
+                                                            class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 new_teacher_calendar_outer3 box_8 ">
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 <div class="teacher-calendar-days-field3 teacher-calendar-days-field4"
