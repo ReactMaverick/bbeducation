@@ -376,6 +376,7 @@
 
     @for ($page = 1; $page <= $numPages; $page++)
         @php $currentPage++; @endphp
+
         <main>
             @if ($page == 1)
                 <div id="details" class="clearfix">
