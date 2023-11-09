@@ -2258,6 +2258,16 @@ pre code {
     color: #1f42b4 !important;
 }
 
+.big_icon {
+    font-size: 20px !important;
+    line-height: 1 !important;
+    color: #1f42b4 !important;
+}
+.big_icon img {
+    height: 24px !important;
+    width: 24px !important;
+}
+
 @media (max-width:575.98px) {
     .table-responsive-sm {
         display: block;
@@ -58856,7 +58866,7 @@ button#advanceSearch {
     width: 95%;
     margin: auto;
     min-height: 55px;
-    background: #3498db75 !important;
+    background: #41b15b30 !important;
     color: #000 !important;
     cursor: pointer;
 }
@@ -58983,12 +58993,11 @@ span.skl_icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
-    background: #d4d4d4;
+    width: 50px;
+    height: 50px;
+    background: #fff;
     border: none;
     padding: 0px;
-    font-size: 30px;
     box-shadow: 4px 4px 10px rgb(0 0 0 / 18%), -3px -3px 10px rgb(255 255 255 / 74%);
     cursor: pointer;
     border-radius: 100%;
@@ -58996,11 +59005,13 @@ span.skl_icon {
 }
 
 span.svg_icon svg {
-    height: 30px;
-    width: 30px;
+    height: 35px;
+    width: 35px;
     display: block;
 }
-
+.fc-row.fc-widget-content {
+    height: auto !important;
+}
 .skl_check:hover {
     box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.8),
         inset -2px -2px 5px rgba(255, 255, 255, 0.8);
@@ -59326,7 +59337,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
 .finance-remittance-top-sec {
     display: flex;
     align-items: center;
-    width: 20%;
+    width: 30%;
+    justify-content: end;
 }
 
 .form-group.finance-remittance-payment-method {

@@ -9,7 +9,7 @@
                     <h2>Alberto Alonso</h2>
                     <div class="teacher-detail-user-img-sec">
                         <div class="management-user-img-sec">
-                            <img src="{{ asset('web/images/user-img.png') }}" alt="">
+                            <img class="img-fluid" src="{{ asset('web/images/user-img.png') }}" alt="">
                                 <a href="#">
                                     <i class="fa-solid fa-plus"></i>
                                 </a>

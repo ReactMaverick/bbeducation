@@ -56,16 +56,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="school-finance-contact-icon-sec contact-icon-sec">
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="remitInvoiceBtn" title="Remit Invoice">
                                                         <i class="far fa-check-square"></i>
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="previewInvoiceBtn" title="Preview Invoice">
-                                                        <img src="{{ asset('web/company_logo/search-file.png') }}"
+                                                        <img class="img-fluid" src="{{ asset('web/company_logo/search-file.png') }}"
                                                             alt="">
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="sendRemitInvoiceBtn" title="Send Invoice">
                                                         <i class="fas fa-envelope"></i>
                                                     </a>

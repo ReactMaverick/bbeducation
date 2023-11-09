@@ -329,4 +329,20 @@ class AlertController extends Controller
             }
         }
     }
+
+    public function adminUserAddMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/adminUser_mail', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Successfully added as Admin")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                echo $e;
+                exit;
+            }
+        }
+    }
 }
