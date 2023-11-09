@@ -316,37 +316,36 @@
         }
     });
 
-    // $(document).on('click', '#deleteContactHistoryBttn', function() {
-    //     var ContactHistoryId = $('#ContactHistoryId').val();
-    //     if (ContactHistoryId) {
-    //         swal({
-    //                 title: "Alert",
-    //                 text: "Are you sure you wish to remove this contact history?",
-    //                 buttons: {
-    //                     cancel: "No",
-    //                     Yes: "Yes"
-    //                 },
-    //             })
-    //             .then((value) => {
-    //                 switch (value) {
-    //                     case "Yes":
-    //                         $.ajax({
-    //                             type: 'POST',
-    //                             url: '{{ url('
-    //                             schoolContactHistoryDelete ') }}',
-    //                             data: {
-    //                                 "_token": "{{ csrf_token() }}",
-    //                                 ContactHistoryId: ContactHistoryId
-    //                             },
-    //                             success: function(data) {
-    //                                 location.reload();
-    //                             }
-    //                         });
-    //                 }
-    //             });
-    //     } else {
-    //         swal("", "Please select one contact.");
-    //     }
-    // });
+    $(document).on('click', '#deleteContactHistoryBttn', function() {
+        var adminId = $('#adminId').val();
+        if (adminId) {
+            swal({
+                    title: "Alert",
+                    text: "Are you sure you wish to remove this user?",
+                    buttons: {
+                        cancel: "No",
+                        Yes: "Yes"
+                    },
+                })
+                .then((value) => {
+                    switch (value) {
+                        case "Yes":
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url('/deleteAdminUsers') }}',
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    adminId: adminId
+                                },
+                                success: function(data) {
+                                    location.reload();
+                                }
+                            });
+                    }
+                });
+        } else {
+            swal("", "Please select one user.");
+        }
+    });
 </script>
 @endsection

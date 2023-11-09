@@ -301,6 +301,7 @@ class ManagementController extends Controller
     {
         $request->validate([
             'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'admin_email' => 'required|unique:tbl_user,workEmail_txt'
         ]);
 
         $image = $request->file('profileImage');
@@ -430,5 +431,16 @@ class ManagementController extends Controller
         } else {
             return redirect()->intended('/');
         }
+    }
+
+    public function deleteAdminUsers(Request $request){
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            DB::table('tbl_user')->where('user_id', $request->adminId)->delete();
+            return redirect('/adminUsers');
+        } else {
+            return redirect()->intended('/');
+        }
+        
     }
 }

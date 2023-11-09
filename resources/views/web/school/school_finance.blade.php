@@ -59,45 +59,45 @@
                                                 <div class="school-finance-contact-icon-sec contact-icon-sec">
                                                     <div class="finance-invoice-icon-sec">
                                                         <a style="cursor: pointer" id="sendAccountSummaryBtn"
-                                                            title="Send Account Summary" class="icon_all nw_icon">
+                                                            title="Send Account Summary" class="big_icon nw_icon">
                                                             <i class="fas fa-envelope"></i>
                                                             <div class="finance-invoice-second-icon-sec">
                                                                 <i class="fas fa-plus"></i>
                                                             </div>
                                                         </a>
                                                     </div>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="remitInvoiceBtn" title="Remit Invoice">
                                                         <i class="far fa-check-square"></i>
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="creditNoteBttn" title="Create Credit Note">
-                                                        <img src="{{ asset('web/company_logo/money.png') }}" alt="">
+                                                        <img class="img-fluid" src="{{ asset('web/company_logo/money.png') }}" alt="">
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="splitInvoiceBtn" title="Split Invoice">
-                                                        <img src="{{ asset('web/company_logo/diverge.png') }}"
+                                                        <img class="img-fluid" src="{{ asset('web/company_logo/diverge.png') }}"
                                                             alt="">
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="previewInvoiceBtn" title="Preview Invoice">
-                                                        <img src="{{ asset('web/company_logo/search-file.png') }}"
+                                                        <img class="img-fluid" src="{{ asset('web/company_logo/search-file.png') }}"
                                                             alt="">
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="sendInvoiceBtn" title="Send Invoice">
                                                         <i class="fas fa-envelope"></i>
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="deleteInvoiceBttn">
                                                         <i class="fas fa-trash-alt trash-icon"></i>
                                                     </a>
                                                     <a style="cursor: pointer" id="invoiceAddBttn"
                                                         onclick="invoiceAdd('<?php echo $school_id; ?>', '<?php echo app('request')->input('include'); ?>', '<?php echo app('request')->input('method'); ?>')"
-                                                        title="Create Invoice" class="icon_all">
+                                                        title="Create Invoice" class="big_icon">
                                                         <i class="fas fa-plus-circle"></i>
                                                     </a>
-                                                    <a style="cursor: pointer" class="disabled-link icon_all"
+                                                    <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="InvoiceEditBttn" title="Edit invoice">
                                                         <i class="fas fa-edit school-edit-icon"></i>
                                                     </a>

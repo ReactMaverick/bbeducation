@@ -295,6 +295,7 @@ Route::get('/adminUsers', [ManagementController::class,'adminUsers']);
 Route::post('/insertAdminUsers', [ManagementController::class, 'InsertAdminUsers']);
 Route::post('/getAdminUser',[ManagementController::class,'getAdminUser']);
 Route::post('/updateAdminUsers',[ManagementController::class,'updateAdminUsers']);
+Route::post('/deleteAdminUsers',[ManagementController::class,'deleteAdminUsers']);
 Route::get('/companyDetailsEdit', [ManagementController::class,'companyDetailsEdit']);
 Route::post('/updateCompanyDetails', [ManagementController::class,'updateCompanyDetails']);
 // Management
