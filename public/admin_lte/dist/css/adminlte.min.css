@@ -59420,7 +59420,60 @@ select.form-control.nw_formcontrol {
     gap: 10px;
     align-items: center;
 }
-
+.modal-input-field-section.nwp {
+    text-align: center;
+    margin: 20px 0px 40px;
+}
+.mx_w_100 {
+    max-width: 100%;
+}
+.file_up_load {
+    height: 38px;
+    padding: 7px;
+    display: grid;
+    place-items: center;
+    border: 2px dashed #cacaca;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    cursor: pointer;
+    position: relative;
+}
+.file_up_load::after{
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    top: 0;
+    left: 0;
+}
+.file_up_load::before{
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+.modal-input-field.form-group.modal_logo {
+    width: 25%;
+    height: auto;
+}
+.new_file {
+    position: relative;
+}
+span.file_upload {
+    position: absolute;
+    top: 75%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    display: inline-block;
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+}
 @media screen and (max-width: 767px) {
 
     .grid-refs-sec,

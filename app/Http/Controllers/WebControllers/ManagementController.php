@@ -9,6 +9,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MetricsExport;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ManagementController extends Controller
 {
@@ -273,5 +275,160 @@ class ManagementController extends Controller
         $headerTitle = "Management Mailshot";
 
         return view("web.management.mailshot", ['title' => $title, 'headerTitle' => $headerTitle]);
+    }
+
+    public function adminUsers()
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $title = array('pageTitle' => "Management");
+            $headerTitle = "Management";
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+
+            $userAdmins = DB::table("tbl_user")
+                ->where('company_id', $company_id)
+                ->where('user_id', '!=', $user_id)
+                ->get();
+
+            return view("web.management.adminUsers", ['title' => $title, 'headerTitle' => $headerTitle, 'userAdmins' => $userAdmins]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function InsertAdminUsers(Request $request)
+    {
+        $request->validate([
+            'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $image = $request->file('profileImage');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images/userimages'), $imageName);
+
+        $webUserLoginData = Session::get('webUserLoginData');
+
+        $adminUserId = DB::table('tbl_user')
+            ->insertGetId([
+                'company_id'    => $webUserLoginData->company_id,
+                'admin_type'    => 1,
+                'firstName_txt' => $request->admin_firstName,
+                'surname_txt' => $request->admin_surName,
+                'DOB_dte'       => $request->admin_dob,
+                'workEmail_txt' =>  $request->admin_email,
+                'password'      => password_hash($request->admin_password, PASSWORD_DEFAULT),
+                'password_txt'  => $request->admin_password,
+                'user_name'     => $request->admin_email,
+                'profileImage'  => $imageName,
+                'profileImageLocation_txt'  => 'images/userimages',
+                'timestamp_ts' => date('Y-m-d H:i:s')
+            ]);
+        // return response()->json(['status' => 'success']);
+
+        return redirect('/adminUsers');
+    }
+
+    public function getAdminUser(Request $request)
+    {
+        $user_id = $request->adminId;
+
+        $user = DB::table('tbl_user')->where('user_id', $user_id)->first();
+
+        return response()->json(['userAdmin' => $user]);
+    }
+
+    public function updateAdminUsers(Request $request)
+    {
+        $request->validate([
+            'edit_profileImage' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $webUserLoginData = Session::get('webUserLoginData');
+        $adminUser = DB::table('tbl_user')->where('user_id', $request->adminUserId)->first();
+
+        if ($request->file('edit_profileImage')) {
+            $imagePath = public_path($adminUser->profileImageLocation_txt . '/' . $adminUser->profileImage);
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
+            $image = $request->file('edit_profileImage');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/userimages'), $imageName);
+        } else {
+            $imageName = $request->old_image;
+        }
+
+        $user = DB::table('tbl_user')
+            ->where('user_id', $request->adminUserId)
+            ->update([
+                'firstName_txt' => $request->edit_admin_firstName,
+                'surname_txt' => $request->edit_admin_surName,
+                'DOB_dte' => $request->edit_admin_dob,
+                'workEmail_txt' => $request->edit_admin_email,
+                'password' => password_hash($request->edit_admin_password, PASSWORD_DEFAULT),
+                'password_txt' => $request->edit_admin_password,
+                'user_name' => $request->edit_admin_email,
+                'profileImage' => $imageName,
+            ]);
+
+        return redirect('/adminUsers');
+    }
+
+    public function companyDetailsEdit()
+    {
+        $title = array('pageTitle' => "Management");
+        $headerTitle = "Management";
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $company = DB::table('company')->where('company_id', $company_id)->first();
+            // dd($company);
+            return view('web.management.company_details_edit', ['title' => $title, 'headerTitle' => $headerTitle, 'company' => $company]);
+        } else {
+            return redirect()->intended('/');
+        }
+    }
+
+    public function updateCompanyDetails(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $company = DB::table('company')->where('company_id', $company_id)->first();
+
+            if ($request->file('company_logo')) {
+                
+                if (File::exists(public_path($company->company_logo))) {
+                    File::delete(public_path($company->company_logo));
+                }
+                $image = $request->file('company_logo');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('web/company_logo'), $imageName);
+                $imageName = 'web/company_logo/'.$imageName;
+            } else {
+                $imageName = $company->company_logo;
+            }
+            DB::table('company')
+                ->where('company_id', $company_id)
+                ->update([
+                    'company_name'      => $request->company_name,
+                    'company_phone'     => $request->company_phone,
+                    'company_logo'      => $imageName,
+                    'vat_registration'  => $request->vat_registration,
+                    'address1_txt'      => $request->address1_txt,
+                    'address2_txt'      => $request->address2_txt,
+                    'address3_txt'      => $request->address3_txt,
+                    'address4_txt'      => $request->address4_txt,
+                    'address5_txt'      => $request->address5_txt,
+                    'postcode_txt'      => $request->postcode_txt,
+                    'valid_from'        => $request->valid_from,
+                    'valid_to'          => $request->valid_to
+                ]);
+                return redirect('/management');
+        } else {
+            return redirect()->intended('/');
+        }
     }
 }

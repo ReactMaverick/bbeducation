@@ -291,6 +291,12 @@ Route::post('/studentUpdate', [ManagementController::class, 'studentUpdate']);
 Route::post('/studentDelete', [ManagementController::class, 'studentDelete']);
 Route::post('/viewMetricsAjax', [ManagementController::class, 'viewMetricsAjax']);
 Route::post('/viewMetricsExport', [ManagementController::class, 'viewMetricsExport']);
+Route::get('/adminUsers', [ManagementController::class,'adminUsers']);
+Route::post('/insertAdminUsers', [ManagementController::class, 'InsertAdminUsers']);
+Route::post('/getAdminUser',[ManagementController::class,'getAdminUser']);
+Route::post('/updateAdminUsers',[ManagementController::class,'updateAdminUsers']);
+Route::get('/companyDetailsEdit', [ManagementController::class,'companyDetailsEdit']);
+Route::post('/updateCompanyDetails', [ManagementController::class,'updateCompanyDetails']);
 // Management
 
 
