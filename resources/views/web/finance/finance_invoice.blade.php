@@ -349,7 +349,7 @@
 
     <!-- Event Edit Modal -->
     <div class="modal fade" id="eventEditModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -358,28 +358,30 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Assignment Day</h2>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Assignment Day</h2>
+                    </div>
+
+                    <form action="{{ url('/timesheetEventUpdateAjax') }}" method="post" class="form-validate"
+                        id="ajaxAssignmentEventForm">
+                        @csrf
+
+                        <input type="hidden" name="p_maxDate" value="{{ $p_maxDate }}">
+
+                        <div class="modal-input-field-section">
+                            <div id="AjaxEventEdit"></div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="ajaxAssignmentEventBtn">Submit</button>
+
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
                 </div>
-
-                <form action="{{ url('/timesheetEventUpdateAjax') }}" method="post" class="form-validate"
-                    id="ajaxAssignmentEventForm">
-                    @csrf
-
-                    <input type="hidden" name="p_maxDate" value="{{ $p_maxDate }}">
-
-                    <div class="modal-input-field-section">
-                        <div id="AjaxEventEdit"></div>
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="ajaxAssignmentEventBtn">Submit</button>
-
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
 
             </div>
         </div>
@@ -388,8 +390,8 @@
 
     <!-- Split Invoice Modal -->
     <div class="modal fade" id="splitInvoiceModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:100%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -397,33 +399,35 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Split Invoice Id - <span id="spanInvId"></span></h2>
-                </div>
-
-                <form action="{{ url('/financeSplitInvoiceCreate') }}" method="post" class=""
-                    enctype="multipart/form-data" id="splitInvoiceForm">
-                    @csrf
-
-                    <input type="hidden" name="invoiceNumberMin"
-                        value="{{ app('request')->input('invoiceNumberMin') }}">
-                    <input type="hidden" name="invoiceNumberMax"
-                        value="{{ app('request')->input('invoiceNumberMax') }}">
-                    <input type="hidden" name="date"
-                        value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
-                    <input type="hidden" name="showSent"
-                        value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
-
-                    <div class="modal-input-field-section" id="invoiceISplitAjax" style="width: 100%;"></div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="splitInvSubmitBtn">Submit</button>
-
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Split Invoice Id - <span id="spanInvId"></span></h2>
                     </div>
-                </form>
+
+                    <form action="{{ url('/financeSplitInvoiceCreate') }}" method="post" class=""
+                        enctype="multipart/form-data" id="splitInvoiceForm">
+                        @csrf
+
+                        <input type="hidden" name="invoiceNumberMin"
+                            value="{{ app('request')->input('invoiceNumberMin') }}">
+                        <input type="hidden" name="invoiceNumberMax"
+                            value="{{ app('request')->input('invoiceNumberMax') }}">
+                        <input type="hidden" name="date"
+                            value="{{ app('request')->input('date') ? app('request')->input('date') : $p_maxDate }}">
+                        <input type="hidden" name="showSent"
+                            value="{{ app('request')->input('showSent') ? app('request')->input('showSent') : 'false' }}">
+
+                        <div class="modal-input-field-section" id="invoiceISplitAjax" style="width: 100%;"></div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="splitInvSubmitBtn">Submit</button>
+
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -432,8 +436,8 @@
 
     <!-- Edit Invoice Modal -->
     <div class="modal fade" id="editInvoiceModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:100%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -441,24 +445,26 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Invoice Details</h2>
-                </div>
-
-                <form action="{{ url('/financeInvoiceUpdate') }}" method="post" class=""
-                    enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="modal-input-field-section" id="invoiceEditAjax" style="width: 100%;"></div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
-
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Invoice Details</h2>
                     </div>
-                </form>
+
+                    <form action="{{ url('/financeInvoiceUpdate') }}" method="post" class=""
+                        enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="modal-input-field-section" id="invoiceEditAjax" style="width: 100%;"></div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="submit" class="btn btn-secondary">Submit</button>
+
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -467,8 +473,8 @@
 
     <!-- Send Selected Invoice Modal -->
     <div class="modal fade" id="selectedInvModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:100%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -476,26 +482,28 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <form action="{{ url('/financeInvoiceMail') }}" method="post" class=""
-                    enctype="multipart/form-data" id="sendInvFormId">
-                    @csrf
+                <div class="modal-body">
+                    <form action="{{ url('/financeInvoiceMail') }}" method="post" class=""
+                        enctype="multipart/form-data" id="sendInvFormId">
+                        @csrf
 
-                    <input type="hidden" name="editInvoiceId" id="formInvoiceId" value="">
+                        <input type="hidden" name="editInvoiceId" id="formInvoiceId" value="">
 
-                    <div class="modal-input-field-section mt-3">
-                        <div class="modal-input-field">
-                            <label class="form-check-label">Mail Body</label>
-                            <textarea class="form-control" name="temp_description" id="temp_description" rows="12" cols="50">{!! $templateDet->temp_description !!}</textarea>
+                        <div class="modal-input-field-section mt-3">
+                            <div class="modal-input-field">
+                                <label class="form-check-label">Mail Body</label>
+                                <textarea class="form-control" name="temp_description" id="temp_description" rows="12" cols="50">{!! $templateDet->temp_description !!}</textarea>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="formSendInvBtn">Send</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="formSendInvBtn">Send</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -504,8 +512,8 @@
 
     <!-- Send Listed Invoice Modal -->
     <div class="modal fade" id="listedInvModal">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-            <div class="modal-content calendar-modal-content" style="width:100%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header calendar-modal-header">
@@ -513,29 +521,31 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <form action="{{ url('/financeInvoiceAllMail') }}" method="post" class=""
-                    enctype="multipart/form-data" id="sendListedInvFormId">
-                    @csrf
+                <div class="modal-body">
+                    <form action="{{ url('/financeInvoiceAllMail') }}" method="post" class=""
+                        enctype="multipart/form-data" id="sendListedInvFormId">
+                        @csrf
 
-                    <input type="hidden" name="invoiceNumberMin"
-                        value="{{ app('request')->input('invoiceNumberMin') }}">
-                    <input type="hidden" name="invoiceNumberMax"
-                        value="{{ app('request')->input('invoiceNumberMax') }}">
+                        <input type="hidden" name="invoiceNumberMin"
+                            value="{{ app('request')->input('invoiceNumberMin') }}">
+                        <input type="hidden" name="invoiceNumberMax"
+                            value="{{ app('request')->input('invoiceNumberMax') }}">
 
-                    <div class="modal-input-field-section mt-3">
-                        <div class="modal-input-field">
-                            <label class="form-check-label">Mail Body</label>
-                            <textarea class="form-control" name="temp_description" id="listed_temp_description" rows="12" cols="50">{!! $templateDet->temp_description !!}</textarea>
+                        <div class="modal-input-field-section mt-3">
+                            <div class="modal-input-field">
+                                <label class="form-check-label">Mail Body</label>
+                                <textarea class="form-control" name="temp_description" id="listed_temp_description" rows="12" cols="50">{!! $templateDet->temp_description !!}</textarea>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="formSendListInvBtn">Send</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="formSendListInvBtn">Send</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>

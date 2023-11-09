@@ -48,14 +48,14 @@
                 <h2>Invoice Items</h2>
             </div>
             <div class="contact-icon-sec">
-                <a style="cursor: pointer" class="disabled-link" id="deleteInvItemBttn">
-                    <i class="fa-solid fa-xmark"></i>
+                <a style="cursor: pointer" class="disabled-link icon_all" id="deleteInvItemBttn">
+                    <i class="fas fa-trash-alt trash-icon"></i>
                 </a>
-                <a data-toggle="modal" data-target="#invoiceItemAddModal" style="cursor: pointer;">
-                    <i class="fa-solid fa-plus"></i>
+                <a data-toggle="modal" data-target="#invoiceItemAddModal" style="cursor: pointer;" class="icon_all">
+                    <i class="fas fa-plus-circle"></i>
                 </a>
-                <a style="cursor: pointer;" class="disabled-link" id="editInvItemBttn">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
+                <a style="cursor: pointer;" class="disabled-link icon_all" id="editInvItemBttn">
+                    <i class="fas fa-edit school-edit-icon"></i>
                 </a>
             </div>
         </div>
@@ -102,8 +102,8 @@
 
 <!-- Invoice item add Modal -->
 <div class="modal fade" id="invoiceItemAddModal">
-    <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-        <div class="modal-content calendar-modal-content" style="width:65%;">
+    <div class="modal-dialog modal-md modal-dialog-centered calendar-modal-section">
+        <div class="modal-content calendar-modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header calendar-modal-header">
@@ -111,60 +111,64 @@
                 <button type="button" class="close ajaxInvoiceAddBtnCencel">&times;</button>
             </div>
 
-            <div class="calendar-heading-sec">
-                <i class="fa-solid fa-pencil school-edit-icon"></i>
-                <h2>Add Invoice Item</h2>
-            </div>
+            <div class="modal-body">
+                <div class="calendar-heading-sec" style="align-items: baseline;">
+                    <i class="fas fa-edit school-edit-icon"></i>
+                    <h2>Add Invoice Item</h2>
+                </div>
 
-            <form action="{{ url('/financeInvItemInsert') }}" method="post" class="form-validate-3"
-                enctype="multipart/form-data" id="ajaxInvoiceAddForm">
-                @csrf
-                <div class="modal-input-field-section">
-                    <input type="hidden" name="invoice_id" value="{{ $invoiceDetail->invoice_id }}">
+                <form action="{{ url('/financeInvItemInsert') }}" method="post" class="form-validate-3"
+                    enctype="multipart/form-data" id="ajaxInvoiceAddForm">
+                    @csrf
+                    <div class="modal-input-field-section">
+                        <input type="hidden" name="invoice_id" value="{{ $invoiceDetail->invoice_id }}">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group modal-input-field">
-                                <label class="form-check-label">Item Description</label><span
-                                    style="color: red;">*</span>
-                                <textarea name="description_txt" id="" cols="30" rows="4" class="form-control field-validate-3"></textarea>
-                            </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group modal-input-field">
+                                    <label class="form-check-label">Item Description</label><span
+                                        style="color: red;">*</span>
+                                    <textarea name="description_txt" id="" cols="30" rows="4" class="form-control field-validate-3"></textarea>
+                                </div>
 
-                            <div class="modal-input-field form-group">
-                                <label class="form-check-label">Number of Items</label><span
-                                    style="color: red;">*</span>
-                                <input type="text" class="form-control number-validate-3" name="numItems_dec"
-                                    id="" value="">
-                            </div>
+                                <div class="modal-input-field form-group">
+                                    <label class="form-check-label">Number of Items</label><span
+                                        style="color: red;">*</span>
+                                    <input type="text" class="form-control number-validate-3" name="numItems_dec"
+                                        id="" value="">
+                                </div>
 
-                            <div class="modal-input-field form-group">
-                                <label class="form-check-label">Linked Date</label><span style="color: red;">*</span>
-                                <input type="text" class="form-control datePickerPaste datepaste-validate-3"
-                                    name="dateFor_dte" id="" value="">
-                            </div>
+                                <div class="modal-input-field form-group">
+                                    <label class="form-check-label">Linked Date</label><span
+                                        style="color: red;">*</span>
+                                    <input type="text" class="form-control datePickerPaste datepaste-validate-3"
+                                        name="dateFor_dte" id="" value="">
+                                </div>
 
-                            <div class="modal-input-field form-group">
-                                <label class="form-check-label">Charge</label><span style="color: red;">*</span>
-                                <input type="text" class="form-control number-validate-3" name="charge_dec"
-                                    id="" value="">
-                            </div>
+                                <div class="modal-input-field form-group">
+                                    <label class="form-check-label">Charge</label><span style="color: red;">*</span>
+                                    <input type="text" class="form-control number-validate-3" name="charge_dec"
+                                        id="" value="">
+                                </div>
 
-                            <div class="modal-input-field form-group">
-                                <label class="form-check-label">Cost</label><span style="color: red;">*</span>
-                                <input type="text" class="form-control number-validate-3" name="cost_dec"
-                                    id="" value="">
+                                <div class="modal-input-field form-group">
+                                    <label class="form-check-label">Cost</label><span style="color: red;">*</span>
+                                    <input type="text" class="form-control number-validate-3" name="cost_dec"
+                                        id="" value="">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Modal footer -->
-                <div class="modal-footer calendar-modal-footer">
-                    <button type="button" class="btn btn-secondary" id="ajaxInvoiceAddBtn">Submit</button>
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="button" class="btn btn-secondary" id="ajaxInvoiceAddBtn">Submit</button>
 
-                    <button type="button" class="btn btn-danger cancel-btn ajaxInvoiceAddBtnCencel">Cancel</button>
-                </div>
-            </form>
+                        <button type="button"
+                            class="btn btn-danger cancel-btn ajaxInvoiceAddBtnCencel">Cancel</button>
+                    </div>
+                </form>
+            </div>
 
         </div>
     </div>
@@ -173,8 +177,8 @@
 
 <!-- Invoice item edit Modal -->
 <div class="modal fade" id="invoiceItemEditModal">
-    <div class="modal-dialog modal-dialog-centered calendar-modal-section">
-        <div class="modal-content calendar-modal-content" style="width:65%;">
+    <div class="modal-dialog modal-md modal-dialog-centered calendar-modal-section">
+        <div class="modal-content calendar-modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header calendar-modal-header">
@@ -182,29 +186,32 @@
                 <button type="button" class="close ajaxInvoiceEditBtnCencel">&times;</button>
             </div>
 
-            <div class="calendar-heading-sec">
-                <i class="fa-solid fa-pencil school-edit-icon"></i>
-                <h2>Edit Invoice Item</h2>
+            <div class="modal-body">
+                <div class="calendar-heading-sec" style="align-items: baseline;">
+                    <i class="fas fa-edit school-edit-icon"></i>
+                    <h2>Edit Invoice Item</h2>
+                </div>
+
+                <form action="{{ url('/financeInvoiceItemUpdate') }}" method="post" class="form-validate-2"
+                    enctype="multipart/form-data" id="ajaxInvoiceEditForm">
+                    @csrf
+                    <input type="hidden" name="editInvItemId" id="editInvItemId" value="">
+                    <div class="modal-input-field-section">
+
+                        <input type="hidden" name="invoice_id" value="{{ $invoiceDetail->invoice_id }}">
+
+                        <div class="row" id="invoiceItemEditAjax"></div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer calendar-modal-footer">
+                        <button type="submit" class="btn btn-secondary" id="ajaxInvoiceEditBtn">Submit</button>
+
+                        <button type="button"
+                            class="btn btn-danger cancel-btn ajaxInvoiceEditBtnCencel">Cancel</button>
+                    </div>
+                </form>
             </div>
-
-            <form action="{{ url('/financeInvoiceItemUpdate') }}" method="post" class="form-validate-2"
-                enctype="multipart/form-data" id="ajaxInvoiceEditForm">
-                @csrf
-                <input type="hidden" name="editInvItemId" id="editInvItemId" value="">
-                <div class="modal-input-field-section">
-
-                    <input type="hidden" name="invoice_id" value="{{ $invoiceDetail->invoice_id }}">
-
-                    <div class="row" id="invoiceItemEditAjax"></div>
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer calendar-modal-footer">
-                    <button type="submit" class="btn btn-secondary" id="ajaxInvoiceEditBtn">Submit</button>
-
-                    <button type="button" class="btn btn-danger cancel-btn ajaxInvoiceEditBtnCencel">Cancel</button>
-                </div>
-            </form>
 
         </div>
     </div>

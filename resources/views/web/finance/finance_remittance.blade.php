@@ -239,13 +239,19 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
-                pageLength: 50,
+                // pageLength: 50,
+                "order": [
+                    [11, "desc"]
+                ],
+                scrollY: '600px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                // searching: false,
                 responsive: true,
                 lengthChange: true,
                 autoWidth: true,
-                "order": [
-                    [11, "desc"]
-                ]
             });
         });
 

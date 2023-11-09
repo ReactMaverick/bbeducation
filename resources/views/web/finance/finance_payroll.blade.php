@@ -206,7 +206,7 @@
 
     <!-- Event Edit Modal -->
     <div class="modal fade" id="eventEditModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-sm modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -215,32 +215,34 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Rate</h2>
-                </div>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Rate</h2>
+                    </div>
 
-                <form action="{{ url('/payrollEventUpdate') }}" method="post" class="form-validate"
-                    id="ajaxPayrollEventForm">
-                    @csrf
+                    <form action="{{ url('/payrollEventUpdate') }}" method="post" class="form-validate"
+                        id="ajaxPayrollEventForm">
+                        @csrf
 
-                    <input type="hidden" name="asnItem_id" id="payrollAsnItemId" value="">
+                        <input type="hidden" name="asnItem_id" id="payrollAsnItemId" value="">
 
-                    <div class="modal-input-field-section">
-                        <div class="modal-input-field form-group">
-                            <label class="form-check-label">Please enter the new pay rate for that date</label>
-                            <input type="text" class="form-control number-validate onlynumber" name="cost_dec"
-                                id="payrollCostDec" value="">
+                        <div class="modal-input-field-section">
+                            <div class="modal-input-field form-group">
+                                <label class="form-check-label">Please enter the new pay rate for that date</label>
+                                <input type="text" class="form-control number-validate onlynumber" name="cost_dec"
+                                    id="payrollCostDec" value="">
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="ajaxPayrollEventBtn">Submit</button>
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="ajaxPayrollEventBtn">Submit</button>
 
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>

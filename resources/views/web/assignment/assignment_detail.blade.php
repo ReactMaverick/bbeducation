@@ -80,10 +80,11 @@
                                                     onclick="candidateVetting({{ $asn_id }}, '{{ $assignmentDetail->teacher_id }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">Candidate
                                                     Vetting</button>
 
-                                                <button type="submit" class="btn btn-primary button-3 check_save_btn">
+                                                <button type="button" class="btn btn-primary button-3 check_save_btn"
+                                                    id="assignmentDetSubBtn">
                                                     Save
                                                     {{-- <img src="{{ asset('web/images/checkmark.png') }}" alt=""
-                                                class="checkmark_img" /> --}}
+                                                        class="checkmark_img" /> --}}
                                                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
                                                         xmlns:xlink="http://www.w3.org/1999/xlink" width="12"
                                                         height="12" x="0" y="0" viewBox="0 0 512 511"
@@ -109,7 +110,7 @@
                     </div>
                     <div class="col-md-12 topbar-sec">
 
-                        <form action="{{ url('/assignmentDetailUpdate') }}" method="post">
+                        <form action="{{ url('/assignmentDetailUpdate') }}" method="post" id="assignmentDetForm">
                             @csrf
 
                             <input type="hidden" name="assignmentId" id="" value="{{ $asn_id }}">
@@ -240,9 +241,9 @@
                                         </div>
                                         <div class="row assignment-notes-sec">
                                             {{-- <div class="form-group col-md-6 label-heading">
-                            <label for="">Last Contact re. Assignment</label>
-                            <textarea class="form-control" rows="5" id="" name=""></textarea>
-                        </div> --}}
+                                                <label for="">Last Contact re. Assignment</label>
+                                                <textarea class="form-control" rows="5" id="" name=""></textarea>
+                                            </div> --}}
                                             <div class="form-group col-md-12 label-heading">
                                                 <label for="">Assignment Notes</label>
                                                 <textarea class="form-control" rows="5" id="" name="notes_txt">{{ $assignmentDetail->notes_txt }}</textarea>
@@ -323,18 +324,18 @@
 
 
                             {{-- <div class="button-section">
-                        <button type="button"
-                            class="button-1 {{ $assignmentDetail->teacher_id ? '' : 'disableCandVetting' }}"
-                            {{ $assignmentDetail->teacher_id ? '' : 'disabled' }}
-                            onclick="candidateVetting({{ $asn_id }}, '{{ $assignmentDetail->teacher_id }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">Candidate
-                            Vetting</button>
+                            <button type="button"
+                                class="button-1 {{ $assignmentDetail->teacher_id ? '' : 'disableCandVetting' }}"
+                                {{ $assignmentDetail->teacher_id ? '' : 'disabled' }}
+                                onclick="candidateVetting({{ $asn_id }}, '{{ $assignmentDetail->teacher_id }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">Candidate
+                                Vetting</button>
 
-                        <button type="button" class="btn btn-primary button-2" id="blockBookingBtnId">
-                            Block Booking
-                        </button>
+                            <button type="button" class="btn btn-primary button-2" id="blockBookingBtnId">
+                                Block Booking
+                            </button>
 
-                        <button type="submit" class="btn btn-primary button-3">Save</button>
-                    </div> --}}
+                            <button type="submit" class="btn btn-primary button-3">Save</button>
+                            </div> --}}
                         </form>
                     </div>
                 </div>
@@ -665,7 +666,9 @@
             });
         });
 
-
+        $(document).on('click', '#assignmentDetSubBtn', function() {
+            $('#assignmentDetForm').submit();
+        });
         // $(document).ready(function() {
         //     $('#blockBookingStartTime, #blockBookingEndTime').timepicker({
         //         // timeFormat: 'h:i a',

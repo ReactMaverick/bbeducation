@@ -584,7 +584,7 @@
 
     <!-- Event Edit Modal -->
     <div class="modal fade" id="eventEditModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered calendar-modal-section">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -593,28 +593,30 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="calendar-heading-sec">
-                    <i class="fa-solid fa-pencil school-edit-icon"></i>
-                    <h2>Edit Assignment Day</h2>
+                <div class="modal-body">
+                    <div class="calendar-heading-sec" style="align-items: baseline;">
+                        <i class="fas fa-edit school-edit-icon"></i>
+                        <h2>Edit Assignment Day</h2>
+                    </div>
+
+                    <form method="post" class="form-validate" id="ajaxAssignmentEventForm">
+                        @csrf
+                        <input type="hidden" name="editEventId" id="editEventId" value="">
+                        <input type="hidden" name="max_date" id="" value="{{ $p_maxDate }}">
+                        <input type="hidden" name="school_id" id="editSchoolId" value="">
+
+                        <div class="modal-input-field-section">
+                            <div id="AjaxEventEdit"></div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer calendar-modal-footer">
+                            <button type="button" class="btn btn-secondary" id="ajaxAssignmentEventBtn">Submit</button>
+
+                            <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
                 </div>
-
-                <form method="post" class="form-validate" id="ajaxAssignmentEventForm">
-                    @csrf
-                    <input type="hidden" name="editEventId" id="editEventId" value="">
-                    <input type="hidden" name="max_date" id="" value="{{ $p_maxDate }}">
-                    <input type="hidden" name="school_id" id="editSchoolId" value="">
-
-                    <div class="modal-input-field-section">
-                        <div id="AjaxEventEdit"></div>
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer calendar-modal-footer">
-                        <button type="button" class="btn btn-secondary" id="ajaxAssignmentEventBtn">Submit</button>
-
-                        <button type="button" class="btn btn-danger cancel-btn" data-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
 
             </div>
         </div>
