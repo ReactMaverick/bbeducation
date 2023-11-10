@@ -52,7 +52,7 @@
                                             <tr class="school-detail-table-heading">
                                                 <th style="width: 40%">First Name</th>
                                                 <th>Last Name</th>
-                                                <th>Username</th>
+                                                <th>Email</th>
                                                 {{-- <th>Email</th> --}}
                                             </tr>
                                         </thead>
@@ -131,7 +131,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="modal-input-field form-group">
-                                            <label class="form-check-label">Username(Email)</label>
+                                            <label class="form-check-label">Email</label>
                                             <input type="text" class="form-control field-validate email-validate"
                                                 name="admin_username" id="admin_username" value="">
                                         </div>
@@ -204,7 +204,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="modal-input-field form-group">
-                                            <label class="form-check-label">Username(Email)</label>
+                                            <label class="form-check-label">Email</label>
                                             <input type="text" class="form-control form-validate-2 email-validate2"
                                                 name="edit_admin_username" id="edit_admin_username" value="">
                                         </div>
