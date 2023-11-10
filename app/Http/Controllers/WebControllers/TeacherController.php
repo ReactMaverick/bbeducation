@@ -493,31 +493,31 @@ class TeacherController extends Controller
                         });
                 })
                 ->leftJoin(
-                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day1Avail_txt, tbl_asn.asn_id AS day1Link_id, dayPart_int AS day1LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day1Amount_dec, tbl_asn.school_id AS day1School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate' AND status_int = 3 GROUP BY teacher_id) AS t_day1"),
+                    DB::raw("(SELECT teacher_id, IF(COUNT(asnItem_id) > 1, 'Multiple Bookings', CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)))) AS day1Avail_txt, tbl_asn.asn_id AS day1Link_id, dayPart_int AS day1LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day1Amount_dec, tbl_asn.school_id AS day1School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate' AND status_int = 3 GROUP BY teacher_id) AS t_day1"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_day1.teacher_id');
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day2Avail_txt, tbl_asn.asn_id AS day2Link_id, dayPart_int AS day2LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day2Amount_dec, tbl_asn.school_id AS day2School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate2' AND status_int = 3 GROUP BY teacher_id) AS t_day2"),
+                    DB::raw("(SELECT teacher_id, IF(COUNT(asnItem_id) > 1, 'Multiple Bookings', CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)))) AS day2Avail_txt, tbl_asn.asn_id AS day2Link_id, dayPart_int AS day2LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day2Amount_dec, tbl_asn.school_id AS day2School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate2' AND status_int = 3 GROUP BY teacher_id) AS t_day2"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_day2.teacher_id');
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day3Avail_txt, tbl_asn.asn_id AS day3Link_id, dayPart_int AS day3LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day3Amount_dec, tbl_asn.school_id AS day3School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate3' AND status_int = 3 GROUP BY teacher_id) AS t_day3"),
+                    DB::raw("(SELECT teacher_id, IF(COUNT(asnItem_id) > 1, 'Multiple Bookings', CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)))) AS day3Avail_txt, tbl_asn.asn_id AS day3Link_id, dayPart_int AS day3LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day3Amount_dec, tbl_asn.school_id AS day3School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate3' AND status_int = 3 GROUP BY teacher_id) AS t_day3"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_day3.teacher_id');
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day4Avail_txt, tbl_asn.asn_id AS day4Link_id, dayPart_int AS day4LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day4Amount_dec, tbl_asn.school_id AS day4School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate4' AND status_int = 3 GROUP BY teacher_id) AS t_day4"),
+                    DB::raw("(SELECT teacher_id, IF(COUNT(asnItem_id) > 1, 'Multiple Bookings', CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)))) AS day4Avail_txt, tbl_asn.asn_id AS day4Link_id, dayPart_int AS day4LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day4Amount_dec, tbl_asn.school_id AS day4School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate4' AND status_int = 3 GROUP BY teacher_id) AS t_day4"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_day4.teacher_id');
                     }
                 )
                 ->leftJoin(
-                    DB::raw("(SELECT teacher_id, CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int))) AS day5Avail_txt, tbl_asn.asn_id AS day5Link_id, dayPart_int AS day5LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day5Amount_dec, tbl_asn.school_id AS day5School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate5' AND status_int = 3 GROUP BY teacher_id) AS t_day5"),
+                    DB::raw("(SELECT teacher_id, IF(COUNT(asnItem_id) > 1, 'Multiple Bookings', CONCAT(tbl_school.name_txt, ': ', IF(dayPart_int = 4, CONCAT(dayPercent_dec, ' Hours'), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 20 AND description_int = dayPart_int)))) AS day5Avail_txt, tbl_asn.asn_id AS day5Link_id, dayPart_int AS day5LinkType_int, IFNULL(SUM(dayPercent_dec), 0) AS day5Amount_dec, tbl_asn.school_id AS day5School_id FROM tbl_asn LEFT JOIN tbl_asnItem ON tbl_asn.asn_id = tbl_asnItem.asn_id LEFT JOIN tbl_school ON tbl_asn.school_id = tbl_school.school_id WHERE asnDate_dte = '$weekStartDate5' AND status_int = 3 GROUP BY teacher_id) AS t_day5"),
                     function ($join) {
                         $join->on('tbl_teacher.teacher_id', '=', 't_day5.teacher_id');
                     }
@@ -625,7 +625,7 @@ class TeacherController extends Controller
                             $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
                         }
                     )
-                    ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, NULL, IF(COUNT(asnItem_id) > 1, 6, 1)), reason_int) AS reason_int'), DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", IF(COUNT(asnItem_id) > 1, "Multiple BB Bookings", reason_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, IF(COUNT(asnItem_id) > 1, -1, asn_id)) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
+                    ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, NULL, IF(COUNT(asnItem_id) > 1, 6, 1)), reason_int) AS reason_int'), DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", IF(COUNT(asnItem_id) > 1, "Multiple Bookings", reason_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, IF(COUNT(asnItem_id) > 1, -1, asn_id)) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
                     ->where('tbl_teacherCalendar.teacher_id', $teacherID)
                     ->where('date_dte', $calendarDate)
                     ->groupBy('tbl_teacherCalendar.date_dte')
@@ -708,7 +708,7 @@ class TeacherController extends Controller
                     $calendarItem_id = $tchAsn[0]->calendarItem_id;
                     $start = $tchAsn[0]->start;
                     $reason_int = count($tchAsnNew) > 1 ? 6 : $tchAsn[0]->reason_int;
-                    $title = count($tchAsnNew) > 1 ? "Multiple BB Bookings" : $tchAsn[0]->title;
+                    $title = count($tchAsnNew) > 1 ? "Multiple Bookings" : $tchAsn[0]->title;
                     $linkType_int = $tchAsn[0]->linkType_int;
                     $link_id = $tchAsn[0]->link_id;
                     $tc_start_tm = $tchAsn[0]->tc_start_tm;
@@ -1104,7 +1104,7 @@ class TeacherController extends Controller
                                 $join->on('tbl_teacherCalendar.date_dte', '=', 't_tchAsn.asnDate_dte');
                             }
                         )
-                        ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, NULL, IF(COUNT(asnItem_id) > 1, 6, 1)), reason_int) AS reason_int'), DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", IF(COUNT(asnItem_id) > 1, "Multiple BB Bookings", reason_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, IF(COUNT(asnItem_id) > 1, -1, asn_id)) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
+                        ->select('asnItem_id', 'tbl_teacherCalendar.calendarItem_id', 'date_dte as start', DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, NULL, IF(COUNT(asnItem_id) > 1, 6, 1)), reason_int) AS reason_int'), DB::raw('IF(reason_int IS NULL, IF(reason_txt IS NULL, "", IF(COUNT(asnItem_id) > 1, "Multiple Bookings", reason_txt)), (SELECT description_txt FROM tbl_description WHERE descriptionGroup_int = 4 AND description_int = reason_int)) AS title'), DB::raw('IF(asn_id IS NULL, 0, 1) AS linkType_int'), DB::raw('IF(asn_id IS NULL, 0, IF(COUNT(asnItem_id) > 1, -1, asn_id)) AS link_id'), 'tbl_teacherCalendar.start_tm as tc_start_tm', 'tbl_teacherCalendar.end_tm as tc_end_tm', 'tbl_teacherCalendar.notes_txt as tc_notes_txt')
                         ->where('tbl_teacherCalendar.teacher_id', $teacherID)
                         ->where('date_dte', $calendarDate)
                         ->groupBy('tbl_teacherCalendar.date_dte')
@@ -1162,7 +1162,7 @@ class TeacherController extends Controller
                         $calendarItem_id = $tchAsn[0]->calendarItem_id;
                         $start = $tchAsn[0]->start;
                         $reason_int = count($tchAsnNew) > 1 ? 6 : $tchAsn[0]->reason_int;
-                        $title = count($tchAsnNew) > 1 ? "Multiple BB Bookings" : $tchAsn[0]->title;
+                        $title = count($tchAsnNew) > 1 ? "Multiple Bookings" : $tchAsn[0]->title;
                         $linkType_int = $tchAsn[0]->linkType_int;
                         $link_id = $tchAsn[0]->link_id;
                         $tc_start_tm = $tchAsn[0]->tc_start_tm;
