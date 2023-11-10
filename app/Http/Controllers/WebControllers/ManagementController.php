@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MetricsExport;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class ManagementController extends Controller
 {
@@ -305,8 +306,11 @@ class ManagementController extends Controller
         ]);
 
         $image = $request->file('profileImage');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images/userimages'), $imageName);
+        $extension = $image->extension();
+        $file_name = mt_rand(100000, 999999);
+        $rand = mt_rand(100000, 999999);
+        $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+        $image->move(public_path('images/userimages'), $filename);
 
         $webUserLoginData = Session::get('webUserLoginData');
 
@@ -317,23 +321,23 @@ class ManagementController extends Controller
                 'firstName_txt' => $request->admin_firstName,
                 'surname_txt' => $request->admin_surName,
                 'workEmail_txt' => $request->admin_email,
-                'password' => password_hash($request->admin_password, PASSWORD_DEFAULT),
+                'password' => Hash::make($request->admin_password),
                 'password_txt' => $request->admin_password,
                 'user_name' => $request->admin_email,
-                'profileImage' => $imageName,
+                'profileImage' => $filename,
                 'profileImageLocation_txt' => 'images/userimages',
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
         // return response()->json(['status' => 'success']);
         $companyDetail = DB::table('company')
-                ->select('company.*')
-                ->where('company.company_id', $webUserLoginData->company_id)
-                ->first();
+            ->select('company.*')
+            ->where('company.company_id', $webUserLoginData->company_id)
+            ->first();
 
         if ($request->admin_email && $request->admin_password) {
             $mailData['companyDetail'] = $companyDetail;
-            $mailData['firstName_txt'] = $request->firstName_txt;
-            $mailData['surname_txt'] = $request->surname_txt;
+            $mailData['firstName_txt'] = $request->admin_firstName;
+            $mailData['surname_txt'] = $request->admin_surName;
             $mailData['mail'] = $request->admin_email;
             $mailData['password'] = $request->admin_password;
             $myVar = new AlertController();
@@ -348,8 +352,19 @@ class ManagementController extends Controller
         $user_id = $request->adminId;
 
         $user = DB::table('tbl_user')->where('user_id', $user_id)->first();
+        $imagePath = public_path($user->profileImageLocation_txt . '/' . $user->profileImage);
+        if ($user->profileImage != '') {
+            if (File::exists($imagePath)) {
+                $image = asset($user->profileImageLocation_txt . '/' . $user->profileImage);
+            } else {
+                $image = '';
+            }
+        } else {
+            $image = '';
+        }
 
-        return response()->json(['userAdmin' => $user]);
+
+        return response()->json(['userAdmin' => $user,'image' => $image]);
     }
 
     public function updateAdminUsers(Request $request)
@@ -361,16 +376,26 @@ class ManagementController extends Controller
         $webUserLoginData = Session::get('webUserLoginData');
         $adminUser = DB::table('tbl_user')->where('user_id', $request->adminUserId)->first();
 
+        $password = '';
+        if ($request->edit_admin_password) {
+            $password = $request->edit_admin_password;
+        } else {
+            $password = $adminUser->password_txt;
+        }
+
         if ($request->file('edit_profileImage')) {
             $imagePath = public_path($adminUser->profileImageLocation_txt . '/' . $adminUser->profileImage);
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
             }
             $image = $request->file('edit_profileImage');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/userimages'), $imageName);
+            $extension = $image->extension();
+            $file_name = mt_rand(100000, 999999);
+            $rand = mt_rand(100000, 999999);
+            $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+            $image->move(public_path('images/userimages'), $filename);
         } else {
-            $imageName = $request->old_image;
+            $filename = $request->old_image;
         }
 
         $user = DB::table('tbl_user')
@@ -379,10 +404,10 @@ class ManagementController extends Controller
                 'firstName_txt' => $request->edit_admin_firstName,
                 'surname_txt' => $request->edit_admin_surName,
                 'workEmail_txt' => $request->edit_admin_email,
-                'password' => password_hash($request->edit_admin_password, PASSWORD_DEFAULT),
-                'password_txt' => $request->edit_admin_password,
+                'password' => Hash::make($password),
+                'password_txt' => $password,
                 'user_name' => $request->edit_admin_email,
-                'profileImage' => $imageName,
+                'profileImage' => $filename,
             ]);
 
         return redirect('/adminUsers');
@@ -417,18 +442,19 @@ class ManagementController extends Controller
                     File::delete(public_path($company->company_logo));
                 }
                 $image = $request->file('company_logo');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('web/company_logo'), $imageName);
-                $imageName = 'web/company_logo/' . $imageName;
+                $extension = $image->extension();
+                $file_name = mt_rand(100000, 999999);
+                $rand = mt_rand(100000, 999999);
+                $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+                $image->move(public_path('web/company_logo'), $filename);
             } else {
-                $imageName = $company->company_logo;
+                $filename = $company->company_logo;
             }
             DB::table('company')
                 ->where('company_id', $company_id)
                 ->update([
-                    'company_name' => $request->company_name,
                     'company_phone' => $request->company_phone,
-                    'company_logo' => $imageName,
+                    'company_logo' => $filename,
                     'vat_registration' => $request->vat_registration,
                     'address1_txt' => $request->address1_txt,
                     'address2_txt' => $request->address2_txt,

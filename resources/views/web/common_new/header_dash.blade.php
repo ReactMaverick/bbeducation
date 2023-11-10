@@ -60,7 +60,17 @@
         <li class="user_log">
             <a class="log_item" href="#">
                 <div class="image skd_user_img elevation-2 img-circle">
-                    <img src="{{ asset('web/images/user-img.png') }}" class="img-fluid" alt="">
+                    @if ($webUserLoginData->profileImage)
+                        @if (File::exists(public_path($webUserLoginData->profileImageLocation_txt . '/' . $webUserLoginData->profileImage)))
+                            <img src="{{ asset($webUserLoginData->profileImageLocation_txt . '/' . $webUserLoginData->profileImage) }}"
+                                class="img-fluid" alt="">
+                        @else
+                            <img src="{{ asset('web/images/user-img.png') }}" class="img-fluid" alt="">
+                        @endif
+                    @else
+                        <img src="{{ asset('web/images/user-img.png') }}" class="img-fluid" alt="">
+                    @endif
+
                 </div>
                 <span
                     class="mob_dp_none">{{ $webUserLoginData->firstName_txt . ' ' . $webUserLoginData->surname_txt }}</span>
