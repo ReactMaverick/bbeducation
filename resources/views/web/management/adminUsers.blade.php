@@ -130,22 +130,18 @@
                                     <div class="col-md-6">
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Email</label>
-                                            <input type="text" class="form-control field-validate email-validate" name="admin_email"
-                                                id="admin_email" value="">
+                                            <input type="text" class="form-control field-validate email-validate"
+                                                name="admin_email" id="admin_email" value="">
                                         </div>
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Password</label>
-                                            <input type="text" class="form-control field-validate" name="admin_password"
+                                            <input type="password" class="form-control field-validate" name="admin_password"
                                                 id="admin_password" value="">
                                         </div>
-
-                                        
                                     </div>
-                                    
                                 </div>
                                 <div class="modal-footer calendar-modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        id="adminAddBtn">Add</button>
+                                    <button type="button" class="btn btn-secondary" id="adminAddBtn">Add</button>
                                     <button type="button" class="btn btn-danger cancel-btn"
                                         data-dismiss="modal">Cancel</button>
                                 </div>
@@ -215,11 +211,11 @@
                                         </div>
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Password</label>
-                                            <input type="text" class="form-control form-validate-2"
+                                            <input type="password" class="form-control form-validate-2"
                                                 name="edit_admin_password" id="edit_admin_password" value="">
                                         </div>
 
-                                        
+
                                     </div>
 
                                 </div>
@@ -351,7 +347,7 @@
                     data: {
                         "_token": "{{ csrf_token() }}",
                         loginMail: loginMailId,
-                        adminUserId : adminUserId
+                        adminUserId: adminUserId
                     },
                     async: false,
                     success: function(data) {
@@ -385,9 +381,7 @@
 
         $(document).on('click', '#editContactHistoryBttn', function() {
             var adminId = $('#adminId').val();
-            // alert(adminId);
             if (adminId) {
-                // $('#editContactHistoryId').val(ContactHistoryId);
                 $.ajax({
                     type: 'POST',
                     url: '{{ url('/getAdminUser') }}',
@@ -396,16 +390,18 @@
                         adminId: adminId
                     },
                     success: function(data) {
+                        console.log(data);
                         $("#adminUserId").val(data.userAdmin.user_id);
                         $("#edit_admin_firstName").val(data.userAdmin.firstName_txt);
                         $("#edit_admin_surName").val(data.userAdmin.surname_txt);
                         $("#edit_admin_email").val(data.userAdmin.workEmail_txt);
-                        $("#edit_admin_password").val(data.userAdmin.password_txt);
+                        // $("#edit_admin_password").val(data.userAdmin.password_txt);
                         $("#old_image").val(data.userAdmin.profileImage);
                         $("#old_user_image").empty();
-                        var html =
-                            `<img style="width: 70px; height: 70px;" class="img-fluid" src="${data.userAdmin.profileImageLocation_txt}/${data.userAdmin.profileImage}">`;
-                        $("#old_user_image").append(html);
+                        if (data.image != '') {
+                            var html = `<img style="width: 70px; height: 70px;" class="img-fluid" src="${data.image}">`;
+                            $("#old_user_image").append(html);
+                        }
                     }
                 });
                 $('#userEditModal').modal("show");

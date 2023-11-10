@@ -45,6 +45,7 @@
                                 <p>Dear <strong>{{ $mailData['firstName_txt'] }}
                                         {{ $mailData['surname_txt'] }},</strong>
                                 </p>
+                                <p>Congratulations and welcome to the <strong>{{ $mailData['companyDetail']->company_name }}</strong> as an administrator!</p>
                                 <p>Your login user name is '{{ $mailData['mail'] }}'</p>
                                 <p>Your login password is '{{ $mailData['password'] }}'</p>
                             </td>
