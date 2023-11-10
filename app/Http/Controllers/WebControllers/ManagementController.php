@@ -485,7 +485,7 @@ class ManagementController extends Controller
         if (isset($request->adminUserId)) {
             $count = DB::table('tbl_user')
                 ->select('tbl_user.*')
-                ->where('workEmail_txt', $loginMail)
+                ->where('user_name', $loginMail)
                 ->where('user_id', '!=', $request->adminUserId)
                 ->get();
             if (count($count) > 0) {
@@ -496,7 +496,7 @@ class ManagementController extends Controller
         } else {
             $count = DB::table('tbl_user')
                 ->select('tbl_user.*')
-                ->where('workEmail_txt', $loginMail)
+                ->where('user_name', $loginMail)
                 ->get();
             if (count($count) > 0) {
                 return "Yes";
