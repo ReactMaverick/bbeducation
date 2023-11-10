@@ -50,9 +50,10 @@
                                     <table class="table table-bordered table-striped" id="myTable">
                                         <thead>
                                             <tr class="school-detail-table-heading">
-                                                <th style="width: 40%">Name</th>
-                                                <th>Username</th>
+                                                <th style="width: 40%">First Name</th>
+                                                <th>Last Name</th>
                                                 <th>Email</th>
+                                                {{-- <th>Email</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody class="table-body-sec">
@@ -62,9 +63,10 @@
                                                     id="editContactHistoryRow{{ $userAdmin->user_id }}"
                                                     onclick="contactHistoryRowSelect({{ $userAdmin->user_id }})">
                                                     <td style="width: 40%">
-                                                        {{ $userAdmin->firstName_txt . ' ' . $userAdmin->surname_txt }}</td>
+                                                        {{ $userAdmin->firstName_txt }}</td>
+                                                    <td>{{ $userAdmin->surname_txt }}</td>
                                                     <td>{{ $userAdmin->user_name }}</td>
-                                                    <td>{{ $userAdmin->workEmail_txt }}</td>
+                                                    {{-- <td>{{ $userAdmin->workEmail_txt }}</td> --}}
                                                     {{-- <td>{{ $userAdmin->DOB_dte }}</td> --}}
                                                     {{-- <td><img src="{{$userAdmin->profileImageLocation_txt . '/' . $userAdmin->profileImage }}"></td> --}}
                                                 </tr>
@@ -113,7 +115,7 @@
                                         </div>
 
                                         <div class="modal-input-field form-group">
-                                            <label class="form-check-label">Surname</label>
+                                            <label class="form-check-label">Last Name</label>
                                             <input type="text" class="form-control field-validate" name="admin_surName"
                                                 id="admin_surName" value="">
                                         </div>
@@ -131,7 +133,7 @@
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Email</label>
                                             <input type="text" class="form-control field-validate email-validate"
-                                                name="admin_email" id="admin_email" value="">
+                                                name="admin_username" id="admin_username" value="">
                                         </div>
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Password</label>
@@ -164,7 +166,6 @@
                     <h4 class="modal-title">Edit User Admin</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-
                 <div class="modal-body">
                     <div class="calendar-heading-sec" style="align-items: baseline;">
                         <i class="fas fa-edit school-edit-icon"></i>
@@ -186,7 +187,7 @@
                                         </div>
 
                                         <div class="modal-input-field form-group">
-                                            <label class="form-check-label">Surname</label>
+                                            <label class="form-check-label">Last Name</label>
                                             <input type="text" class="form-control form-validate-2"
                                                 name="edit_admin_surName" id="edit_admin_surName" value="">
                                         </div>
@@ -200,24 +201,19 @@
                                         </div>
                                         <div id="old_user_image"></div>
                                         <input type="hidden" name="old_image" id="old_image">
-
                                     </div>
                                     <div class="col-md-6">
-
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Email</label>
                                             <input type="text" class="form-control form-validate-2 email-validate2"
-                                                name="edit_admin_email" id="edit_admin_email" value="">
+                                                name="edit_admin_username" id="edit_admin_username" value="">
                                         </div>
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Password</label>
                                             <input type="password" class="form-control form-validate-2"
                                                 name="edit_admin_password" id="edit_admin_password" value="">
                                         </div>
-
-
                                     </div>
-
                                 </div>
                                 <div class="modal-footer calendar-modal-footer">
                                     <button type="button" class="btn btn-secondary" id="adminUpdateBtn">Update</button>
@@ -267,7 +263,7 @@
             if (error == "has error") {
                 return false;
             } else {
-                var loginMailId = $('#admin_email').val();
+                var loginMailId = $('#admin_username').val();
                 $.ajax({
                     type: 'POST',
                     url: '{{ url('checkAdminUserMailExist') }}',
@@ -339,7 +335,7 @@
             if (error == "has error") {
                 return false;
             } else {
-                var loginMailId = $('#edit_admin_email').val();
+                var loginMailId = $('#edit_admin_username').val();
                 var adminUserId = $('#adminUserId').val();
                 $.ajax({
                     type: 'POST',
@@ -394,12 +390,13 @@
                         $("#adminUserId").val(data.userAdmin.user_id);
                         $("#edit_admin_firstName").val(data.userAdmin.firstName_txt);
                         $("#edit_admin_surName").val(data.userAdmin.surname_txt);
-                        $("#edit_admin_email").val(data.userAdmin.workEmail_txt);
+                        $("#edit_admin_username").val(data.userAdmin.user_name);
                         // $("#edit_admin_password").val(data.userAdmin.password_txt);
                         $("#old_image").val(data.userAdmin.profileImage);
                         $("#old_user_image").empty();
                         if (data.image != '') {
-                            var html = `<img style="width: 70px; height: 70px;" class="img-fluid" src="${data.image}">`;
+                            var html =
+                                `<img style="width: 70px; height: 70px;" class="img-fluid" src="${data.image}">`;
                             $("#old_user_image").append(html);
                         }
                     }

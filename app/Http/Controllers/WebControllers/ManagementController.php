@@ -302,7 +302,7 @@ class ManagementController extends Controller
     {
         $request->validate([
             'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'admin_email' => 'required|unique:tbl_user,workEmail_txt'
+            'admin_email' => 'required|unique:tbl_user,user_name'
         ]);
 
         $image = $request->file('profileImage');
@@ -320,10 +320,9 @@ class ManagementController extends Controller
                 'admin_type' => 1,
                 'firstName_txt' => $request->admin_firstName,
                 'surname_txt' => $request->admin_surName,
-                'workEmail_txt' => $request->admin_email,
                 'password' => Hash::make($request->admin_password),
                 'password_txt' => $request->admin_password,
-                'user_name' => $request->admin_email,
+                'user_name' => $request->admin_username,
                 'profileImage' => $filename,
                 'profileImageLocation_txt' => 'images/userimages',
                 'timestamp_ts' => date('Y-m-d H:i:s')
@@ -334,11 +333,11 @@ class ManagementController extends Controller
             ->where('company.company_id', $webUserLoginData->company_id)
             ->first();
 
-        if ($request->admin_email && $request->admin_password) {
+        if ($request->admin_username && $request->admin_password) {
             $mailData['companyDetail'] = $companyDetail;
             $mailData['firstName_txt'] = $request->admin_firstName;
             $mailData['surname_txt'] = $request->admin_surName;
-            $mailData['mail'] = $request->admin_email;
+            $mailData['mail'] = $request->admin_username;
             $mailData['password'] = $request->admin_password;
             $myVar = new AlertController();
             $myVar->adminUserAddMail($mailData);
@@ -403,10 +402,10 @@ class ManagementController extends Controller
             ->update([
                 'firstName_txt' => $request->edit_admin_firstName,
                 'surname_txt' => $request->edit_admin_surName,
-                'workEmail_txt' => $request->edit_admin_email,
                 'password' => Hash::make($password),
                 'password_txt' => $password,
-                'user_name' => $request->edit_admin_email,
+                'user_name' => $request->edit_admin_username,
+                'profileImageLocation_txt' => 'images/userimages',
                 'profileImage' => $filename,
             ]);
 
