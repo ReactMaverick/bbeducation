@@ -2263,6 +2263,7 @@ pre code {
     line-height: 1 !important;
     color: #1f42b4 !important;
 }
+
 .big_icon img {
     height: 24px !important;
     width: 24px !important;
@@ -56721,7 +56722,7 @@ span.input_icon i.fa-eye {
 }
 
 .teacher-calendar-days-field {
-    background-color: #3498db75;
+    background-color: #28a7456e;
     width: 100%;
 }
 
@@ -58027,7 +58028,7 @@ input.form-control.section5_input {
 }
 
 .timesheetActive {
-    background: #4f9eeb4a;
+    background: #a2d9af !important;
 }
 
 @media only screen and (min-width: 550px) and (max-width: 1024px) {
@@ -58866,7 +58867,7 @@ button#advanceSearch {
     width: 95%;
     margin: auto;
     min-height: 55px;
-    background: #41b15b30 !important;
+    background: #28a7456e !important;
     color: #000 !important;
     cursor: pointer;
 }
@@ -59009,9 +59010,12 @@ span.svg_icon svg {
     width: 35px;
     display: block;
 }
+
 .fc-row.fc-widget-content {
     height: auto !important;
+    min-height: 89px !important;
 }
+
 .skl_check:hover {
     box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.8),
         inset -2px -2px 5px rgba(255, 255, 255, 0.8);
@@ -59432,13 +59436,16 @@ select.form-control.nw_formcontrol {
     gap: 10px;
     align-items: center;
 }
+
 .modal-input-field-section.nwp {
     text-align: center;
     margin: 20px 0px 40px;
 }
+
 .mx_w_100 {
     max-width: 100%;
 }
+
 .file_up_load {
     height: 38px;
     padding: 7px;
@@ -59450,7 +59457,8 @@ select.form-control.nw_formcontrol {
     cursor: pointer;
     position: relative;
 }
-.file_up_load::after{
+
+.file_up_load::after {
     position: absolute;
     content: "";
     height: 100%;
@@ -59459,7 +59467,8 @@ select.form-control.nw_formcontrol {
     top: 0;
     left: 0;
 }
-.file_up_load::before{
+
+.file_up_load::before {
     position: absolute;
     content: "";
     height: 100%;
@@ -59469,13 +59478,16 @@ select.form-control.nw_formcontrol {
     left: 0;
     z-index: 2;
 }
+
 .modal-input-field.form-group.modal_logo {
     width: 25%;
     height: auto;
 }
+
 .new_file {
     position: relative;
 }
+
 span.file_upload {
     position: absolute;
     top: 75%;
@@ -59486,6 +59498,7 @@ span.file_upload {
     width: 100%;
     text-align: center;
 }
+
 @media screen and (max-width: 767px) {
 
     .grid-refs-sec,
@@ -59543,6 +59556,11 @@ span.file_upload {
 
     .new_invoice_details {
         gap: 10px;
+    }
+
+    .fc-row.fc-widget-content {
+        height: auto !important;
+        min-height: 70px !important;
     }
 
     /* 

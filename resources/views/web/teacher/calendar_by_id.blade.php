@@ -108,7 +108,7 @@
 
     <!-- multiple asn Modal -->
     <div class="modal fade" id="multipleTeacherAsnModal" data-backdrop="static">
-        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section" style="max-width: 50%;">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
                 <!-- Modal Header -->
@@ -118,8 +118,8 @@
                 </div>
 
                 <div class="modal-body">
-                    <div class="col-md-10 mt-4">
-                        <table class="table assignment-page-table add-school-teacher-page-table">
+                    <div class="col-md-12 mt-2">
+                        <table class="table table-bordered table-striped">
                             <thead>
                                 <tr class="table-heading add-school-teacher-table">
                                     <th>School</th>
