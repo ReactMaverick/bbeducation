@@ -41,7 +41,7 @@ class LoginController extends Controller
             return redirect('/')->withErrors($validator)->withInput();
         } else {
 
-            if (Auth::guard('subadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'admin_type' => 1], $request->get('remember'))) {
+            if (Auth::guard('subadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'admin_type' => 1,'isActive' => 1], $request->get('remember'))) {
                 $admin = Auth::guard('subadmin')->user();
 
                 $administrators = DB::table('tbl_user')

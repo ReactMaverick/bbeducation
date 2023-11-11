@@ -339,10 +339,13 @@ class AlertController extends Controller
                         ->getHeaders()
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
+                return true;
             } catch (\Exception $e) {
                 echo $e;
+                return false;
                 exit;
             }
         }
     }
+
 }

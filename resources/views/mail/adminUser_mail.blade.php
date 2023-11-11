@@ -47,10 +47,15 @@
                                 </p>
                                 <p>Congratulations and welcome to the <strong>{{ $mailData['companyDetail']->company_name }}</strong> as an administrator!</p>
                                 <p>Your login user name is '{{ $mailData['mail'] }}'</p>
-                                <p>Your login password is '{{ $mailData['password'] }}'</p>
                             </td>
                         </tr>
                     </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px;">
+                    <h1 style="font-size: 20px;">Please click the bellow link to set your login password.</h1>
+                    <p style="font-size: 16px;"><a href="{{ $mailData['rUrl'] }}">{{ $mailData['rUrl'] }}</a></p>
                 </td>
             </tr>
             <tr>
