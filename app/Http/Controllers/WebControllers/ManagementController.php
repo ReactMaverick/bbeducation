@@ -375,7 +375,7 @@ class ManagementController extends Controller
         ]);
 
         $webUserLoginData = Session::get('webUserLoginData');
-        
+
         $adminUser = DB::table('tbl_user')->where('user_id', $request->adminUserId)->first();
 
         $password = '';
@@ -412,10 +412,10 @@ class ManagementController extends Controller
                 'profileImageLocation_txt' => 'images/userimages',
                 'profileImage' => $filename,
             ]);
-            if($user){
-                $webUserLoginData->profileImage = $filename;
-                session(['webUserLoginData' => $webUserLoginData]);
-            }
+        if ($user) {
+            $webUserLoginData->profileImage = $filename;
+            session(['webUserLoginData' => $webUserLoginData]);
+        }
         return redirect('/adminUsers');
     }
 
@@ -460,14 +460,25 @@ class ManagementController extends Controller
                 ->where('company_id', $company_id)
                 ->update([
                     'company_phone' => $request->company_phone,
-                    'company_logo' => $filename,
+                    'company_logo' => 'web/company_logo/' . $filename,
                     'vat_registration' => $request->vat_registration,
                     'address1_txt' => $request->address1_txt,
                     'address2_txt' => $request->address2_txt,
                     'address3_txt' => $request->address3_txt,
                     'address4_txt' => $request->address4_txt,
                     'postcode_txt' => $request->postcode_txt,
+                    'website' => $request->website,
+                    'finance_query_mail' => $request->finance_query_mail,
+                    'compliance_mail' => $request->compliance_mail,
+                    'account_name' => $request->account_name,
+                    'account_number' => $request->account_number,
+                    'sort_code' => $request->sort_code,
                 ]);
+
+            if ($webUserLoginData->company_logo) {
+                $webUserLoginData->company_logo = 'web/company_logo/' . $filename;
+                session(['webUserLoginData' => $webUserLoginData]);
+            }
             return redirect('/management');
         } else {
             return redirect()->intended('/');
@@ -580,14 +591,12 @@ class ManagementController extends Controller
             $mailData['rUrl'] = url('/adminUser/set-password') . '/' . $uID;
             $myVar = new AlertController();
             $mailStatus = $myVar->reset_password($mailData);
-            if($mailStatus){
+            if ($mailStatus) {
                 return response()->json(true);
-            }
-            else{
+            } else {
                 return response()->json(false);
             }
-        }
-        else{
+        } else {
             return response()->json(false);
         }
     }
