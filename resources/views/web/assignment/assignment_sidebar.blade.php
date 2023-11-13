@@ -23,7 +23,7 @@
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="sidebar-top-text">
-            <a href="{{ URL::to('/school-detail/' . $assignmentDetail->school_id) }}" class="skd_id_box"
+            <a href="{{ URL::to('/school-detail/' . $assignmentDetail->school_id) }}" class="skd_id_box new_skd_id_box"
                 target="_blank">
                 <span class="skl_icon">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"

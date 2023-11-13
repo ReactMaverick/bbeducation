@@ -372,10 +372,22 @@
         $totalItems = count($invoiceItemList);
         $numPages = ceil($totalItems / $itemsPerPage);
         $currentPage = 0;
+
+        if ($numPages > 2) {
+            if ($totalItems - $itemsPerPage < 38 && count($invoiceItemList) > 25) {
+                $itemsPerPage2 = $totalItems - $itemsPerPage - 1;
+            } else {
+                $itemsPerPage2 = 38;
+            }
+            $totalItems2 = $totalItems - $itemsPerPage;
+            $numPages2 = ceil(($totalItems - $itemsPerPage) / $itemsPerPage2);
+        }
     @endphp
 
     @for ($page = 1; $page <= $numPages; $page++)
-        @php $currentPage++; @endphp
+        @php
+            $currentPage++;
+        @endphp
 
         <main>
             @if ($page == 1)
@@ -512,8 +524,16 @@
                 </thead>
                 <tbody>
                     @php
-                        $start = ($page - 1) * $itemsPerPage;
-                        $end = min($page * $itemsPerPage, $totalItems);
+                        if ($numPages > 2 && $page == 2) {
+                            $start = $itemsPerPage;
+                            $end = min($itemsPerPage + $itemsPerPage2, $totalItems2);
+                        } elseif ($numPages > 2 && $page > 2) {
+                            $start = ($page - 1) * $itemsPerPage2;
+                            $end = min($start + $itemsPerPage2, $totalItems);
+                        } else {
+                            $start = ($page - 1) * $itemsPerPage;
+                            $end = min($start + $itemsPerPage, $totalItems);
+                        }
                     @endphp
                     @for ($i = $start; $i < $end; $i++)
                         <tr>
@@ -537,6 +557,12 @@
                     @endfor
                 </tbody>
             </table>
+
+            @php
+                if ($numPages > 2) {
+                    $numPages = $numPages2 + 1;
+                }
+            @endphp
 
             @if ($page == $currentPage && $currentPage < $numPages)
                 <div class="footer2">

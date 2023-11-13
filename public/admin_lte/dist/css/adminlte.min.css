@@ -56584,7 +56584,7 @@ ul.pagination li a {
 }
 
 .calendar-section:hover {
-    background-color: #D0D0FD;
+    background-color: #10acee;
     cursor: pointer;
 }
 
@@ -59497,6 +59497,10 @@ span.file_upload {
     z-index: 1;
     width: 100%;
     text-align: center;
+}
+
+a.new_skd_id_box {
+    height: 100% !important;
 }
 
 @media screen and (max-width: 767px) {
