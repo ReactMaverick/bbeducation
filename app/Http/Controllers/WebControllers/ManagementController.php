@@ -377,12 +377,10 @@ class ManagementController extends Controller
         $webUserLoginData = Session::get('webUserLoginData');
 
         $adminUser = DB::table('tbl_user')->where('user_id', $request->adminUserId)->first();
-
-        $password = '';
-        if ($request->edit_admin_password) {
-            $password = $request->edit_admin_password;
+        if ($request->adminUserId == $webUserLoginData->user_id) {
+            $status = 1;
         } else {
-            $password = $adminUser->password_txt;
+            $status = $request->edit_status;
         }
 
         if ($request->file('edit_profileImage')) {
@@ -405,10 +403,8 @@ class ManagementController extends Controller
             ->update([
                 'firstName_txt' => $request->edit_admin_firstName,
                 'surname_txt' => $request->edit_admin_surName,
-                'password' => Hash::make($password),
-                'password_txt' => $password,
                 'user_name' => $request->edit_admin_username,
-                'isActive' => $request->edit_status,
+                'isActive' => $status,
                 'profileImageLocation_txt' => 'images/userimages',
                 'profileImage' => $filename,
             ]);
