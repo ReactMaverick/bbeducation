@@ -1,4 +1,7 @@
 {{-- @extends('web.layout') --}}
+@php
+    $webUserLoginData = Session::get('webUserLoginData');
+@endphp
 @extends('web.layout_dashboard')
 @section('content')
     <style>
@@ -570,6 +573,7 @@
 
         $(document).on('click', '#editContactHistoryBttn', function() {
             var adminId = $('#adminId').val();
+            var loggedinId = {{ $webUserLoginData->user_id }}
             if (adminId) {
                 $.ajax({
                     type: 'POST',
@@ -586,7 +590,12 @@
                         $("#edit_admin_username").val(data.userAdmin.user_name);
                         // $("#edit_admin_password").val(data.userAdmin.password_txt);
                         $("#old_image").val(data.userAdmin.profileImage);
-                        $("#edit-status").val(data.userAdmin.isActive);
+                        if (data.userAdmin.user_id == loggedinId) {
+                            $("#edit-status").prop('disabled', true);
+                        } else {
+                            $("#edit-status").prop('disabled', false);
+                            $("#edit-status").val(data.userAdmin.isActive);
+                        }
                         $("#old_user_image").empty();
                         if (data.image != '') {
                             var html =
