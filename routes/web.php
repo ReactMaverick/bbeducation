@@ -299,6 +299,10 @@ Route::post('/deleteAdminUsers',[ManagementController::class,'deleteAdminUsers']
 Route::get('/companyDetailsEdit', [ManagementController::class,'companyDetailsEdit']);
 Route::post('/updateCompanyDetails', [ManagementController::class,'updateCompanyDetails']);
 Route::post('/checkAdminUserMailExist', [ManagementController::class, 'checkAdminUserMailExist']);
+Route::get('/adminUser/set-password/{id}', [ManagementController::class, 'adminUserSetPassword']);
+Route::post('/adminUserUpdatePassword', [ManagementController::class, 'adminUserUpdatePassword']);
+Route::post('/adminuser/changeStatus', [ManagementController::class, 'changeStatus']);
+Route::post('/adminUserPasswordreset', [ManagementController::class, 'adminUserPasswordreset']);
 // Management
 
 

@@ -302,7 +302,7 @@ class ManagementController extends Controller
     {
         $request->validate([
             'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'admin_email' => 'required|unique:tbl_user,user_name'
+            'admin_username' => 'required|unique:tbl_user,user_name'
         ]);
 
         $image = $request->file('profileImage');
@@ -320,10 +320,11 @@ class ManagementController extends Controller
                 'admin_type' => 1,
                 'firstName_txt' => $request->admin_firstName,
                 'surname_txt' => $request->admin_surName,
-                'password' => Hash::make($request->admin_password),
-                'password_txt' => $request->admin_password,
+                // 'password' => Hash::make($request->admin_password),
+                // 'password_txt' => $request->admin_password,
                 'user_name' => $request->admin_username,
                 'profileImage' => $filename,
+                'isActive' => $request->status,
                 'profileImageLocation_txt' => 'images/userimages',
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
@@ -333,12 +334,13 @@ class ManagementController extends Controller
             ->where('company.company_id', $webUserLoginData->company_id)
             ->first();
 
-        if ($request->admin_username && $request->admin_password) {
+        if ($request->admin_username) {
+            $uID = base64_encode($adminUserId);
             $mailData['companyDetail'] = $companyDetail;
             $mailData['firstName_txt'] = $request->admin_firstName;
             $mailData['surname_txt'] = $request->admin_surName;
             $mailData['mail'] = $request->admin_username;
-            $mailData['password'] = $request->admin_password;
+            $mailData['rUrl'] = url('/adminUser/set-password') . '/' . $uID;
             $myVar = new AlertController();
             $myVar->adminUserAddMail($mailData);
         }
@@ -363,7 +365,7 @@ class ManagementController extends Controller
         }
 
 
-        return response()->json(['userAdmin' => $user,'image' => $image]);
+        return response()->json(['userAdmin' => $user, 'image' => $image]);
     }
 
     public function updateAdminUsers(Request $request)
@@ -373,6 +375,7 @@ class ManagementController extends Controller
         ]);
 
         $webUserLoginData = Session::get('webUserLoginData');
+
         $adminUser = DB::table('tbl_user')->where('user_id', $request->adminUserId)->first();
 
         $password = '';
@@ -405,10 +408,14 @@ class ManagementController extends Controller
                 'password' => Hash::make($password),
                 'password_txt' => $password,
                 'user_name' => $request->edit_admin_username,
+                'isActive' => $request->edit_status,
                 'profileImageLocation_txt' => 'images/userimages',
                 'profileImage' => $filename,
             ]);
-
+        if ($user) {
+            $webUserLoginData->profileImage = $filename;
+            session(['webUserLoginData' => $webUserLoginData]);
+        }
         return redirect('/adminUsers');
     }
 
@@ -453,14 +460,25 @@ class ManagementController extends Controller
                 ->where('company_id', $company_id)
                 ->update([
                     'company_phone' => $request->company_phone,
-                    'company_logo' => $filename,
+                    'company_logo' => 'web/company_logo/' . $filename,
                     'vat_registration' => $request->vat_registration,
                     'address1_txt' => $request->address1_txt,
                     'address2_txt' => $request->address2_txt,
                     'address3_txt' => $request->address3_txt,
                     'address4_txt' => $request->address4_txt,
                     'postcode_txt' => $request->postcode_txt,
+                    'website' => $request->website,
+                    'finance_query_mail' => $request->finance_query_mail,
+                    'compliance_mail' => $request->compliance_mail,
+                    'account_name' => $request->account_name,
+                    'account_number' => $request->account_number,
+                    'sort_code' => $request->sort_code,
                 ]);
+
+            if ($webUserLoginData->company_logo) {
+                $webUserLoginData->company_logo = 'web/company_logo/' . $filename;
+                session(['webUserLoginData' => $webUserLoginData]);
+            }
             return redirect('/management');
         } else {
             return redirect()->intended('/');
@@ -506,5 +524,80 @@ class ManagementController extends Controller
 
     }
 
+    public function adminUserSetPassword($id)
+    {
+        $adminUserid = base64_decode($id);
+        $adminDetail = DB::table('tbl_user')
+            ->select('tbl_user.*')
+            ->where('user_id', $adminUserid)
+            ->first();
+        $companyDetail = array();
+        if ($adminDetail) {
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $adminDetail->company_id)
+                ->get();
+        }
+        return view("web.management.user_set_password", ['adminUserid' => $adminUserid, 'adminUserDetail' => $adminDetail, 'companyDetail' => $companyDetail]);
+    }
 
+    public function adminUserUpdatePassword(Request $request)
+    {
+        if ($request->password != $request->confirm_password) {
+            return redirect()->back()->with('error', "Password and confirm password not match.");
+        } else {
+            $adminUserid = $request->adminUser_id;
+            DB::table('tbl_user')
+                ->where('user_id', '=', $adminUserid)
+                ->update([
+                    'password' => Hash::make($request->password),
+                    'password_txt' => $request->password
+                ]);
+            return redirect()->intended('/');
+        }
+    }
+
+    public function changeStatus(Request $request)
+    {
+        if (isset($request['adminId']) && isset($request['statusValue'])) {
+            $adminUserid = $request['adminId'];
+            DB::table('tbl_user')
+                ->where('user_id', '=', $adminUserid)
+                ->update([
+                    'isActive' => $request['statusValue']
+                ]);
+            return response()->json(true);
+
+        } else {
+            return response()->json(false);
+        }
+    }
+
+    public function adminUserPasswordreset(Request $request)
+    {
+        $adminUser = DB::table('tbl_user')->where('user_id', $request->adminId)->first();
+        $webUserLoginData = Session::get('webUserLoginData');
+        $companyDetail = DB::table('company')
+            ->select('company.*')
+            ->where('company.company_id', $webUserLoginData->company_id)
+            ->first();
+
+        if ($adminUser->user_name) {
+            $uID = base64_encode($request->adminId);
+            $mailData['companyDetail'] = $companyDetail;
+            $mailData['firstName_txt'] = $adminUser->firstName_txt;
+            $mailData['surname_txt'] = $adminUser->surname_txt;
+            $mailData['mail'] = $adminUser->user_name;
+            $mailData['rUrl'] = url('/adminUser/set-password') . '/' . $uID;
+            $myVar = new AlertController();
+            $mailStatus = $myVar->reset_password($mailData);
+            if ($mailStatus) {
+                return response()->json(true);
+            } else {
+                return response()->json(false);
+            }
+        } else {
+            return response()->json(false);
+        }
+    }
 }
