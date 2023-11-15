@@ -527,9 +527,21 @@
                         if ($numPages > 2 && $page == 2) {
                             $start = $itemsPerPage;
                             $end = min($itemsPerPage + $itemsPerPage2, $totalItems2);
-                        } elseif ($numPages > 2 && $page > 2) {
-                            $start = ($page - 1) * $itemsPerPage2;
-                            $end = min($start + $itemsPerPage2, $totalItems);
+                        } elseif ($numPages > 2 && $page == 3) {
+                            $start = $itemsPerPage + $itemsPerPage2;
+                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                        } elseif ($numPages > 2 && $page == 4) {
+                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2;
+                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                        } elseif ($numPages > 2 && $page == 5) {
+                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                        } elseif ($numPages > 2 && $page == 6) {
+                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                        } elseif ($numPages > 2 && $page == 7) {
+                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
                         } else {
                             $start = ($page - 1) * $itemsPerPage;
                             $end = min($start + $itemsPerPage, $totalItems);
