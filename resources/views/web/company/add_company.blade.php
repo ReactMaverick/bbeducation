@@ -14,116 +14,118 @@
                                             <div class="modal-input-field-section p-0">
                                                 <div class="col-md-12 col-lg-12 col-xl-12 col-12 col-sm-12">
                                                     <div class="modal-input-field-section nwp">
-                                                        <h6>{{ $company->company_name }}</h6>
+                                                        <h6>Add New Company</h6>
                                                     </div>
-                                                    <form action="{{ url('/updateCompanyDetails') }}" method="post"
+                                                    <form action="{{ url('/storeCompany') }}" method="post"
                                                         class="form-validate" id="companyUpdateForm"
                                                         enctype="multipart/form-data">
                                                         @csrf
-                                                        <!-- <div class="modal-input-field form-group">
-                                                                                                                    <label class="form-check-label">Company Name</label>
-                                                                                                                    <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
-                                                                                                                </div> -->
+                                                        <div class="modal-input-field form-group">
+                                                            <label class="form-check-label">Company Name</label>
+                                                            <input type="text" class="form-control field-validate"
+                                                                name="company_name" id="company_name"
+                                                                value="">
+                                                        </div>
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Contact Number</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="company_phone" id="company_phone"
-                                                                        value="{{ $company->company_phone }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Vat Registration</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="vat_registration" id="vat_registration"
-                                                                        value="{{ $company->vat_registration }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Finance Query
                                                                         Email</label>
                                                                     <input type="text"
-                                                                        class="form-control email-validate"
+                                                                        class="form-control email-validate field-validate"
                                                                         name="finance_query_mail" id="finance_query_mail"
-                                                                        value="{{ $company->finance_query_mail }}">
+                                                                        value="">
                                                                 </div>
 
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Website</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="website" id="website"
-                                                                        value="{{ $company->website }}">
+                                                                        value="">
                                                                 </div>
 
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Compliance Mail</label>
                                                                     <input type="text"
-                                                                        class="form-control email-validate"
+                                                                        class="form-control email-validate field-validate"
                                                                         name="compliance_mail" id="compliance_mail"
-                                                                        value="{{ $company->compliance_mail }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Address</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="address1_txt" id="address1_txt"
-                                                                        value="{{ $company->address1_txt }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="address2_txt" id="address2_txt"
-                                                                        value="{{ $company->address2_txt }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <input type="text" class="form-control"
                                                                         name="address3_txt" id="address3_txt"
-                                                                        value="{{ $company->address3_txt }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <input type="text" class="form-control"
                                                                         name="address4_txt" id="address4_txt"
-                                                                        value="{{ $company->address4_txt }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Postcode</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="postcode_txt" id="postcode_txt"
-                                                                        value="{{ $company->postcode_txt }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Sort Code</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="sort_code" id="sort_code"
-                                                                        value="{{ $company->sort_code }}">
+                                                                        value="">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <p><Strong>Payee Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="account_name" id="account_name"
-                                                                        value="{{ $company->account_name }}">
+                                                                        value="">
                                                                 </div>
 
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Number</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="account_number" id="account_number"
-                                                                        value="{{ $company->account_number }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Number</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control field-validate"
                                                                         name="sort_code" id="sort_code"
-                                                                        value="{{ $company->sort_code }}">
+                                                                        value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Terms &
                                                                         Condition</label>
-                                                                    <textarea class="form-control" name="terms_and_condition" id="terms_and_condition">{{ $company->terms_and_condition }}</textarea>
+                                                                    <textarea class="form-control field-validate" name="terms_and_condition" id="terms_and_condition"></textarea>
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Payment Terms</label>
-                                                                    <textarea class="form-control" name="payment_terms" id="payment_terms">{{ $company->payment_terms }}</textarea>
+                                                                    <textarea class="form-control field-validate" name="payment_terms" id="payment_terms"></textarea>
                                                                 </div>
 
 
@@ -142,19 +144,14 @@
                                                                         Choose File to upload
                                                                     </span>
                                                                     <input type="file"
-                                                                        class="form-control file_up_load"
+                                                                        class="form-control file_up_load field-validate"
                                                                         name="company_logo" id="company-logo"
                                                                         value="">
                                                                 </div>
                                                                 <p style="color: red; font-size: small;">Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
-                                                                <div class="modal-input-field form-group modal_logo">
-                                                                    @if (File::exists(public_path($company->company_logo)))
-                                                                        <img class="img-fluid" id= "oldImage"
-                                                                            src="{{ asset($company->company_logo) }}">
-                                                                    @endif
-                                                                </div>
+                                                                
                                                                 <div id="uploadedImage"></div>
                                                                 <div class="modal-input-field form-group new_file">
                                                                     <label class="form-check-label">Invoice Logo</label>
@@ -163,7 +160,7 @@
                                                                         Choose Files to upload
                                                                     </span>
                                                                     <input type="file"
-                                                                        class="form-control file_up_load"
+                                                                        class="form-control file_up_load field-validate"
                                                                         name="invoice_logo[]" id="invoice-logo"
                                                                         value="" multiple>
                                                                 </div>
@@ -171,27 +168,15 @@
                                                                     allowed. Max size 1mb
                                                                 </p>
                                                                 <div class="modal-input-field form-group modal_logo">
+                                                                    
                                                                 </div>
                                                                 <div id="uploadedlogo"
-                                                                    style="display: flex; flex-wrap: wrap;">
-                                                                    @foreach ($companyImages as $images)
-                                                                        <div
-                                                                            style="position: relative; display: inline-block;">
-                                                                            <img src="{{ asset($images->path . '/' . $images->image_name) }}"
-                                                                                style="width: 70px; height: 70px; display: block;">
-                                                                            <div onclick="imagedelete({{ $images->image_id }})"
-                                                                                style="position: absolute; top: 0; right: 0; width: 20px; height: 20px; background-color: rgb(254, 251, 251); clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 50% 50%, 50% 100%, 0% 100%);">
-                                                                                <i class="fa fa-times"
-                                                                                    aria-hidden="true"></i>
-                                                                            </div>
-                                                                        </div>
-                                                                    @endforeach
-                                                                </div>
+                                                                    style="display: flex; flex-wrap: wrap;"></div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer calendar-modal-footer">
                                                             <button type="button" class="btn btn-secondary"
-                                                                id="companyUpdateBtn">Update</button>
+                                                                id="companyUpdateBtn">Add</button>
                                                             <button type="button" class="btn btn-danger cancel-btn"
                                                                 data-dismiss="modal"
                                                                 onclick="window.location.href='{{ url()->previous() }}'">Back</button>
@@ -266,6 +251,14 @@
 
         $(document).on('click', '#companyUpdateBtn', function() {
             var error = "";
+            $(".field-validate").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
             $(".email-validate").each(function() {
                 var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
                 if (this.value != '' && validEmail.test(this.value)) {
