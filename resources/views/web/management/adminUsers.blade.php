@@ -81,7 +81,7 @@
                                                                 {{ $userAdmin->isActive == 1 ? 'selected' : '' }}>Active
                                                             </option>
                                                             <option value='0'
-                                                                {{ $userAdmin->isActive == 0 ? 'selected' : '' }}>In Active
+                                                                {{ $userAdmin->isActive == 0 ? 'selected' : '' }}>De-Active
                                                             </option>
                                                         </select></td>
                                                     {{-- <td>{{ $userAdmin->workEmail_txt }}</td> --}}
@@ -238,7 +238,7 @@
                                                 <option value='1' selected>
                                                     Active
                                                 </option>
-                                                <option value='0'>In Active
+                                                <option value='0'>De-Active
                                                 </option>
                                             </select>
                                         </div>
@@ -251,7 +251,7 @@
                                             <input type="file" class="form-control file_up_load"
                                                 name="edit_profileImage" id="edit_admin_image" value="">
                                         </div>
-                                        <p style="color: red; font-size: small;">Jpg,Jpeg,png type allowed. Max size 5mb
+                                        <p style="color: red; font-size: small;">Jpg,Jpeg,png type allowed. Max size 1mb
                                         </p>
                                         <div id="old_user_image"></div>
                                         <img id="edituploadedImage" style="display: none; width: 70px; height: 70px;"
@@ -305,7 +305,7 @@
                 var allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
 
                 // Max file size in bytes (adjust as needed)
-                var maxSize = 5 * 1024 * 1024; // 5 MB
+                var maxSize = 1 * 1024 * 1024; // 5 MB
 
                 if (!allowedTypes.includes(fileType)) {
                     swal({

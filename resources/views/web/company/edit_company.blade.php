@@ -16,14 +16,17 @@
                                                     <div class="modal-input-field-section nwp">
                                                         <h6>{{ $company->company_name }}</h6>
                                                     </div>
-                                                    <form action="{{ url('/updateCompanyDetails') }}" method="post"
+                                                    <form action="{{ url('/updateCompany') }}" method="post"
                                                         class="form-validate" id="companyUpdateForm"
                                                         enctype="multipart/form-data">
                                                         @csrf
-                                                        <!-- <div class="modal-input-field form-group">
-                                                                                                                    <label class="form-check-label">Company Name</label>
-                                                                                                                    <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
-                                                                                                                </div> -->
+                                                        <div class="modal-input-field form-group">
+                                                            <label class="form-check-label">Company Name</label>
+                                                            <input type="text" class="form-control field-validate"
+                                                                name="company_name" id="company_name"
+                                                                value="{{ $company->company_name }}">
+                                                        </div>
+                                                        <input type="hidden" name="company_id" value="{{ $company->company_id }}">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">

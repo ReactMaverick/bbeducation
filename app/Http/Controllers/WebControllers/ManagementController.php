@@ -423,8 +423,8 @@ class ManagementController extends Controller
         if ($webUserLoginData) {
             $company_id = $webUserLoginData->company_id;
             $company = DB::table('company')->where('company_id', $company_id)->first();
-            // dd($company);
-            return view('web.management.company_details_edit', ['title' => $title, 'headerTitle' => $headerTitle, 'company' => $company]);
+            $companyImages = DB::table('company_logo')->where('company_id', $company->company_id)->get();
+            return view('web.management.company_details_edit', ['title' => $title, 'headerTitle' => $headerTitle, 'company' => $company, 'companyImages' => $companyImages]);
         } else {
             return redirect()->intended('/');
         }
@@ -432,6 +432,7 @@ class ManagementController extends Controller
 
     public function updateCompanyDetails(Request $request)
     {
+
         $webUserLoginData = Session::get('webUserLoginData');
 
         if ($webUserLoginData) {
@@ -439,7 +440,7 @@ class ManagementController extends Controller
             $company = DB::table('company')->where('company_id', $company_id)->first();
 
             if ($request->file('company_logo')) {
-
+                
                 if (File::exists(public_path($company->company_logo))) {
                     File::delete(public_path($company->company_logo));
                 }
@@ -447,16 +448,32 @@ class ManagementController extends Controller
                 $extension = $image->extension();
                 $file_name = mt_rand(100000, 999999);
                 $rand = mt_rand(100000, 999999);
-                $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
-                $image->move(public_path('web/company_logo'), $filename);
+                $filename1 = 'web/company_logo/' . time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+                $image->move(public_path('web/company_logo'), $filename1);
             } else {
-                $filename = $company->company_logo;
+                $filename1 = $company->company_logo;
+            }
+            if ($request->file('invoice_logo')) {
+                foreach ($request->file('invoice_logo') as $key => $logo) {
+                    $extension = $logo->extension();
+                    $file_name = mt_rand(100000, 999999);
+                    $rand = mt_rand(100000, 999999);
+                    $filename2 = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+                    $logo->move(public_path('web/company_logo/footer_images/'), $filename2);
+
+                    DB::table('company_logo')->insert([
+                        'company_id' => $company_id,
+                        'image_name' => $filename2,
+                        'path' => 'web/company_logo/footer_images/'
+                    ]);
+
+                }
             }
             DB::table('company')
                 ->where('company_id', $company_id)
                 ->update([
                     'company_phone' => $request->company_phone,
-                    'company_logo' => 'web/company_logo/' . $filename,
+                    'company_logo' => $filename1,
                     'vat_registration' => $request->vat_registration,
                     'address1_txt' => $request->address1_txt,
                     'address2_txt' => $request->address2_txt,
@@ -469,10 +486,12 @@ class ManagementController extends Controller
                     'account_name' => $request->account_name,
                     'account_number' => $request->account_number,
                     'sort_code' => $request->sort_code,
+                    'terms_and_condition' => $request->terms_and_condition,
+                    'payment_terms' => $request->payment_terms,
                 ]);
 
             if ($webUserLoginData->company_logo) {
-                $webUserLoginData->company_logo = 'web/company_logo/' . $filename;
+                $webUserLoginData->company_logo = $filename1;
                 session(['webUserLoginData' => $webUserLoginData]);
             }
             return redirect('/management');
@@ -592,6 +611,21 @@ class ManagementController extends Controller
             } else {
                 return response()->json(false);
             }
+        } else {
+            return response()->json(false);
+        }
+    }
+
+    public function deletecCompanyImage(Request $request)
+    {
+        $imageDetails = DB::table('company_logo')->where('image_id', $request->imageId)->first();
+        $imagePath = public_path($imageDetails->path . $imageDetails->image_name);
+        if (File::exists($imagePath)) {
+            File::delete($imagePath);
+        }
+        $status = DB::table('company_logo')->where('image_id', $request->imageId)->delete();
+        if ($status) {
+            return response()->json(true);
         } else {
             return response()->json(false);
         }

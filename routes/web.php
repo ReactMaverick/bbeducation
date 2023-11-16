@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WebControllers\CompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebControllers\LoginController;
 use App\Http\Controllers\WebControllers\HomeController;
@@ -303,6 +304,7 @@ Route::get('/adminUser/set-password/{id}', [ManagementController::class, 'adminU
 Route::post('/adminUserUpdatePassword', [ManagementController::class, 'adminUserUpdatePassword']);
 Route::post('/adminuser/changeStatus', [ManagementController::class, 'changeStatus']);
 Route::post('/adminUserPasswordreset', [ManagementController::class, 'adminUserPasswordreset']);
+Route::post('/deletecCompanyImage', [ManagementController::class, 'deletecCompanyImage']);
 // Management
 
 
@@ -415,3 +417,10 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
 });
 
 Route::get('/approveVettingSendTest', [AssignmentController::class, 'approveVettingSendTest']);
+
+Route::get('/super-admin-login', [LoginController::class,'superAdminLogin']);
+Route::get('/all-company', [CompanyController::class,'all_company']);
+Route::get('/create-company', [CompanyController::class,'create_company']);
+Route::post('/storeCompany', [CompanyController::class,'storeCompany']);
+Route::get('/editCompany/{id}', [CompanyController::class,'editCompany']);
+Route::post('/updateCompany', [CompanyController::class,'updateCompany']);
