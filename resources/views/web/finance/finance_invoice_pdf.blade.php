@@ -648,40 +648,38 @@
 
     <footer>
         <div style="text-align: left; width: 100%;">
-            <div>By paying this invoice I certify that I have read and agree to be bound to the TC’s
-                of
-                BumbleBee Education</div>
-            <div> <b>Payment Terms:</b> Payment within 14 days of invoice date </div>
+            <div>{{ $companyDetail ? $companyDetail->terms_and_condition : '' }}</div>
+            <div> <b>Payment Terms:</b> {{ $companyDetail ? $companyDetail->payment_terms : '' }}</div>
 
             {{-- <div style="font-size: 18px; font-weight: 700; margin-top: 20px;">THANK YOU!</div> --}}
             <div style="margin-top: 10px;"><b>Payee Details:</b></div>
             <div>Payment by BACS:</div>
-            <div>Account Name: BumbleBee Education LTD</div>
-            <div>Account Number: 90009687</div>
-            <div>Sort Code: 209561</div>
+            <div>Account Name: {{ $companyDetail ? $companyDetail->account_name : '' }}</div>
+            <div>Account Number: {{ $companyDetail ? $companyDetail->account_number : '' }}</div>
+            <div>Sort Code: {{ $companyDetail ? $companyDetail->sort_code : '' }}</div>
             <table id="footer-logo">
                 <tbody>
                     <tr>
-                        <td>
-                            <img src="{{ asset('web/images/pdf_img_1.jpg') }}" alt="" width="100px;">
-                        </td>
-                        <td>
-                            <img src="{{ asset('web/images/pdf_img_2.png') }}" alt="" width="100px;">
-                        </td>
-                        <td>
-                            <img src="{{ asset('web/images/pdf_img_3.jpg') }}" alt="" width="100px;">
-                        </td>
+                        @if ($comFooterLogos && count($comFooterLogos) > 0)
+                            @foreach ($comFooterLogos as $comFooterLogo)
+                                <td>
+                                    <img src="{{ asset($comFooterLogo->path . $comFooterLogo->image_name) }}"
+                                        alt="" width="100px;">
+                                </td>
+                            @endforeach
+                        @endif
                     </tr>
                 </tbody>
             </table>
         </div>
         <div style="border-top: 1px solid #AAAAAA; padding-top: 10px;">
             <div style="float: left;">
-                <a href="www.bumblebee-education.co.uk">www.bumblebee-education.co.uk</a>
+                <a
+                    href="{{ $companyDetail ? $companyDetail->website : '' }}">{{ $companyDetail ? $companyDetail->website : '' }}</a>
             </div>
             <div style="float: right;">
-                <a href="tel:02084329844">Tel: 0208 4329844</a>
-                <a href="fax:0208432635"> / Fax: 0208 432635</a>
+                <a href="tel:02084329844">Tel: {{ $companyDetail ? $companyDetail->company_phone : '' }}</a>
+                {{-- <a href="fax:0208432635"> / Fax: 0208 432635</a> --}}
             </div>
         </div>
 

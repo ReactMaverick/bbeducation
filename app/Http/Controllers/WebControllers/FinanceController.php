@@ -1993,6 +1993,10 @@ class FinanceController extends Controller
                     ->select('company.*')
                     ->where('company.company_id', $company_id)
                     ->first();
+                $comFooterLogos = DB::table('company_logo')
+                    ->where('company_logo.company_id', $company_id)
+                    ->orderBy('company_logo.image_id', 'DESC')
+                    ->get();
 
                 $schoolDetail = DB::table('tbl_school')
                     ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
@@ -2023,7 +2027,7 @@ class FinanceController extends Controller
                     ->orderBy('tbl_schoolContactLog.schoolContactLog_id', 'DESC')
                     ->first();
 
-                $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+                $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet, 'comFooterLogos' => $comFooterLogos]);
                 $pdfName = 'invoice-' . $invoice_id . '.pdf';
                 $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                 $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2158,7 +2162,10 @@ class FinanceController extends Controller
                         ->select('company.*')
                         ->where('company.company_id', $company_id)
                         ->first();
-                    $companyFooterImages = DB::table('company_logo')->where('company_id', $company_id)->take(6)->get();
+                    $comFooterLogos = DB::table('company_logo')
+                        ->where('company_logo.company_id', $company_id)
+                        ->orderBy('company_logo.image_id', 'DESC')
+                        ->get();
                     $schoolDetail = DB::table('tbl_school')
                         ->LeftJoin('tbl_localAuthority', 'tbl_localAuthority.la_id', '=', 'tbl_school.la_id')
                         ->LeftJoin('tbl_schoolContactLog', function ($join) {
@@ -2199,7 +2206,7 @@ class FinanceController extends Controller
                         ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew,'companyFooterImages' => $companyFooterImages]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2268,6 +2275,10 @@ class FinanceController extends Controller
                     ->select('company.*')
                     ->where('company.company_id', $company_id)
                     ->first();
+                $comFooterLogos = DB::table('company_logo')
+                    ->where('company_logo.company_id', $company_id)
+                    ->orderBy('company_logo.image_id', 'DESC')
+                    ->get();
 
                 $sendMail = [];
                 // if ($contactDet && $contactDet->contactItem_txt) {
@@ -2339,7 +2350,7 @@ class FinanceController extends Controller
                         ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2418,6 +2429,10 @@ class FinanceController extends Controller
                     ->select('company.*')
                     ->where('company.company_id', $company_id)
                     ->first();
+                $comFooterLogos = DB::table('company_logo')
+                    ->where('company_logo.company_id', $company_id)
+                    ->orderBy('company_logo.image_id', 'DESC')
+                    ->get();
 
                 $sendMail = [];
                 // if ($contactDet && $contactDet->contactItem_txt) {
@@ -2489,7 +2504,7 @@ class FinanceController extends Controller
                         ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2547,6 +2562,10 @@ class FinanceController extends Controller
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
+            $comFooterLogos = DB::table('company_logo')
+                ->where('company_logo.company_id', $company_id)
+                ->orderBy('company_logo.image_id', 'DESC')
+                ->get();
 
             $contactDet = DB::table('tbl_schoolContact')
                 ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
@@ -2634,7 +2653,7 @@ class FinanceController extends Controller
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                     $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2690,6 +2709,10 @@ class FinanceController extends Controller
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
+            $comFooterLogos = DB::table('company_logo')
+                ->where('company_logo.company_id', $company_id)
+                ->orderBy('company_logo.image_id', 'DESC')
+                ->get();
 
             $dueInvoices = DB::table('tbl_invoice')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
@@ -2771,7 +2794,7 @@ class FinanceController extends Controller
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                     $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2827,6 +2850,10 @@ class FinanceController extends Controller
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
+            $comFooterLogos = DB::table('company_logo')
+                ->where('company_logo.company_id', $company_id)
+                ->orderBy('company_logo.image_id', 'DESC')
+                ->get();
 
             $contactDet = DB::table('tbl_schoolContact')
                 ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
@@ -2914,7 +2941,7 @@ class FinanceController extends Controller
                         ->orderBy('tbl_invoiceItem.dateFor_dte', 'ASC')
                         ->get();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $value, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                     $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -2992,6 +3019,10 @@ class FinanceController extends Controller
                     ->select('company.*')
                     ->where('company.company_id', $company_id)
                     ->first();
+                $comFooterLogos = DB::table('company_logo')
+                    ->where('company_logo.company_id', $company_id)
+                    ->orderBy('company_logo.image_id', 'DESC')
+                    ->get();
 
                 $sendMail = [];
                 $invoice_path = '';
@@ -3064,7 +3095,7 @@ class FinanceController extends Controller
                         ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                         ->first();
 
-                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                    $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                     $pdfName = 'invoice-' . $editInvoiceId . '.pdf';
                     $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                     $fPath = 'pdfs/invoice/' . $pdfName;
@@ -3174,6 +3205,10 @@ class FinanceController extends Controller
                         ->select('company.*')
                         ->where('company.company_id', $company_id)
                         ->first();
+                    $comFooterLogos = DB::table('company_logo')
+                        ->where('company_logo.company_id', $company_id)
+                        ->orderBy('company_logo.image_id', 'DESC')
+                        ->get();
 
                     $sendMail = [];
                     $invoice_path = '';
@@ -3245,7 +3280,7 @@ class FinanceController extends Controller
                             ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                             ->first();
 
-                        $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew]);
+                        $pdf = PDF::loadView('web.finance.finance_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDetNew, 'comFooterLogos' => $comFooterLogos]);
                         $pdfName = 'invoice-' . $value->invoice_id . '.pdf';
                         $pdf->save(public_path('pdfs/invoice/' . $pdfName));
                         $fPath = 'pdfs/invoice/' . $pdfName;
@@ -3654,6 +3689,10 @@ class FinanceController extends Controller
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
+            $comFooterLogos = DB::table('company_logo')
+                ->where('company_logo.company_id', $company_id)
+                ->orderBy('company_logo.image_id', 'DESC')
+                ->get();
 
             $contactDet = DB::table('tbl_schoolContact')
                 ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
@@ -3666,7 +3705,7 @@ class FinanceController extends Controller
                 ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                 ->first();
 
-            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet, 'comFooterLogos' => $comFooterLogos]);
             $pdfName = 'invoice-' . $invoice_id . '.pdf';
             // return $pdf->download('test.pdf');
             return $pdf->stream($pdfName);
