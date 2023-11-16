@@ -21,9 +21,9 @@
                                                         enctype="multipart/form-data">
                                                         @csrf
                                                         <!-- <div class="modal-input-field form-group">
-                                                                                                                    <label class="form-check-label">Company Name</label>
-                                                                                                                    <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
-                                                                                                                </div> -->
+                                                            <label class="form-check-label">Company Name</label>
+                                                            <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
+                                                        </div> -->
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
@@ -88,14 +88,6 @@
                                                                         name="postcode_txt" id="postcode_txt"
                                                                         value="{{ $company->postcode_txt }}">
                                                                 </div>
-                                                                <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Sort Code</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="sort_code" id="sort_code"
-                                                                        value="{{ $company->sort_code }}">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
                                                                 <p><Strong>Payee Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
@@ -111,11 +103,16 @@
                                                                         value="{{ $company->account_number }}">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Account Number</label>
+                                                                    <label class="form-check-label">Sort Code</label>
                                                                     <input type="text" class="form-control"
                                                                         name="sort_code" id="sort_code"
                                                                         value="{{ $company->sort_code }}">
                                                                 </div>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Terms &
                                                                         Condition</label>
@@ -136,7 +133,7 @@
                                                                 <input type="date" class="form-control" name="valid_to" id="valid_to" value="{{ $company->valid_to }}">
                                                             </div> --}}
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Image</label>
+                                                                    <label class="form-check-label">Company Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose File to upload
@@ -146,18 +143,18 @@
                                                                         name="company_logo" id="company-logo"
                                                                         value="">
                                                                 </div>
-                                                                <p style="color: red; font-size: small;">Jpg,Jpeg,png type
-                                                                    allowed. Max size 1mb
-                                                                </p>
                                                                 <div class="modal-input-field form-group modal_logo">
                                                                     @if (File::exists(public_path($company->company_logo)))
-                                                                        <img class="img-fluid" id= "oldImage"
+                                                                        <img class="img-fluid" id="oldImage"
                                                                             src="{{ asset($company->company_logo) }}">
                                                                     @endif
+
+                                                                    <div id="oldImage"></div>
                                                                 </div>
                                                                 <div id="uploadedImage"></div>
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Invoice Logo</label>
+                                                                    <label class="form-check-label">Invoice Footer
+                                                                        Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose Files to upload
@@ -245,11 +242,11 @@
                 } else {
                     var reader = new FileReader();
                     reader.onload = function(e) {
-
+                        $('#oldImage').empty();
                         var image = $('<img>', {
                             // id: 'edituploadedImage',
                             src: e.target.result,
-                            style: 'width: 70px; height: 70px; display: block;',
+                            style: 'width: 150px; height: 150px; display: block;',
                             class: 'img-fluid'
                         });
                         if ($('#oldImage').length > 0) {
@@ -258,6 +255,7 @@
                             $('#uploadedImage').append(image);
                         }
 
+                        $('#oldImage').append(image);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -350,7 +348,7 @@
             if (imageId) {
                 swal({
                         title: "Alert",
-                        text: "Are you sure you wish to remove this image ?",
+                        text: "Are you sure to remove this image ?",
                         buttons: {
                             cancel: "No",
                             Yes: "Yes"

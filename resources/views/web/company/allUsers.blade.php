@@ -33,20 +33,20 @@
                                     </div>
                                     <div class="school-teacher-list-heading">
                                         <div class="school-assignment-contact-icon-sec contact-icon-sec">
-                                            <a style="cursor: pointer" class="disabled-link icon_all"
-                                                id="deleteContactHistoryBttn" title="Delete User">
+                                            <a style="cursor: pointer" class="disabled-link icon_all" id="deleteUserBttn"
+                                                title="Delete User">
                                                 <i class="fas fa-trash-alt trash-icon"></i>
                                             </a>
-                                            <a data-toggle="modal" data-target="#userAddModal" style="cursor: pointer;"
+                                            {{-- <a data-toggle="modal" data-target="#userAddModal" style="cursor: pointer;"
                                                 class="icon_all" title="Add New User">
                                                 <i class="fas fa-plus-circle"></i>
-                                            </a>
+                                            </a> --}}
                                             <a style="cursor: pointer;" class="disabled-link icon_all" id="passwordReset"
                                                 title="Send Mail To user">
                                                 <i class="fas fa-paper-plane"></i>
                                             </a>
-                                            <a style="cursor: pointer;" class="disabled-link icon_all"
-                                                id="editContactHistoryBttn" title="Edit User">
+                                            <a style="cursor: pointer;" class="disabled-link icon_all" id="editUserBttn"
+                                                title="Edit User">
                                                 <i class="fas fa-edit school-edit-icon"></i>
                                             </a>
                                         </div>
@@ -57,8 +57,8 @@
                                     <table class="table table-bordered table-striped" id="myTable">
                                         <thead>
                                             <tr class="school-detail-table-heading">
-                                                <th style="width: 40%">First Name</th>
-                                                <th>Last Name</th>
+                                                <th style="width: 40%">Name</th>
+                                                <th>Company Name</th>
                                                 <th>Email</th>
                                                 <th>Status</th>
                                                 {{-- <th>Email</th> --}}
@@ -72,8 +72,8 @@
                                                     onclick="contactHistoryRowSelect({{ $userAdmin->user_id }})"
                                                     data-id={{ $userAdmin->user_id }}>
                                                     <td style="width: 40%">
-                                                        {{ $userAdmin->firstName_txt }}</td>
-                                                    <td>{{ $userAdmin->surname_txt }}</td>
+                                                        {{ $userAdmin->firstName_txt . ' ' . $userAdmin->surname_txt }}</td>
+                                                    <td>{{ $userAdmin->company_name }}</td>
                                                     <td>{{ $userAdmin->user_name }}</td>
                                                     <td><select class="form-control status"
                                                             onchange="changeStatus({{ $userAdmin->user_id }}, this.value)">
@@ -103,7 +103,7 @@
     </section>
     <!-- /.content -->
     <!-- User Add Modal -->
-    <div class="modal fade" id="userAddModal">
+    {{-- <div class="modal fade" id="userAddModal">
         <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
@@ -166,13 +166,13 @@
                                         </div>
                                         <p style="color: red; font-size: small;">Jpg,Jpeg,png type allowed. Max size 5mb
                                         </p>
-                                        <div id="uploadedImage"></div>
-                                        {{-- <div class="modal-input-field form-group">
+                                        <div id="uploadedImage"></div> --}}
+    {{-- <div class="modal-input-field form-group">
                                             <label class="form-check-label">Password</label>
                                             <input type="password" class="form-control field-validate" name="admin_password"
                                                 id="admin_password" value="">
                                         </div> --}}
-                                    </div>
+    {{-- </div>
                                 </div>
                                 <div class="modal-footer calendar-modal-footer">
                                     <button type="button" class="btn btn-secondary" id="adminAddBtn">Add</button>
@@ -185,7 +185,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- User Add Modal -->
 
     <!-- User edit Modal -->
@@ -206,7 +206,7 @@
 
                     <div class="modal-input-field-section">
                         <div class="col-md-12 col-lg-12 col-xl-12 col-12 col-sm-12">
-                            <form action="{{ url('/updateAdminUsers') }}" method="post" class="form-validate-2"
+                            <form action="{{ url('/userUpdate') }}" method="post" class="form-validate-2"
                                 id="adminUserUpdateForm" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
@@ -393,77 +393,77 @@
             }
         });
 
-        $(document).on('click', '#adminAddBtn', function() {
-            var error = "";
-            $(".field-validate").each(function() {
-                if (this.value == '') {
-                    $(this).closest(".form-group").addClass('has-error');
-                    error = "has error";
-                } else {
-                    $(this).closest(".form-group").removeClass('has-error');
-                }
-            });
-            $(".email-validate").each(function() {
-                var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-                if (this.value != '' && validEmail.test(this.value)) {
-                    $(this).closest(".form-group").removeClass('has-error');
+        // $(document).on('click', '#adminAddBtn', function() {
+        //     var error = "";
+        //     $(".field-validate").each(function() {
+        //         if (this.value == '') {
+        //             $(this).closest(".form-group").addClass('has-error');
+        //             error = "has error";
+        //         } else {
+        //             $(this).closest(".form-group").removeClass('has-error');
+        //         }
+        //     });
+        //     $(".email-validate").each(function() {
+        //         var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+        //         if (this.value != '' && validEmail.test(this.value)) {
+        //             $(this).closest(".form-group").removeClass('has-error');
 
-                } else {
-                    $(this).closest(".form-group").addClass('has-error');
-                    error = "has error";
-                }
-            });
-            if (error == "has error") {
-                return false;
-            } else {
-                var loginMailId = $('#admin_username').val();
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ url('checkAdminUserMailExist') }}',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        loginMail: loginMailId
-                    },
-                    async: false,
-                    success: function(data) {
-                        if (data == 'Yes') {
-                            swal(
-                                'Failed!',
-                                'Email-id already exist.'
-                            );
-                        } else {
-                            $('#adminUserAddForm').submit();
-                        }
-                    }
-                });
-            }
-            // if (error == "has error") {
-            //     return false;
-            // } else {
-            //     var form = $("#adminUserAddForm");
-            //     console.log(form.serialize());
-            //     var actionUrl = form.attr('action');
-            //     $.ajax({
-            //         type: "POST",
-            //         url: actionUrl,
-            //         data: form.serialize(),
+        //         } else {
+        //             $(this).closest(".form-group").addClass('has-error');
+        //             error = "has error";
+        //         }
+        //     });
+        //     if (error == "has error") {
+        //         return false;
+        //     } else {
+        //         var loginMailId = $('#admin_username').val();
+        //         $.ajax({
+        //             type: 'POST',
+        //             url: '{{ url('checkAdminUserMailExist') }}',
+        //             data: {
+        //                 "_token": "{{ csrf_token() }}",
+        //                 loginMail: loginMailId
+        //             },
+        //             async: false,
+        //             success: function(data) {
+        //                 if (data == 'Yes') {
+        //                     swal(
+        //                         'Failed!',
+        //                         'Email-id already exist.'
+        //                     );
+        //                 } else {
+        //                     $('#adminUserAddForm').submit();
+        //                 }
+        //             }
+        //         });
+        //     }
+        //     // if (error == "has error") {
+        //     //     return false;
+        //     // } else {
+        //     //     var form = $("#adminUserAddForm");
+        //     //     console.log(form.serialize());
+        //     //     var actionUrl = form.attr('action');
+        //     //     $.ajax({
+        //     //         type: "POST",
+        //     //         url: actionUrl,
+        //     //         data: form.serialize(),
 
-            //         dataType: "json",
-            //         success: function(data) {
-            //             console.log(data);
-            //             // $("#firstName_txt").val('');
-            //             // $("#surname_txt").val('');
-            //             // $("#studentTbody").html('');
-            //             // $("#studentTbody").html(data.html);
-            //             // swal("", "Student added successfully.");
+        //     //         dataType: "json",
+        //     //         success: function(data) {
+        //     //             console.log(data);
+        //     //             // $("#firstName_txt").val('');
+        //     //             // $("#surname_txt").val('');
+        //     //             // $("#studentTbody").html('');
+        //     //             // $("#studentTbody").html(data.html);
+        //     //             // swal("", "Student added successfully.");
 
-            //             if (data.status === 'success') {
-            //                 window.location.reload();
-            //             }
-            //         }
-            //     });
-            // }
-        });
+        //     //             if (data.status === 'success') {
+        //     //                 window.location.reload();
+        //     //             }
+        //     //         }
+        //     //     });
+        //     // }
+        // });
 
         $(document).on('click', '#adminUpdateBtn', function() {
             var error = "";
@@ -517,34 +517,21 @@
             if ($('#editContactHistoryRow' + adminUser_id).hasClass('tableRowActive')) {
                 $('#adminId').val('');
                 $('#editContactHistoryRow' + adminUser_id).removeClass('tableRowActive');
-                $('#deleteContactHistoryBttn').addClass('disabled-link');
-                $('#editContactHistoryBttn').addClass('disabled-link');
+                $('#deleteUserBttn').addClass('disabled-link');
+                $('#editUserBttn').addClass('disabled-link');
                 $('#passwordReset').addClass('disabled-link');
             } else {
                 $('#adminId').val(adminUser_id);
                 $('.editContactHistoryRow').removeClass('tableRowActive');
                 $('#editContactHistoryRow' + adminUser_id).addClass('tableRowActive');
-                $('#deleteContactHistoryBttn').removeClass('disabled-link');
-                $('#editContactHistoryBttn').removeClass('disabled-link');
+                $('#deleteUserBttn').removeClass('disabled-link');
+                $('#editUserBttn').removeClass('disabled-link');
                 $('#passwordReset').removeClass('disabled-link');
             }
         }
 
         function changeStatus(id, value) {
-            var loginUserId = {{ Session::get('webUserLoginData')->user_id }};
-            if (id == loginUserId) {
-                swal({
-                    title: "Alert",
-                    text: "You can't change this status !",
-                    icon: "warning",
-                    buttons: {
-                        cancel: "Discard"
-                    },
-                })
-                setTimeout(function() {
-                    location.reload();
-                }, 1000);
-            } else if (id && value) {
+            if (id && value) {
                 $.ajax({
                     type: 'POST',
                     url: '{{ url('/adminuser/changeStatus') }}',
@@ -582,13 +569,13 @@
             }
         }
 
-        $(document).on('click', '#editContactHistoryBttn', function() {
+        $(document).on('click', '#editUserBttn', function() {
             var adminId = $('#adminId').val();
             var loggedinId = {{ $webUserLoginData->user_id }}
             if (adminId) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ url('/getAdminUser') }}',
+                    url: '{{ url('/userEdit') }}',
                     data: {
                         "_token": "{{ csrf_token() }}",
                         adminId: adminId
@@ -600,12 +587,7 @@
                         $("#edit_admin_username").val(data.userAdmin.user_name);
                         // $("#edit_admin_password").val(data.userAdmin.password_txt);
                         $("#old_image").val(data.userAdmin.profileImage);
-                        if (data.userAdmin.user_id == loggedinId) {
-                            $("#edit-status").prop('disabled', true);
-                        } else {
-                            $("#edit-status").prop('disabled', false);
-                            $("#edit-status").val(data.userAdmin.isActive);
-                        }
+                        $("#edit-status").val(data.userAdmin.isActive);
                         $("#old_user_image").empty();
                         if (data.image != '') {
                             var html =
@@ -648,20 +630,9 @@
             }
         });
 
-        $(document).on('click', '#deleteContactHistoryBttn', function() {
+        $(document).on('click', '#deleteUserBttn', function() {
             var adminId = $('#adminId').val();
-            var loginUserId = {{ Session::get('webUserLoginData')->user_id }};
-
-            if (adminId == loginUserId) {
-                swal({
-                    title: "Alert",
-                    text: "You can't delete this user !",
-                    icon: "warning",
-                    buttons: {
-                        cancel: "Discard"
-                    },
-                })
-            } else if (adminId) {
+            if (adminId) {
                 swal({
                         title: "Alert",
                         text: "Are you sure you wish to remove this user ?",
@@ -675,7 +646,7 @@
                             case "Yes":
                                 $.ajax({
                                     type: 'POST',
-                                    url: '{{ url('/deleteAdminUsers') }}',
+                                    url: '{{ url('/userDelete') }}',
                                     data: {
                                         "_token": "{{ csrf_token() }}",
                                         adminId: adminId

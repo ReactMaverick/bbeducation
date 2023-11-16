@@ -290,6 +290,7 @@ class ManagementController extends Controller
             $userAdmins = DB::table("tbl_user")
                 ->where('company_id', $company_id)
                 ->where('admin_type', '=', 1)
+                ->where('is_delete', 0)
                 ->get();
 
             return view("web.management.adminUsers", ['title' => $title, 'headerTitle' => $headerTitle, 'userAdmins' => $userAdmins]);
@@ -345,7 +346,8 @@ class ManagementController extends Controller
             $myVar->adminUserAddMail($mailData);
         }
 
-        return redirect('/adminUsers');
+        return redirect('/adminUsers')->with('success', 'User registered successfully. Check user email for a password setup link.');
+
     }
 
     public function getAdminUser(Request $request)
@@ -412,7 +414,7 @@ class ManagementController extends Controller
             $webUserLoginData->profileImage = $filename;
             session(['webUserLoginData' => $webUserLoginData]);
         }
-        return redirect('/adminUsers');
+        return redirect('/adminUsers')->with('success', 'User edited Successfully');
     }
 
     public function companyDetailsEdit()
@@ -440,7 +442,7 @@ class ManagementController extends Controller
             $company = DB::table('company')->where('company_id', $company_id)->first();
 
             if ($request->file('company_logo')) {
-                
+
                 if (File::exists(public_path($company->company_logo))) {
                     File::delete(public_path($company->company_logo));
                 }
@@ -494,7 +496,7 @@ class ManagementController extends Controller
                 $webUserLoginData->company_logo = $filename1;
                 session(['webUserLoginData' => $webUserLoginData]);
             }
-            return redirect('/management');
+            return redirect()->back()->with('success', 'Updated Successfully');
         } else {
             return redirect()->intended('/');
         }
@@ -504,10 +506,10 @@ class ManagementController extends Controller
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
-            DB::table('tbl_user')->where('user_id', $request->adminId)->delete();
-            return redirect('/adminUsers');
+            DB::table('tbl_user')->where('user_id', $request->adminId)->update(['is_delete' => 1]);
+            return response()->json(true);
         } else {
-            return redirect()->intended('/');
+            return response()->json(false);
         }
     }
 
