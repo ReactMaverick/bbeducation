@@ -374,13 +374,13 @@
         $currentPage = 0;
 
         if ($numPages > 2) {
-            if ($totalItems - $itemsPerPage < 38 && count($invoiceItemList) > 25) {
-                $itemsPerPage2 = $totalItems - $itemsPerPage - 1;
+            $totalItems2 = $totalItems - $itemsPerPage;
+            if ($totalItems2 < 38 && count($invoiceItemList) > 25) {
+                $itemsPerPage2 = $totalItems2 - 1;
             } else {
                 $itemsPerPage2 = 38;
             }
-            $totalItems2 = $totalItems - $itemsPerPage;
-            $numPages2 = ceil(($totalItems - $itemsPerPage) / $itemsPerPage2);
+            $numPages2 = ceil($totalItems2 / $itemsPerPage2);
         }
     @endphp
 
@@ -525,28 +525,59 @@
                 <tbody>
                     @php
                         if ($numPages > 2 && $page == 2) {
-                            $start = $itemsPerPage;
-                            $end = min($itemsPerPage + $itemsPerPage2, $totalItems2);
+                            if ($numPages - 1 == $page) {
+                                $start = $itemsPerPage;
+                                $end = $itemsPerPage + $itemsPerPage2;
+                            } else {
+                                $start = $itemsPerPage;
+                                $end = min($itemsPerPage + $itemsPerPage2, $totalItems2);
+                            }
                         } elseif ($numPages > 2 && $page == 3) {
-                            $start = $itemsPerPage + $itemsPerPage2;
-                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            if ($numPages - 1 == $page) {
+                                $start = $itemsPerPage + $itemsPerPage2;
+                                $end = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2;
+                            } else {
+                                $start = $itemsPerPage + $itemsPerPage2;
+                                $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            }
                         } elseif ($numPages > 2 && $page == 4) {
-                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2;
-                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            if ($numPages - 1 == $page) {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2;
+                                $end = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                            } else {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2;
+                                $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            }
                         } elseif ($numPages > 2 && $page == 5) {
-                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
-                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            if ($numPages - 1 == $page) {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                                $end = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                            } else {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                                $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            }
                         } elseif ($numPages > 2 && $page == 6) {
-                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
-                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            if ($numPages - 1 == $page) {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                                $end = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                            } else {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                                $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            }
                         } elseif ($numPages > 2 && $page == 7) {
-                            $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
-                            $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            if ($numPages - 1 == $page) {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                                $end = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                            } else {
+                                $start = $itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2;
+                                $end = min($itemsPerPage + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2 + $itemsPerPage2, $totalItems);
+                            }
                         } else {
                             $start = ($page - 1) * $itemsPerPage;
                             $end = min($start + $itemsPerPage, $totalItems);
                         }
                     @endphp
+
                     @for ($i = $start; $i < $end; $i++)
                         <tr>
                             <td class="desc">
