@@ -348,7 +348,7 @@
             if (imageId) {
                 swal({
                         title: "Alert",
-                        text: "Are you sure you wish to remove this image ?",
+                        text: "Are you sure to remove this image ?",
                         buttons: {
                             cancel: "No",
                             Yes: "Yes"

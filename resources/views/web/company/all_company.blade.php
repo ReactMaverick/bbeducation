@@ -33,18 +33,18 @@
                                     </div>
                                     <div class="school-teacher-list-heading">
                                         <div class="school-assignment-contact-icon-sec contact-icon-sec">
-                                            {{-- <a style="cursor: pointer" class="disabled-link icon_all"
+                                            <a style="cursor: pointer" class="disabled-link icon_all"
                                                 id="deleteContactHistoryBttn">
                                                 <i class="fas fa-trash-alt trash-icon"></i>
-                                            </a> --}}
+                                            </a>
                                             <a href="{{ url('/create-company') }}" style="cursor: pointer;"
                                                 class="icon_all">
                                                 <i class="fas fa-plus-circle"></i>
                                             </a>
-                                            <a style="cursor: pointer;" class="disabled-link icon_all" id="passwordReset"
+                                            {{-- <a style="cursor: pointer;" class="disabled-link icon_all" id="passwordReset"
                                                 title="Send to school">
                                                 <i class="fas fa-paper-plane"></i>
-                                            </a>
+                                            </a> --}}
                                             <a style="cursor: pointer;" class="disabled-link icon_all"
                                                 id="editContactHistoryBttn">
                                                 <i class="fas fa-edit school-edit-icon"></i>
@@ -118,6 +118,50 @@
                 window.location.href = '{{ url('/editCompany') }}/' + companyId;
             } else {
                 swal("", "Please select one contact.");
+            }
+        });
+
+        $(document).on('click', '#deleteContactHistoryBttn', function() {
+            var companyId = $('#companyId').val();
+            var loginUserId = {{ Session::get('webUserLoginData')->user_id }};
+            if (companyId) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to remove this comapny ?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('/deleteCompany') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        companyId: companyId
+                                    },
+                                    success: function(data) {
+                                        swal({
+                                            title: 'Success!',
+                                            text: 'Company Deleted Successfully!',
+                                            icon: 'success',
+                                            buttons: {
+                                                confirm: 'OK',
+                                            },
+                                        }).then((value) => {
+                                            if (value) {
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one user.");
             }
         });
     </script>

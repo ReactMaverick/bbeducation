@@ -23,20 +23,21 @@
                                                         <div class="modal-input-field form-group">
                                                             <label class="form-check-label">Company Name</label>
                                                             <input type="text" class="form-control field-validate"
-                                                                name="company_name" id="company_name"
-                                                                value="">
+                                                                name="company_name" id="company_name" value="">
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Contact Number</label>
-                                                                    <input type="text" class="form-control field-validate"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="company_phone" id="company_phone"
                                                                         value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Vat Registration</label>
-                                                                    <input type="text" class="form-control field-validate"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="vat_registration" id="vat_registration"
                                                                         value="">
                                                                 </div>
@@ -51,9 +52,9 @@
 
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Website</label>
-                                                                    <input type="text" class="form-control field-validate"
-                                                                        name="website" id="website"
-                                                                        value="">
+                                                                    <input type="text"
+                                                                        class="form-control field-validate" name="website"
+                                                                        id="website" value="">
                                                                 </div>
 
                                                                 <div class="modal-input-field form-group">
@@ -65,12 +66,14 @@
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Address</label>
-                                                                    <input type="text" class="form-control field-validate"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="address1_txt" id="address1_txt"
                                                                         value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
-                                                                    <input type="text" class="form-control field-validate"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="address2_txt" id="address2_txt"
                                                                         value="">
                                                                 </div>
@@ -86,39 +89,36 @@
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Postcode</label>
-                                                                    <input type="text" class="form-control field-validate"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="postcode_txt" id="postcode_txt"
                                                                         value="">
                                                                 </div>
                                                                 <p><Strong>Payee Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
-                                                                    <input type="text" class="form-control field-validate"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="account_name" id="account_name"
                                                                         value="">
                                                                 </div>
 
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Number</label>
-                                                                    <input type="text" class="form-control field-validate"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="account_number" id="account_number"
                                                                         value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Account Number</label>
-                                                                    <input type="text" class="form-control field-validate"
-                                                                        name="sort_code" id="sort_code"
-                                                                        value="">
-                                                                </div>
-                                                                <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Sort Code</label>
-                                                                    <input type="text" class="form-control field-validate"
-                                                                        name="sort_code" id="sort_code"
-                                                                        value="">
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
+                                                                        name="sort_code" id="sort_code" value="">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                
+
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Terms &
                                                                         Condition</label>
@@ -152,10 +152,11 @@
                                                                 <p style="color: red; font-size: small;">Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
-                                                                
+
                                                                 <div id="uploadedImage"></div>
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Invoice Footer Logo</label>
+                                                                    <label class="form-check-label">Invoice Footer
+                                                                        Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose Files to upload
@@ -169,10 +170,60 @@
                                                                     allowed. Max size 1mb
                                                                 </p>
                                                                 <div class="modal-input-field form-group modal_logo">
-                                                                    
+
                                                                 </div>
                                                                 <div id="uploadedlogo"
                                                                     style="display: flex; flex-wrap: wrap;"></div>
+                                                                    <p><Strong>Add user for this company :</Strong></p>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">First Name</label>
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
+                                                                        name="admin_firstName" id="admin_firstName"
+                                                                        value="">
+                                                                </div>
+
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Last Name</label>
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
+                                                                        name="admin_surName" id="admin_surName"
+                                                                        value="">
+                                                                </div>
+
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Email</label>
+                                                                    <input type="text"
+                                                                        class="form-control field-validate email-validate"
+                                                                        name="admin_username" id="admin_username"
+                                                                        value="">
+                                                                </div>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Status</label>
+                                                                    <select class="form-control" name="status">
+                                                                        <option value='1' selected>
+                                                                            Active
+                                                                        </option>
+                                                                        <option value='0'>In Active
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="modal-input-field form-group new_file">
+                                                                    <label class="form-check-label">Profile Image</label>
+                                                                    <span class="file_upload"><i
+                                                                            class="fas fa-upload"></i>
+                                                                        Choose File to upload
+                                                                    </span>
+                                                                    <input type="file"
+                                                                        class="form-control file_up_load field-validate"
+                                                                        name="profileImage" id="admin_image"
+                                                                        value="">
+                                                                </div>
+                                                                <p style="color: red; font-size: small;">Jpg,Jpeg,png type
+                                                                    allowed. Max size 1mb
+                                                                </p>
+                                                                <div id="uploadedImageuser"></div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer calendar-modal-footer">
@@ -273,9 +324,28 @@
             if (error == "has error") {
                 return false;
             } else {
-                $('#companyUpdateForm').submit();
+                var loginMailId = $('#admin_username').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('checkAdminUserMailExist') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        loginMail: loginMailId
+                    },
+                    async: false,
+                    success: function(data) {
+                        if (data == 'Yes') {
+                            swal(
+                                'Failed!',
+                                'Email-id already exist.'
+                            );
+                        } else {
+                            $('#companyUpdateForm').submit();
+                        }
+                    }
+                });
+                
             }
-
         });
 
         $('#invoice-logo').change(function() {
@@ -310,6 +380,55 @@
 
                         reader.readAsDataURL(file);
                     }
+                }
+            }
+        });
+
+        $('#admin_image').change(function() {
+            var input = this;
+            if (input.files && input.files[0]) {
+                var file = input.files[0];
+                var fileType = file.type; // Retrieve the file type
+                var fileSize = file.size; // Retrieve the file size in bytes
+
+                // Allowed file types (you can adjust this array with the types you want to allow)
+                var allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+
+                // Max file size in bytes (adjust as needed)
+                var maxSize = 1 * 1024 * 1024; // 5 MB
+
+                if (!allowedTypes.includes(fileType)) {
+                    swal({
+                        title: "Alert",
+                        text: "File Type not matched!",
+                        icon: "warning",
+                        buttons: {
+                            cancel: "Discard"
+                        },
+                    });
+                } else if (!(fileSize <= maxSize)) {
+                    swal({
+                        title: "Alert",
+                        text: "File size not matched!",
+                        icon: "warning",
+                        buttons: {
+                            cancel: "Discard"
+                        },
+                    });
+                } else {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+
+                        var image = $('<img>', {
+                            // id: 'edituploadedImage',
+                            src: e.target.result,
+                            style: 'width: 70px; height: 70px; display: block;',
+                            class: 'img-fluid'
+                        });
+
+                        $('#uploadedImageuser').append(image);
+                    };
+                    reader.readAsDataURL(file);
                 }
             }
         });

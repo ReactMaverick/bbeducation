@@ -346,7 +346,7 @@ class ManagementController extends Controller
             $myVar->adminUserAddMail($mailData);
         }
 
-        return redirect('/adminUsers')->with('success', 'User registered successfully. Check your email for a password setup link.');
+        return redirect('/adminUsers')->with('success', 'User registered successfully. Check user email for a password setup link.');
 
     }
 
@@ -507,9 +507,9 @@ class ManagementController extends Controller
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
             DB::table('tbl_user')->where('user_id', $request->adminId)->update(['is_delete' => 1]);
-            return redirect('/adminUsers');
+            return response()->json(true);
         } else {
-            return redirect()->intended('/');
+            return response()->json(false);
         }
     }
 

@@ -26,7 +26,8 @@
                                                                 name="company_name" id="company_name"
                                                                 value="{{ $company->company_name }}">
                                                         </div>
-                                                        <input type="hidden" name="company_id" value="{{ $company->company_id }}">
+                                                        <input type="hidden" name="company_id"
+                                                            value="{{ $company->company_id }}">
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
@@ -364,7 +365,7 @@
                             case "Yes":
                                 $.ajax({
                                     type: 'POST',
-                                    url: '{{ url('/deletecCompanyImage') }}',
+                                    url: '{{ url('/deleteCompanyFooterImage') }}',
                                     data: {
                                         "_token": "{{ csrf_token() }}",
                                         imageId: imageId
