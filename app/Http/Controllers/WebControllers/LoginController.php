@@ -28,11 +28,11 @@ class LoginController extends Controller
     {
         $validator = Validator::make(
             array(
-                'user_name'    => $request->user_name,
+                'user_name' => $request->user_name,
                 'password' => $request->password
             ),
             array(
-                'user_name'    => 'required',
+                'user_name' => 'required',
                 'password' => 'required',
             )
         );
@@ -41,7 +41,7 @@ class LoginController extends Controller
             return redirect('/')->withErrors($validator)->withInput();
         } else {
 
-            if (Auth::guard('subadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'admin_type' => 1,'isActive' => 1, 'is_delete' => 0], $request->get('remember'))) {
+            if (Auth::guard('subadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'admin_type' => 1, 'isActive' => 1, 'is_delete' => 0], $request->get('remember'))) {
                 $admin = Auth::guard('subadmin')->user();
 
                 $administrators = DB::table('tbl_user')
@@ -75,6 +75,44 @@ class LoginController extends Controller
             return view("web.user.profile", ['title' => $title, 'headerTitle' => $headerTitle]);
         } else {
             return redirect()->intended('/');
+        }
+    }
+
+    public function superAdminLogin()
+    {
+        $title = array('pageTitle' => "Login");
+        return view("web.superAdmin.login", ['title' => $title]);
+    }
+
+    public function superAdminLoginAttempt(Request $request)
+    {
+        $validator = Validator::make(
+            array(
+                'user_name' => $request->user_name,
+                'password' => $request->password
+            ),
+            array(
+                'user_name' => 'required',
+                'password' => 'required',
+            )
+        );
+        //check validation
+        if ($validator->fails()) {
+            return redirect('/super-admin-login')->withErrors($validator)->withInput();
+        } else {
+
+            if (Auth::guard('superadmin')->attempt(['user_name' => $request->user_name, 'password' => $request->password, 'admin_type' => 5, 'isActive' => 1, 'is_delete' => 0], $request->get('remember'))) {
+                $admin = Auth::guard('subadmin')->user();
+
+                $administrators = DB::table('tbl_user')
+                    ->where('user_id', $admin->user_id)
+                    ->get();
+                Session::put('superAdminLoginData', $administrators[0]);
+                // dd($admin);
+                return redirect()->intended('/dashboard')->with('administrators', $administrators[0]);
+            } else {
+                return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
+            }
         }
     }
 }
