@@ -1735,6 +1735,10 @@ class SchoolController extends Controller
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
+            $comFooterLogos = DB::table('company_logo')
+                ->where('company_logo.company_id', $company_id)
+                ->orderBy('company_logo.image_id', 'DESC')
+                ->get();
 
             $contactDet = DB::table('tbl_schoolContact')
                 ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
@@ -1747,7 +1751,7 @@ class SchoolController extends Controller
                 ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                 ->first();
 
-            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet, 'comFooterLogos' => $comFooterLogos]);
             $pdfName = 'invoice-' . $invoice_id . '.pdf';
             // return $pdf->download('test.pdf');
             return $pdf->stream($pdfName);
@@ -3680,6 +3684,10 @@ class SchoolController extends Controller
                 ->select('company.*')
                 ->where('company.company_id', $company_id)
                 ->first();
+            $comFooterLogos = DB::table('company_logo')
+                ->where('company_logo.company_id', $company_id)
+                ->orderBy('company_logo.image_id', 'DESC')
+                ->get();
 
             $contactDet = DB::table('tbl_schoolContact')
                 ->LeftJoin('tbl_contactItemSch', 'tbl_schoolContact.contact_id', '=', 'tbl_contactItemSch.schoolContact_id')
@@ -3692,7 +3700,7 @@ class SchoolController extends Controller
                 ->where('tbl_schoolContact.school_id', $schoolInvoices->school_id)
                 ->first();
 
-            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet]);
+            $pdf = PDF::loadView('web.school.school_invoice_pdf', ['schoolDetail' => $schoolDetail, 'schoolInvoices' => $schoolInvoices, 'invoiceItemList' => $invoiceItemList, 'companyDetail' => $companyDetail, 'contactDet' => $contactDet, 'comFooterLogos' => $comFooterLogos]);
             $pdfName = 'invoice-' . $id . '.pdf';
             // return $pdf->download('test.pdf');
             return $pdf->stream($pdfName);

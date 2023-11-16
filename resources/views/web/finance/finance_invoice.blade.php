@@ -149,7 +149,7 @@
                                                     method="get" id="invoiceFromToForm">
 
                                                     <div class="form-group invoice-top-first-input-sec">
-                                                        <label for=""
+                                                        <label style="width: 145px;" for=""
                                                             class="col-form-label finance_timesheets_label">Invoice No
                                                             From</label>
                                                         <input type="text" id="" class="onlynumber"
@@ -185,7 +185,7 @@
                                                     class="sd_form" id="invoiceFromToForm">
 
                                                     <div class="form-group invoice-top-first-input-sec">
-                                                        <label for="invoiceFrom"
+                                                        <label style="width: 145px;" for="invoiceFrom"
                                                             class="col-form-label finance_timesheets_label">Invoice Date
                                                             From</label>
                                                         <input type="text" class="datePickerPaste"

@@ -57853,10 +57853,11 @@ label.finance_timesheets_label {
 }
 
 .new_details-heading {
-    display: grid;
+    display: flex;
     padding: 15px;
     background: #e9ebf752;
     gap: 10px;
+    align-items: center;
 }
 
 button.timesheet-search-btn i {
@@ -57866,7 +57867,7 @@ button.timesheet-search-btn i {
 
 .sd_input_box {
     width: 100%;
-    display: flex;
+    display: grid;
     align-items: center;
     justify-content: space-between;
 }
