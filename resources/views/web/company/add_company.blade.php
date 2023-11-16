@@ -90,14 +90,6 @@
                                                                         name="postcode_txt" id="postcode_txt"
                                                                         value="">
                                                                 </div>
-                                                                <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Sort Code</label>
-                                                                    <input type="text" class="form-control field-validate"
-                                                                        name="sort_code" id="sort_code"
-                                                                        value="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
                                                                 <p><Strong>Payee Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
@@ -119,6 +111,15 @@
                                                                         value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Sort Code</label>
+                                                                    <input type="text" class="form-control field-validate"
+                                                                        name="sort_code" id="sort_code"
+                                                                        value="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                
+                                                                <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Terms &
                                                                         Condition</label>
                                                                     <textarea class="form-control field-validate" name="terms_and_condition" id="terms_and_condition"></textarea>
@@ -138,7 +139,7 @@
                                                                 <input type="date" class="form-control" name="valid_to" id="valid_to" value="{{ $company->valid_to }}">
                                                             </div> --}}
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Image</label>
+                                                                    <label class="form-check-label">Company Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose File to upload
@@ -154,7 +155,7 @@
                                                                 
                                                                 <div id="uploadedImage"></div>
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Invoice Logo</label>
+                                                                    <label class="form-check-label">Invoice Footer Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose Files to upload

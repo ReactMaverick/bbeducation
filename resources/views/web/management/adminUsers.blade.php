@@ -33,20 +33,20 @@
                                     </div>
                                     <div class="school-teacher-list-heading">
                                         <div class="school-assignment-contact-icon-sec contact-icon-sec">
-                                            {{-- <a style="cursor: pointer" class="disabled-link icon_all"
-                                                id="deleteContactHistoryBttn">
+                                            <a style="cursor: pointer" class="disabled-link icon_all"
+                                                id="deleteContactHistoryBttn" title="Delete User">
                                                 <i class="fas fa-trash-alt trash-icon"></i>
-                                            </a> --}}
+                                            </a>
                                             <a data-toggle="modal" data-target="#userAddModal" style="cursor: pointer;"
-                                                class="icon_all">
+                                                class="icon_all" title="Add New User">
                                                 <i class="fas fa-plus-circle"></i>
                                             </a>
                                             <a style="cursor: pointer;" class="disabled-link icon_all" id="passwordReset"
-                                                title="Send to school">
+                                                title="Send Mail To user">
                                                 <i class="fas fa-paper-plane"></i>
                                             </a>
                                             <a style="cursor: pointer;" class="disabled-link icon_all"
-                                                id="editContactHistoryBttn">
+                                                id="editContactHistoryBttn" title="Edit User">
                                                 <i class="fas fa-edit school-edit-icon"></i>
                                             </a>
                                         </div>
@@ -555,7 +555,18 @@
                     },
                     success: function(data) {
                         if (data == true) {
-                            location.reload();
+                            swal({
+                                title: 'Success!',
+                                text: 'Status Changed Successfully!',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: 'OK',
+                                },
+                            }).then((value) => {
+                                if (value) {
+                                    location.reload();
+                                }
+                            });
                         } else {
                             swal({
                                 title: "Alert",
@@ -613,6 +624,7 @@
         $(document).on('click', '#passwordReset', function() {
             var adminId = $('#adminId').val();
             if (adminId) {
+                $('#fullLoader').show();
                 $.ajax({
                     type: 'POST',
                     url: '{{ url('/adminUserPasswordreset') }}',
@@ -621,8 +633,9 @@
                         adminId: adminId
                     },
                     success: function(data) {
+                        $('#fullLoader').hide();
                         swal({
-                            title: "Alert",
+                            title: "Success!",
                             text: "Mail sent successfully !",
                             icon: "success",
                             buttons: {
@@ -636,47 +649,58 @@
             }
         });
 
-        // $(document).on('click', '#deleteContactHistoryBttn', function() {
-        //     var adminId = $('#adminId').val();
-        //     var loginUserId = {{ Session::get('webUserLoginData')->user_id }};
+        $(document).on('click', '#deleteContactHistoryBttn', function() {
+            var adminId = $('#adminId').val();
+            var loginUserId = {{ Session::get('webUserLoginData')->user_id }};
 
-        //     if (adminId == loginUserId) {
-        //         swal({
-        //             title: "Alert",
-        //             text: "You can't delete this user !",
-        //             icon: "warning",
-        //             buttons: {
-        //                 cancel: "Discard"
-        //             },
-        //         })
-        //     } else if (adminId) {
-        //         swal({
-        //                 title: "Alert",
-        //                 text: "Are you sure you wish to remove this user ?",
-        //                 buttons: {
-        //                     cancel: "No",
-        //                     Yes: "Yes"
-        //                 },
-        //             })
-        //             .then((value) => {
-        //                 switch (value) {
-        //                     case "Yes":
-        //                         $.ajax({
-        //                             type: 'POST',
-        //                             url: '{{ url('/deleteAdminUsers') }}',
-        //                             data: {
-        //                                 "_token": "{{ csrf_token() }}",
-        //                                 adminId: adminId
-        //                             },
-        //                             success: function(data) {
-        //                                 location.reload();
-        //                             }
-        //                         });
-        //                 }
-        //             });
-        //     } else {
-        //         swal("", "Please select one user.");
-        //     }
-        // });
+            if (adminId == loginUserId) {
+                swal({
+                    title: "Alert",
+                    text: "You can't delete this user !",
+                    icon: "warning",
+                    buttons: {
+                        cancel: "Discard"
+                    },
+                })
+            } else if (adminId) {
+                swal({
+                        title: "Alert",
+                        text: "Are you sure you wish to remove this user ?",
+                        buttons: {
+                            cancel: "No",
+                            Yes: "Yes"
+                        },
+                    })
+                    .then((value) => {
+                        switch (value) {
+                            case "Yes":
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ url('/deleteAdminUsers') }}',
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        adminId: adminId
+                                    },
+                                    success: function(data) {
+                                        swal({
+                                            title: 'Success!',
+                                            text: 'User Deleted Successfully!',
+                                            icon: 'success',
+                                            buttons: {
+                                                confirm: 'OK',
+                                            },
+                                        }).then((value) => {
+                                            if (value) {
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                });
+                        }
+                    });
+            } else {
+                swal("", "Please select one user.");
+            }
+        });
     </script>
 @endsection

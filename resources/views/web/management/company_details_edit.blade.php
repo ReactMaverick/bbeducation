@@ -21,9 +21,9 @@
                                                         enctype="multipart/form-data">
                                                         @csrf
                                                         <!-- <div class="modal-input-field form-group">
-                                                        <label class="form-check-label">Company Name</label>
-                                                        <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
-                                                    </div> -->
+                                                            <label class="form-check-label">Company Name</label>
+                                                            <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
+                                                        </div> -->
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
@@ -88,14 +88,6 @@
                                                                         name="postcode_txt" id="postcode_txt"
                                                                         value="{{ $company->postcode_txt }}">
                                                                 </div>
-                                                                <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Sort Code</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="sort_code" id="sort_code"
-                                                                        value="{{ $company->sort_code }}">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
                                                                 <p><Strong>Payee Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
@@ -111,11 +103,16 @@
                                                                         value="{{ $company->account_number }}">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Account Number</label>
+                                                                    <label class="form-check-label">Sort Code</label>
                                                                     <input type="text" class="form-control"
                                                                         name="sort_code" id="sort_code"
                                                                         value="{{ $company->sort_code }}">
                                                                 </div>
+
+                                                            </div>
+                                                            <div class="col-md-6">
+
+
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Terms &
                                                                         Condition</label>
@@ -141,7 +138,8 @@
                                                                             class="fas fa-upload"></i>
                                                                         Choose File to upload
                                                                     </span>
-                                                                    <input type="file" class="form-control file_up_load"
+                                                                    <input type="file"
+                                                                        class="form-control file_up_load"
                                                                         name="company_logo" id="company-logo"
                                                                         value="">
                                                                 </div>
@@ -155,7 +153,8 @@
                                                                 </div>
                                                                 <div id="uploadedImage"></div>
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Invoice Footer Logo</label>
+                                                                    <label class="form-check-label">Invoice Footer
+                                                                        Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose Files to upload

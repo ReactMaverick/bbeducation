@@ -75,7 +75,9 @@
                                                         {{ $company->company_name }}</td>
                                                     <td>{{ $company->company_phone }}</td>
                                                     <td>{{ $company->vat_registration }}</td>
-                                                    <td>{{ $company->company_logo }}</td>
+                                                    <td><img src="{{ asset($company->company_logo) }}"
+                                                            style="width: 70px; height: 70px;"></td>
+
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -113,7 +115,7 @@
             var companyId = $('#companyId').val();
             // var loggedinId = {{ $webUserLoginData->user_id }}
             if (companyId) {
-                window.location.href = '/editCompany/' + companyId;
+                window.location.href = '{{ url('/editCompany') }}/' + companyId;
             } else {
                 swal("", "Please select one contact.");
             }
