@@ -543,7 +543,7 @@
                 })
                 setTimeout(function() {
                     location.reload();
-                }, 1000);
+                }, 3000);
             } else if (id && value) {
                 $.ajax({
                     type: 'POST',

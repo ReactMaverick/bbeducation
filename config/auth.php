@@ -80,6 +80,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Web\User::class,
         ],
+        'superadmin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Web\User::class,
+        ],
 
         // 'users' => [
         //     'driver' => 'database',

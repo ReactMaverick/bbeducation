@@ -431,3 +431,4 @@ Route::post('/userUpdate', [CompanyController::class,'userUpdate']);
 Route::post('/userDelete', [CompanyController::class,'userDelete']);
 Route::post('/userStatus', [CompanyController::class,'userStatus']);
 Route::post('/deleteCompanyFooterImage', [CompanyController::class,'deleteCompanyFooterImage']);
+Route::post('/super-admin-login-attempt', [LoginController::class,'superAdminLoginAttempt']);
