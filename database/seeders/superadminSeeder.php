@@ -15,8 +15,6 @@ class superadminSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-                      
-        ]);
+        //
     }
 }
