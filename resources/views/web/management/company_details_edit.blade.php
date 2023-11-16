@@ -21,9 +21,9 @@
                                                         enctype="multipart/form-data">
                                                         @csrf
                                                         <!-- <div class="modal-input-field form-group">
-                                                            <label class="form-check-label">Company Name</label>
-                                                            <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
-                                                        </div> -->
+                                                                    <label class="form-check-label">Company Name</label>
+                                                                    <input type="text" class="form-control field-validate" name="company_name" id="company_name" value="{{ $company->company_name }}" readonly>
+                                                                </div> -->
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
@@ -175,9 +175,10 @@
                                                                         <div
                                                                             style="position: relative; display: inline-block;">
                                                                             <img src="{{ asset($images->path . '/' . $images->image_name) }}"
-                                                                                style="width: 70px; height: 70px; display: block;">
+                                                                                style="width: 70px; height: 70px; display: block;"
+                                                                                class="img-fluid">
                                                                             <div onclick="imagedelete({{ $images->image_id }})"
-                                                                                style="position: absolute; top: 0; right: 0; width: 20px; height: 20px; background-color: rgb(254, 251, 251); clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 50% 50%, 50% 100%, 0% 100%);">
+                                                                                class="cross_btn">
                                                                                 <i class="fa fa-times"
                                                                                     aria-hidden="true"></i>
                                                                             </div>
