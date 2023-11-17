@@ -348,4 +348,22 @@ class AlertController extends Controller
         }
     }
 
+    public function superadminOtpMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/login_otp_mail', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Secure Login: Your One-Time Password is Here!")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+                return true;
+            } catch (\Exception $e) {
+                echo $e;
+                return false;
+                exit;
+            }
+        }
+    }
+
 }

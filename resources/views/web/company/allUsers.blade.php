@@ -1,8 +1,8 @@
 {{-- @extends('web.layout') --}}
 @php
-    $webUserLoginData = Session::get('webUserLoginData');
+    $webUserLoginData = Session::get('superadmin');
 @endphp
-@extends('web.layout_dashboard')
+@extends('web.superAdmin.layout')
 @section('content')
     <style>
         .disabled-link {
@@ -29,7 +29,7 @@
                                 </div> --}}
                                 <div class="teacher-list-section details-heading">
                                     <div class="school-teacher-heading-text">
-                                        <h2>All User</h2>
+                                        <h2>{{ $company->company_name }}</h2>
                                     </div>
                                     <div class="school-teacher-list-heading">
                                         <div class="school-assignment-contact-icon-sec contact-icon-sec">
@@ -37,14 +37,14 @@
                                                 title="Delete User">
                                                 <i class="fas fa-trash-alt trash-icon"></i>
                                             </a>
-                                            {{-- <a data-toggle="modal" data-target="#userAddModal" style="cursor: pointer;"
+                                            <a data-toggle="modal" data-target="#userAddModal" style="cursor: pointer;"
                                                 class="icon_all" title="Add New User">
-                                                <i class="fas fa-plus-circle"></i>
-                                            </a> --}}
-                                            <a style="cursor: pointer;" class="disabled-link icon_all" id="passwordReset"
+                                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                            </a>
+                                            {{-- <a style="cursor: pointer;" class="disabled-link icon_all" id="passwordReset"
                                                 title="Send Mail To user">
                                                 <i class="fas fa-paper-plane"></i>
-                                            </a>
+                                            </a> --}}
                                             <a style="cursor: pointer;" class="disabled-link icon_all" id="editUserBttn"
                                                 title="Edit User">
                                                 <i class="fas fa-edit school-edit-icon"></i>
@@ -58,7 +58,6 @@
                                         <thead>
                                             <tr class="school-detail-table-heading">
                                                 <th style="width: 40%">Name</th>
-                                                <th>Company Name</th>
                                                 <th>Email</th>
                                                 <th>Status</th>
                                                 {{-- <th>Email</th> --}}
@@ -73,7 +72,7 @@
                                                     data-id={{ $userAdmin->user_id }}>
                                                     <td style="width: 40%">
                                                         {{ $userAdmin->firstName_txt . ' ' . $userAdmin->surname_txt }}</td>
-                                                    <td>{{ $userAdmin->company_name }}</td>
+                                                    
                                                     <td>{{ $userAdmin->user_name }}</td>
                                                     <td><select class="form-control status"
                                                             onchange="changeStatus({{ $userAdmin->user_id }}, this.value)">
@@ -103,7 +102,7 @@
     </section>
     <!-- /.content -->
     <!-- User Add Modal -->
-    {{-- <div class="modal fade" id="userAddModal">
+    <div class="modal fade" id="userAddModal">
         <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
             <div class="modal-content calendar-modal-content">
 
@@ -121,7 +120,7 @@
 
                     <div class="modal-input-field-section">
                         <div class="col-md-12 col-lg-12 col-xl-12 col-12 col-sm-12">
-                            <form action="{{ url('/insertAdminUsers') }}" method="post" class="form-validate"
+                            <form action="{{ url('/userAdd') }}" method="post" class="form-validate"
                                 id="adminUserAddForm" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
@@ -131,7 +130,7 @@
                                             <input type="text" class="form-control field-validate" name="admin_firstName"
                                                 id="admin_firstName" value="">
                                         </div>
-
+                                        <input type="hidden" name="company_id" value="{{$company->company_id}}">
                                         <div class="modal-input-field form-group">
                                             <label class="form-check-label">Last Name</label>
                                             <input type="text" class="form-control field-validate" name="admin_surName"
@@ -166,13 +165,13 @@
                                         </div>
                                         <p style="color: red; font-size: small;">Jpg,Jpeg,png type allowed. Max size 5mb
                                         </p>
-                                        <div id="uploadedImage"></div> --}}
-    {{-- <div class="modal-input-field form-group">
+                                        <div id="uploadedImage"></div>
+                                        {{-- <div class="modal-input-field form-group">
                                             <label class="form-check-label">Password</label>
                                             <input type="password" class="form-control field-validate" name="admin_password"
                                                 id="admin_password" value="">
                                         </div> --}}
-    {{-- </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer calendar-modal-footer">
                                     <button type="button" class="btn btn-secondary" id="adminAddBtn">Add</button>
@@ -185,7 +184,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
     <!-- User Add Modal -->
 
     <!-- User edit Modal -->
@@ -571,7 +570,6 @@
 
         $(document).on('click', '#editUserBttn', function() {
             var adminId = $('#adminId').val();
-            var loggedinId = {{ $webUserLoginData->user_id }}
             if (adminId) {
                 $.ajax({
                     type: 'POST',
@@ -670,6 +668,52 @@
                     });
             } else {
                 swal("", "Please select one user.");
+            }
+        });
+
+        $(document).on('click', '#adminAddBtn', function() {
+            var error = "";
+            $(".field-validate").each(function() {
+                if (this.value == '') {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+            });
+            $(".email-validate").each(function() {
+                var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+                if (this.value != '' && validEmail.test(this.value)) {
+                    $(this).closest(".form-group").removeClass('has-error');
+
+                } else {
+                    $(this).closest(".form-group").addClass('has-error');
+                    error = "has error";
+                }
+            });
+            if (error == "has error") {
+                return false;
+            } else {
+                var loginMailId = $('#admin_username').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url('checkAdminUserMailExist') }}',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        loginMail: loginMailId
+                    },
+                    async: false,
+                    success: function(data) {
+                        if (data == 'Yes') {
+                            swal(
+                                'Failed!',
+                                'Email-id already exist.'
+                            );
+                        } else {
+                            $('#adminUserAddForm').submit();
+                        }
+                    }
+                });
             }
         });
     </script>

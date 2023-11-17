@@ -9,6 +9,7 @@ use App\Http\Controllers\WebControllers\TeacherController;
 use App\Http\Controllers\WebControllers\SchoolController;
 use App\Http\Controllers\WebControllers\FinanceController;
 use App\Http\Controllers\WebControllers\ManagementController;
+use App\Http\Controllers\WebControllers\SuperadminController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 
@@ -292,13 +293,13 @@ Route::post('/studentUpdate', [ManagementController::class, 'studentUpdate']);
 Route::post('/studentDelete', [ManagementController::class, 'studentDelete']);
 Route::post('/viewMetricsAjax', [ManagementController::class, 'viewMetricsAjax']);
 Route::post('/viewMetricsExport', [ManagementController::class, 'viewMetricsExport']);
-Route::get('/adminUsers', [ManagementController::class,'adminUsers']);
+Route::get('/adminUsers', [ManagementController::class, 'adminUsers']);
 Route::post('/insertAdminUsers', [ManagementController::class, 'InsertAdminUsers']);
-Route::post('/getAdminUser',[ManagementController::class,'getAdminUser']);
-Route::post('/updateAdminUsers',[ManagementController::class,'updateAdminUsers']);
-Route::post('/deleteAdminUsers',[ManagementController::class,'deleteAdminUsers']);
-Route::get('/companyDetailsEdit', [ManagementController::class,'companyDetailsEdit']);
-Route::post('/updateCompanyDetails', [ManagementController::class,'updateCompanyDetails']);
+Route::post('/getAdminUser', [ManagementController::class, 'getAdminUser']);
+Route::post('/updateAdminUsers', [ManagementController::class, 'updateAdminUsers']);
+Route::post('/deleteAdminUsers', [ManagementController::class, 'deleteAdminUsers']);
+Route::get('/companyDetailsEdit', [ManagementController::class, 'companyDetailsEdit']);
+Route::post('/updateCompanyDetails', [ManagementController::class, 'updateCompanyDetails']);
 Route::post('/checkAdminUserMailExist', [ManagementController::class, 'checkAdminUserMailExist']);
 Route::get('/adminUser/set-password/{id}', [ManagementController::class, 'adminUserSetPassword']);
 Route::post('/adminUserUpdatePassword', [ManagementController::class, 'adminUserUpdatePassword']);
@@ -418,17 +419,28 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
 
 Route::get('/approveVettingSendTest', [AssignmentController::class, 'approveVettingSendTest']);
 
-Route::get('/super-admin-login', [LoginController::class,'superAdminLogin']);
-Route::get('/all-company', [CompanyController::class,'all_company']);
-Route::get('/create-company', [CompanyController::class,'create_company']);
-Route::post('/storeCompany', [CompanyController::class,'storeCompany']);
-Route::get('/editCompany/{id}', [CompanyController::class,'editCompany']);
-Route::post('/updateCompany', [CompanyController::class,'updateCompany']);
-Route::post('/deleteCompany', [CompanyController::class,'deleteCompany']);
-Route::get('/allUsers', [CompanyController::class,'allUsers']);
-Route::post('/userEdit', [CompanyController::class,'userEdit']);
-Route::post('/userUpdate', [CompanyController::class,'userUpdate']);
-Route::post('/userDelete', [CompanyController::class,'userDelete']);
-Route::post('/userStatus', [CompanyController::class,'userStatus']);
-Route::post('/deleteCompanyFooterImage', [CompanyController::class,'deleteCompanyFooterImage']);
-Route::post('/super-admin-login-attempt', [LoginController::class,'superAdminLoginAttempt']);
+// Super Admin Routes
+Route::post('/super-admin-login-attempt', [LoginController::class, 'superAdminLoginAttempt']);
+Route::post('/super-admin-otp-verify', [LoginController::class, 'superAdminOtpVerify']);
+Route::get('/otpVerification', [LoginController::class, 'otpVerification']);
+Route::get('/super-admin-login', [LoginController::class, 'superAdminLogin']);
+Route::get('/super-admin-logout', [LoginController::class, 'superAdminlogout']);
+
+Route::group(['middleware' => ['superadmin']], function () {
+    Route::get('/all-company', [SuperadminController::class, 'all_company']);
+    Route::get('/create-company', [SuperadminController::class, 'create_company']);
+    Route::post('/storeCompany', [SuperadminController::class, 'storeCompany']);
+    Route::get('/editCompany/{id}', [SuperadminController::class, 'editCompany']);
+    Route::post('/updateCompany', [SuperadminController::class, 'updateCompany']);
+    Route::post('/deleteCompany', [SuperadminController::class, 'deleteCompany']);
+    Route::get('/companyUsers/{id}', [SuperadminController::class, 'allUsers']);
+    Route::post('/userEdit', [SuperadminController::class, 'userEdit']);
+    Route::post('/userUpdate', [SuperadminController::class, 'userUpdate']);
+    Route::post('/userDelete', [SuperadminController::class, 'userDelete']);
+    Route::post('/userStatus', [SuperadminController::class, 'userStatus']);
+    Route::post('/deleteCompanyFooterImage', [SuperadminController::class, 'deleteCompanyFooterImage']);
+    Route::post('/userAdd', [SuperadminController::class, 'userAdd']);
+});
+
+Route::get('/superAdminDashboard', [SuperadminController::class, 'dashboard']);
+

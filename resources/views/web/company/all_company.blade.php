@@ -2,7 +2,7 @@
 @php
     $webUserLoginData = Session::get('webUserLoginData');
 @endphp
-@extends('web.layout_dashboard')
+@extends('web.superAdmin.layout')
 @section('content')
     <style>
         .disabled-link {
@@ -33,20 +33,25 @@
                                     </div>
                                     <div class="school-teacher-list-heading">
                                         <div class="school-assignment-contact-icon-sec contact-icon-sec">
-                                            <a style="cursor: pointer" class="disabled-link icon_all"
-                                                id="deleteContactHistoryBttn">
+                                            <a style="cursor: pointer;" class="disabled-link icon_all" title="Users"
+                                                id="companyUsers">
+                                                <i class="fa fa-users" aria-hidden="true"></i>
+                                            </a>
+                                            <a style="cursor: pointer" class="disabled-link icon_all" id="deleteCompanyBttn"
+                                                title="Delete company !">
                                                 <i class="fas fa-trash-alt trash-icon"></i>
                                             </a>
-                                            <a href="{{ url('/create-company') }}" style="cursor: pointer;"
-                                                class="icon_all">
+                                            <a href="{{ url('/create-company') }}" style="cursor: pointer;" class="icon_all"
+                                                title="Add new company">
                                                 <i class="fas fa-plus-circle"></i>
                                             </a>
+
                                             {{-- <a style="cursor: pointer;" class="disabled-link icon_all" id="passwordReset"
                                                 title="Send to school">
                                                 <i class="fas fa-paper-plane"></i>
                                             </a> --}}
                                             <a style="cursor: pointer;" class="disabled-link icon_all"
-                                                id="editContactHistoryBttn">
+                                                id="editContactHistoryBttn" title="Edit Company">
                                                 <i class="fas fa-edit school-edit-icon"></i>
                                             </a>
                                         </div>
@@ -94,26 +99,36 @@
     </section>
     <!-- /.content -->
     <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable({
+                ordering: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
+            });
+        });
+
         function contactHistoryRowSelect(adminUser_id) {
             if ($('#editContactHistoryRow' + adminUser_id).hasClass('tableRowActive')) {
                 $('#companyId').val('');
                 $('#editContactHistoryRow' + adminUser_id).removeClass('tableRowActive');
-                $('#deleteContactHistoryBttn').addClass('disabled-link');
+                $('#deleteCompanyBttn').addClass('disabled-link');
                 $('#editContactHistoryBttn').addClass('disabled-link');
+                $('#companyUsers').addClass('disabled-link');
                 $('#passwordReset').addClass('disabled-link');
             } else {
                 $('#companyId').val(adminUser_id);
                 $('.editContactHistoryRow').removeClass('tableRowActive');
                 $('#editContactHistoryRow' + adminUser_id).addClass('tableRowActive');
-                $('#deleteContactHistoryBttn').removeClass('disabled-link');
+                $('#deleteCompanyBttn').removeClass('disabled-link');
                 $('#editContactHistoryBttn').removeClass('disabled-link');
+                $('#companyUsers').removeClass('disabled-link');
                 $('#passwordReset').removeClass('disabled-link');
             }
         }
 
         $(document).on('click', '#editContactHistoryBttn', function() {
             var companyId = $('#companyId').val();
-            // var loggedinId = {{ $webUserLoginData->user_id }}
             if (companyId) {
                 window.location.href = '{{ url('/editCompany') }}/' + companyId;
             } else {
@@ -121,9 +136,8 @@
             }
         });
 
-        $(document).on('click', '#deleteContactHistoryBttn', function() {
+        $(document).on('click', '#deleteCompanyBttn', function() {
             var companyId = $('#companyId').val();
-            var loginUserId = {{ Session::get('webUserLoginData')->user_id }};
             if (companyId) {
                 swal({
                         title: "Alert",
@@ -162,6 +176,15 @@
                     });
             } else {
                 swal("", "Please select one user.");
+            }
+        });
+
+        $(document).on('click', '#companyUsers', function() {
+            var companyId = $('#companyId').val();
+            if (companyId) {
+                window.location.href = '{{ url('/companyUsers') }}/' + companyId;
+            } else {
+                swal("", "Please select one contact.");
             }
         });
     </script>
