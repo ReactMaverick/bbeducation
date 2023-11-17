@@ -1,5 +1,5 @@
 {{-- @extends('web.layout') --}}
-@extends('web.layout_dashboard')
+@extends('web.superAdmin.layout')
 @section('content')
     <div class="tab-content dashboard-tab-content" id="myTabContent">
         <div class="assignment-section-col">

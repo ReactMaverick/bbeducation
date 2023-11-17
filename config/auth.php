@@ -48,6 +48,10 @@ return [
             'driver' => 'session',
             'provider' => 'subadmins',
         ],
+        'superadmin' => [
+            'driver' => 'session',
+            'provider' => 'subadmins',
+        ],
     ],
 
     /*

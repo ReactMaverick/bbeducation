@@ -51,7 +51,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ url('/processLogin') }}" class="form-validate">
+                <form method="POST" action="{{ url('/super-admin-login-attempt') }}" class="form-validate">
                     @csrf
                     <div class="input-group form-group mb-3">
                         <input type="text"
