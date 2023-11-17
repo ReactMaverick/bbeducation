@@ -379,7 +379,7 @@
             @if ($page == 1)
                 <div id="details" class="clearfix">
                     <div id="client">
-                        <div class="to">Accounts Department</div>
+                        <div class="to">Accounts Department </div>
                         <div style="">
                             @if ($schoolDetail && $schoolDetail->name_txt)
                                 {{ $schoolDetail->name_txt }} <br>

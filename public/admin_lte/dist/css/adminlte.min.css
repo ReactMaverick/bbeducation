@@ -57926,6 +57926,26 @@ a#splitInvoiceBtn img {
     align-items: center;
 }
 
+.cross_btn {
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    font-size: 14px;
+    background: #fff;
+    color: #f22;
+    box-shadow: 0 0 10px 0px rgb(0 0 0 / 23%);
+    position: absolute;
+    top: -3px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #f22;
+    z-index: 2;
+    cursor: pointer;
+}
+
 /* .topbar-Section.new_top_bar .menu_item.menu_item::before {
     content: "";
     position: absolute;
