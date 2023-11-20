@@ -49,6 +49,20 @@
                                                                         name="finance_query_mail" id="finance_query_mail"
                                                                         value="">
                                                                 </div>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Compliance Mail</label>
+                                                                    <input type="text"
+                                                                        class="form-control email-validate field-validate"
+                                                                        name="compliance_mail" id="compliance_mail"
+                                                                        value="">
+                                                                </div>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Vetting Enquiry Mail</label>
+                                                                    <input type="text"
+                                                                        class="form-control email-validate"
+                                                                        name="vetting_enquiry_mail" id="vetting_enquiry_mail"
+                                                                        value="">
+                                                                </div>
 
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Website</label>
@@ -57,13 +71,7 @@
                                                                         id="website" value="">
                                                                 </div>
 
-                                                                <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Compliance Mail</label>
-                                                                    <input type="text"
-                                                                        class="form-control email-validate field-validate"
-                                                                        name="compliance_mail" id="compliance_mail"
-                                                                        value="">
-                                                                </div>
+                                                                
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Address</label>
                                                                     <input type="text"
@@ -292,6 +300,7 @@
                         if ($('#oldImage').length > 0) {
                             $('#oldImage').attr('src', e.target.result);
                         } else {
+                            $('#uploadedImage').empty();
                             $('#uploadedImage').append(image);
                         }
 

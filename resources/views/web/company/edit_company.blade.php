@@ -50,14 +50,6 @@
                                                                         name="finance_query_mail" id="finance_query_mail"
                                                                         value="{{ $company->finance_query_mail }}">
                                                                 </div>
-
-                                                                <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Website</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="website" id="website"
-                                                                        value="{{ $company->website }}">
-                                                                </div>
-
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Compliance Mail</label>
                                                                     <input type="text"
@@ -65,6 +57,21 @@
                                                                         name="compliance_mail" id="compliance_mail"
                                                                         value="{{ $company->compliance_mail }}">
                                                                 </div>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Vetting Enquiry Mail</label>
+                                                                    <input type="text"
+                                                                        class="form-control email-validate"
+                                                                        name="vetting_enquiry_mail" id="vetting_enquiry_mail"
+                                                                        value="{{ $company->vetting_enquiry_mail }}">
+                                                                </div>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Website</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="website" id="website"
+                                                                        value="{{ $company->website }}">
+                                                                </div>
+
+                                                                
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Address</label>
                                                                     <input type="text" class="form-control"
