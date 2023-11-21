@@ -347,7 +347,6 @@ class ManagementController extends Controller
         }
 
         return redirect('/adminUsers')->with('success', 'User registered successfully. Check user email for a password setup link.');
-
     }
 
     public function getAdminUser(Request $request)
@@ -468,7 +467,6 @@ class ManagementController extends Controller
                         'image_name' => $filename2,
                         'path' => 'web/company_logo/footer_images/'
                     ]);
-
                 }
             }
             DB::table('company')
@@ -540,7 +538,6 @@ class ManagementController extends Controller
                 return "No";
             }
         }
-
     }
 
     public function adminUserSetPassword($id)
@@ -586,7 +583,6 @@ class ManagementController extends Controller
                     'isActive' => $request['statusValue']
                 ]);
             return response()->json(true);
-
         } else {
             return response()->json(false);
         }

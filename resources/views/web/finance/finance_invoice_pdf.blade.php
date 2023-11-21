@@ -653,7 +653,7 @@
 
             {{-- <div style="font-size: 18px; font-weight: 700; margin-top: 20px;">THANK YOU!</div> --}}
             <div style="margin-top: 10px;"><b>Payee Details:</b></div>
-            <div>Payment by BACS:</div>
+            <div>Payment by {{ $companyDetail ? $companyDetail->pref_payment_method : '' }}:</div>
             <div>Account Name: {{ $companyDetail ? $companyDetail->account_name : '' }}</div>
             <div>Account Number: {{ $companyDetail ? $companyDetail->account_number : '' }}</div>
             <div>Sort Code: {{ $companyDetail ? $companyDetail->sort_code : '' }}</div>

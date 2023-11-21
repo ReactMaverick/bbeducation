@@ -58,6 +58,7 @@ class FinanceController extends Controller
                 ->where('timesheet_id', NULL)
                 ->where('status_int', 3)
                 ->whereDate('asnDate_dte', '<=', $weekEndDate)
+                ->where('tbl_asn.company_id', $company_id)
                 ->groupBy('school_id')
                 // ->orderByRaw('COUNT(asnItem_id) DESC')
                 ->orderBy('tbl_school.name_txt', 'ASC')
@@ -131,6 +132,7 @@ class FinanceController extends Controller
                         ->groupBy('tbl_asn.asn_id')
                         ->get();
                 })
+                ->where('tbl_asn.company_id', $company_id)
                 ->groupBy('tbl_asn.asn_id')
                 ->orderBy('tbl_school.name_txt', 'ASC')
                 ->orderBy('tbl_teacher.firstName_txt', 'ASC')
@@ -1480,6 +1482,7 @@ class FinanceController extends Controller
                 ->where('timesheet_id', '!=', NULL)
                 ->where('tbl_asnItem.invoice_id', '=', NULL)
                 ->whereDate('asnDate_dte', '<=', $p_maxDate)
+                ->where('tbl_asn.company_id', $company_id)
                 ->groupBy('asnItem_id')
                 ->orderByRaw('school_id,teacher_id,asnDate_dte')
                 ->get();
@@ -1519,6 +1522,7 @@ class FinanceController extends Controller
             }
 
             $invoiceList = $invoices->where('tbl_invoice.invoice_id', '!=', null)
+                ->where('tbl_school.company_id', $company_id)
                 ->groupBy('tbl_invoice.invoice_id')
                 ->orderBy('tbl_invoice.invoice_id', 'DESC')
                 ->orderBy('invoiceDate_dte', 'DESC')
@@ -3355,6 +3359,7 @@ class FinanceController extends Controller
                 ->select('tbl_asnItem.asnItem_id', 'tbl_asn.asn_id', 'tbl_asn.teacher_id', 'tbl_asn.school_id', 'tbl_school.name_txt', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'asnDate_dte', 'dayPercent_dec AS dayPart_dec', 'tbl_asnItem.cost_dec AS pay_dec')
                 ->where('invoice_id', '!=', NULL)
                 ->where('payroll_id', '=', NULL)
+                ->where('tbl_asn.company_id', $company_id)
                 ->groupBy(['teacher_id', 'school_id', 'asnItem_id'])
                 ->orderBy('tbl_school.name_txt')
                 ->orderBy('teacher_id')
@@ -3368,6 +3373,7 @@ class FinanceController extends Controller
                 ->select('tbl_asn.teacher_id', DB::raw("SUM(dayPercent_dec) AS days_dec"), DB::raw("CAST(SUM(dayPercent_dec * tbl_asnItem.cost_dec) AS DECIMAL(7, 2)) AS grossPay_dec"), 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
                 ->where('tbl_asnItem.payroll_id', '!=', NULL)
                 ->whereDate('tbl_payrollRun.payDate_dte', '=', $friday)
+                ->where('tbl_asn.company_id', $company_id)
                 ->groupBy('tbl_asn.teacher_id')
                 ->get();
 
@@ -3376,6 +3382,7 @@ class FinanceController extends Controller
                 ->LeftJoin('tbl_payrollRun', 'tbl_asnItem.payroll_id', '=', 'tbl_payrollRun.payroll_id')
                 ->select('tbl_payrollRun.payroll_id', 'payDate_dte', DB::raw("COUNT(DISTINCT teacher_id) AS teachers_int"), DB::raw("CAST(SUM(dayPercent_dec * tbl_asnItem.cost_dec) AS DECIMAL(9,2)) AS grossPay_dec"))
                 ->where('tbl_asnItem.payroll_id', '!=', NULL)
+                ->where('tbl_asn.company_id', $company_id)
                 ->groupBy('payDate_dte')
                 ->orderBy('payDate_dte', 'DESC')
                 ->get();
@@ -3513,6 +3520,11 @@ class FinanceController extends Controller
 
     public function payrollDateChange(Request $request)
     {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+        }
         $dateType = $request->dateType;
         $fridayDate = $request->fridayDate;
 
@@ -3528,7 +3540,7 @@ class FinanceController extends Controller
             }
         }
         $html = '';
-        if ($newFriday) {
+        if ($webUserLoginData && $newFriday) {
             $paySummaryList = DB::table('tbl_asn')
                 ->LeftJoin('tbl_asnItem', 'tbl_asn.asn_id', '=', 'tbl_asnItem.asn_id')
                 ->LeftJoin('tbl_payrollRun', 'tbl_asnItem.payroll_id', '=', 'tbl_payrollRun.payroll_id')
@@ -3536,6 +3548,7 @@ class FinanceController extends Controller
                 ->select('tbl_asn.teacher_id', DB::raw("SUM(dayPercent_dec) AS days_dec"), DB::raw("CAST(SUM(dayPercent_dec * tbl_asnItem.cost_dec) AS DECIMAL(7, 2)) AS grossPay_dec"), 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt')
                 ->where('tbl_asnItem.payroll_id', '!=', NULL)
                 ->whereDate('tbl_payrollRun.payDate_dte', '=', $newFriday)
+                ->where('tbl_asn.company_id', $company_id)
                 ->groupBy('tbl_asn.teacher_id')
                 ->get();
 
@@ -3603,7 +3616,8 @@ class FinanceController extends Controller
             if ($request->method) {
                 $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
             }
-            $remitInvoices = $Invoices->groupBy('tbl_invoice.invoice_id')
+            $remitInvoices = $Invoices->where('tbl_school.company_id', $company_id)
+                ->groupBy('tbl_invoice.invoice_id')
                 // ->orderBy('tbl_invoice.invoiceDate_dte', 'DESC')
                 ->get();
 
@@ -3613,16 +3627,20 @@ class FinanceController extends Controller
                 ->get();
 
             $invoiceCal = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                 ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
                 ->where('tbl_invoice.paidOn_dte', NULL)
+                ->where('tbl_school.company_id', $company_id)
                 ->first();
 
             $invoiceOverdue = DB::table('tbl_invoice')
+                ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
                 ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                 ->select(DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"))
                 ->where('tbl_invoice.paidOn_dte', NULL)
                 ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate)
+                ->where('tbl_school.company_id', $company_id)
                 ->first();
 
             return view("web.finance.finance_remittance", ['title' => $title, 'headerTitle' => $headerTitle, 'remitInvoices' => $remitInvoices, 'paymentMethodList' => $paymentMethodList, 'invoiceCal' => $invoiceCal, 'invoiceOverdue' => $invoiceOverdue]);
