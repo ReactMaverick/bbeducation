@@ -35,11 +35,11 @@ class SuperadminController extends Controller
 
     public function storeCompany(Request $request)
     {
-        $request->validate([
-            'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'admin_username' => 'required|unique:tbl_user,user_name'
-        ]);
-
+        // $request->validate([
+        //     'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        //     'admin_username' => 'required|unique:tbl_user,user_name'
+        // ]);
+        $filename1 = '';
         if ($request->file('company_logo')) {
             $image = $request->file('company_logo');
             $extension = $image->extension();
@@ -87,41 +87,41 @@ class SuperadminController extends Controller
             }
         }
 
-        $image = $request->file('profileImage');
-        $extension = $image->extension();
-        $file_name = mt_rand(100000, 999999);
-        $rand = mt_rand(100000, 999999);
-        $filename3 = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
-        $image->move(public_path('images/userimages'), $filename3);
+        // $image = $request->file('profileImage');
+        // $extension = $image->extension();
+        // $file_name = mt_rand(100000, 999999);
+        // $rand = mt_rand(100000, 999999);
+        // $filename3 = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+        // $image->move(public_path('images/userimages'), $filename3);
 
-        $adminUserId = DB::table('tbl_user')
-            ->insertGetId([
-                'company_id' => $newCompanyId,
-                'admin_type' => 1,
-                'firstName_txt' => $request->admin_firstName,
-                'surname_txt' => $request->admin_surName,
-                'user_name' => $request->admin_username,
-                'profileImage' => $filename3,
-                'isActive' => $request->status,
-                'profileImageLocation_txt' => 'images/userimages',
-                'timestamp_ts' => date('Y-m-d H:i:s')
-            ]);
+        // $adminUserId = DB::table('tbl_user')
+        //     ->insertGetId([
+        //         'company_id' => $newCompanyId,
+        //         'admin_type' => 1,
+        //         'firstName_txt' => $request->admin_firstName,
+        //         'surname_txt' => $request->admin_surName,
+        //         'user_name' => $request->admin_username,
+        //         'profileImage' => $filename3,
+        //         'isActive' => $request->status,
+        //         'profileImageLocation_txt' => 'images/userimages',
+        //         'timestamp_ts' => date('Y-m-d H:i:s')
+        //     ]);
         // return response()->json(['status' => 'success']);
-        $companyDetail = DB::table('company')
-            ->select('company.*')
-            ->where('company.company_id', $newCompanyId)
-            ->first();
+        // $companyDetail = DB::table('company')
+        //     ->select('company.*')
+        //     ->where('company.company_id', $newCompanyId)
+        //     ->first();
 
-        if ($request->admin_username) {
-            $uID = base64_encode($adminUserId);
-            $mailData['companyDetail'] = $companyDetail;
-            $mailData['firstName_txt'] = $request->admin_firstName;
-            $mailData['surname_txt'] = $request->admin_surName;
-            $mailData['mail'] = $request->admin_username;
-            $mailData['rUrl'] = url('/adminUser/set-password') . '/' . $uID;
-            $myVar = new AlertController();
-            $myVar->adminUserAddMail($mailData);
-        }
+        // if ($request->admin_username) {
+        //     $uID = base64_encode($adminUserId);
+        //     $mailData['companyDetail'] = $companyDetail;
+        //     $mailData['firstName_txt'] = $request->admin_firstName;
+        //     $mailData['surname_txt'] = $request->admin_surName;
+        //     $mailData['mail'] = $request->admin_username;
+        //     $mailData['rUrl'] = url('/adminUser/set-password') . '/' . $uID;
+        //     $myVar = new AlertController();
+        //     $myVar->adminUserAddMail($mailData);
+        // }
 
         return redirect('/all-company')->with('success', 'Company created successfully. Check user email for a password setup link.');
     }
