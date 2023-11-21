@@ -46,21 +46,21 @@
                                                                     <label class="form-check-label">Finance Query
                                                                         Email</label>
                                                                     <input type="text"
-                                                                        class="form-control email-validate"
+                                                                        class="form-control"
                                                                         name="finance_query_mail" id="finance_query_mail"
                                                                         value="{{ $company->finance_query_mail }}">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Compliance Mail</label>
                                                                     <input type="text"
-                                                                        class="form-control email-validate"
+                                                                        class="form-control"
                                                                         name="compliance_mail" id="compliance_mail"
                                                                         value="{{ $company->compliance_mail }}">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Vetting Enquiry Mail</label>
                                                                     <input type="text"
-                                                                        class="form-control email-validate"
+                                                                        class="form-control"
                                                                         name="vetting_enquiry_mail" id="vetting_enquiry_mail"
                                                                         value="{{ $company->vetting_enquiry_mail }}">
                                                                 </div>
@@ -157,7 +157,7 @@
                                                                         name="company_logo" id="company-logo"
                                                                         value="">
                                                                 </div>
-                                                                <p style="color: red; font-size: small;">Jpg,Jpeg,png type
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
                                                                 <div class="modal-input-field form-group modal_logo">
@@ -178,7 +178,7 @@
                                                                         name="invoice_logo[]" id="invoice-logo"
                                                                         value="" multiple>
                                                                 </div>
-                                                                <p style="color: red; font-size: small;">Jpg,Jpeg,png type
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
                                                                 <div class="modal-input-field form-group modal_logo">

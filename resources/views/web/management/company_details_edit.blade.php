@@ -95,6 +95,13 @@
                                                                 </div>
                                                                 <p><Strong>Payee Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Preferred Payment Method
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="pref_payment_method" id="pref_payment_method"
+                                                                        value="{{ $company->pref_payment_method }}">
+                                                                </div>
+                                                                <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
                                                                     <input type="text" class="form-control"
                                                                         name="account_name" id="account_name"
@@ -116,8 +123,6 @@
 
                                                             </div>
                                                             <div class="col-md-6">
-
-
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Terms &
                                                                         Condition</label>
@@ -148,6 +153,9 @@
                                                                         name="company_logo" id="company-logo"
                                                                         value="">
                                                                 </div>
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
+                                                                    allowed. Max size 1mb
+                                                                </p>
                                                                 <div class="modal-input-field form-group modal_logo">
                                                                     @if (File::exists(public_path($company->company_logo)))
                                                                         <img class="img-fluid" id="oldImage"
@@ -169,7 +177,7 @@
                                                                         name="invoice_logo[]" id="invoice-logo"
                                                                         value="" multiple>
                                                                 </div>
-                                                                <p style="color: red; font-size: small;">Jpg,Jpeg,png type
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
                                                                 <div class="modal-input-field form-group modal_logo">
