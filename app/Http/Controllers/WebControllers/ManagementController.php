@@ -485,6 +485,7 @@ class ManagementController extends Controller
                     'website' => $request->website,
                     'finance_query_mail' => $request->finance_query_mail,
                     'compliance_mail' => $request->compliance_mail,
+                    'vetting_enquiry_mail' => $request->vetting_enquiry_mail,
                     'account_name' => $request->account_name,
                     'account_number' => $request->account_number,
                     'sort_code' => $request->sort_code,

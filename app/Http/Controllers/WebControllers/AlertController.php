@@ -366,4 +366,59 @@ class AlertController extends Controller
         }
     }
 
+    public function adminOtpMail($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_login_otp_mail', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Secure Login: Your One-Time Password is Here!")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+                return true;
+            } catch (\Exception $e) {
+                echo $e;
+                return false;
+                exit;
+            }
+        }
+    }
+
+    public function adminForgotPasswordOtp($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_forgot_password_mail', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Forgot Password")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+                return true;
+            } catch (\Exception $e) {
+                echo $e;
+                return false;
+                exit;
+            }
+        }
+    }
+
+    public function supAdminForgotPasswordOtp($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/supAdmin_forgot_password_mail', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Forgot Password")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+                return true;
+            } catch (\Exception $e) {
+                // echo $e;
+                return false;
+                exit;
+            }
+        }
+    }
+
+
 }

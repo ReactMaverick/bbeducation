@@ -40,8 +40,25 @@ Route::get('/cache-clear', function () {
 
 Route::get('/', [LoginController::class, 'login']);
 Route::post('/processLogin', [LoginController::class, 'processLogin']);
+Route::post('/adminLogin', [LoginController::class, 'adminLogin']);
+Route::get('/adminOtp',[LoginController::class,'adminOtp']);
 Route::get('/logout', [LoginController::class, 'logout']);
 Route::get('/profile', [LoginController::class, 'profile']);
+//================= Admin Forget Password =============================//
+Route::get('/adminForgetPassword', [LoginController::class, 'adminforgetPassword']);
+Route::post('/admin-Forget-Password-otpsend', [LoginController::class, 'adminforgetPasswordSendOtp']);
+Route::get('/admin-Forget-Password-otp', [LoginController::class, 'adminforgetPasswordOtp']);
+Route::post('/admin-Forget-Password-otpverify', [LoginController::class, 'adminfPasswordOtpVerify']);
+Route::get('/admin-Forget-Password-generate', [LoginController::class, 'adminfPasswordGenerate']);
+Route::post('/admin-Forget-Password-update', [LoginController::class, 'adminfPasswordUpdate']);
+//================= Super Admin Forget Password=========================//
+Route::get('/systemForgetPassword', [LoginController::class, 'supadminforgetPassword']);
+Route::post('/system-Forget-Password-otpsend', [LoginController::class, 'supAdminforgetPasswordSendOtp']);
+Route::get('/system-Forget-Password-otp', [LoginController::class, 'supAdminforgetPasswordOtp']);
+Route::post('/system-Forget-Password-otpverify', [LoginController::class, 'supAdminfPasswordOtpVerify']);
+Route::get('/system-Forget-Password-generate', [LoginController::class, 'supAdminfPasswordGenerate']);
+Route::post('/system-Forget-Password-update', [LoginController::class, 'supAdminfPasswordUpdate']);
+
 
 Route::get('/dashboard', [HomeController::class, 'dashboard']);
 
@@ -420,11 +437,11 @@ Route::group(['namespace' => 'WebControllers', 'prefix' => 'school'], function (
 Route::get('/approveVettingSendTest', [AssignmentController::class, 'approveVettingSendTest']);
 
 // Super Admin Routes
-Route::post('/super-admin-login-attempt', [LoginController::class, 'superAdminLoginAttempt']);
-Route::post('/super-admin-otp-verify', [LoginController::class, 'superAdminOtpVerify']);
+Route::post('/system-login-attempt', [LoginController::class, 'superAdminLoginAttempt']);
+Route::post('/system-otp-verify', [LoginController::class, 'superAdminOtpVerify']);
 Route::get('/otpVerification', [LoginController::class, 'otpVerification']);
-Route::get('/super-admin-login', [LoginController::class, 'superAdminLogin']);
-Route::get('/super-admin-logout', [LoginController::class, 'superAdminlogout']);
+Route::get('/system-login', [LoginController::class, 'superAdminLogin']);
+Route::get('/system-logout', [LoginController::class, 'superAdminlogout']);
 
 Route::group(['middleware' => ['superadmin']], function () {
     Route::get('/all-company', [SuperadminController::class, 'all_company']);
@@ -440,7 +457,8 @@ Route::group(['middleware' => ['superadmin']], function () {
     Route::post('/userStatus', [SuperadminController::class, 'userStatus']);
     Route::post('/deleteCompanyFooterImage', [SuperadminController::class, 'deleteCompanyFooterImage']);
     Route::post('/userAdd', [SuperadminController::class, 'userAdd']);
+    Route::get('/superAdminDashboard', [SuperadminController::class, 'dashboard']);
 });
 
-Route::get('/superAdminDashboard', [SuperadminController::class, 'dashboard']);
+
 

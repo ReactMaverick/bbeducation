@@ -23,11 +23,10 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <img src="{{ asset('/web/images/mymooncloud-logo2.png')}}"
-                                    style="width: 100px;" />
+                                <img src="{{ asset('/web/images/mymooncloud-logo2.png') }}" style="width: 100px;" />
                             </td>
                             <td style="padding: 10px 20px; text-align: right;">
-                                <p style="color: #888; font-size: 25px;">OTP</p>
+                                <p style="color: #888; font-size: 25px;">Forgot Password Mail</p>
                             </td>
                         </tr>
                     </table>
@@ -38,10 +37,11 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <p>Dear <strong>{{ $mailData['firstName_txt'] }}
-                                        {{ $mailData['surname_txt'] }},</strong>
+                                <p>Dear <strong>{{ $mailData['userExist']->firstName_txt }}
+                                        {{ $mailData['userExist']->surname_txt }},</strong>
                                 </p>
-                                <p>One-Time Password for Login: '{{ $mailData['login_otp'] }}'</p>
+                                <p>Your login user name is '{{ $mailData['mail'] }}'</p>
+                                <p>Your forgot password OTP is '{{ $mailData['rand_otp'] }}'</p>
                             </td>
                         </tr>
                     </table>

@@ -50,14 +50,6 @@
                                                                         name="finance_query_mail" id="finance_query_mail"
                                                                         value="{{ $company->finance_query_mail }}">
                                                                 </div>
-
-                                                                <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Website</label>
-                                                                    <input type="text" class="form-control"
-                                                                        name="website" id="website"
-                                                                        value="{{ $company->website }}">
-                                                                </div>
-
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Compliance Mail</label>
                                                                     <input type="text"
@@ -65,6 +57,21 @@
                                                                         name="compliance_mail" id="compliance_mail"
                                                                         value="{{ $company->compliance_mail }}">
                                                                 </div>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Vetting Enquiry Mail</label>
+                                                                    <input type="text"
+                                                                        class="form-control email-validate"
+                                                                        name="vetting_enquiry_mail" id="vetting_enquiry_mail"
+                                                                        value="{{ $company->vetting_enquiry_mail }}">
+                                                                </div>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Website</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="website" id="website"
+                                                                        value="{{ $company->website }}">
+                                                                </div>
+
+                                                                
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Address</label>
                                                                     <input type="text" class="form-control"
@@ -184,7 +191,7 @@
                                                                             <img src="{{ asset($images->path . '/' . $images->image_name) }}"
                                                                                 style="width: 70px; height: 70px; display: block;">
                                                                             <div onclick="imagedelete({{ $images->image_id }})"
-                                                                                style="position: absolute; top: 0; right: 0; width: 20px; height: 20px; background-color: rgb(254, 251, 251); clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 50% 50%, 50% 100%, 0% 100%);">
+                                                                                class="cross_btn">
                                                                                 <i class="fa fa-times"
                                                                                     aria-hidden="true"></i>
                                                                             </div>

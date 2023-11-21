@@ -31,7 +31,7 @@
                 <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="" style="width: 60%;">
             </div>
             <div class="card-body">
-                <p class="login-box-msg">ADMIN LOGIN</p>
+                <p class="login-box-msg">SYSTEM LOGIN</p>
 
                 @if (count($errors) > 0)
                     @foreach ($errors->all() as $error)
@@ -51,7 +51,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ url('/super-admin-login-attempt') }}" class="form-validate">
+                <form method="POST" action="{{ url('/system-login-attempt') }}" class="form-validate">
                     @csrf
                     <div class="input-group form-group mb-3">
                         <input type="text"
@@ -76,7 +76,7 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <button type="button" id="loginResetBtn" class="btn btn-primary btn-block">Reset</button>
+                            {{-- <button type="button" id="loginResetBtn" class="btn btn-primary btn-block">Reset</button> --}}
                         </div>
                         <div class="col-4"></div>
                         <!-- /.col -->
@@ -85,6 +85,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                    <a href="{{url('/systemForgetPassword')}}">Forgot Password ?</a>
                 </form>
 
                 {{-- <p class="mb-1">
