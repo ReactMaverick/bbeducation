@@ -23,8 +23,7 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <img src="{{ asset('/web/images/mymooncloud-logo2.png')}}"
-                                    style="width: 100px;" />
+                                <img src="{{ asset('/web/images/mymooncloud-logo2.png') }}" style="width: 100px;" />
                             </td>
                             <td style="padding: 10px 20px; text-align: right;">
                                 <p style="color: #888; font-size: 25px;">OTP</p>
@@ -51,7 +50,7 @@
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
                     <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                         MONITORED.*</h3>
-                    <p>For any queries, please email <a href="mailto:Saleem@bbe-edu.co.uk"
+                    <p>For support, please email <a href="mailto:sys@mymooncloud.com"
                             target="_blank">sys@mymooncloud.com</a></p>
                 </td>
             </tr>

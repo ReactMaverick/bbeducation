@@ -30,12 +30,31 @@
             <b>Compliance Team</b><br>
             <b>{{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</b>
         </p>
-        <p>Building 3, North London Business Park</p>
-        <p>Oakleigh Road South</p>
-        <p>N11 1GN</p>
-        <p>Telephone:0208 4329844</p>
-        <p>Head of Compliance Email: <a href="mailto:Saleem@bbe-edu.co.uk" target="_blank">Saleem@bbe-edu.co.uk</a></p>
-        <p>Web: <a href="www.bumblebee-education.co.uk" target="_blank">www.bumblebee-education.co.uk</a></p>
+        @if ($mailData['companyDetail'] && $mailData['companyDetail']->address1_txt)
+            <p>{{ $mailData['companyDetail']->address1_txt . ', ' }}</p>
+        @endif
+        @if ($mailData['companyDetail'] && $mailData['companyDetail']->address2_txt)
+            <p>{{ $mailData['companyDetail']->address2_txt . ', ' }}</p>
+        @endif
+        @if ($mailData['companyDetail'] && $mailData['companyDetail']->address3_txt)
+            <p>{{ $mailData['companyDetail']->address3_txt . ', ' }}</p>
+        @endif
+        @if ($mailData['companyDetail'] && $mailData['companyDetail']->address4_txt)
+            <p>{{ $mailData['companyDetail']->address4_txt . ', ' }}</p>
+        @endif
+        @if ($mailData['companyDetail'] && $mailData['companyDetail']->address5_txt)
+            <p>{{ $mailData['companyDetail']->address5_txt . ', ' }}</p>
+        @endif
+        @if ($mailData['companyDetail'] && $mailData['companyDetail']->postcode_txt)
+            <p>{{ $mailData['companyDetail']->postcode_txt . ', ' }}</p>
+        @endif
+        <p>Telephone:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_phone : '' }}</p>
+        <p>Head of Compliance Email: <a
+                href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}"
+                target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a>
+        </p>
+        <p>Web: <a href="{{ $mailData['companyDetail'] ? $mailData['companyDetail']->website : '' }}"
+                target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->website : '' }}</a></p>
     </div>
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -44,7 +63,9 @@
                 <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                     MONITORED.*</h3>
                 <p>Should you have any queries for this invoice, please promptly email <a
-                        href="mailto:Saleem@bbe-edu.co.uk" target="_blank">Saleem@bbe-edu.co.uk</a></p>
+                        href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}"
+                        target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a>
+                </p>
             </td>
         </tr>
     </table>

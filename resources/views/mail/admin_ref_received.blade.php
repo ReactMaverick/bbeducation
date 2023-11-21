@@ -61,8 +61,8 @@
                     <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                         MONITORED.*</h3>
                     <p>For any queries, please email <a
-                            href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}"
-                            target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</a>
+                            href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}"
+                            target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a>
                     </p>
                 </td>
             </tr>
