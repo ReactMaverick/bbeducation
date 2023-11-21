@@ -23,8 +23,12 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td style="padding: 10px 20px;">
-                                <img src="{{ asset('/web/images/mymooncloud-logo2.png')}}"
+                                <img src="{{ $mailData['companyDetail'] ? asset($mailData['companyDetail']->company_logo) : '' }}"
                                     style="width: 100px;" />
+                            </td>
+                            <td style="padding: 10px 20px; text-align: right;">
+                                <p style="color: #2c2b2b; font-size: 25px;">
+                                    {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</p>
                             </td>
                             <td style="padding: 10px 20px; text-align: right;">
                                 <p style="color: #888; font-size: 25px;">OTP</p>
@@ -41,7 +45,7 @@
                                 <p>Dear <strong>{{ $mailData['firstName_txt'] }}
                                         {{ $mailData['surname_txt'] }},</strong>
                                 </p>
-                                <p>One-Time Password for Login: '{{ $mailData['login_otp'] }}'</p>
+                                <p>One-Time Password for Login: <b>'{{ $mailData['login_otp'] }}'<b></p>
                             </td>
                         </tr>
                     </table>
@@ -49,10 +53,16 @@
             </tr>
             <tr>
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
+                    <h3 style="margin-bottom: 10px;">Best regards,
+                        {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</h3>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
                     <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                         MONITORED.*</h3>
                     <p>For any queries, please email <a href="mailto:Saleem@bbe-edu.co.uk"
-                            target="_blank">sys@mymooncloud.com</a></p>
+                            target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a></p>
                 </td>
             </tr>
             <tr>

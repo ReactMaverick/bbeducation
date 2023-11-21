@@ -191,7 +191,7 @@
                                                                             <img src="{{ asset($images->path . '/' . $images->image_name) }}"
                                                                                 style="width: 70px; height: 70px; display: block;">
                                                                             <div onclick="imagedelete({{ $images->image_id }})"
-                                                                                style="position: absolute; top: 0; right: 0; width: 20px; height: 20px; background-color: rgb(254, 251, 251); clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 50% 50%, 50% 100%, 0% 100%);">
+                                                                                class="cross_btn">
                                                                                 <i class="fa fa-times"
                                                                                     aria-hidden="true"></i>
                                                                             </div>

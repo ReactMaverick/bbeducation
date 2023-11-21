@@ -43,7 +43,7 @@
                 </div>
             @endif
             <span>Enter Your otp for login !</span>
-            <form action="{{ url('/system-otp-verify') }}" method="post"
+            <form action="{{ url('/processLogin') }}" method="post"
                 class="reset-password-form-sec form-validate">
                 @csrf
                 <div class="form-group reset-password-form-group">

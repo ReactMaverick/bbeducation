@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Forgot Password</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -31,7 +31,7 @@
                 <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="" style="width: 60%;">
             </div>
             <div class="card-body">
-                <p class="login-box-msg">ADMIN LOGIN</p>
+                <p class="login-box-msg">FORGOT PASSWORD</p>
 
                 @if (count($errors) > 0)
                     @foreach ($errors->all() as $error)
@@ -43,54 +43,46 @@
                     @endforeach
                 @endif
 
-                @if (Session::has('loginError'))
+                @if (Session::has('otp_error'))
                     <div class="alert alert-danger" role="alert">
                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        <span class="sr-only">Error:</span>
-                        {!! session('loginError') !!}
+                        {!! session('otp_error') !!}
                     </div>
                 @endif
 
-                <form method="POST" action="{{ url('/adminLogin') }}" class="form-validate">
+                @if (Session::has('otp_success'))
+                    <div class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        {!! session('otp_success') !!}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ url('/admin-Forget-Password-otpverify') }}" class="form-validate">
                     @csrf
                     <div class="input-group form-group mb-3">
-                        <input type="text"
-                            class="form-control field-validate @error('user_name') is-invalid @enderror" id="user_name"
-                            name="user_name" value="{{ old('user_name') }}" autocomplete="user_name" autofocus
-                            placeholder="Username">
+                        <input type="text" class="form-control field-validate" id="" name="f_pass_otp"
+                            autofocus placeholder="Enter OTP">
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                                <span class="fas fa-keyboard"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="input-group form-group mb-3">
-                        <input type="password"
-                            class="form-control field-validate @error('password') is-invalid @enderror" id="password"
-                            name="password" autocomplete="current-password" placeholder="Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="row">
-                        <div class="col-4">
-                            {{-- <button type="button" id="loginResetBtn" class="btn btn-primary btn-block">Reset</button> --}}
+                        <div class="col-8">
                         </div>
-                        <div class="col-4"></div>
                         <!-- /.col -->
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
                         </div>
                         <!-- /.col -->
                     </div>
-                    <a href="{{url('/adminForgetPassword')}}">Forgot Password ?</a>
                 </form>
 
-                {{-- <p class="mb-1">
-                    <a href="forgot-password.html">I forgot my password</a>
-                </p> --}}
+                <p class="mb-1">
+                    <a href="{{ URL::to('/') }}">Sign In</a>
+                </p>
             </div>
             <!-- /.card-body -->
         </div>
@@ -105,18 +97,8 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('admin_lte/dist/js/adminlte.min.js') }}"></script>
 
-    @include('web.common_new.scripts')
+    @include('web.teacherPortal.common.scripts')
 
-    <script>
-        $(document).on('click', '#loginResetBtn', function() {
-            $('#user_name').val('');
-            $('#password').val('');
-        });
-
-        $(document).on('click', '#loginBtn', function() {
-            $('#fullLoader').show();
-        });
-    </script>
 </body>
 
 </html>

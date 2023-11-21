@@ -57,7 +57,7 @@
                     class="mob_dp_none">{{ $webUserLoginData->firstName_txt . ' ' . $webUserLoginData->surname_txt }}</span>
             </a>
             <ul class="dropdown">
-                <li><a href="{{ URL::to('/super-admin-logout') }}">
+                <li><a href="{{ URL::to('/system-logout') }}">
                         <span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

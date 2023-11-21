@@ -21,6 +21,6 @@ class SuperAdminMiddleware
             return $next($request);
         }
 
-        return redirect('/super-admin-login')->with('error', 'You do not have permission to access this resource.');
+        return redirect('/system-login')->with('error', 'You do not have permission to access this resource.');
     }
 }
