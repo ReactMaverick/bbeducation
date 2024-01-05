@@ -116,7 +116,7 @@
 
                                             <div class="new_teacher_calendar_outer1">
                                                 <div class="new_teacher_wapper">
-                                                    <div class="skd_dates_row grid_7 grid_8">
+                                                    <div class="skd_dates_row new_grid_8 grid_8">
                                                         <div class="teacher-calendar-total-days-text skd_date">
                                                         </div>
                                                         <div class="teacher-calendar-days-text skd_date">
@@ -144,7 +144,7 @@
 
                                                     @foreach ($calenderList as $key => $calender)
                                                         <div
-                                                            class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 new_teacher_calendar_outer3 box_8 ">
+                                                            class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 new_teacher_calendar_outer3 grid_8 ">
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 <div class="teacher-calendar-days-field3 teacher-calendar-days-field4"
@@ -165,7 +165,7 @@
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day1Avail_txt && $calender->day1Link_id)
-                                                                    <div class="teacher-calendar-days-field"
+                                                                    <div class="{{ $calender->day1Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
                                                                         style="cursor: pointer;"
                                                                         onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day1Link_id }}')">
                                                                         <p>{{ $calender->day1Avail_txt }}</p>
@@ -175,7 +175,7 @@
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day2Avail_txt && $calender->day2Link_id)
-                                                                    <div class="teacher-calendar-days-field"
+                                                                    <div class="{{ $calender->day2Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
                                                                         style="cursor: pointer;"
                                                                         onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day2Link_id }}')">
                                                                         <p>{{ $calender->day2Avail_txt }}</p>
@@ -185,7 +185,7 @@
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day3Avail_txt && $calender->day3Link_id)
-                                                                    <div class="teacher-calendar-days-field"
+                                                                    <div class="{{ $calender->day3Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
                                                                         style="cursor: pointer;"
                                                                         onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day3Link_id }}')">
                                                                         <p>{{ $calender->day3Avail_txt }}</p>
@@ -195,7 +195,7 @@
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day4Avail_txt && $calender->day4Link_id)
-                                                                    <div class="teacher-calendar-days-field"
+                                                                    <div class="{{ $calender->day4Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
                                                                         style="cursor: pointer;"
                                                                         onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day4Link_id }}')">
                                                                         <p>{{ $calender->day4Avail_txt }}</p>
@@ -205,7 +205,7 @@
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day5Avail_txt && $calender->day5Link_id)
-                                                                    <div class="teacher-calendar-days-field"
+                                                                    <div class="{{ $calender->day5Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
                                                                         style="cursor: pointer;"
                                                                         onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day5Link_id }}')">
                                                                         <p>{{ $calender->day5Avail_txt }}</p>
@@ -215,7 +215,7 @@
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day6Avail_txt && $calender->day6Link_id)
-                                                                    <div class="teacher-calendar-days-field"
+                                                                    <div class="{{ $calender->day6Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day6LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
                                                                         style="cursor: pointer;"
                                                                         onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day6Link_id }}')">
                                                                         <p>{{ $calender->day6Avail_txt }}</p>
@@ -225,7 +225,7 @@
                                                             <div
                                                                 class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                 @if ($calender->day7Avail_txt && $calender->day7Link_id)
-                                                                    <div class="teacher-calendar-days-field"
+                                                                    <div class="{{ $calender->day7Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day7LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
                                                                         style="cursor: pointer;"
                                                                         onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day7Link_id }}')">
                                                                         <p>{{ $calender->day7Avail_txt }}</p>

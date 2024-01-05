@@ -86,18 +86,18 @@
                                                     id="editReferenceRow{{ $reference->teacherReference_id }}"
                                                     onclick="editReferenceRowSelect({{ $reference->teacherReference_id }}, '<?php echo $reference->receivedOn_dtm; ?>')">
                                                     <td>{{ $reference->employer_txt }}</td>
-                                                    <td>{{ $reference->employedFrom_dte != null ? date('d-m-Y', strtotime($reference->employedFrom_dte)) : '' }}
+                                                    <td>{{ $reference->employedFrom_dte != null ? date('d M Y', strtotime($reference->employedFrom_dte)) : '' }}
                                                     </td>
-                                                    <td>{{ $reference->employedUntil_dte != null ? date('d-m-Y', strtotime($reference->employedUntil_dte)) : '' }}
+                                                    <td>{{ $reference->employedUntil_dte != null ? date('d M Y', strtotime($reference->employedUntil_dte)) : '' }}
                                                     </td>
-                                                    <td>{{ $reference->lastSent_dte != null ? date('d-m-Y', strtotime($reference->lastSent_dte)) : '' }}
+                                                    <td>{{ $reference->lastSent_dte != null ? date('d M Y', strtotime($reference->lastSent_dte)) : '' }}
                                                     </td>
                                                     <td>{{ $reference->totalSent_int }}</td>
                                                     <td>
                                                         @if ($reference->req_reference_receive == 1)
                                                             Yes
                                                             @if ($reference->req_reference_receive_dte)
-                                                                {{ ' ( ' . date('d-m-Y', strtotime($reference->req_reference_receive_dte)) . ' )' }}
+                                                                {{ ' ( ' . date('d M Y', strtotime($reference->req_reference_receive_dte)) . ' )' }}
                                                             @endif
                                                         @else
                                                             No

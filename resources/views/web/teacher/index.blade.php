@@ -91,7 +91,7 @@
                                                         @if ($fabTeacher->contactTeacherId == null || $fabTeacher->contactTeacherId == '')
                                                             No Contact
                                                         @else
-                                                            {{ date('d-m-Y', strtotime($fabTeacher->lastContact_dte)) }}
+                                                            {{ date('d M Y', strtotime($fabTeacher->lastContact_dte)) }}
                                                         @endif
                                                     </td>
                                                 </tr>

@@ -45,7 +45,7 @@
                                     <div class="finance-timesheet-left-sec">
 
                                         <div class="row my_row_gap">
-                                            <div class="col-md-9 col-lg-9 col-xl-9 col-12 col-sm-12">
+                                            <div class="col-md-12 col-lg-9 col-xl-9 col-12 col-sm-12">
                                                 <div class="finance-timesheet-contact-first-sec sec_box_edit ">
 
                                                     <div class="details-heading">
@@ -57,13 +57,13 @@
                                                                 title="Reload timesheets" class="icon_all">
                                                                 <i class="fas fa-sync"></i>
                                                             </a>
-                                                            <div class="invoice-top-btn-sec mr-3 icon_all">
+                                                            <div class="invoice-top-btn-sec icon_all">
                                                                 <button class="btn btn-warning btn_nw"
                                                                     id="selectNoneBtn">Select
                                                                     None</button>
                                                             </div>
 
-                                                            <div class="  invoice-top-btn-sec mr-3 icon_all">
+                                                            <div class="  invoice-top-btn-sec icon_all">
                                                                 <button class="btn btn-info btn_nw" id="selectAllBtn">Select
                                                                     All</button>
                                                             </div>
@@ -112,7 +112,7 @@
                                                     <div class="new_teacher_calendar_outer1 dataTables_wrapper sm_h">
                                                         <div class="new_teacher_wapper">
 
-                                                            <div class="skd_dates_row grid_7 grid_8">
+                                                            <div class="skd_dates_row new_grid_8 grid_8">
                                                                 <div class="teacher-calendar-days-text skd_date f_12">
                                                                     <p>School</p>
                                                                 </div>
@@ -239,7 +239,7 @@
                                                                         class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                         <div
                                                                             class="teacher-calendar-days-field3 field_day_3">
-                                                                            <p>
+                                                                            <p class="nam_bld">
                                                                                 {{ $calender->name_txt }}
                                                                             </p>
                                                                         </div>
@@ -248,7 +248,7 @@
                                                                         class="date-left-teacher-calendar new_teacher_calendar_inner">
                                                                         <div
                                                                             class="teacher-calendar-days-field3 field_day_3">
-                                                                            <p>
+                                                                            <p class="nam_bld">
                                                                                 @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
                                                                                     {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
                                                                                 @else
@@ -402,7 +402,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-3 col-lg-3 col-xl-3 col-12 col-sm-12">
+                                            <div class="col-md-12 col-lg-3 col-xl-3 col-12 col-sm-12">
                                                 <div class="finance-timesheet-contact-second-sec sec_box_edit">
                                                     <div class="contact-heading details-heading">
                                                         <div class="contact-heading-text">
@@ -460,7 +460,7 @@
                                     </div>
 
                                     <div class="finance-timesheet-left-sec mt-3">
-                                        <div class="row my_row_gap">
+                                        <div class="row my_row_gap timesheet_reverse">
                                             <div class="col-md-7 col-lg-7 col-xl-7 col-12 col-sm-12">
                                                 <div class="finance-timesheet-contact-first-sec sec_box_edit ">
                                                     <div class="contact-heading details-heading">
@@ -626,7 +626,7 @@
     <script>
         $(document).ready(function() {
             $('#myTable1').DataTable({
-                scrollY: '392px',
+                scrollY: '400px',
                 paging: false,
                 footer: false,
                 info: false,

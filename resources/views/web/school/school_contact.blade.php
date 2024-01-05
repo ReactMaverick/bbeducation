@@ -77,7 +77,7 @@
                                                     <td style="width: 40%">{{ $History->notes_txt }}</td>
                                                     <td>{{ $History->spokeTo_txt }}</td>
                                                     <td>{{ $History->firstName_txt . ' ' . $History->surname_txt }}</td>
-                                                    <td>{{ date('d-m-Y H:i', strtotime($History->contactOn_dtm)) }}</td>
+                                                    <td>{{ date('d M Y, H:i', strtotime($History->contactOn_dtm)) }}</td>
                                                     <td>{{ $History->method_txt }}</td>
                                                     <td>
                                                         @if ($History->callbackOn_dtm == null)

@@ -88,7 +88,7 @@
                                                     <h2>Date of Birth</h2>
                                                 </div>
                                                 <div class="school-name-text">
-                                                    <p>{{ date('d-m-Y', strtotime($teacherDetail->DOB_dte)) }}</p>
+                                                    <p>{{ date('d M Y', strtotime($teacherDetail->DOB_dte)) }}</p>
                                                 </div>
                                             </div>
 
@@ -208,8 +208,8 @@
                                     <div class="school-details-first-sec sec_box_edit">
                                         <div class="details-heading">
                                             <h2>Emergency Contact</h2>
-                                            <a data-toggle="modal" data-target="#editEmergencyContactModal"
-                                                style="cursor: pointer;"><i class="fas fa-edit school-edit-icon"></i></a>
+                                            {{-- <a data-toggle="modal" data-target="#editEmergencyContactModal"
+                                                style="cursor: pointer;"><i class="fas fa-edit school-edit-icon"></i></a> --}}
                                         </div>
 
                                         <div class="about-school-section">

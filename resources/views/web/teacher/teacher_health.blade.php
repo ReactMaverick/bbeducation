@@ -191,7 +191,7 @@
                                                     <h2>Health Decoration Date</h2>
                                                 </div>
                                                 <div class="teacher-prefernce-name-text">
-                                                    <p>{{ $teacherDetail->healthDeclaration_dte != null ? date('d-m-Y', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}
+                                                    <p>{{ $teacherDetail->healthDeclaration_dte != null ? date('d M Y', strtotime($teacherDetail->healthDeclaration_dte)) : '' }}
                                                     </p>
                                                 </div>
                                             </div>

@@ -3569,7 +3569,7 @@ class FinanceController extends Controller
             }
         }
         $result['newFriday'] = $newFriday;
-        $result['formattedDate'] = date('d-m-Y', strtotime($newFriday));
+        $result['formattedDate'] = date('d M Y', strtotime($newFriday));
         $result['html'] = $html;
         return response()->json($result);
     }
@@ -3590,36 +3590,6 @@ class FinanceController extends Controller
             $company_id = $webUserLoginData->company_id;
             $user_id = $webUserLoginData->user_id;
             $thresholdDate = Carbon::now()->subDays(30);
-
-            $Invoices = DB::table('tbl_invoice')
-                ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
-                ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
-                ->LeftJoin('tbl_user as paymentLoggedTbl', 'tbl_invoice.paymentLoggedBy_id', '=', 'paymentLoggedTbl.user_id')
-                ->LeftJoin('tbl_user as senderTbl', 'tbl_invoice.sentMailBy', '=', 'senderTbl.user_id')
-                ->LeftJoin('tbl_description as SchoolPaymentMethod', function ($join) {
-                    $join->on('SchoolPaymentMethod.description_int', '=', 'tbl_invoice.school_paid_method')
-                        ->where(function ($query) {
-                            $query->where('SchoolPaymentMethod.descriptionGroup_int', '=', 42);
-                        });
-                })
-                ->LeftJoin('tbl_description as invPaymentMethod', function ($join) {
-                    $join->on('invPaymentMethod.description_int', '=', 'tbl_invoice.paymentMethod_int')
-                        ->where(function ($query) {
-                            $query->where('invPaymentMethod.descriptionGroup_int', '=', 42);
-                        });
-                })
-                ->select('tbl_invoice.invoice_id', 'tbl_invoice.school_id', 'tbl_invoice.invoiceDate_dte As invoice_dte', 'tbl_school.name_txt As school_txt', 'tbl_invoice.paidOn_dte As paid_dte', 'tbl_invoice.school_paid_dte', DB::raw("CONCAT(paymentLoggedTbl.firstName_txt, ' ', paymentLoggedTbl.surname_txt) As remittee_txt"), 'tbl_invoice.sentOn_dte As sent_dte', DB::raw("CONCAT(senderTbl.firstName_txt, ' ', senderTbl.surname_txt) As sender_txt"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"), 'SchoolPaymentMethod.description_txt as paymentMethod_txt', 'invPaymentMethod.description_txt as invPaymentMethod_txt', 'tbl_invoice.sentMailDate');
-            if ($request->include == '') {
-                $Invoices->where('tbl_invoice.paidOn_dte', NULL);
-                // ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate);
-            }
-            if ($request->method) {
-                $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
-            }
-            $remitInvoices = $Invoices->where('tbl_school.company_id', $company_id)
-                ->groupBy('tbl_invoice.invoice_id')
-                // ->orderBy('tbl_invoice.invoiceDate_dte', 'DESC')
-                ->get();
 
             $paymentMethodList = DB::table('tbl_description')
                 ->select('tbl_description.*')
@@ -3643,9 +3613,144 @@ class FinanceController extends Controller
                 ->where('tbl_school.company_id', $company_id)
                 ->first();
 
-            return view("web.finance.finance_remittance", ['title' => $title, 'headerTitle' => $headerTitle, 'remitInvoices' => $remitInvoices, 'paymentMethodList' => $paymentMethodList, 'invoiceCal' => $invoiceCal, 'invoiceOverdue' => $invoiceOverdue]);
+            return view("web.finance.finance_remittance", ['title' => $title, 'headerTitle' => $headerTitle, 'paymentMethodList' => $paymentMethodList, 'invoiceCal' => $invoiceCal, 'invoiceOverdue' => $invoiceOverdue]);
         } else {
             return redirect()->intended('/');
+        }
+    }
+
+    public function financeRemittancePostAjax(Request $request)
+    {
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+            $user_id = $webUserLoginData->user_id;
+            $thresholdDate = Carbon::now()->subDays(30);
+
+            if ($request->ajax()) {
+                $start = $request->input('start', 0);
+                $length = $request->input('length', 25);
+
+                $Invoices = DB::table('tbl_invoice')
+                    ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
+                    ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
+                    ->LeftJoin('tbl_user as paymentLoggedTbl', 'tbl_invoice.paymentLoggedBy_id', '=', 'paymentLoggedTbl.user_id')
+                    ->LeftJoin('tbl_user as senderTbl', 'tbl_invoice.sentMailBy', '=', 'senderTbl.user_id')
+                    ->LeftJoin('tbl_description as SchoolPaymentMethod', function ($join) {
+                        $join->on('SchoolPaymentMethod.description_int', '=', 'tbl_invoice.school_paid_method')
+                            ->where(function ($query) {
+                                $query->where('SchoolPaymentMethod.descriptionGroup_int', '=', 42);
+                            });
+                    })
+                    ->LeftJoin('tbl_description as invPaymentMethod', function ($join) {
+                        $join->on('invPaymentMethod.description_int', '=', 'tbl_invoice.paymentMethod_int')
+                            ->where(function ($query) {
+                                $query->where('invPaymentMethod.descriptionGroup_int', '=', 42);
+                            });
+                    })
+                    ->select('tbl_invoice.invoice_id', 'tbl_invoice.school_id', 'tbl_invoice.invoiceDate_dte As invoice_dte', 'tbl_school.name_txt As school_txt', 'tbl_invoice.paidOn_dte As paid_dte', 'tbl_invoice.school_paid_dte', DB::raw("CONCAT(paymentLoggedTbl.firstName_txt, ' ', paymentLoggedTbl.surname_txt) As remittee_txt"), 'tbl_invoice.sentOn_dte As sent_dte', DB::raw("CONCAT(senderTbl.firstName_txt, ' ', senderTbl.surname_txt) As sender_txt"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec), 2) As net_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As vat_dec"), DB::raw("ROUND(SUM(tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec + tbl_invoiceItem.charge_dec * tbl_invoiceItem.numItems_dec * vatRate_dec / 100), 2) As gross_dec"), 'SchoolPaymentMethod.description_txt as paymentMethod_txt', 'invPaymentMethod.description_txt as invPaymentMethod_txt', 'tbl_invoice.sentMailDate');
+                if ($request->include == '') {
+                    $Invoices->where('tbl_invoice.paidOn_dte', NULL);
+                    // ->where('tbl_invoice.invoiceDate_dte', '<', $thresholdDate);
+                }
+                if ($request->method) {
+                    $Invoices->where('tbl_invoice.paymentMethod_int', $request->method);
+                }
+
+                // Sorting Logic
+                if ($request->has('order') && count($request->input('order'))) {
+                    $orderColumnIndex = $request->input('order')[0]['column'];
+                    $orderDirection = $request->input('order')[0]['dir'];
+                    $orderColumnName = $request->input('columns')[$orderColumnIndex]['data'];
+
+                    // $Invoices->orderBy($orderColumnName, $orderDirection);
+                    switch ($orderColumnName) {
+                        case 'payment_status':
+                            $Invoices->orderBy('tbl_invoice.school_paid_dte', $orderDirection);
+                            break;
+                        case 'status':
+                            // Use the correct column name for 'status'
+                            $Invoices->orderBy('tbl_invoice.status', $orderDirection);
+                            break;
+                            // Add more cases as needed for other aliases or expressions
+                        default:
+                            $Invoices->orderBy($orderColumnName, $orderDirection);
+                            break;
+                    }
+                }
+
+                if ($request->has('search') && !empty($request->input('search')['value'])) {
+                    $searchValue = $request->input('search')['value'];
+
+                    // Add your specific search conditions here
+                    $Invoices->where(function ($query) use ($searchValue) {
+                        $query->where('tbl_invoice.invoice_id', 'LIKE', "%$searchValue%")
+                            ->orWhere('tbl_school.name_txt', 'LIKE', "%$searchValue%")
+                            ->orWhere('tbl_invoice.sentOn_dte', 'LIKE', "%$searchValue%");
+                        // Add more conditions as needed
+                    });
+                }
+
+                // Fetch data based on pagination
+                $remitInvoices = $Invoices->where('tbl_school.company_id', $company_id)
+                    ->groupBy('tbl_invoice.invoice_id')
+                    ->skip($start)
+                    ->take($length)
+                    ->get();
+
+                // Transform the data as needed
+                $transformedData = $remitInvoices->map(function ($invoice) {
+                    return [
+                        'invoice_id' => $invoice->invoice_id,
+                        'invoice_dte' => $invoice->invoice_dte ? date('d M Y', strtotime($invoice->invoice_dte)) : '',
+                        'school_txt' => $invoice->school_txt,
+                        'net_dec' => $invoice->net_dec,
+                        'vat_dec' => $invoice->vat_dec,
+                        'gross_dec' => $invoice->gross_dec,
+                        'paid_dte' => $invoice->paid_dte ? date('d M Y', strtotime($invoice->paid_dte)) : '',
+                        'invPaymentMethod_txt' => $invoice->invPaymentMethod_txt,
+                        'remittee_txt' => $invoice->remittee_txt,
+                        'sentMailDate' => $invoice->sentMailDate ? date('d M Y', strtotime($invoice->sentMailDate)) : '',
+                        'sender_txt' => $invoice->sender_txt,
+                        'payment_status' => $invoice->school_paid_dte ? 'Paid' . ($invoice->paymentMethod_txt ? ' (by ' . $invoice->paymentMethod_txt . ')' : '') : 'Due', // Adjust as needed
+                        'school_paid_dte' => $invoice->school_paid_dte ? date('d M Y', strtotime($invoice->school_paid_dte)) : '',
+                        'status' => $invoice->paid_dte ? 'Paid' : (date('Y-m-d', strtotime($invoice->invoice_dte . ' + 30 days')) <= date('Y-m-d') ? 'Overdue' : 'Due'),
+                    ];
+                });
+
+                $totalInvoices = DB::table('tbl_invoice')
+                    ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
+                    ->select('tbl_invoice.invoice_id');
+                if ($request->include == '') {
+                    $totalInvoices->where('tbl_invoice.paidOn_dte', NULL);
+                }
+                if ($request->method) {
+                    $totalInvoices->where('tbl_invoice.paymentMethod_int', $request->method);
+                }
+                // Apply search conditions to total records as well
+                if ($request->has('search') && !empty($request->input('search')['value'])) {
+                    $searchValue = $request->input('search')['value'];
+                    $totalInvoices->where(function ($query) use ($searchValue) {
+                        $query->where('tbl_invoice.invoice_id', 'LIKE', "%$searchValue%")
+                            ->orWhere('tbl_school.name_txt', 'LIKE', "%$searchValue%")
+                            ->orWhere('tbl_invoice.sentOn_dte', 'LIKE', "%$searchValue%");
+                        // Add more conditions as needed
+                    });
+                }
+
+                // Fetch data based on pagination
+                $totalRecords = $totalInvoices->where('tbl_school.company_id', $company_id)
+                    ->count();
+                $filteredRecords = $totalRecords;
+
+                return response()->json([
+                    'data' => $transformedData,
+                    'recordsTotal' => $totalRecords,
+                    'recordsFiltered' => $filteredRecords,
+                ]);
+            }
+        } else {
+            return false;
         }
     }
 
@@ -3758,7 +3863,7 @@ class FinanceController extends Controller
                 $invoicesList = DB::table('tbl_invoice')
                     ->LeftJoin('tbl_invoiceItem', 'tbl_invoice.invoice_id', '=', 'tbl_invoiceItem.invoice_id')
                     ->LeftJoin('tbl_school', 'tbl_invoice.school_id', '=', 'tbl_school.school_id')
-                    ->select('tbl_invoice.invoice_id AS InvoiceNo', 'name_txt AS Customer', DB::raw("DATE_FORMAT(invoiceDate_dte, '%d/%m/%Y') AS InvoiceDate"), DB::raw("DATE_FORMAT(DATE_ADD(invoiceDate_dte, INTERVAL 30 DAY), '%d/%m/%Y') AS DueDate"), DB::raw("'Net 30' AS Terms"), DB::raw("'' AS Memo"), DB::raw("'Teachers' AS prodOrService"), DB::raw("'Teachers' AS ItemDescription"), DB::raw("'' AS ItemQuantity"), DB::raw("'' AS ItemRate"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(9,2)) AS ItemAmount"), DB::raw("'20%' AS ItemTaxCode"), DB::raw("CAST(SUM(numItems_dec * charge_dec) * .2 AS DECIMAL(9,2)) AS ItemTaxAmount"), DB::raw("CAST((SUM(numItems_dec * charge_dec)+(SUM(numItems_dec * charge_dec) * .2)) AS DECIMAL(9,2)) AS GrossAmount"))
+                    ->select('tbl_invoice.invoice_id AS InvoiceNo', 'name_txt AS Customer', DB::raw("DATE_FORMAT(invoiceDate_dte, '%d/%m/%Y') AS InvoiceDate"), DB::raw("DATE_FORMAT(DATE_ADD(invoiceDate_dte, INTERVAL 30 DAY), '%d/%m/%Y') AS DueDate"), DB::raw("'Net 30' AS Terms"), DB::raw("'' AS Memo"), DB::raw("'Teachers' AS prodOrService"), DB::raw("'Teachers' AS ItemDescription"), DB::raw("'' AS ItemQuantity"), DB::raw("'' AS ItemRate"), DB::raw("CAST(SUM(numItems_dec * charge_dec) AS DECIMAL(9,2)) AS ItemAmount"), DB::raw("'20.0% S' AS ItemTaxCode"), DB::raw("CAST(SUM(numItems_dec * charge_dec) * .2 AS DECIMAL(9,2)) AS ItemTaxAmount"), DB::raw("CAST((SUM(numItems_dec * charge_dec)+(SUM(numItems_dec * charge_dec) * .2)) AS DECIMAL(9,2)) AS GrossAmount"))
                     ->whereBetween('tbl_invoice.invoiceDate_dte', [$from, $to])
                     ->groupBy('tbl_invoice.invoice_id')
                     ->get();

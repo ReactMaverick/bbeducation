@@ -40,6 +40,12 @@ class HomeController extends Controller
                 ->LeftJoin('tbl_teacher', 'tbl_teacher.teacher_id', '=', 'tbl_asn.teacher_id')
                 ->LeftJoin('tbl_teacherdbs', 'tbl_teacherdbs.teacher_id', '=', 'tbl_asn.teacher_id')
                 ->LeftJoin('tbl_school', 'tbl_school.school_id', '=', 'tbl_asn.school_id')
+                ->leftJoin(
+                    DB::raw('(SELECT asn_id, SUM(tbl_asnItem.dayPercent_dec) as daysOfWeek FROM tbl_asnItem GROUP BY tbl_asnItem.asn_id) AS days_asnItems'),
+                    function ($join) {
+                        $join->on('tbl_asn.asn_id', '=', 'days_asnItems.asn_id');
+                    }
+                )
                 ->LeftJoin('tbl_description as assStatusDescription', function ($join) {
                     $join->on('assStatusDescription.description_int', '=', 'tbl_asn.status_int')
                         ->where(function ($query) {
@@ -52,7 +58,7 @@ class HomeController extends Controller
                             $query->where('teacherProff.descriptionGroup_int', '=', 7);
                         });
                 })
-                ->select('tbl_asn.*', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'), DB::raw('SUM((tbl_asnItem.charge_dec - tbl_asnItem.cost_dec) * dayPercent_dec) AS predictedGP'), DB::raw('COUNT(DISTINCT tbl_asn.teacher_id) AS teachersWorking'), DB::raw('COUNT(DISTINCT tbl_asn.school_id) AS schoolsUsing'), 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession')
+                ->select('tbl_asn.*', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'days_asnItems.daysOfWeek as daysThisWeek', DB::raw('SUM((tbl_asnItem.charge_dec - tbl_asnItem.cost_dec) * dayPercent_dec) AS predictedGP'), DB::raw('COUNT(DISTINCT tbl_asn.teacher_id) AS teachersWorking'), DB::raw('COUNT(DISTINCT tbl_asn.school_id) AS schoolsUsing'), 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession')
                 // ->where('tbl_asn.status_int', 2)
                 ->where('tbl_asn.company_id', $company_id)
                 // ->where('tbl_teacher.is_delete', 0)

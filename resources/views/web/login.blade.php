@@ -17,86 +17,116 @@
     <link rel="stylesheet" href="{{ asset('admin_lte/dist/css/adminlte.min.css') }}">
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition">
     <div class="skd_loder_box" id="fullLoader">
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
     </div>
-    <div class="login-box">
-        <!-- /.login-logo -->
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="" style="width: 60%;">
+    <div class="main_box_login">
+        <div class="bgimg" style="background-image: url({{ asset('web/images/slider-left-dec.png') }});"></div>
+
+        <div class="loginnavbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a href="{{ url('/') }}" class="brand">
+                        <img class="img-fluid top_logo" src="{{ asset('web/images/logo.png') }}" alt="">
+                    </a>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="login-box-msg">ADMIN LOGIN</p>
+        </div>
+        <div class="bgimg1" style="background-image: url({{ asset('web/images/slider-dec.png') }});"></div>
+        <div class="login-box">
 
-                @if (count($errors) > 0)
-                    @foreach ($errors->all() as $error)
-                        <div class="alert alert-danger" role="alert">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">Error:</span>
-                            {{ $error }}
-                        </div>
-                    @endforeach
-                @endif
+            <!-- /.login-logo -->
+            <div class="card card-outline card-primary new_log_card">
+                {{-- <div class="card-header text-center">
+                    <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="" style="width: 60%;">
+                </div> --}}
+                <div class="card_box">
+                    <div class="card-body">
+                        <p class="login-box-msg">ADMIN LOGIN</p>
 
-                @if (Session::has('loginError'))
-                    <div class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        <span class="sr-only">Error:</span>
-                        {!! session('loginError') !!}
-                    </div>
-                @endif
+                        @if (count($errors) > 0)
+                            @foreach ($errors->all() as $error)
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        @endif
 
-                <form method="POST" action="{{ url('/adminLogin') }}" class="form-validate">
-                    @csrf
-                    <div class="input-group form-group mb-3">
-                        <input type="text"
-                            class="form-control field-validate @error('user_name') is-invalid @enderror" id="user_name"
-                            name="user_name" value="{{ old('user_name') }}" autocomplete="user_name" autofocus
-                            placeholder="Username">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
+                        @if (Session::has('loginError'))
+                            <div class="alert alert-danger" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                <span class="sr-only">Error:</span>
+                                {!! session('loginError') !!}
                             </div>
-                        </div>
-                    </div>
-                    <div class="input-group form-group mb-3">
-                        <input type="password"
-                            class="form-control field-validate @error('password') is-invalid @enderror" id="password"
-                            name="password" autocomplete="current-password" placeholder="Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            {{-- <button type="button" id="loginResetBtn" class="btn btn-primary btn-block">Reset</button> --}}
-                        </div>
-                        <div class="col-4"></div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <a href="{{url('/adminForgetPassword')}}">Forgot Password ?</a>
-                </form>
+                        @endif
 
-                {{-- <p class="mb-1">
+                        <form method="POST" action="{{ url('/adminLogin') }}" class="form-validate">
+                            @csrf
+                            <div class="input-group form-group mb-3">
+                                <input type="text"
+                                    class="form-control field-validate @error('user_name') is-invalid @enderror"
+                                    id="user_name" name="user_name" value="{{ old('user_name') }}"
+                                    autocomplete="user_name" autofocus placeholder="Username">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-envelope"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group form-group mb-3">
+                                <div class="input_icon">
+                                    <input type="password"
+                                        class="form-control field-validate @error('password') is-invalid @enderror"
+                                        id="password" name="password" autocomplete="current-password"
+                                        placeholder="Password">
+                                    <span toggle="#password" class="far fa-eye field-icon toggle-password"></span>
+                                </div>
+
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    {{-- <button type="button" id="loginResetBtn" class="btn btn-primary btn-block">Reset</button> --}}
+                                    <a href="{{ url('/adminForgetPassword') }}">Forgot Password ?</a>
+                                </div>
+
+                                <!-- /.col -->
+                                <div class="col-6">
+                                    <button type="submit" class="btn btn-primary btn-block mrg_ato">Sign In</button>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+
+                        </form>
+
+                        {{-- <p class="mb-1">
                     <a href="forgot-password.html">I forgot my password</a>
                 </p> --}}
+                    </div>
+                </div>
+
+                <!-- /.card-body -->
             </div>
-            <!-- /.card-body -->
+            <!-- /.card -->
         </div>
-        <!-- /.card -->
+        <!-- /.login-box -->
+
+        <div class="container-fluid log_footer">
+            <span>© {{ date('Y') }} All Rights Reserved. <a href="https://www.reddragonitsolution.com/"
+                    target="_blank">Red Dragon IT Solution Ltd</a></span>
+        </div>
     </div>
-    <!-- /.login-box -->
+
 
     <!-- jQuery -->
     <script src="{{ asset('admin_lte/plugins/jquery/jquery.min.js') }}"></script>
@@ -115,6 +145,18 @@
 
         $(document).on('click', '#loginBtn', function() {
             $('#fullLoader').show();
+        });
+
+        $(document).on('click', '.toggle-password', function() {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+                input.attr("autocomplete", "off");
+            } else {
+                input.attr("type", "password");
+                input.attr("autocomplete", "current-password");
+            }
         });
     </script>
 </body>

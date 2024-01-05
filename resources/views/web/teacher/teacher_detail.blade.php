@@ -99,7 +99,7 @@
                                                     <h2>Date of Birth</h2>
                                                 </div>
                                                 <div class="school-name-text">
-                                                    <p>{{ date('d-m-Y', strtotime($teacherDetail->DOB_dte)) }}</p>
+                                                    <p>{{ date('d M Y', strtotime($teacherDetail->DOB_dte)) }}</p>
                                                 </div>
                                             </div>
 

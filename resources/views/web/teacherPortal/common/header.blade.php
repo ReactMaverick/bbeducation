@@ -12,7 +12,9 @@
 
         <li class="user_log"><a class="log_item" href="#">
                 <div class="image elevation-2 img-circle">
-                    @if ($teacherDetail->file_location != null || $teacherDetail->file_location != '')
+                    @if (
+                        ($teacherDetail->file_location != null || $teacherDetail->file_location != '') &&
+                            file_exists(public_path($teacherDetail->file_location)))
                         <img src="{{ asset($teacherDetail->file_location) }}" class="img-fluid" alt="">
                     @else
                         <img src="{{ asset('web/images/user-img.png') }}" class="img-fluid" alt="">

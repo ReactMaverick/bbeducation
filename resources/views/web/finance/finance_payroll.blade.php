@@ -82,7 +82,7 @@
                                                                 @endif
                                                             </td>
                                                             <td>{{ $payroll->name_txt }}</td>
-                                                            <td>{{ date('d-m-Y', strtotime($payroll->asnDate_dte)) }}</td>
+                                                            <td>{{ date('d M Y', strtotime($payroll->asnDate_dte)) }}</td>
                                                             <td>{{ $payroll->dayPart_dec }}</td>
                                                             <td>{{ $payroll->pay_dec }}</td>
                                                         </tr>
@@ -119,7 +119,7 @@
                                                 <a style="cursor: pointer;" onclick="clickDate('prev')" class="icon_all">
                                                     <i class="fas fa-caret-left"></i>
                                                 </a>
-                                                <span id="dateSpan">{{ date('d-m-Y', strtotime($friday)) }}</span>
+                                                <span id="dateSpan">{{ date('d M Y', strtotime($friday)) }}</span>
                                                 <a style="cursor: pointer;" onclick="clickDate('next')" class="icon_all">
                                                     <i class="fas fa-caret-right"></i>
                                                 </a>
@@ -185,7 +185,7 @@
                                                         <tr class="school-detail-table-data editPayrollRunRow"
                                                             id="editPayrollRunRow{{ $key3 + 1 }}"
                                                             onclick="payrollRowRun('{{ $key3 + 1 }}','{{ $payrollRun->payDate_dte }}')">
-                                                            <td>{{ date('d-m-Y', strtotime($payrollRun->payDate_dte)) }}
+                                                            <td>{{ date('d M Y', strtotime($payrollRun->payDate_dte)) }}
                                                             </td>
                                                             <td>{{ $payrollRun->teachers_int }}</td>
                                                             <td>{{ $payrollRun->grossPay_dec }}</td>

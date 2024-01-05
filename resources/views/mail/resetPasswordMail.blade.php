@@ -22,15 +22,15 @@
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
-                            <td style="padding: 10px 20px;">
+                            <td style="padding: 10px 20px;width:20%;text-align: left;">
                                 <img src="{{ $mailData['companyDetail'] ? asset($mailData['companyDetail']->company_logo) : '' }}"
-                                    style="width: 100px;" />
+                                    style="width: 80px;" />
                             </td>
-                            <td style="padding: 10px 20px; text-align: right;">
-                                <p style="color: #2c2b2b; font-size: 25px;">
+                            <td style="padding: 10px 20px;width:45%; text-align: center;">
+                                <p style="color: #2c2b2b; font-size: 20px;">
                                     {{ $mailData['companyDetail'] ? $mailData['companyDetail']->company_name : '' }}</p>
                             </td>
-                            <td style="padding: 10px 20px; text-align: right;">
+                            <td style="padding: 10px 20px;width:33.33%; text-align: right;">
                                 <p style="color: #888; font-size: 25px;">Acknowledgement Mail</p>
                             </td>
                         </tr>
@@ -67,10 +67,12 @@
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
                     <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                         MONITORED.*</h3>
-                    <p>For any queries, please email <a
-                            href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}"
-                            target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a>
-                    </p>
+                    @if ($mailData['companyDetail'] && $mailData['companyDetail']->compliance_mail)
+                        <p>For any queries, please email <a
+                                href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}"
+                                target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a>
+                        </p>
+                    @endif
                 </td>
             </tr>
             <tr>

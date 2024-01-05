@@ -66,7 +66,7 @@
                                                     <td style="width: 40%">{{ $teacherContact->notes_txt }}</td>
                                                     <td>{{ $teacherContact->firstName_txt . ' ' . $teacherContact->surname_txt }}
                                                     </td>
-                                                    <td>{{ date('d-m-Y H:i', strtotime($teacherContact->contactOn_dtm)) }}
+                                                    <td>{{ date('d M Y, H:i', strtotime($teacherContact->contactOn_dtm)) }}
                                                     </td>
                                                     <td>{{ $teacherContact->method_txt }}</td>
                                                     <td>

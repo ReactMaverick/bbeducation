@@ -2853,15 +2853,18 @@ table td {
     border-radius: 5%;
     border: 1px solid #9dc3e6;
 }
+
 .calendar_first_sec {
     width: 25%;
     border-right: 1px solid #e2e2e2;
 }
+
 .calendar_first_sec img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
+
 .calendar_right_sec {
     display: flex;
     flex-direction: column;
@@ -4171,13 +4174,14 @@ td.fc-day-top {
 /* ==========RESET PASSWORD=========== */
 
 .reset-password-section {
-    background-image: linear-gradient(to right, #40A0ED, #A5E4FF );
+    background-image: linear-gradient(to right, #40A0ED, #A5E4FF);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
+
 .reset-password-footer-sec {
     position: fixed;
     bottom: 0;
@@ -4186,15 +4190,18 @@ td.fc-day-top {
     display: flex;
     justify-content: center;
 }
+
 .reset-password-footer-sec span {
     font-size: 15px;
     font-weight: 200;
     color: #fff;
     margin-bottom: 0;
 }
+
 .reset-password-footer-sec a {
     color: #A5E4FF;
 }
+
 .reset-password-form-outer {
     width: 400px;
     display: flex;
@@ -4205,23 +4212,27 @@ td.fc-day-top {
     border-radius: 10px;
     box-shadow: rgba(99, 99, 99, 1) 0px 2px 8px 0px;
 }
+
 .reset-password-form-outer img {
     width: 60px;
     height: 70px;
     object-fit: cover;
 }
+
 .reset-password-form-outer h1 {
     font-size: 20px;
     font-weight: bold;
     color: #40A0ED;
     margin: 10px 0 5px 0;
 }
+
 .reset-password-form-outer span {
     font-size: 17px;
     font-weight: 500;
     color: #3a3a3a;
     margin-bottom: 10px;
 }
+
 .reset-password-form-group {
     display: flex;
     align-items: center;
@@ -4230,21 +4241,26 @@ td.fc-day-top {
     border-radius: 0.25rem;
     padding: 0.375rem 0.75rem;
 }
+
 .reset-password-form-group .form-control {
-    border: none ;
+    border: none;
     border-radius: 0;
     box-shadow: none;
-    padding: 0 10px 0 0;;
+    padding: 0 10px 0 0;
+    ;
     height: 28px;
 }
+
 .reset-password-form-group i {
     font-size: 15px;
     color: #40A0ED;
 }
+
 .reset-password-form-sec {
     width: 100%;
     margin-top: 10px;
 }
+
 .reset-password-form-sec input[type=submit] {
     background-color: #40A0ED;
     border: 2px solid #fff;
@@ -4254,6 +4270,7 @@ td.fc-day-top {
     font-size: 15px;
     float: right;
 }
+
 .reset-password-form-sec input[type=button] {
     background-color: #40A0ED;
     border: 2px solid #fff;
@@ -4263,6 +4280,7 @@ td.fc-day-top {
     font-size: 15px;
     float: right;
 }
+
 .calendar-outer-sec {
     display: flex;
     flex-direction: column;
@@ -4290,65 +4308,90 @@ td.fc-day-top {
 
 /* loader */
 #fullLoader {
-  background: #1c1b1b;
-  color: #666666;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  z-index: 99999;
-  top: 0;
-  left: 0;
-  float: left;
-  text-align: center;
-  /* padding-top: 25%; */
-  opacity: .8;
+    background: #1c1b1b;
+    color: #666666;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    float: left;
+    text-align: center;
+    /* padding-top: 25%; */
+    opacity: .8;
 }
 
 #fullLoader .loadingDiv {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  bottom: 50%;
-  right: 50%;
-  z-index: 99999;
-  width: 60px;
-  height: 60px;
-  margin: -30px;
-  border: 16px solid #6e6868;
-  border-radius: 50%;
-  border-top: 16px solid #00538a;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    bottom: 50%;
+    right: 50%;
+    z-index: 99999;
+    width: 60px;
+    height: 60px;
+    margin: -30px;
+    border: 16px solid #6e6868;
+    border-radius: 50%;
+    border-top: 16px solid #00538a;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Add animation to "page content" */
 .animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
 }
 
 @-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 } 
-  to { bottom:0px; opacity:1 }
+    from {
+        bottom: -100px;
+        opacity: 0
+    }
+
+    to {
+        bottom: 0px;
+        opacity: 1
+    }
 }
 
-@keyframes animatebottom { 
-  from{ bottom:-100px; opacity:0 } 
-  to{ bottom:0; opacity:1 }
+@keyframes animatebottom {
+    from {
+        bottom: -100px;
+        opacity: 0
+    }
+
+    to {
+        bottom: 0;
+        opacity: 1
+    }
 }
+
 /* loader */
 
 
@@ -4357,19 +4400,23 @@ td.fc-day-top {
     align-items: center;
     justify-content: space-between;
 }
+
 .block_booking_inr_div {
-    width:14%;
+    width: 14%;
     margin-bottom: 10px;
 }
+
 .date_calendar_top_sec {
     background-color: #e2e2e2;
     text-align: center;
     padding: 3px;
 }
+
 .date_calendar_top_sec span {
     font-size: 14px;
     color: #000;
 }
+
 .date_calendar_bottom_sec {
     background-color: #afabab;
     min-height: 80px;
@@ -4377,6 +4424,7 @@ td.fc-day-top {
     margin-top: 5px;
     cursor: pointer;
 }
+
 .date_calendar_bottom_sec_active {
     background-color: #40A0ED;
 }
@@ -4386,10 +4434,12 @@ td.fc-day-top {
 .form-check.mode-check input {
     display: none;
 }
+
 .mode_text_outer {
     width: 100%;
     display: block;
 }
+
 .mode_check_inner .add_days_btn {
     background-color: #91d250;
     text-align: center;
@@ -4401,6 +4451,7 @@ td.fc-day-top {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .mode_check_inner .edit_days_btn {
     background-color: #ee7e34;
     text-align: center;
@@ -4412,6 +4463,7 @@ td.fc-day-top {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .mode_check_inner .unblock_days_btn {
     background-color: #fc0000;
     text-align: center;
@@ -4423,11 +4475,13 @@ td.fc-day-top {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .btn_sec_outer {
     display: block;
     width: 100%;
     padding-left: 0;
 }
+
 .button-section .block_days_btn {
     background-color: #00aff0;
     text-align: center;
@@ -4438,6 +4492,7 @@ td.fc-day-top {
     margin-bottom: 28px;
     font-weight: 500;
 }
+
 .button-section .candidate_vetting_days_btn {
     background-color: #712faa;
     text-align: center;
@@ -4448,6 +4503,7 @@ td.fc-day-top {
     font-weight: 500;
     margin-bottom: 28px;
 }
+
 .button-section .check_save_btn {
     background-color: #ffb90e;
     text-align: center;
@@ -4458,20 +4514,45 @@ td.fc-day-top {
     margin-bottom: 28px;
     font-weight: 500;
 }
+
 .checkmark_img {
     width: 15px;
     height: 15px;
     margin-left: 10px;
 }
+
 .check_btn_active {
     border: 4px solid #40A0ED;
 }
+
 .reference_form_label {
     font-size: 15px !important;
     color: #3a3a3a;
     font-weight: 600 !important;
     margin-bottom: 5px;
 }
+
 .reference_form_outer {
     width: 60% !important;
+}
+
+.select_company {
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+}
+
+.new_flx {
+    display: grid;
+    gap: 15px;
+}
+
+.new_flx .select_company .form-control {
+    width: 40px;
+    height: 20px;
+}
+
+.new_flx .select_company label {
+    margin: 0;
+
 }

@@ -42,29 +42,36 @@ class LoginController extends Controller
             return redirect('/')->withErrors($validator)->withInput();
         } else {
             $admin = DB::table('tbl_user')
-                ->where('user_name', $request->user_name)
-                ->where('admin_type', 1)
-                ->where('is_delete', 0)
-                ->where('isActive', 1)
-                ->first();
-
-            if ($admin) {
-                if (Hash::check($request->password, $admin->password)) {
+                ->leftJoin('company', 'company.company_id', '=', 'tbl_user.company_id')
+                ->select('tbl_user.*', 'company.company_name', 'company.company_logo')
+                ->where('tbl_user.user_name', $request->user_name)
+                ->where('tbl_user.admin_type', 1)
+                ->where('tbl_user.is_delete', 0)
+                ->where('tbl_user.isActive', 1)
+                ->get();
+            if (count($admin) > 1) {
+                $mLogData['user_name'] = $request->user_name;
+                $mLogData['password'] = $request->password;
+                Session::put('multiLogData', $mLogData);
+                Session::put('multiComData', $admin);
+                return redirect('/admin-multi-company');
+            } else if (count($admin) == 1) {
+                if (Hash::check($request->password, $admin[0]->password)) {
                     $otp = rand(100000, 999999);
                     $credential['user_name'] = $request->user_name;
                     $credential['password'] = $request->password;
-                    $credential['id'] = $admin->user_id;
+                    $credential['id'] = $admin[0]->user_id;
                     Session::put('credentials', $credential);
                     DB::table('tbl_user')
-                        ->where('user_id', $admin->user_id)
+                        ->where('user_id', $admin[0]->user_id)
                         ->where('admin_type', 1)
                         ->update(['login_otp' => $otp]);
                     $administrators = DB::table('tbl_user')
-                        ->where('user_id', $admin->user_id)
+                        ->where('user_id', $admin[0]->user_id)
                         ->first();
                     $companyDetail = DB::table('company')
                         ->select('company.*')
-                        ->where('company.company_id', $admin->company_id)
+                        ->where('company.company_id', $admin[0]->company_id)
                         ->first();
                     if (isset($administrators)) {
                         $mailData['companyDetail'] = $companyDetail;
@@ -74,18 +81,17 @@ class LoginController extends Controller
                         $mailData['login_otp'] = $administrators->login_otp;
                         $myVar = new AlertController();
                         if ($myVar->adminOtpMail($mailData)) {
-                            return redirect('/adminOtp')->with('success', 'And OTP has been sent to your registered email address.');
+                            return redirect('/adminOtp')->with('admSuccess', 'An OTP has been sent to your registered email address.');
                         } else {
                             return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Something went wrong !");
                         }
                     }
                 } else {
-                    return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
+                    return redirect()->back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
                 }
             } else {
-                return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
+                return redirect()->back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Username or password is incorrect");
             }
-
         }
     }
 
@@ -97,12 +103,12 @@ class LoginController extends Controller
                 'otp' => $request->otp,
             ),
             array(
-                'otp' => 'required|size:6',
+                'otp' => 'required',
             )
         );
         //check validation
         if ($validator->fails()) {
-            return redirect('/')->withErrors($validator)->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         } else {
             if (Session::has('credentials')) {
                 $credentials = Session::get('credentials');
@@ -123,17 +129,82 @@ class LoginController extends Controller
                             ->where('tbl_user.user_id', $admin->user_id)
                             ->get();
                         Session::put('webUserLoginData', $administrators[0]);
+                        Session::forget(['multiLogData']);
+                        Session::forget(['multiComData']);
                         // dd($admin);
                         return redirect()->intended('/dashboard')->with('administrators', $administrators[0]);
                     } else {
-                        return back()->withInput($request->only('user_name', 'remember'))->with('error', "Incorrect OTP");
+                        return redirect()->back()->withInput($request->only('user_name', 'remember'))->with('error', "Incorrect OTP");
                     }
                 } else {
-                    return back()->withInput($request->only('user_name', 'remember'))->with('error', "Incorrect OTP");
+                    return redirect()->back()->withInput($request->only('user_name', 'remember'))->with('error', "Incorrect OTP");
                 }
             } else {
                 return redirect('/');
             }
+        }
+    }
+
+    public function adminMultiCompany()
+    {
+        $multiComData = Session::get('multiComData');
+        $multiLogData = Session::get('multiLogData');
+        if ($multiComData && $multiLogData) {
+            return view('auth.admin_multi_com', ['multiComData' => $multiComData]);
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function processMultiCom(Request $request)
+    {
+        $multiComData = Session::get('multiComData');
+        $multiLogData = Session::get('multiLogData');
+        $admin = DB::table('tbl_user')
+            ->leftJoin('company', 'company.company_id', '=', 'tbl_user.company_id')
+            ->select('tbl_user.*', 'company.company_name', 'company.company_logo')
+            ->where('tbl_user.user_name', $multiLogData['user_name'])
+            ->where('tbl_user.company_id', $request->company_id)
+            ->where('tbl_user.admin_type', 1)
+            ->where('tbl_user.is_delete', 0)
+            ->where('tbl_user.isActive', 1)
+            ->first();
+        if ($admin) {
+            if (Hash::check($multiLogData['password'], $admin->password)) {
+                $otp = rand(100000, 999999);
+                $credential['user_name'] = $multiLogData['user_name'];
+                $credential['password'] = $multiLogData['password'];
+                $credential['id'] = $admin->user_id;
+                Session::put('credentials', $credential);
+                DB::table('tbl_user')
+                    ->where('user_id', $admin->user_id)
+                    ->where('admin_type', 1)
+                    ->update(['login_otp' => $otp]);
+                $administrators = DB::table('tbl_user')
+                    ->where('user_id', $admin->user_id)
+                    ->first();
+                $companyDetail = DB::table('company')
+                    ->select('company.*')
+                    ->where('company.company_id', $admin->company_id)
+                    ->first();
+                if (isset($administrators)) {
+                    $mailData['companyDetail'] = $companyDetail;
+                    $mailData['firstName_txt'] = $administrators->firstName_txt;
+                    $mailData['surname_txt'] = $administrators->surname_txt;
+                    $mailData['mail'] = $administrators->user_name;
+                    $mailData['login_otp'] = $administrators->login_otp;
+                    $myVar = new AlertController();
+                    if ($myVar->adminOtpMail($mailData)) {
+                        return redirect('/adminOtp')->with('admSuccess', 'An OTP has been sent to your registered email address.');
+                    } else {
+                        return redirect()->back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Something went wrong !");
+                    }
+                }
+            } else {
+                return redirect('/')->withInput($request->only('user_name', 'remember'))->with('loginError', "Password is incorrect");
+            }
+        } else {
+            return redirect('/')->with('loginError', "Something went wrong please try again");
         }
     }
 
@@ -208,7 +279,7 @@ class LoginController extends Controller
                         $mailData['login_otp'] = $administrators->login_otp;
                         $myVar = new AlertController();
                         if ($myVar->superadminOtpMail($mailData)) {
-                            return redirect('/otpVerification')->with('success', 'And OTP has been sent to your registered email address.');
+                            return redirect('/otpVerification')->with('sAdminSuccess', 'An OTP has been sent to your registered email address.');
                         } else {
                             return back()->withInput($request->only('user_name', 'remember'))->with('loginError', "Something went wrong !");
                         }
@@ -299,7 +370,7 @@ class LoginController extends Controller
             )
         );
         if ($validator->fails()) {
-            return redirect()->back()->with('fp_error', $validator);
+            return redirect()->back()->withErrors($validator)->withInput();
         } else {
             $email = $request->email;
             $userExist = DB::table('tbl_user')
@@ -334,11 +405,10 @@ class LoginController extends Controller
 
                     return redirect('/admin-Forget-Password-otp')->with('otp_success', "An OTP has been sent to your mail address.");
                 } else {
-                    return redirect()->back()->with('fp_error', "Some thing went wrong please try again !");
+                    return redirect()->back()->with('loginError', "Some thing went wrong please try again !");
                 }
-
             } else {
-                return redirect()->back()->with('fp_error', "Email address does not exist.");
+                return redirect()->back()->with('loginError', "Email address does not exist.");
             }
         }
     }
@@ -389,7 +459,6 @@ class LoginController extends Controller
         $title = array('pageTitle' => "Forgot Password Otp");
 
         return view("auth.admin_forget_password_generate", ['title' => $title]);
-
     }
 
     public function adminfPasswordUpdate(Request $request)
@@ -466,7 +535,6 @@ class LoginController extends Controller
                 } else {
                     return redirect()->back()->with('fp_error', "Something went wrong");
                 }
-
             } else {
                 return redirect()->back()->with('fp_error', "Email address does not exist.");
             }
@@ -545,5 +613,4 @@ class LoginController extends Controller
             return redirect('/system-login')->with('success', "Password has been updated.");
         }
     }
-
 }

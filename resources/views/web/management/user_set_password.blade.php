@@ -1,21 +1,20 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('web/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('web/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('web/css/responsive.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap"
-        rel="stylesheet">
-    <script src="{{ asset('web/js/jquery.min.js') }}"></script>
-
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('admin_lte/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{{ asset('admin_lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('admin_lte/dist/css/adminlte.min.css') }}">
     <style>
         .form-group.has-error {
             border-color: #dd4b39 !important;
@@ -23,43 +22,127 @@
     </style>
 </head>
 
-<body>
-    <div class="container-fluid reset-password-section">
-        <div class="reset-password-form-outer">
-            <img src="{{ count($companyDetail) > 0 ? asset($companyDetail[0]->company_logo) : '' }}" alt="">
-            <h1>{{ count($companyDetail) > 0 ? $companyDetail[0]->company_name : '' }}</h1>
-            <span>Set Your Password !</span>
-            <form action="{{ url('/adminUserUpdatePassword') }}" method="post"
-                class="reset-password-form-sec form-validate">
-                @csrf
-                <input type="hidden" name="adminUser_id" value="{{ $adminUserid }}">
-                <div class="form-group reset-password-form-group">
-                    <!-- <label for="pwd">Password:</label> -->
-                    <input type="password" class="form-control field-validate" name="password" placeholder="Password"
-                        id="password-input-sec">
-                    <i class="fa-regular fa-eye" id="password-sec-icon"></i>
-                </div>
+<body class="hold-transition">
+    {{-- <div class="skd_loder_box" id="fullLoader">
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+        <div class="skd_ldr"></div>
+    </div> --}}
+    <div class="main_box_login">
+        <div class="bgimg" style="background-image: url({{ asset('web/images/slider-left-dec.png') }});"></div>
 
-                <div class="form-group reset-password-form-group">
-                    <!-- <label for="pwd">Confirm Password:</label> -->
-                    <input type="password" class="form-control field-validate" name="confirm_password"
-                        placeholder="Confirm Password" id="confirm-password-input-sec">
-                    <i class="fa-regular fa-eye" id="confirm-password-sec-icon"></i>
-
+        <div class="loginnavbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a href="javascript:void(0)" class="brand new_br">
+                        <img class="img-fluid top_logo"
+                            src="{{ count($companyDetail) > 0 ? asset($companyDetail[0]->company_logo) : '' }}"
+                            alt="" style="width: 50px;">
+                        <p class="">{{ count($companyDetail) > 0 ? $companyDetail[0]->company_name : '' }}
+                        </p>
+                    </a>
                 </div>
-                <input type="submit" value="Submit">
-                {{-- @if ($teacherDetail)
-                    <input type="submit" value="Submit">
-                @else
-                    <input type="button" value="Submit">
-                @endif --}}
-            </form>
+            </div>
         </div>
-        <div class="container-fluid reset-password-footer-sec">
-            <span>© 2023 All Rights Reserved. by <a href="javascript:vid(0);">Bumblebee</a></span>
+        <div class="bgimg1" style="background-image: url({{ asset('web/images/slider-dec.png') }});"></div>
+        <div class="login-box">
+
+            <!-- /.login-logo -->
+            <div class="card card-outline card-primary new_log_card">
+                {{-- <div class="card-header text-center">
+                    <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="" style="width: 60%;">
+                </div> --}}
+                <div class="card_box">
+                    <div class="card-body">
+                        <p class="login-box-msg">Set Your Password</p>
+
+                        @if (count($errors) > 0)
+                            @foreach ($errors->all() as $error)
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        @endif
+
+                        @if (Session::has('loginError'))
+                            <div class="alert alert-danger" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                <span class="sr-only">Error:</span>
+                                {!! session('loginError') !!}
+                            </div>
+                        @endif
+
+                        <form action="{{ url('/adminUserUpdatePassword') }}" method="post"
+                            class="reset-password-form-sec form-validate">
+                            @csrf
+                            <input type="hidden" name="adminUser_id" value="{{ $adminUserid }}">
+
+                            <div class="input-group form-group mb-3">
+                                <div class="input_icon">
+                                    <input type="password" class="form-control field-validate" id="password-input-sec"
+                                        name="password" placeholder="Password">
+                                    <span toggle="#password-input-sec"
+                                        class="far fa-eye field-icon toggle-password"></span>
+                                </div>
+
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group form-group mb-3">
+                                <div class="input_icon">
+                                    <input type="password" class="form-control field-validate"
+                                        id="confirm-password-input-sec" name="confirm_password"
+                                        placeholder="Confirm Password">
+                                    <span toggle="#confirm-password-input-sec"
+                                        class="far fa-eye field-icon toggle-password"></span>
+                                </div>
+
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center">
+                                <div class="col-6"></div>
+
+                                <div class="col-6">
+                                    <button type="submit" class="btn btn-primary btn-block mrg_ato">Submit</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.login-box -->
+
+        <div class="container-fluid log_footer">
+            <span>© {{ date('Y') }} All Rights Reserved. <a href="https://www.reddragonitsolution.com/"
+                    target="_blank">Red Dragon IT Solution Ltd</a></span>
         </div>
     </div>
 
+
+    <!-- jQuery -->
+    <script src="{{ asset('admin_lte/plugins/jquery/jquery.min.js') }}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset('admin_lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('admin_lte/dist/js/adminlte.min.js') }}"></script>
     <script src="{!! asset('plugins/sweetalert/sweetalert.min.js') !!}"></script>
     <?php if (Session::has('error')) { ?>
     <script>
@@ -108,30 +191,16 @@
 
         });
         /******* field validate 1 ********/
-    </script>
-
-    <script>
-        $("body").on('click', '#password-sec-icon', function() {
+        $(document).on('click', '.toggle-password', function() {
             $(this).toggleClass("fa-eye fa-eye-slash");
-            var input = $("#password-input-sec");
-            if (input.attr("type") === "password") {
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
                 input.attr("type", "text");
+                input.attr("autocomplete", "off");
             } else {
                 input.attr("type", "password");
+                input.attr("autocomplete", "current-password");
             }
-
-        });
-    </script>
-    <script>
-        $("body").on('click', '#confirm-password-sec-icon', function() {
-            $(this).toggleClass("fa-eye fa-eye-slash");
-            var input = $("#confirm-password-input-sec");
-            if (input.attr("type") === "password") {
-                input.attr("type", "text");
-            } else {
-                input.attr("type", "password");
-            }
-
         });
     </script>
 

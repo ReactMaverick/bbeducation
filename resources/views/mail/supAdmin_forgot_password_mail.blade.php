@@ -15,18 +15,17 @@
 
 <body>
 
-    <div
-        style="border: 1px solid #ccc; background-color: #fff; width: 100%; max-width: 900px; margin: 0 auto; padding-top: 50px;">
+    <div style="border: 1px solid #ccc; background-color: #fff; width: 100%; max-width: 900px; margin: 0 auto;">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td>
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr>
-                            <td style="padding: 10px 20px;">
-                                <img src="{{ asset('/web/images/mymooncloud-logo2.png') }}" style="width: 100px;" />
+                        <tr style="background-color: #e0f3fb;">
+                            <td style="padding: 10px 20px;width:50%;text-align: left;">
+                                <img src="{{ asset('/web/images/mymooncloud-logo.png') }}" style="width: 100px;" />
                             </td>
-                            <td style="padding: 10px 20px; text-align: right;">
-                                <p style="color: #888; font-size: 25px;">Forgot Password Mail</p>
+                            <td style="padding: 10px 20px;width:50%; text-align: right;">
+                                <p style="color: #888; font-size: 25px;">Password Reset</p>
                             </td>
                         </tr>
                     </table>

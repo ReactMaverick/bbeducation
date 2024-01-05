@@ -72,16 +72,19 @@
                                                     </a>
                                                     <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="creditNoteBttn" title="Create Credit Note">
-                                                        <img class="img-fluid" src="{{ asset('web/company_logo/money.png') }}" alt="">
+                                                        <img class="img-fluid"
+                                                            src="{{ asset('web/company_logo/money.png') }}" alt="">
                                                     </a>
                                                     <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="splitInvoiceBtn" title="Split Invoice">
-                                                        <img class="img-fluid" src="{{ asset('web/company_logo/diverge.png') }}"
+                                                        <img class="img-fluid"
+                                                            src="{{ asset('web/company_logo/diverge.png') }}"
                                                             alt="">
                                                     </a>
                                                     <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="previewInvoiceBtn" title="Preview Invoice">
-                                                        <img class="img-fluid" src="{{ asset('web/company_logo/search-file.png') }}"
+                                                        <img class="img-fluid"
+                                                            src="{{ asset('web/company_logo/search-file.png') }}"
                                                             alt="">
                                                     </a>
                                                     <a style="cursor: pointer" class="disabled-link big_icon"
@@ -133,14 +136,14 @@
                                                             onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
                                                             id="editInvoiceRow{{ $Invoices->invoice_id }}">
                                                             <td>{{ $Invoices->invoice_id }}</td>
-                                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}
+                                                            <td>{{ date('d M Y', strtotime($Invoices->invoiceDate_dte)) }}
                                                             </td>
                                                             <td>{{ $Invoices->net_dec }}</td>
                                                             <td>{{ $Invoices->vat_dec }}</td>
                                                             <td>{{ $Invoices->gross_dec }}</td>
                                                             <td>
                                                                 @if ($Invoices->paidOn_dte != null)
-                                                                    {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
+                                                                    {{ date('d M Y', strtotime($Invoices->paidOn_dte)) }}
                                                                 @endif
                                                             </td>
                                                             <td>{{ $Invoices->invPaymentMethod_txt }}</td>
@@ -282,7 +285,7 @@
                                                             onclick="editDueInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
                                                             id="editDueInvoiceRow{{ $Invoices->invoice_id }}">
                                                             <td>{{ $Invoices->invoice_id }}</td>
-                                                            <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}
+                                                            <td>{{ date('d M Y', strtotime($Invoices->invoiceDate_dte)) }}
                                                             </td>
                                                             <td>{{ $Invoices->net_dec }}</td>
                                                             <td>{{ $Invoices->vat_dec }}</td>
@@ -290,7 +293,7 @@
                                                             <td>
                                                                 @if ($Invoices->sentMailDate)
                                                                     {{ 'Sent to school ' }}
-                                                                    ({{ date('d-m-Y', strtotime($Invoices->sentMailDate)) }})
+                                                                    ({{ date('d M Y', strtotime($Invoices->sentMailDate)) }})
                                                                 @else
                                                                     {{ '' }}
                                                                 @endif

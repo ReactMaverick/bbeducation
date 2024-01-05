@@ -17,89 +17,110 @@
     <link rel="stylesheet" href="{{ asset('admin_lte/dist/css/adminlte.min.css') }}">
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition">
     <div class="skd_loder_box" id="fullLoader">
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
         <div class="skd_ldr"></div>
     </div>
-    <div class="login-box">
-        <!-- /.login-logo -->
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                <img src="{{ asset('web/images/mymooncloud-logo.png') }}" alt="" style="width: 60%;">
+    <div class="main_box_login">
+        <div class="bgimg" style="background-image: url({{ asset('web/images/slider-left-dec.png') }});"></div>
+
+        <div class="loginnavbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a href="{{ url('/') }}" class="brand">
+                        <img class="img-fluid top_logo" src="{{ asset('web/images/logo.png') }}" alt="">
+                    </a>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="login-box-msg">GENERATE NEW PASSWORD</p>
-
-                @if (count($errors) > 0)
-                    @foreach ($errors->all() as $error)
-                        <div class="alert alert-danger" role="alert">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">Error:</span>
-                            {{ $error }}
-                        </div>
-                    @endforeach
-                @endif
-
-                @if (Session::has('up_password_error'))
-                    <div class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        {!! session('up_password_error') !!}
-                    </div>
-                @endif
-
-                @if (Session::has('up_password_success'))
-                    <div class="alert alert-success" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        {!! session('up_password_success') !!}
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ url('/system-Forget-Password-update') }}" class="form-validate">
-                    @csrf
-
-                    <div class="input-group form-group mb-3">
-                        <input type="password" class="form-control field-validate" id="" name="password"
-                            autofocus placeholder="New Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="input-group form-group mb-3">
-                        <input type="password" class="form-control field-validate" id=""
-                            name="confirm_password" autofocus placeholder="Confirm Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-8">
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                </form>
-
-                <p class="mb-1">
-                    <a href="{{ URL::to('/systemForgetPassword') }}">Sign In</a>
-                </p>
-            </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
+        <div class="bgimg1" style="background-image: url({{ asset('web/images/slider-dec.png') }});"></div>
+        <div class="login-box">
+
+            <!-- /.login-logo -->
+            <div class="card card-outline card-primary new_log_card">
+
+                <div class="card_box">
+                    <div class="card-body">
+                        <p class="login-box-msg">GENERATE NEW PASSWORD</p>
+
+                        @if (count($errors) > 0)
+                            @foreach ($errors->all() as $error)
+                                <div class="alert alert-danger" role="alert">
+                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        @endif
+
+                        @if (Session::has('up_password_error'))
+                            <div class="alert alert-danger" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                {!! session('up_password_error') !!}
+                            </div>
+                        @endif
+
+                        @if (Session::has('up_password_success'))
+                            <div class="alert alert-success" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                {!! session('up_password_success') !!}
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ url('/system-Forget-Password-update') }}" class="form-validate">
+                            @csrf
+                            <div class="input-group form-group mb-3">
+                                <input type="password" class="form-control field-validate" id=""
+                                    name="password" autofocus placeholder="New Password">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group form-group mb-3">
+                                <input type="password" class="form-control field-validate" id=""
+                                    name="confirm_password" autofocus placeholder="Confirm Password">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <a href="{{ URL::to('/system-login') }}">Sign In</a>
+                                </div>
+
+                                <!-- /.col -->
+                                <div class="col-6">
+                                    <button type="submit" class="btn btn-primary btn-block mrg_ato">Submit</button>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.login-box -->
+
+        <div class="container-fluid log_footer">
+            <span>© {{ date('Y') }} All Rights Reserved. <a href="https://www.reddragonitsolution.com/"
+                    target="_blank">Red Dragon IT Solution Ltd</a></span>
+        </div>
     </div>
-    <!-- /.login-box -->
+
 
     <!-- jQuery -->
     <script src="{{ asset('admin_lte/plugins/jquery/jquery.min.js') }}"></script>
@@ -108,7 +129,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('admin_lte/dist/js/adminlte.min.js') }}"></script>
 
-    @include('web.teacherPortal.common.scripts')
+    @include('web.common_new.scripts')
 
 </body>
 

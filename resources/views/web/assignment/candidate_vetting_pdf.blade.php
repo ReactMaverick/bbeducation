@@ -51,7 +51,7 @@
         #logo {
             float: right;
             margin-top: 8px;
-            width: 33.33%;
+            width: 20%;
             text-align: right;
         }
 
@@ -61,7 +61,7 @@
 
         #company {
             float: left;
-            width: 33.33%;
+            width: 35%;
             text-align: left;
             font-size: 20px;
             color: #fff;
@@ -70,7 +70,7 @@
 
         #company-name {
             float: left;
-            width: 33.33%;
+            width: 45%;
             text-align: center;
             font-size: 20px;
             color: #fff;
@@ -746,8 +746,17 @@
 
                     </th>
                     <th>
-                        <img src="{{ $vettingDetail->imageLocation_txt ? asset($vettingDetail->imageLocation_txt) : '' }}"
-                            alt="afsafs" style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;">
+                        {{-- <img src="{{ $vettingDetail->imageLocation_txt ? asset($vettingDetail->imageLocation_txt) : '' }}"
+                            alt="afsafs" style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;"> --}}
+                        @if (
+                            ($vettingDetail->imageLocation_txt != null || $vettingDetail->imageLocation_txt != '') &&
+                                file_exists(public_path($vettingDetail->imageLocation_txt)))
+                            <img src="{{ asset($vettingDetail->imageLocation_txt) }}" alt=""
+                                style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;">
+                        @else
+                            <img src="{{ asset('web/images/user-img.png') }}" alt=""
+                                style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;">
+                        @endif
 
                     </th>
                     <th>

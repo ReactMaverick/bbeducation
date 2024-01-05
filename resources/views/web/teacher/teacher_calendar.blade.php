@@ -170,109 +170,113 @@
                                                             </p>
                                                         </div>
                                                     </div>
-
-
-                                                    @foreach ($calenderList as $key1 => $calender)
-                                                        <div
-                                                            class="calendar-section skd_image_calender_box new_teacher_calendar_outer2">
+                                                    <div class="nw_teacher_inner_box_row">
+                                                        @foreach ($calenderList as $key1 => $calender)
                                                             <div
-                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                <div class="teacher-calendar-days-field3"
-                                                                    style="cursor: pointer;"
-                                                                    onclick="calDateClick('teacher', '{{ $calender->teacher_id }}', '', '')">
-                                                                    <div class="calendar_first_sec">
-                                                                        @if ($calender->file_location != null || $calender->file_location != '')
-                                                                            <img src="{{ asset($calender->file_location) }}"
-                                                                                alt="">
-                                                                        @else
-                                                                            <img src="{{ asset('web/images/user-img.png') }}"
-                                                                                alt="">
-                                                                        @endif
-                                                                    </div>
-                                                                    <div class="calendar_right_sec">
-                                                                        <p>
-                                                                            @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
-                                                                                {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
+                                                                class="calendar-section skd_image_calender_box new_teacher_calendar_outer2 grid_7">
+                                                                <div
+                                                                    class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                    <div class="teacher-calendar-days-field3"
+                                                                        style="cursor: pointer;"
+                                                                        onclick="calDateClick('teacher', '{{ $calender->teacher_id }}', '', '','')">
+                                                                        <div class="calendar_first_sec">
+                                                                            @if (
+                                                                                ($calender->file_location != null || $calender->file_location != '') &&
+                                                                                    file_exists(public_path($calender->file_location)))
+                                                                                <img src="{{ asset($calender->file_location) }}"
+                                                                                    alt="">
                                                                             @else
-                                                                                {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
+                                                                                <img src="{{ asset('web/images/user-img.png') }}"
+                                                                                    alt="">
                                                                             @endif
-                                                                        </p>
-                                                                        <p>{{ $calender->totalDays }} Days</p>
+                                                                        </div>
+                                                                        <div class="calendar_right_sec">
+                                                                            <p>
+                                                                                @if ($calender->knownAs_txt == null && $calender->knownAs_txt == '')
+                                                                                    {{ $calender->firstName_txt . ' ' . $calender->surname_txt }}
+                                                                                @else
+                                                                                    {{ $calender->firstName_txt . ' (' . $calender->knownAs_txt . ') ' . $calender->surname_txt }}
+                                                                                @endif
+                                                                            </p>
+                                                                            <p>{{ $calender->totalDays }} Days</p>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
+                                                                <div
+                                                                    class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                    @if ($calender->day1Avail_txt && $calender->day1Link_id)
+                                                                        <div class="{{ $calender->day1Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
+                                                                            style="cursor: pointer;"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day1Link_id }}', '{{ $calender->day1School_id }}', '{{ date('Y-m-d', strtotime($weekStartDate)) }}')">
+                                                                            <p>{{ $calender->day1Avail_txt }}</p>
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="teacher-calendar-days-field3"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '','')">
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div
+                                                                    class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                    @if ($calender->day2Avail_txt && $calender->day2Link_id)
+                                                                        <div class="{{ $calender->day2Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
+                                                                            style="cursor: pointer;"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day2Link_id }}', '{{ $calender->day2School_id }}','{{ date('Y-m-d', strtotime($weekStartDate . ' +1 days')) }}')">
+                                                                            <p>{{ $calender->day2Avail_txt }}</p>
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="teacher-calendar-days-field3"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '','')">
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div
+                                                                    class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                    @if ($calender->day3Avail_txt && $calender->day3Link_id)
+                                                                        <div class="{{ $calender->day3Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
+                                                                            style="cursor: pointer;"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day3Link_id }}', '{{ $calender->day3School_id }}','{{ date('Y-m-d', strtotime($weekStartDate . ' +2 days')) }}')">
+                                                                            <p>{{ $calender->day3Avail_txt }}</p>
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="teacher-calendar-days-field3"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '','')">
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div
+                                                                    class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                    @if ($calender->day4Avail_txt && $calender->day4Link_id)
+                                                                        <div class="{{ $calender->day4Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
+                                                                            style="cursor: pointer;"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day4Link_id }}', '{{ $calender->day4School_id }}','{{ date('Y-m-d', strtotime($weekStartDate . ' +3 days')) }}')">
+                                                                            <p>{{ $calender->day4Avail_txt }}</p>
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="teacher-calendar-days-field3"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '','')">
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div
+                                                                    class="date-left-teacher-calendar new_teacher_calendar_inner">
+                                                                    @if ($calender->day5Avail_txt && $calender->day5Link_id)
+                                                                        <div class="{{ $calender->day5Avail_txt == 'Multiple Bookings' ? 'teacher-calendar-days-field5' : ($calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2') }}"
+                                                                            style="cursor: pointer;"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day5Link_id }}', '{{ $calender->day5School_id }}','{{ date('Y-m-d', strtotime($weekStartDate . ' +4 days')) }}')">
+                                                                            <p>{{ $calender->day5Avail_txt }}</p>
+                                                                        </div>
+                                                                    @else
+                                                                        <div class="teacher-calendar-days-field3"
+                                                                            onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '','')">
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
                                                             </div>
-                                                            <div
-                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                @if ($calender->day1Avail_txt && $calender->day1Link_id)
-                                                                    <div class="{{ $calender->day1LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
-                                                                        style="cursor: pointer;"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day1Link_id }}', '{{ $calender->day1School_id }}')">
-                                                                        <p>{{ $calender->day1Avail_txt }}</p>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="teacher-calendar-days-field3"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '')">
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div
-                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                @if ($calender->day2Avail_txt && $calender->day2Link_id)
-                                                                    <div class="{{ $calender->day2LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
-                                                                        style="cursor: pointer;"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day2Link_id }}', '{{ $calender->day2School_id }}')">
-                                                                        <p>{{ $calender->day2Avail_txt }}</p>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="teacher-calendar-days-field3"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '')">
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div
-                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                @if ($calender->day3Avail_txt && $calender->day3Link_id)
-                                                                    <div class="{{ $calender->day3LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
-                                                                        style="cursor: pointer;"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day3Link_id }}', '{{ $calender->day3School_id }}')">
-                                                                        <p>{{ $calender->day3Avail_txt }}</p>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="teacher-calendar-days-field3"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '')">
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div
-                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                @if ($calender->day4Avail_txt && $calender->day4Link_id)
-                                                                    <div class="{{ $calender->day4LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
-                                                                        style="cursor: pointer;"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day4Link_id }}', '{{ $calender->day4School_id }}')">
-                                                                        <p>{{ $calender->day4Avail_txt }}</p>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="teacher-calendar-days-field3"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '')">
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div
-                                                                class="date-left-teacher-calendar new_teacher_calendar_inner">
-                                                                @if ($calender->day5Avail_txt && $calender->day5Link_id)
-                                                                    <div class="{{ $calender->day5LinkType_int == 1 ? 'teacher-calendar-days-field' : 'teacher-calendar-days-field2' }}"
-                                                                        style="cursor: pointer;"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '{{ $calender->day5Link_id }}', '{{ $calender->day5School_id }}')">
-                                                                        <p>{{ $calender->day5Avail_txt }}</p>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="teacher-calendar-days-field3"
-                                                                        onclick="calDateClick('date', '{{ $calender->teacher_id }}', '', '')">
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
+                                                        @endforeach
+                                                    </div>
+
+
 
                                                 </div>
                                             </div>
@@ -335,8 +339,41 @@
     </div>
     <!-- Teacher Calendar Event Edit Modal -->
 
+    <!-- multiple asn Modal -->
+    <div class="modal fade" id="multipleTeacherAsnFirstModal" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered calendar-modal-section">
+            <div class="modal-content calendar-modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header calendar-modal-header">
+                    <h4 class="modal-title">Multiple Teacher Assignment Dates</h4>
+                    <button type="button" class="close" id="multipleTeacherAsnFirstClose">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="col-md-12 mt-2">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr class="table-heading add-school-teacher-table">
+                                    <th>School</th>
+                                    <th>Day Part</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body-sec" id="multipleTeacherAsnFirstTable">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- multiple asn Modal -->
+
     <script>
-        function calDateClick(type, teacher_id, asn_id, school_id) {
+        function calDateClick(type, teacher_id, asn_id, school_id, date) {
             // alert('type->'+type+', teacher->'+teacher_id+', asn->'+asn_id)
             var calendar_mode = $('input[name="calendar_mode"]:checked').val();
             if (calendar_mode == 'edit') {
@@ -346,8 +383,57 @@
                     );
                 }
                 if (type == 'date' && asn_id) {
-                    var rUrl = '<?php echo url('/assignment-details/'); ?>' + '/' + asn_id;
-                    window.open(rUrl, '_blank');
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    var SITEURL = "{{ url('/') }}";
+
+                    $.ajax({
+                        url: SITEURL + "/teacherEventExist",
+                        data: {
+                            teacher_id: teacher_id,
+                            event_start: date
+                        },
+                        type: "POST",
+                        dataType: "json",
+                        async: false,
+                        success: function(data) {
+                            // console.log(data);
+                            var viewEventId = '';
+                            var asnItem_id = '';
+                            var calendarItem_id = '';
+                            var eAsnList = [];
+                            if (data) {
+                                if (data.status == true) {
+                                    viewEventId = data.calEventItem.link_id;
+                                    asnItem_id = data.calEventItem.asnItem_id;
+                                    calendarItem_id = data.calEventItem.calendarItem_id;
+                                    eAsnList = data.calEventItem.e_asn_list;
+                                }
+                            }
+
+                            if (eAsnList != undefined && eAsnList.length > 1) {
+                                var tableHtml = '';
+                                $.each(eAsnList, function(index, value) {
+                                    var tUrl = "{{ url('/assignment-details') }}" + "/" + value
+                                        .asn_id;
+                                    tableHtml +=
+                                        '<tr class="table-data clickable-row" data-url=' +
+                                        tUrl +
+                                        '> <td>' + value
+                                        .name_txt + '</td> <td>' + value.title + '</td> <td>' +
+                                        value.yearGroup + '</td> </tr>';
+                                });
+                                $('#multipleTeacherAsnFirstTable').html(tableHtml);
+                                $('#multipleTeacherAsnFirstModal').modal("show");
+                            } else {
+                                var rUrl = '<?php echo url('/assignment-details/'); ?>' + '/' + asn_id;
+                                window.open(rUrl, '_blank');
+                            }
+                        }
+                    });
                 }
             }
 
@@ -385,6 +471,17 @@
                 }
             }
         }
+
+        $(document).ready(function() {
+            $('#multipleTeacherAsnFirstTable').on('click', '.clickable-row', function() {
+                var url = $(this).data('url');
+                window.open(url, '_blank');
+            });
+        });
+        $(document).on('click', '#multipleTeacherAsnFirstClose', function() {
+            $('#multipleTeacherAsnFirstModal').modal("hide");
+            $('body').addClass('modal-open');
+        });
 
         $(document).on('click', '#EventEditModalClose', function() {
             $('#TeacherCalEventEditModal').modal("hide");

@@ -60,7 +60,7 @@
                                                         @if ($fabSchool->contactSchoolId == null || $fabSchool->contactSchoolId == '')
                                                             No Contact
                                                         @else
-                                                            {{ date('d-m-Y', strtotime($fabSchool->lastContact_dte)) }}
+                                                            {{ date('d M Y', strtotime($fabSchool->lastContact_dte)) }}
                                                         @endif
                                                     </td>
                                                 </tr>

@@ -41,7 +41,9 @@ Route::get('/cache-clear', function () {
 Route::get('/', [LoginController::class, 'login']);
 Route::post('/processLogin', [LoginController::class, 'processLogin']);
 Route::post('/adminLogin', [LoginController::class, 'adminLogin']);
-Route::get('/adminOtp',[LoginController::class,'adminOtp']);
+Route::get('/adminOtp', [LoginController::class, 'adminOtp']);
+Route::get('/admin-multi-company', [LoginController::class, 'adminMultiCompany']);
+Route::post('/processMultiCom', [LoginController::class, 'processMultiCom']);
 Route::get('/logout', [LoginController::class, 'logout']);
 Route::get('/profile', [LoginController::class, 'profile']);
 //================= Admin Forget Password =============================//
@@ -296,6 +298,7 @@ Route::post('/financeProcessPayroll', [FinanceController::class, 'financeProcess
 Route::post('/payrollDateChange', [FinanceController::class, 'payrollDateChange']);
 Route::get('/exportPayroll/{date}', [FinanceController::class, 'exportPayroll']);
 Route::get('/finance-remittance', [FinanceController::class, 'financeRemittance']);
+Route::post('/financeRemittancePostAjax', [FinanceController::class, 'financeRemittancePostAjax']);
 Route::get('/finance-invoice-pdf/{invoice_id}', [FinanceController::class, 'financeInvoicePdf']);
 Route::get('/exportInvoiceByDate/{from}/{to}/{type}', [FinanceController::class, 'exportInvoiceByDate']);
 Route::post('/remitInvoiceSend', [FinanceController::class, 'remitInvoiceSend']);
@@ -458,7 +461,31 @@ Route::group(['middleware' => ['superadmin']], function () {
     Route::post('/deleteCompanyFooterImage', [SuperadminController::class, 'deleteCompanyFooterImage']);
     Route::post('/userAdd', [SuperadminController::class, 'userAdd']);
     Route::get('/superAdminDashboard', [SuperadminController::class, 'dashboard']);
+
+    Route::get('/system-assignment', [SuperadminController::class, 'system_assignment']);
+    Route::post('/sysAddAgeRange', [SuperadminController::class, 'sysAddAgeRange']);
+    Route::post('/sysEditAgeRange', [SuperadminController::class, 'sysEditAgeRange']);
+    Route::post('/sysDeleteAgeRange', [SuperadminController::class, 'sysDeleteAgeRange']);
+    Route::post('/sysAddSubject', [SuperadminController::class, 'sysAddSubject']);
+    Route::post('/sysEditSubject', [SuperadminController::class, 'sysEditSubject']);
+    Route::post('/sysDeleteSubject', [SuperadminController::class, 'sysDeleteSubject']);
+    Route::post('/sysAddYearGrp', [SuperadminController::class, 'sysAddYearGrp']);
+    Route::post('/sysEditYearGrp', [SuperadminController::class, 'sysEditYearGrp']);
+    Route::post('/sysDeleteYearGrp', [SuperadminController::class, 'sysDeleteYearGrp']);
+    Route::post('/sysAddProfType', [SuperadminController::class, 'sysAddProfType']);
+    Route::post('/sysEditProfType', [SuperadminController::class, 'sysEditProfType']);
+    Route::post('/sysDeleteProfType', [SuperadminController::class, 'sysDeleteProfType']);
+
+    Route::get('/system-school', [SuperadminController::class, 'system_school']);
+    Route::post('/sysAddSchAgeRange', [SuperadminController::class, 'sysAddSchAgeRange']);
+    Route::post('/sysEditSchAgeRange', [SuperadminController::class, 'sysEditSchAgeRange']);
+    Route::post('/sysDeleteSchAgeRange', [SuperadminController::class, 'sysDeleteSchAgeRange']);
+    Route::post('/sysAddSchoolType', [SuperadminController::class, 'sysAddSchoolType']);
+    Route::post('/sysEditSchoolType', [SuperadminController::class, 'sysEditSchoolType']);
+    Route::post('/sysDeleteSchoolType', [SuperadminController::class, 'sysDeleteSchoolType']);
+
+    Route::get('/system-teacher', [SuperadminController::class, 'system_teacher']);
+    Route::post('/sysAddBank', [SuperadminController::class, 'sysAddBank']);
+    Route::post('/sysEditBank', [SuperadminController::class, 'sysEditBank']);
+    Route::post('/sysDeleteBank', [SuperadminController::class, 'sysDeleteBank']);
 });
-
-
-

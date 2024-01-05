@@ -79,7 +79,8 @@
                 </div>
             </a>
             @if ($assignmentDetail->status_int < 3)
-                <a class="skl_check" style="cursor: pointer;" id="statusAnchId"
+                <a class="skl_check {{ $assignmentDetail->status_int == 3 ? 'assignmentCompleteOuter' : '' }}"
+                    style="cursor: pointer;" id="statusAnchId"
                     onclick="changeStatusToComplete({{ $asn_id }}, '{{ $assignmentDetail->teacher_id }}', '{{ $assignmentDetail->techerFirstname . ' ' . $assignmentDetail->techerSurname }}')">
                     <span
                         class="svg_icon {{ $assignmentDetail->status_int == 3 ? 'assignmentComplete' : 'assignmentInComplete' }}"
@@ -97,7 +98,8 @@
                     </span>
                 </a>
             @else
-                <a class="skl_check" style="cursor: pointer;">
+                <a class="skl_check {{ $assignmentDetail->status_int == 3 ? 'assignmentCompleteOuter' : '' }}"
+                    style="cursor: pointer;">
                     <span
                         class="svg_icon {{ $assignmentDetail->status_int == 3 ? 'assignmentComplete' : 'assignmentInComplete' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
@@ -253,7 +255,7 @@
             </div>
         </div>
 
-        <div class="skl_check">
+        <div class="skl_check {{ $assignmentDetail->teacher_id ? 'assignmentCompleteOuter' : '' }}">
             <span
                 class="svg_icon {{ $assignmentDetail->teacher_id ? 'assignmentComplete' : 'assignmentInComplete' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -327,6 +329,8 @@
                     count = 1;
                     $('#statusIconId').removeClass('assignmentInComplete');
                     $('#statusIconId').addClass('assignmentComplete');
+                    //add class to parent div of status icon
+                    $('#statusIconId').parent().addClass('assignmentCompleteOuter');
                     $('#statusAnchId').addClass('disabled-link');
                 }
             }

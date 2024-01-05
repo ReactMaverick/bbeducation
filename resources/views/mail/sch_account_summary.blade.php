@@ -111,7 +111,7 @@
                                                             <td
                                                                 style="text-align: center;padding-top: 10px;border-left: 1px solid #028222;">
                                                                 <span class="label label-primary">
-                                                                    {{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}
+                                                                    {{ date('d M Y', strtotime($Invoices->invoiceDate_dte)) }}
                                                                 </span>
                                                             </td>
                                                             <td
@@ -192,7 +192,7 @@
                                                             <td
                                                                 style="text-align: center;padding-top: 10px;border-left: 1px solid #d80202;">
                                                                 <span class="label label-primary">
-                                                                    {{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}
+                                                                    {{ date('d M Y', strtotime($Invoices->invoiceDate_dte)) }}
                                                                 </span>
                                                             </td>
                                                             <td
@@ -301,10 +301,12 @@
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
                     <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                         MONITORED.*</h3>
-                    <p>For any queries, please email <a
-                            href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->finance_query_mail : '' }}"
-                            target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->finance_query_mail : '' }}</a>
-                    </p>
+                    @if ($mailData['companyDetail'] && $mailData['companyDetail']->finance_query_mail)
+                        <p>For any queries, please email <a
+                                href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->finance_query_mail : '' }}"
+                                target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->finance_query_mail : '' }}</a>
+                        </p>
+                    @endif
                 </td>
             </tr>
             <tr>

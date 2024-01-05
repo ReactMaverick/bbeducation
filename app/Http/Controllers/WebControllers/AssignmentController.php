@@ -33,6 +33,12 @@ class AssignmentController extends Controller
                         $join->on('tbl_asn.asn_id', '=', 't_asnItems.asn_id');
                     }
                 )
+                ->leftJoin(
+                    DB::raw('(SELECT asn_id, SUM(tbl_asnItem.dayPercent_dec) as daysOfWeek FROM tbl_asnItem GROUP BY tbl_asnItem.asn_id) AS days_asnItems'),
+                    function ($join) {
+                        $join->on('tbl_asn.asn_id', '=', 'days_asnItems.asn_id');
+                    }
+                )
                 ->LeftJoin('tbl_description as yearDescription', function ($join) {
                     $join->on('yearDescription.description_int', '=', 'tbl_asn.ageRange_int')
                         ->where(function ($query) {
@@ -57,7 +63,7 @@ class AssignmentController extends Controller
                             $query->where('assType.descriptionGroup_int', '=', 35);
                         });
                 })
-                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'))
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), 'days_asnItems.daysOfWeek as daysThisWeek')
                 ->where('tbl_asn.company_id', $company_id);
             // ->where('tbl_teacher.is_delete', 0);
             $openAssignmentQuery = clone $assignment;
@@ -130,6 +136,12 @@ class AssignmentController extends Controller
                         $join->on('tbl_asn.asn_id', '=', 't_asnItems.asn_id');
                     }
                 )
+                ->leftJoin(
+                    DB::raw('(SELECT asn_id, SUM(tbl_asnItem.dayPercent_dec) as daysOfWeek FROM tbl_asnItem GROUP BY tbl_asnItem.asn_id) AS days_asnItems'),
+                    function ($join) {
+                        $join->on('tbl_asn.asn_id', '=', 'days_asnItems.asn_id');
+                    }
+                )
                 ->LeftJoin('tbl_description as yearDescription', function ($join) {
                     $join->on('yearDescription.description_int', '=', 'tbl_asn.ageRange_int')
                         ->where(function ($query) {
@@ -160,7 +172,7 @@ class AssignmentController extends Controller
                         $join->on('tbl_asn.teacher_id', '=', 't_document.teacher_id');
                     }
                 )
-                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), DB::raw('SUM(tbl_asnItem.dayPercent_dec) as daysThisWeek'), 'file_location', 'teacherDocument_id')
+                ->select('tbl_asn.*', 'tbl_asnItem.hours_dec', 'tbl_asnItem.dayPercent_dec', 'tbl_teacher.firstName_txt as techerFirstname', 'tbl_teacher.surname_txt as techerSurname', 'tbl_school.name_txt as schooleName', 'tbl_teacherdbs.positionAppliedFor_txt', 'yearDescription.description_txt as yearGroup', 'assStatusDescription.description_txt as assignmentStatus', 'teacherProff.description_txt as teacherProfession', 'assType.description_txt as assignmentType', DB::raw('SUM(IF(hours_dec IS NOT NULL, hours_dec, dayPercent_dec)) AS days_dec,IF(hours_dec IS NOT NULL, "hrs", "days") AS type_txt'), DB::raw('IF(t_asnItems.asn_id IS NULL, IF(createdOn_dtm IS NULL, tbl_asn.timestamp_ts, createdOn_dtm), asnStartDate_dte) AS asnStartDate_dte'), 'days_asnItems.daysOfWeek as daysThisWeek', 'file_location', 'teacherDocument_id')
                 ->where('tbl_asn.asn_id', $id)
                 ->groupBy('tbl_asn.asn_id')
                 ->first();

@@ -221,7 +221,7 @@
                                                             {{ $teacherDetail->vetUpdateService_status == '-1' ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->vetUpdateServiceChecked_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetUpdateServiceChecked_dte)) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->vetUpdateServiceChecked_dte != null ? date('d M Y', strtotime($teacherDetail->vetUpdateServiceChecked_dte)) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -235,7 +235,7 @@
                                                             {{ $teacherDetail->vetList99Checked_dte != null ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->vetList99Checked_dte != null ? 'Expires on ' . date('d-m-Y', strtotime($teacherDetail->vetList99Checked_dte . ' +1 years')) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->vetList99Checked_dte != null ? 'Expires on ' . date('d M Y', strtotime($teacherDetail->vetList99Checked_dte . ' +1 years')) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -249,7 +249,7 @@
                                                             {{ $teacherDetail->vetNCTLChecked_dte != null ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->vetNCTLChecked_dte != null ? 'Expires on ' . date('d-m-Y', strtotime($teacherDetail->vetNCTLChecked_dte . ' +1 years')) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->vetNCTLChecked_dte != null ? 'Expires on ' . date('d M Y', strtotime($teacherDetail->vetNCTLChecked_dte . ' +1 years')) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -278,7 +278,7 @@
                                                             {{ $teacherDetail->safeguardingInduction_status == '-1' ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->safeguardingInduction_dte != null ? date('d-m-Y', strtotime($teacherDetail->safeguardingInduction_dte)) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->safeguardingInduction_dte != null ? date('d M Y', strtotime($teacherDetail->safeguardingInduction_dte)) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -293,7 +293,7 @@
                                                             {{ $teacherDetail->vets128_status == '-1' ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->vets128_dte != null ? date('d-m-Y', strtotime($teacherDetail->vets128_dte)) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->vets128_dte != null ? date('d M Y', strtotime($teacherDetail->vets128_dte)) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -308,7 +308,7 @@
                                                             {{ $teacherDetail->vetEEARestriction_status == '-1' ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->vetEEARestriction_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetEEARestriction_dte)) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->vetEEARestriction_dte != null ? date('d M Y', strtotime($teacherDetail->vetEEARestriction_dte)) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -331,7 +331,7 @@
                                                             {{ $teacherDetail->rightToWork_status == '-1' ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->rightToWork_dte != null ? date('d-m-Y', strtotime($teacherDetail->rightToWork_dte)) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->rightToWork_dte != null ? date('d M Y', strtotime($teacherDetail->rightToWork_dte)) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -354,7 +354,7 @@
                                                             {{ $teacherDetail->overseasPolicy_status == '-1' ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->overseasPolicy_dte != null ? date('d-m-Y', strtotime($teacherDetail->overseasPolicy_dte)) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->overseasPolicy_dte != null ? date('d M Y', strtotime($teacherDetail->overseasPolicy_dte)) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -383,7 +383,7 @@
                                                             {{ $teacherDetail->vetQualification_status == '-1' ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="teacher-document-third-name-text">
-                                                        <p>{{ $teacherDetail->vetQualification_dte != null ? date('d-m-Y', strtotime($teacherDetail->vetQualification_dte)) : 'N/A' }}
+                                                        <p>{{ $teacherDetail->vetQualification_dte != null ? date('d M Y', strtotime($teacherDetail->vetQualification_dte)) : 'N/A' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -459,7 +459,7 @@
                                                                 {{-- <td>{{ $document->file_name }}</td> --}}
                                                                 <td>{{ $document->doc_type_txt }}</td>
                                                                 <td>{{ $document->file_type }}</td>
-                                                                <td>{{ date('d-m-Y', strtotime($document->uploadOn_dtm)) }}
+                                                                <td>{{ date('d M Y', strtotime($document->uploadOn_dtm)) }}
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -537,9 +537,9 @@
                                                                 id="editDBSRow{{ $DBS->DBS_id }}"
                                                                 onclick="DBSRowSelect({{ $DBS->DBS_id }})">
                                                                 <td>{{ $DBS->certificateNumber_txt }}</td>
-                                                                <td>{{ $DBS->DBSDate_dte != null ? date('d-m-Y', strtotime($DBS->DBSDate_dte)) : '' }}
+                                                                <td>{{ $DBS->DBSDate_dte != null ? date('d M Y', strtotime($DBS->DBSDate_dte)) : '' }}
                                                                 </td>
-                                                                <td>{{ $DBS->DBSDate_dte != null ? date('d-m-Y', strtotime($DBS->DBSDate_dte . ' +3 years')) : '' }}
+                                                                <td>{{ $DBS->DBSDate_dte != null ? date('d M Y', strtotime($DBS->DBSDate_dte . ' +3 years')) : '' }}
                                                                 </td>
                                                             </tr>
                                                         @endforeach

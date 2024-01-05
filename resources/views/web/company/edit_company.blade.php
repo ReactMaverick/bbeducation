@@ -32,7 +32,8 @@
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Contact Number</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="company_phone" id="company_phone"
                                                                         value="{{ $company->company_phone }}">
                                                                 </div>
@@ -45,23 +46,22 @@
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Finance Query
                                                                         Email</label>
-                                                                    <input type="text"
-                                                                        class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                         name="finance_query_mail" id="finance_query_mail"
                                                                         value="{{ $company->finance_query_mail }}">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Compliance Mail</label>
-                                                                    <input type="text"
-                                                                        class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                         name="compliance_mail" id="compliance_mail"
                                                                         value="{{ $company->compliance_mail }}">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Vetting Enquiry Mail</label>
-                                                                    <input type="text"
-                                                                        class="form-control"
-                                                                        name="vetting_enquiry_mail" id="vetting_enquiry_mail"
+                                                                    <label class="form-check-label">Vetting Enquiry
+                                                                        Mail</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="vetting_enquiry_mail"
+                                                                        id="vetting_enquiry_mail"
                                                                         value="{{ $company->vetting_enquiry_mail }}">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
@@ -71,7 +71,7 @@
                                                                         value="{{ $company->website }}">
                                                                 </div>
 
-                                                                
+
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Address</label>
                                                                     <input type="text" class="form-control"
@@ -99,15 +99,17 @@
                                                                         name="postcode_txt" id="postcode_txt"
                                                                         value="{{ $company->postcode_txt }}">
                                                                 </div>
+
+                                                                <p><Strong>Banking Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Sort Code</label>
+                                                                    <label class="form-check-label">Preferred Payment
+                                                                        Method
+                                                                    </label>
                                                                     <input type="text" class="form-control"
-                                                                        name="sort_code" id="sort_code"
-                                                                        value="{{ $company->sort_code }}">
+                                                                        name="pref_payment_method"
+                                                                        id="pref_payment_method"
+                                                                        value="{{ $company->pref_payment_method }}">
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <p><Strong>Payee Details :</Strong></p>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
                                                                     <input type="text" class="form-control"
@@ -121,12 +123,15 @@
                                                                         name="account_number" id="account_number"
                                                                         value="{{ $company->account_number }}">
                                                                 </div>
+
                                                                 <div class="modal-input-field form-group">
-                                                                    <label class="form-check-label">Account Number</label>
+                                                                    <label class="form-check-label">Sort Code</label>
                                                                     <input type="text" class="form-control"
                                                                         name="sort_code" id="sort_code"
                                                                         value="{{ $company->sort_code }}">
                                                                 </div>
+                                                            </div>
+                                                            <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Terms &
                                                                         Condition</label>
@@ -137,17 +142,8 @@
                                                                     <textarea class="form-control" name="payment_terms" id="payment_terms">{{ $company->payment_terms }}</textarea>
                                                                 </div>
 
-
-                                                                {{-- <div class="modal-input-field form-group">
-                                                                <label class="form-check-label">Valid From</label>
-                                                                <input type="date" class="form-control" name="valid_from" id="valid_from" value="{{ $company->valid_from }}">
-                                                            </div>
-                                                            <div class="modal-input-field form-group">
-                                                                <label class="form-check-label">Valid To</label>
-                                                                <input type="date" class="form-control" name="valid_to" id="valid_to" value="{{ $company->valid_to }}">
-                                                            </div> --}}
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Image</label>
+                                                                    <label class="form-check-label">Company Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose File to upload
@@ -157,18 +153,20 @@
                                                                         name="company_logo" id="company-logo"
                                                                         value="">
                                                                 </div>
-                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">
+                                                                    *Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
                                                                 <div class="modal-input-field form-group modal_logo">
-                                                                    @if (File::exists(public_path($company->company_logo)))
+                                                                    @if ($company->company_logo && File::exists(public_path($company->company_logo)))
                                                                         <img class="img-fluid" id= "oldImage"
                                                                             src="{{ asset($company->company_logo) }}">
                                                                     @endif
                                                                 </div>
                                                                 <div id="uploadedImage"></div>
                                                                 <div class="modal-input-field form-group new_file">
-                                                                    <label class="form-check-label">Invoice Logo</label>
+                                                                    <label class="form-check-label">Invoice Footer
+                                                                        Logo</label>
                                                                     <span class="file_upload"><i
                                                                             class="fas fa-upload"></i>
                                                                         Choose Files to upload
@@ -178,7 +176,8 @@
                                                                         name="invoice_logo[]" id="invoice-logo"
                                                                         value="" multiple>
                                                                 </div>
-                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">
+                                                                    *Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
                                                                 <div class="modal-input-field form-group modal_logo">
@@ -186,16 +185,18 @@
                                                                 <div id="uploadedlogo"
                                                                     style="display: flex; flex-wrap: wrap;">
                                                                     @foreach ($companyImages as $images)
-                                                                        <div
-                                                                            style="position: relative; display: inline-block;">
-                                                                            <img src="{{ asset($images->path . '/' . $images->image_name) }}"
-                                                                                style="width: 70px; height: 70px; display: block;">
-                                                                            <div onclick="imagedelete({{ $images->image_id }})"
-                                                                                class="cross_btn">
-                                                                                <i class="fa fa-times"
-                                                                                    aria-hidden="true"></i>
+                                                                        @if ($images->image_name && File::exists(public_path($images->path . '/' . $images->image_name)))
+                                                                            <div
+                                                                                style="position: relative; display: inline-block; margin-right: 10px;">
+                                                                                <img src="{{ asset($images->path . '/' . $images->image_name) }}"
+                                                                                    style="width: 70px; height: 70px; display: block;">
+                                                                                <div onclick="imagedelete({{ $images->image_id }})"
+                                                                                    class="cross_btn">
+                                                                                    <i class="fa fa-times"
+                                                                                        aria-hidden="true"></i>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
+                                                                        @endif
                                                                     @endforeach
                                                                 </div>
                                                             </div>

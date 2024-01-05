@@ -59,7 +59,7 @@
                                                                 target="_blank">{{ $document->file_name }}</a></td>
                                                         <td>{{ $document->file_type }}</td>
                                                         <td>{{ $document->doc_type_txt }}</td>
-                                                        <td>{{ date('d-m-Y', strtotime($document->uploadOn_dtm)) }}</td>
+                                                        <td>{{ date('d M Y', strtotime($document->uploadOn_dtm)) }}</td>
                                                     </tr>
                                                 @endforeach
                                             @else

@@ -89,8 +89,8 @@
                                                 <input type="hidden" name="weekEndDate" value="{{ $weekEndDate }}">
 
                                                 <div class="new_teacher_calendar_outer1">
-                                                    <div class="new_teacher_wapper">
-                                                        <div class="skd_dates_row grid_7">
+                                                    <div class="new_teacher_wapper tea_gtr">
+                                                        <div class="skd_dates_row grid_7 tea_grd_inner skd_new_field13">
                                                             <div class="skd_date">
                                                                 School
                                                             </div>
@@ -111,7 +111,8 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="new_teacher_calendar_outer2 ">
+                                                        <div
+                                                            class="new_teacher_calendar_outer2 tea_grd_inner skd_new_field12 grid_7">
                                                             <div class="new_teacher_calendar_inner">
                                                                 <div class="teacher-calendar-days-field3">
                                                                     <p>

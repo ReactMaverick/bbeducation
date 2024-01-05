@@ -29,7 +29,8 @@
                                                             <div class="col-md-6">
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Contact Number</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text"
+                                                                        class="form-control field-validate"
                                                                         name="company_phone" id="company_phone"
                                                                         value="">
                                                                 </div>
@@ -42,23 +43,20 @@
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Finance Query
                                                                         Email</label>
-                                                                    <input type="text"
-                                                                        class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                         name="finance_query_mail" id="finance_query_mail"
                                                                         value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Compliance Mail</label>
-                                                                    <input type="text"
-                                                                        class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                         name="compliance_mail" id="compliance_mail"
                                                                         value="">
                                                                 </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Vetting Enquiry
                                                                         Mail</label>
-                                                                    <input type="text"
-                                                                        class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                         name="vetting_enquiry_mail"
                                                                         id="vetting_enquiry_mail" value="">
                                                                 </div>
@@ -99,7 +97,15 @@
                                                                         name="postcode_txt" id="postcode_txt"
                                                                         value="">
                                                                 </div>
-                                                                <p><Strong>Payee Details :</Strong></p>
+                                                                <p><Strong>Banking Details :</Strong></p>
+                                                                <div class="modal-input-field form-group">
+                                                                    <label class="form-check-label">Preferred Payment
+                                                                        Method
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="pref_payment_method"
+                                                                        id="pref_payment_method">
+                                                                </div>
                                                                 <div class="modal-input-field form-group">
                                                                     <label class="form-check-label">Account Name</label>
                                                                     <input type="text" class="form-control"
@@ -131,15 +137,6 @@
                                                                     <textarea class="form-control" name="payment_terms" id="payment_terms"></textarea>
                                                                 </div>
 
-
-                                                                {{-- <div class="modal-input-field form-group">
-                                                                <label class="form-check-label">Valid From</label>
-                                                                <input type="date" class="form-control" name="valid_from" id="valid_from" value="{{ $company->valid_from }}">
-                                                            </div>
-                                                            <div class="modal-input-field form-group">
-                                                                <label class="form-check-label">Valid To</label>
-                                                                <input type="date" class="form-control" name="valid_to" id="valid_to" value="{{ $company->valid_to }}">
-                                                            </div> --}}
                                                                 <div class="modal-input-field form-group new_file">
                                                                     <label class="form-check-label">Company Logo</label>
                                                                     <span class="file_upload"><i
@@ -151,7 +148,8 @@
                                                                         name="company_logo" id="company-logo"
                                                                         value="">
                                                                 </div>
-                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">
+                                                                    *Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
 
@@ -168,13 +166,14 @@
                                                                         name="invoice_logo[]" id="invoice-logo"
                                                                         value="" multiple>
                                                                 </div>
-                                                                <p style="color: rgb(11, 11, 11); font-size: small;">*Jpg,Jpeg,png type
+                                                                <p style="color: rgb(11, 11, 11); font-size: small;">
+                                                                    *Jpg,Jpeg,png type
                                                                     allowed. Max size 1mb
                                                                 </p>
-                                                               
+
                                                                 <div id="uploadedlogo"
                                                                     style="display: flex; flex-wrap: wrap;">
-                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer calendar-modal-footer">

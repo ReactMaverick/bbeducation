@@ -27,6 +27,7 @@ class ManagementController extends Controller
             $studentList = DB::table('tbl_student')
                 ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
                 ->where('tbl_student.is_delete', 0)
+                ->where('tbl_student.company_id', $company_id)
                 ->orderBy('student_id', 'DESC')
                 ->get();
 
@@ -173,16 +174,23 @@ class ManagementController extends Controller
 
     public function studentInsert(Request $request)
     {
+        $company_id = 0;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+        }
         $student_id = DB::table('tbl_student')
             ->insertGetId([
                 'firstName_txt' => $request->firstName_txt,
                 'surname_txt' => $request->surname_txt,
+                'company_id' => $company_id,
                 'timestamp_ts' => date('Y-m-d H:i:s')
             ]);
 
         $studentList = DB::table('tbl_student')
             ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
             ->where('tbl_student.is_delete', 0)
+            ->where('tbl_student.company_id', $company_id)
             ->orderBy('student_id', 'DESC')
             ->get();
 
@@ -202,6 +210,11 @@ class ManagementController extends Controller
 
     public function studentUpdate(Request $request)
     {
+        $company_id = 0;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+        }
         $isCurrent_ysn = 0;
         if ($request->isCurrent_ysn) {
             $isCurrent_ysn = -1;
@@ -217,6 +230,7 @@ class ManagementController extends Controller
         $studentList = DB::table('tbl_student')
             ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
             ->where('tbl_student.is_delete', 0)
+            ->where('tbl_student.company_id', $company_id)
             ->orderBy('student_id', 'DESC')
             ->get();
 
@@ -236,6 +250,11 @@ class ManagementController extends Controller
 
     public function studentDelete(Request $request)
     {
+        $company_id = 0;
+        $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            $company_id = $webUserLoginData->company_id;
+        }
         DB::table('tbl_student')
             ->where('student_id', $request->studentId)
             ->update([
@@ -245,6 +264,7 @@ class ManagementController extends Controller
         $studentList = DB::table('tbl_student')
             ->select('tbl_student.*', DB::raw("CONCAT(firstName_txt, ' ', surname_txt) AS studentName_txt"), DB::raw("IF(isCurrent_ysn = -1, 'Y', 'N') AS isCurrent_txt"))
             ->where('tbl_student.is_delete', 0)
+            ->where('tbl_student.company_id', $company_id)
             ->orderBy('student_id', 'DESC')
             ->get();
 
@@ -301,52 +321,72 @@ class ManagementController extends Controller
 
     public function InsertAdminUsers(Request $request)
     {
-        $request->validate([
-            'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'admin_username' => 'required|unique:tbl_user,user_name'
-        ]);
-
-        $image = $request->file('profileImage');
-        $extension = $image->extension();
-        $file_name = mt_rand(100000, 999999);
-        $rand = mt_rand(100000, 999999);
-        $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
-        $image->move(public_path('images/userimages'), $filename);
-
         $webUserLoginData = Session::get('webUserLoginData');
+        if ($webUserLoginData) {
+            // $request->validate([
+            //     'profileImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            //     'admin_username' => 'required|unique:tbl_user,user_name'
+            // ]);
+            $emailExist = DB::table('tbl_user')
+                ->where('company_id', $webUserLoginData->company_id)
+                ->where('user_name', $request->admin_username)
+                ->where('admin_type', 1)
+                ->where('is_delete', 0)
+                ->first();
 
-        $adminUserId = DB::table('tbl_user')
-            ->insertGetId([
-                'company_id' => $webUserLoginData->company_id,
-                'admin_type' => 1,
-                'firstName_txt' => $request->admin_firstName,
-                'surname_txt' => $request->admin_surName,
-                // 'password' => Hash::make($request->admin_password),
-                // 'password_txt' => $request->admin_password,
-                'user_name' => $request->admin_username,
-                'profileImage' => $filename,
-                'isActive' => $request->status,
-                'profileImageLocation_txt' => 'images/userimages',
-                'timestamp_ts' => date('Y-m-d H:i:s')
-            ]);
-        // return response()->json(['status' => 'success']);
-        $companyDetail = DB::table('company')
-            ->select('company.*')
-            ->where('company.company_id', $webUserLoginData->company_id)
-            ->first();
+            if ($emailExist) {
+                return redirect()->back()->with('error', 'Email already exist.');
+            }
 
-        if ($request->admin_username) {
-            $uID = base64_encode($adminUserId);
-            $mailData['companyDetail'] = $companyDetail;
-            $mailData['firstName_txt'] = $request->admin_firstName;
-            $mailData['surname_txt'] = $request->admin_surName;
-            $mailData['mail'] = $request->admin_username;
-            $mailData['rUrl'] = url('/adminUser/set-password') . '/' . $uID;
-            $myVar = new AlertController();
-            $myVar->adminUserAddMail($mailData);
+            $filename = '';
+            if ($request->file('profileImage')) {
+                $image = $request->file('profileImage');
+                $maxSize = 1024 * 1024;
+                $allowedExtensions = ['jpg', 'jpeg', 'png'];
+                if ($image->getSize() <= $maxSize && in_array($image->getClientOriginalExtension(), $allowedExtensions)) {
+                    $extension = $image->extension();
+                    $file_name = mt_rand(100000, 999999);
+                    $rand = mt_rand(100000, 999999);
+                    $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+                    $image->move(public_path('images/userimages'), $filename);
+                }
+            }
+
+            $adminUserId = DB::table('tbl_user')
+                ->insertGetId([
+                    'company_id' => $webUserLoginData->company_id,
+                    'admin_type' => 1,
+                    'firstName_txt' => $request->admin_firstName,
+                    'surname_txt' => $request->admin_surName,
+                    // 'password' => Hash::make($request->admin_password),
+                    // 'password_txt' => $request->admin_password,
+                    'user_name' => $request->admin_username,
+                    'profileImage' => $filename,
+                    'isActive' => $request->status,
+                    'profileImageLocation_txt' => 'images/userimages',
+                    'timestamp_ts' => date('Y-m-d H:i:s')
+                ]);
+            // return response()->json(['status' => 'success']);
+            $companyDetail = DB::table('company')
+                ->select('company.*')
+                ->where('company.company_id', $webUserLoginData->company_id)
+                ->first();
+
+            if ($request->admin_username) {
+                $uID = base64_encode($adminUserId);
+                $mailData['companyDetail'] = $companyDetail;
+                $mailData['firstName_txt'] = $request->admin_firstName;
+                $mailData['surname_txt'] = $request->admin_surName;
+                $mailData['mail'] = $request->admin_username;
+                $mailData['rUrl'] = url('/adminUser/set-password') . '/' . $uID;
+                $myVar = new AlertController();
+                $myVar->adminUserAddMail($mailData);
+            }
+
+            return redirect('/adminUsers')->with('success', 'User registered successfully. Check user email for a password setup link.');
+        } else {
+            return redirect()->intended('/');
         }
-
-        return redirect('/adminUsers')->with('success', 'User registered successfully. Check user email for a password setup link.');
     }
 
     public function getAdminUser(Request $request)
@@ -371,11 +411,21 @@ class ManagementController extends Controller
 
     public function updateAdminUsers(Request $request)
     {
-        $request->validate([
-            'edit_profileImage' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
         $webUserLoginData = Session::get('webUserLoginData');
+        // $request->validate([
+        //     'edit_profileImage' => 'image|mimes:jpeg,png,jpg,gif|max:1024',
+        // ]);
+
+        $emailExist = DB::table('tbl_user')
+            ->where('company_id', $webUserLoginData->company_id)
+            ->where('user_name', $request->edit_admin_username)
+            ->where('admin_type', 1)
+            ->where('is_delete', 0)
+            ->where('user_id', '!=', $request->adminUserId)
+            ->first();
+        if ($emailExist) {
+            return redirect()->back()->with('error', 'Email already exist.');
+        }
 
         $adminUser = DB::table('tbl_user')->where('user_id', $request->adminUserId)->first();
         if ($request->adminUserId == $webUserLoginData->user_id) {
@@ -385,16 +435,21 @@ class ManagementController extends Controller
         }
 
         if ($request->file('edit_profileImage')) {
-            $imagePath = public_path($adminUser->profileImageLocation_txt . '/' . $adminUser->profileImage);
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
-            }
             $image = $request->file('edit_profileImage');
-            $extension = $image->extension();
-            $file_name = mt_rand(100000, 999999);
-            $rand = mt_rand(100000, 999999);
-            $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
-            $image->move(public_path('images/userimages'), $filename);
+            $maxSize = 1024 * 1024;
+            $allowedExtensions = ['jpg', 'jpeg', 'png'];
+            if ($image->getSize() <= $maxSize && in_array($image->getClientOriginalExtension(), $allowedExtensions)) {
+                $extension = $image->extension();
+                $file_name = mt_rand(100000, 999999);
+                $rand = mt_rand(100000, 999999);
+                $filename = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+                $image->move(public_path('images/userimages'), $filename);
+
+                $imagePath = public_path($adminUser->profileImageLocation_txt . '/' . $adminUser->profileImage);
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
         } else {
             $filename = $request->old_image;
         }
@@ -441,34 +496,45 @@ class ManagementController extends Controller
             $company = DB::table('company')->where('company_id', $company_id)->first();
 
             if ($request->file('company_logo')) {
-
                 if (File::exists(public_path($company->company_logo))) {
                     File::delete(public_path($company->company_logo));
                 }
                 $image = $request->file('company_logo');
-                $extension = $image->extension();
-                $file_name = mt_rand(100000, 999999);
-                $rand = mt_rand(100000, 999999);
-                $filename1 = 'web/company_logo/' . time() . "_" . $rand . "_" . $file_name . '.' . $extension;
-                $image->move(public_path('web/company_logo'), $filename1);
+                $maxSize = 1024 * 1024;
+                $allowedExtensions = ['jpg', 'jpeg', 'png'];
+                if ($image->getSize() <= $maxSize && in_array($image->getClientOriginalExtension(), $allowedExtensions)) {
+                    $extension = $image->extension();
+                    $file_name = mt_rand(100000, 999999);
+                    $rand = mt_rand(100000, 999999);
+                    $filename1 = 'web/company_logo/' . time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+                    $image->move(public_path('web/company_logo'), $filename1);
+                } else {
+                    $filename1 = $company->company_logo;
+                }
             } else {
                 $filename1 = $company->company_logo;
             }
+
             if ($request->file('invoice_logo')) {
                 foreach ($request->file('invoice_logo') as $key => $logo) {
-                    $extension = $logo->extension();
-                    $file_name = mt_rand(100000, 999999);
-                    $rand = mt_rand(100000, 999999);
-                    $filename2 = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
-                    $logo->move(public_path('web/company_logo/footer_images/'), $filename2);
+                    $maxSize = 1024 * 1024;
+                    $allowedExtensions = ['jpg', 'jpeg', 'png'];
+                    if ($logo->getSize() <= $maxSize && in_array($logo->getClientOriginalExtension(), $allowedExtensions)) {
+                        $extension = $logo->extension();
+                        $file_name = mt_rand(100000, 999999);
+                        $rand = mt_rand(100000, 999999);
+                        $filename2 = time() . "_" . $rand . "_" . $file_name . '.' . $extension;
+                        $logo->move(public_path('web/company_logo/footer_images/'), $filename2);
 
-                    DB::table('company_logo')->insert([
-                        'company_id' => $company_id,
-                        'image_name' => $filename2,
-                        'path' => 'web/company_logo/footer_images/'
-                    ]);
+                        DB::table('company_logo')->insert([
+                            'company_id' => $company_id,
+                            'image_name' => $filename2,
+                            'path' => 'web/company_logo/footer_images/'
+                        ]);
+                    }
                 }
             }
+
             DB::table('company')
                 ->where('company_id', $company_id)
                 ->update([
@@ -492,7 +558,7 @@ class ManagementController extends Controller
                     'payment_terms' => $request->payment_terms,
                 ]);
 
-            if ($webUserLoginData->company_logo) {
+            if ($filename1) {
                 $webUserLoginData->company_logo = $filename1;
                 session(['webUserLoginData' => $webUserLoginData]);
             }
@@ -506,7 +572,7 @@ class ManagementController extends Controller
     {
         $webUserLoginData = Session::get('webUserLoginData');
         if ($webUserLoginData) {
-            DB::table('tbl_user')->where('user_id', $request->adminId)->update(['is_delete' => 1]);
+            DB::table('tbl_user')->where('user_id', $request->adminId)->update(['is_delete' => 1, 'isActive' => 0, 'password' => '']);
             return response()->json(true);
         } else {
             return response()->json(false);
@@ -520,6 +586,9 @@ class ManagementController extends Controller
             $count = DB::table('tbl_user')
                 ->select('tbl_user.*')
                 ->where('user_name', $loginMail)
+                ->where('company_id', $request->company_id)
+                ->where('admin_type', 1)
+                ->where('is_delete', 0)
                 ->where('user_id', '!=', $request->adminUserId)
                 ->get();
             if (count($count) > 0) {
@@ -531,6 +600,9 @@ class ManagementController extends Controller
             $count = DB::table('tbl_user')
                 ->select('tbl_user.*')
                 ->where('user_name', $loginMail)
+                ->where('company_id', $request->company_id)
+                ->where('admin_type', 1)
+                ->where('is_delete', 0)
                 ->get();
             if (count($count) > 0) {
                 return "Yes";

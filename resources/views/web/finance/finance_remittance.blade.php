@@ -62,7 +62,8 @@
                                                     </a>
                                                     <a style="cursor: pointer" class="disabled-link big_icon"
                                                         id="previewInvoiceBtn" title="Preview Invoice">
-                                                        <img class="img-fluid" src="{{ asset('web/company_logo/search-file.png') }}"
+                                                        <img class="img-fluid"
+                                                            src="{{ asset('web/company_logo/search-file.png') }}"
                                                             alt="">
                                                     </a>
                                                     <a style="cursor: pointer" class="disabled-link big_icon"
@@ -87,64 +88,21 @@
                                                         <th>Invoice ID</th>
                                                         <th>Invoice Date</th>
                                                         <th>School</th>
+                                                        <th>Net</th>
+                                                        <th>VAT</th>
+                                                        <th>Gross</th>
                                                         <th>Paid On</th>
                                                         <th>Payment Method</th>
                                                         <th>Remitted By</th>
                                                         <th>Sent On</th>
                                                         <th>Sent By</th>
-                                                        <th>Net</th>
-                                                        <th>VAT</th>
-                                                        <th>Gross</th>
                                                         <th>Status By School</th>
                                                         <th>Paid On (School)</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody class="table-body-sec">
-                                                    @foreach ($remitInvoices as $key => $Invoices)
-                                                        <tr class="school-detail-table-data editInvoiceRow"
-                                                            onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
-                                                            id="editInvoiceRow{{ $Invoices->invoice_id }}">
-                                                            <td>{{ $Invoices->invoice_id }}</td>
-                                                            <td>{{ $Invoices->invoice_dte ? date('d-m-Y', strtotime($Invoices->invoice_dte)) : '' }}
-                                                            </td>
-                                                            <td>{{ $Invoices->school_txt }}</td>
-                                                            <td>{{ $Invoices->paid_dte ? date('d-m-Y', strtotime($Invoices->paid_dte)) : '' }}
-                                                            </td>
-                                                            <td>{{ $Invoices->invPaymentMethod_txt }}</td>
-                                                            <td>{{ $Invoices->remittee_txt }}</td>
-                                                            <td>{{ $Invoices->sentMailDate ? date('d-m-Y', strtotime($Invoices->sentMailDate)) : '' }}
-                                                            </td>
-                                                            <td>{{ $Invoices->sender_txt }}</td>
-                                                            <td>{{ $Invoices->net_dec }}</td>
-                                                            <td>{{ $Invoices->vat_dec }}</td>
-                                                            <td>{{ $Invoices->gross_dec }}</td>
-                                                            <td>
-                                                                @if ($Invoices->school_paid_dte)
-                                                                    Paid
-                                                                    @if ($Invoices->paymentMethod_txt)
-                                                                        (by {{ $Invoices->paymentMethod_txt }})
-                                                                    @endif
-                                                                @else
-                                                                    Due
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if ($Invoices->school_paid_dte != null)
-                                                                    {{ date('d-m-Y', strtotime($Invoices->school_paid_dte)) }}
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if ($Invoices->paid_dte != null)
-                                                                    {{ 'Paid' }}
-                                                                @elseif (date('Y-m-d', strtotime($Invoices->invoice_dte . ' + 30 days')) <= date('Y-m-d'))
-                                                                    {{ 'Overdue' }}
-                                                                @else
-                                                                    {{ 'Due' }}
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -239,21 +197,147 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable({
-                // pageLength: 50,
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "{{ url('financeRemittancePostAjax') }}",
+                    "type": "POST",
+                    "data": function(d) {
+                        d._token = "{{ csrf_token() }}";
+                        d.include = $('#includePaid').is(':checked') ? 1 : '';
+                        d.method = $('#paymentMethod').val();
+                    }
+                },
+                // "lengthMenu": [
+                //     [10, 25, 50, -1],
+                //     [10, 25, 50, 75]
+                // ],
+                "pageLength": 25,
+                "rowCallback": function(row, data) {
+                    // Add class and ID to the table row
+                    $(row).addClass('school-detail-table-data editInvoiceRow')
+                        .attr('id', 'editInvoiceRow' + data.invoice_id);
+
+                    // Add a click event to the table row
+                    $(row).on('click', function() {
+                        // Call your custom function passing the invoice_id
+                        editInvoiceRowSelect(data.invoice_id);
+                    });
+                },
                 "order": [
                     [11, "desc"]
                 ],
                 scrollY: '600px',
-                paging: false,
-                footer: false,
-                info: false,
-                ordering: false,
-                // searching: false,
                 responsive: true,
                 lengthChange: true,
                 autoWidth: true,
+                searching: true,
+                "columns": [{
+                        "data": "invoice_id",
+                        "type": "num",
+                        searchable: true
+                    },
+                    {
+                        "data": "invoice_dte",
+                        "type": "date",
+                        searchable: true
+                    },
+                    {
+                        "data": "school_txt",
+                        "type": "string",
+                        searchable: true
+                    },
+                    {
+                        "data": "net_dec",
+                        "type": "num",
+                        searchable: true
+                    },
+                    {
+                        "data": "vat_dec",
+                        "type": "num",
+                        searchable: true
+                    },
+                    {
+                        "data": "gross_dec",
+                        "type": "num",
+                        searchable: true
+                    },
+                    {
+                        "data": "paid_dte",
+                        "type": "date",
+                        searchable: true
+                    },
+                    {
+                        "data": "invPaymentMethod_txt",
+                        "type": "string",
+                        searchable: true
+                    },
+                    {
+                        "data": "remittee_txt",
+                        "type": "string",
+                        searchable: true
+                    },
+                    {
+                        "data": "sentMailDate",
+                        "type": "date",
+                        searchable: true
+                    },
+                    {
+                        "data": "sender_txt",
+                        "type": "string",
+                        searchable: true
+                    },
+                    {
+                        "data": "payment_status",
+                        "type": "string",
+                        "orderable": false,
+                        searchable: true
+                    },
+                    {
+                        "data": "school_paid_dte",
+                        "type": "date",
+                        searchable: true
+                    },
+                    {
+                        "data": "status",
+                        "type": "string",
+                        "orderable": false,
+                        searchable: true
+                    }
+                ],
+                "columnDefs": [{
+                        "type": "num",
+                        "targets": [0, 3, 4, 5]
+                    },
+                    {
+                        "type": "date",
+                        "targets": [1, 6, 9, 12]
+                    },
+                    {
+                        "type": "string",
+                        "targets": [2, 7, 8, 10, 11, 13]
+                    }
+                ],
             });
         });
+
+        // $(document).ready(function() {
+        //     $('#myTable').DataTable({
+        //         // pageLength: 50,
+        //         "order": [
+        //             [11, "desc"]
+        //         ],
+        //         scrollY: '600px',
+        //         paging: false,
+        //         footer: false,
+        //         info: false,
+        //         ordering: false,
+        //         // searching: false,
+        //         responsive: true,
+        //         lengthChange: true,
+        //         autoWidth: true,
+        //     });
+        // });
 
         $(document).on('change', '#includePaid', function() {
             var method = "<?php echo app('request')->input('method'); ?>";

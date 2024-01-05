@@ -162,6 +162,7 @@
                             remark: remark
                         },
                         success: function(data) {
+                            $('#fullLoader').hide();
                             if (data.add == 'Yes') {
                                 swal("", "Timesheet rejected successfully");
                             } else {

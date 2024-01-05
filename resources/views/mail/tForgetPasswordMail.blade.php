@@ -63,10 +63,12 @@
                 <td style="padding: 10px 10px;border-top: 1px solid #dedede;">
                     <h3 style="margin-bottom: 10px;">*PLEASE DO NOT RESPOND TO THIS EMAIL, THIS EMAIL ADDRESS IS NOT
                         MONITORED.*</h3>
-                    <p>For any queries, please email <a
-                            href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}"
-                            target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a>
-                    </p>
+                    @if ($mailData['companyDetail'] && $mailData['companyDetail']->compliance_mail)
+                        <p>For any queries, please email <a
+                                href="mailto:{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}"
+                                target="_blank">{{ $mailData['companyDetail'] ? $mailData['companyDetail']->compliance_mail : '' }}</a>
+                        </p>
+                    @endif
                 </td>
             </tr>
             <tr>

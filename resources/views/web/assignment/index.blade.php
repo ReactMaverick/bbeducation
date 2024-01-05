@@ -124,7 +124,7 @@
                                             </td>
                                             <td>
                                                 @if ($Assignment->asnStartDate_dte)
-                                                    {{ date('d-m-Y', strtotime($Assignment->asnStartDate_dte)) }}
+                                                    {{ date('d M Y', strtotime($Assignment->asnStartDate_dte)) }}
                                                 @endif
                                             </td>
                                             <td>

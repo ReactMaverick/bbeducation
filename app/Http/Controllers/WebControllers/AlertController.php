@@ -74,6 +74,86 @@ class AlertController extends Controller
         }
     }
 
+    public function mailAdminAfterReject($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_mail_after_reject', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Timesheet Rejected By School")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function mailAdminAfterTeacherItemReject($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_mail_after_teacher_item_reject', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Timesheet Rejected By School")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function mailAdminAfterItemReject($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_mail_after_item_reject', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Timesheet Rejected By School")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function mailAdminLogSchAfterReject($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_mail_after_log_sch_reject', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Timesheet Rejected By School")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
+    public function mailAdminLogSchTchrItemAfterReject($mailData)
+    {
+        if ($mailData['mail']) {
+            try {
+                Mail::send('/mail/admin_mail_after_log_tchr_itm_reject', ['mailData' => $mailData], function ($m) use ($mailData) {
+                    $m->to($mailData['mail'])->subject("Timesheet Rejected By School")->getSwiftMessage()
+                        ->getHeaders()
+                        ->addTextHeader('x-mailgun-native-send', 'true');
+                });
+            } catch (\Exception $e) {
+                // echo $e;
+                // exit;
+            }
+        }
+    }
+
     public function sendToSchoolApproval($mailData)
     {
         if ($mailData['mail']) {
@@ -324,8 +404,8 @@ class AlertController extends Controller
                         ->addTextHeader('x-mailgun-native-send', 'true');
                 });
             } catch (\Exception $e) {
-                echo $e;
-                exit;
+                // echo $e;
+                // exit;
             }
         }
     }
@@ -341,9 +421,9 @@ class AlertController extends Controller
                 });
                 return true;
             } catch (\Exception $e) {
-                echo $e;
-                return false;
-                exit;
+                // echo $e;
+                // return false;
+                // exit;
             }
         }
     }
@@ -359,9 +439,9 @@ class AlertController extends Controller
                 });
                 return true;
             } catch (\Exception $e) {
-                echo $e;
-                return false;
-                exit;
+                // echo $e;
+                // return false;
+                // exit;
             }
         }
     }
@@ -377,9 +457,9 @@ class AlertController extends Controller
                 });
                 return true;
             } catch (\Exception $e) {
-                echo $e;
-                return false;
-                exit;
+                // echo $e;
+                // return false;
+                // exit;
             }
         }
     }
@@ -395,9 +475,9 @@ class AlertController extends Controller
                 });
                 return true;
             } catch (\Exception $e) {
-                echo $e;
-                return false;
-                exit;
+                // echo $e;
+                // return false;
+                // exit;
             }
         }
     }
@@ -414,11 +494,9 @@ class AlertController extends Controller
                 return true;
             } catch (\Exception $e) {
                 // echo $e;
-                return false;
-                exit;
+                // return false;
+                // exit;
             }
         }
     }
-
-
 }

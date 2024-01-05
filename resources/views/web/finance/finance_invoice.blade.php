@@ -109,7 +109,7 @@
                                                                     {{ $timesheet->knownAs_txt . ' ' . $timesheet->surname_txt }}
                                                                 @endif
                                                             </td>
-                                                            <td>{{ date('d-m-Y', strtotime($timesheet->asnDate_dte)) }}
+                                                            <td>{{ date('d M Y', strtotime($timesheet->asnDate_dte)) }}
                                                             </td>
                                                             <td>{{ $timesheet->datePart_txt }}</td>
                                                             <td>{{ $timesheet->charge_dec }}</td>
@@ -282,7 +282,8 @@
                                         </div>
                                         <div
                                             class="finance-invoice-table-section finance-invoice-page-table financeInvoiceTableNew">
-                                            <table class="table table-bordered table-striped" id="myTable2">
+                                            <table class="table table-bordered table-striped table_fst_col"
+                                                id="myTable2">
                                                 <thead>
                                                     <tr class="school-detail-table-heading">
                                                         <th>Invoice ID</th>
@@ -304,7 +305,7 @@
                                                             id="editInvoiceRow{{ $invoice->invoice_id }}"
                                                             onclick="selectInvoiceRow('{{ $invoice->invoice_id }}')">
                                                             <td>{{ $invoice->invoice_id }}</td>
-                                                            <td>{{ date('d-m-Y', strtotime($invoice->invoiceDate_dte)) }}
+                                                            <td>{{ date('d M Y', strtotime($invoice->invoiceDate_dte)) }}
                                                             </td>
                                                             <td>{{ $invoice->name_txt }}</td>
                                                             <td>{{ $invoice->gross_dec }}</td>

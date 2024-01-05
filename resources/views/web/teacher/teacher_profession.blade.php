@@ -78,7 +78,7 @@
                                                     <h2>NQT Completed</h2>
                                                 </div>
                                                 <div class="teacher-profession-name-text">
-                                                    <p>{{ $teacherDetail->NQTCompleted_dte != null ? date('d-m-Y', strtotime($teacherDetail->NQTCompleted_dte)) : '' }}
+                                                    <p>{{ $teacherDetail->NQTCompleted_dte != null ? date('d M Y', strtotime($teacherDetail->NQTCompleted_dte)) : '' }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -153,7 +153,7 @@
                                                         <p>Interviewed by
                                                             {{ $teacherDetail->int_firstName_txt . ' ' . $teacherDetail->int_surname_txt }}
                                                             on
-                                                            {{ $teacherDetail->interviewCompletedOn_dtm != null ? date('d-m-Y', strtotime($teacherDetail->interviewCompletedOn_dtm)) : '' }}
+                                                            {{ $teacherDetail->interviewCompletedOn_dtm != null ? date('d M Y', strtotime($teacherDetail->interviewCompletedOn_dtm)) : '' }}
                                                         </p>
                                                     @endif
                                                 </div>

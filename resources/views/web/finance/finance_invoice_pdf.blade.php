@@ -480,7 +480,7 @@
                                         Invoice Date:
                                     </td>
                                     <td>
-                                        {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
+                                        {{ date('d M Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -506,7 +506,7 @@
                                         Approved Date:
                                     </td>
                                     <td>
-                                        {{ date('d-m-Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
+                                        {{ date('d M Y', strtotime($schoolInvoices->invoiceDate_dte)) }}
                                     </td>
                                 </tr>
                             </tbody>

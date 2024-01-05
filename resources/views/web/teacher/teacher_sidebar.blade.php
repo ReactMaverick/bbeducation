@@ -21,7 +21,9 @@
 
             <div class="assignment-detail-user-img-sec">
                 <div class="user-img-sec">
-                    @if ($teacherDetail->file_location != null || $teacherDetail->file_location != '')
+                    @if (
+                        ($teacherDetail->file_location != null || $teacherDetail->file_location != '') &&
+                            file_exists(public_path($teacherDetail->file_location)))
                         <img class="img-fluid" src="{{ asset($teacherDetail->file_location) }}" alt="">
                     @else
                         <img class="img-fluid" src="{{ asset('web/images/user-img.png') }}" alt="">

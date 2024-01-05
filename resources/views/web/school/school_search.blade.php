@@ -64,7 +64,7 @@
                                                                     {{ $school->days_dec }}</td>
                                                                 <td onclick="schoolDetail({{ $school->school_id }})">
                                                                     @if ($school->lastContact_dte != 0)
-                                                                        {{ date('d-m-Y', strtotime($school->lastContact_dte)) }}
+                                                                        {{ date('d M Y', strtotime($school->lastContact_dte)) }}
                                                                     @endif
                                                                 </td>
                                                                 <td onclick="addAssignment({{ $school->school_id }})"

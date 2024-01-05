@@ -73,7 +73,7 @@
                                                     <h2>NQT Completed</h2>
                                                 </div>
                                                 <div class="teacher-profession-name-text">
-                                                    <p>{{ $teacherDetail->NQTCompleted_dte != null ? date('d-m-Y', strtotime($teacherDetail->NQTCompleted_dte)) : '' }}
+                                                    <p>{{ $teacherDetail->NQTCompleted_dte != null ? date('d M Y', strtotime($teacherDetail->NQTCompleted_dte)) : '' }}
                                                     </p>
                                                 </div>
                                             </div>

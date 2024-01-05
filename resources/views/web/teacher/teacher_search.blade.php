@@ -58,7 +58,7 @@
                                                         <td>{{ $teacher->daysWorked_dec }}</td>
                                                         <td>
                                                             @if ($teacher->lastContact_dte != 0)
-                                                                {{ date('d-m-Y', strtotime($teacher->lastContact_dte)) }}
+                                                                {{ date('d M Y', strtotime($teacher->lastContact_dte)) }}
                                                             @endif
                                                         </td>
                                                     </tr>

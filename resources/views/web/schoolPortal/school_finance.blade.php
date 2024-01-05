@@ -23,7 +23,7 @@
                     <div class="col-md-12 topbar-sec">
 
                         <div class="row school-finance-right-sec">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12 col-lg-6 col-xl-6 col-12">
                                 <div class="sec_box_edit">
                                     <div class="contact-heading details-heading">
                                         <div class="contact-heading-text">
@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-12 col-lg-6 col-xl-6 col-12">
                                 <div class="sec_box_edit">
                                     <div class="contact-heading details-heading">
                                         <div class="contact-heading-text">
@@ -119,8 +119,8 @@
                             </div>
                         </div>
 
-                        <div class="row school-finance-right-sec">
-                            <div class="col-md-6">
+                        <div class="row school-finance-right-sec mt-3">
+                            <div class="col-md-12 col-sm-12 col-lg-6 col-xl-6 col-12">
                                 <div class="school-finance-sec heading_finance">
                                     <div class="finance_lft_box">
                                         <div class="school-finance-contact-heading-text">
@@ -162,8 +162,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6"></div>
-                            <div class="col-md-6">
+                            <div class="col-md-12 col-sm-12 col-lg-6 col-xl-6 col-12"></div>
+                        </div>
+                        <div class="row school-finance-right-sec my_row_gap">
+                            <div class="col-md-12 col-sm-12 col-lg-6 col-xl-6 col-12">
                                 <input type="hidden" name="" id="editInvoiceId" value="">
                                 <input type="hidden" name="" id="editInvoiceSchoolId" value="{{ $school_id }}">
                                 <input type="hidden" name="" id="editInvoiceIncludeId"
@@ -195,13 +197,13 @@
                                                         onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
                                                         id="editInvoiceRow{{ $Invoices->invoice_id }}">
                                                         <td>{{ $Invoices->invoice_id }}</td>
-                                                        <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
+                                                        <td>{{ date('d M Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
                                                         <td>{{ $Invoices->net_dec }}</td>
                                                         <td>{{ $Invoices->vat_dec }}</td>
                                                         <td>{{ $Invoices->gross_dec }}</td>
                                                         <td>
                                                             @if ($Invoices->paidOn_dte != null)
-                                                                {{ date('d-m-Y', strtotime($Invoices->paidOn_dte)) }}
+                                                                {{ date('d M Y', strtotime($Invoices->paidOn_dte)) }}
                                                             @endif
                                                         </td>
                                                         <td>
@@ -225,7 +227,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12 col-sm-12 col-lg-6 col-xl-6 col-12">
                                 <div class="sec_box_edit">
                                     <div class="contact-heading details-heading">
                                         <div class="contact-heading-text">
@@ -252,7 +254,7 @@
                                                         onclick="editInvoiceRowSelect('<?php echo $Invoices->invoice_id; ?>')"
                                                         id="editInvoiceRow{{ $Invoices->invoice_id }}">
                                                         <td>{{ $Invoices->invoice_id }}</td>
-                                                        <td>{{ date('d-m-Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
+                                                        <td>{{ date('d M Y', strtotime($Invoices->invoiceDate_dte)) }}</td>
                                                         <td>{{ $Invoices->net_dec }}</td>
                                                         <td>{{ $Invoices->vat_dec }}</td>
                                                         <td>{{ $Invoices->gross_dec }}</td>
@@ -273,7 +275,7 @@
                                                         </td>
                                                         <td>
                                                             @if ($Invoices->school_paid_dte != null)
-                                                                {{ date('d-m-Y', strtotime($Invoices->school_paid_dte)) }}
+                                                                {{ date('d M Y', strtotime($Invoices->school_paid_dte)) }}
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -285,7 +287,7 @@
                             </div>
                         </div>
 
-                        <div class="school-finance-right-sec">
+                        <div class="school-finance-right-sec mt-3">
                             <div class="school-finance-section">
 
                                 <div class="finance-timesheet-contact-first-sec sec_box_edit" style="width: 100%">
@@ -498,12 +500,13 @@
 
                                             <input type="hidden" name="" id="approveAsnId" value="">
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="school-finance-right-sec">
+                        <div class="school-finance-right-sec mt-3">
                             <div class="school-finance-section">
                                 <div class="finance-timesheet-contact-first-sec sec_box_edit" style="width: 100%">
                                     <div class="contact-heading details-heading">
@@ -632,7 +635,10 @@
                 info: false,
                 "order": [
                     [1, "desc"]
-                ]
+                ],
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
             $('#myTable2').DataTable({
                 scrollY: '280px',
@@ -641,7 +647,10 @@
                 info: false,
                 "order": [
                     [6, "desc"]
-                ]
+                ],
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
 
             $('#myTable3').DataTable({
@@ -650,7 +659,22 @@
                 // footer: false,
                 info: false,
                 ordering: false,
-                searching: false
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
+            });
+
+            $('#myTable4').DataTable({
+                scrollY: '395px',
+                paging: false,
+                footer: false,
+                info: false,
+                ordering: false,
+                searching: false,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: true,
             });
         });
 
@@ -858,7 +882,11 @@
                                         remark: remark
                                     },
                                     success: function(data) {
-                                        location.reload();
+                                        $('#fullLoader').hide();
+                                        swal("", "Timesheet rejected successfully");
+                                        setTimeout(function() {
+                                            location.reload();
+                                        }, 2000);
                                     }
                                 });
                         }
@@ -969,6 +997,7 @@
                                     success: function(data) {
                                         teacherSubmittedSheet();
                                         $('#fullLoader').hide();
+                                        swal("", "Timesheet rejected successfully");
                                     }
                                 });
                         }

@@ -933,7 +933,7 @@
     });
     /******* field validate 4 ********/
 
-    /******* field validate 4 ********/
+    /******* field validate 5 ********/
     $(document).on('submit', '.form-validate-5', function(e) {
         var error = "";
 
@@ -1117,4 +1117,270 @@
             //$(this).next(".error-content").addClass('hidden');
         }
     });
+
+    /******* field validate 6 ********/
+    $(document).on('submit', '.form-validate-6', function(e) {
+        var error = "";
+
+        //to validate text field
+        $(".field-validate-6").each(function() {
+
+            if (this.value == '') {
+
+                $(this).closest(".form-group").addClass('has-error');
+                //$(this).next(".error-content").removeClass('hidden');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+                //$(this).next(".error-content").addClass('hidden');
+            }
+        });
+
+        if (error == "has error") {
+            $('#fullLoader').hide();
+            return false;
+        }
+
+    });
+
+    $(document).on('keyup change', '.field-validate-6', function(e) {
+
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+
+    });
+    /******* field validate 6 ********/
+
+    /******* field validate 7 ********/
+    $(document).on('submit', '.form-validate-7', function(e) {
+        var error = "";
+
+        //to validate text field
+        $(".field-validate-7").each(function() {
+
+            if (this.value == '') {
+
+                $(this).closest(".form-group").addClass('has-error');
+                //$(this).next(".error-content").removeClass('hidden');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+                //$(this).next(".error-content").addClass('hidden');
+            }
+        });
+
+        if (error == "has error") {
+            $('#fullLoader').hide();
+            return false;
+        }
+
+    });
+
+    $(document).on('keyup change', '.field-validate-7', function(e) {
+
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+
+    });
+    /******* field validate 7 ********/
+
+    /******* field validate 8 ********/
+    $(document).on('submit', '.form-validate-8', function(e) {
+        var error = "";
+
+        //to validate text field
+        $(".field-validate-8").each(function() {
+
+            if (this.value == '') {
+
+                $(this).closest(".form-group").addClass('has-error');
+                //$(this).next(".error-content").removeClass('hidden');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+                //$(this).next(".error-content").addClass('hidden');
+            }
+        });
+
+        if (error == "has error") {
+            $('#fullLoader').hide();
+            return false;
+        }
+
+    });
+
+    $(document).on('keyup change', '.field-validate-8', function(e) {
+
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+
+    });
+    /******* field validate 8 ********/
+
+    /******* field validate 9 ********/
+    $(document).on('submit', '.form-validate-9', function(e) {
+        var error = "";
+
+        //to validate text field
+        $(".field-validate-9").each(function() {
+
+            if (this.value == '') {
+
+                $(this).closest(".form-group").addClass('has-error');
+                //$(this).next(".error-content").removeClass('hidden');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+                //$(this).next(".error-content").addClass('hidden');
+            }
+        });
+
+        if (error == "has error") {
+            $('#fullLoader').hide();
+            return false;
+        }
+
+    });
+
+    $(document).on('keyup change', '.field-validate-9', function(e) {
+
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+
+    });
+    /******* field validate 9 ********/
+
+    /******* field validate 10 ********/
+    $(document).on('submit', '.form-validate-10', function(e) {
+        var error = "";
+
+        //to validate text field
+        $(".field-validate-10").each(function() {
+
+            if (this.value == '') {
+
+                $(this).closest(".form-group").addClass('has-error');
+                //$(this).next(".error-content").removeClass('hidden');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+                //$(this).next(".error-content").addClass('hidden');
+            }
+        });
+
+        if (error == "has error") {
+            $('#fullLoader').hide();
+            return false;
+        }
+
+    });
+
+    $(document).on('keyup change', '.field-validate-10', function(e) {
+
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+
+    });
+    /******* field validate 10 ********/
+
+    /******* field validate 11 ********/
+    $(document).on('submit', '.form-validate-11', function(e) {
+        var error = "";
+
+        //to validate text field
+        $(".field-validate-11").each(function() {
+
+            if (this.value == '') {
+
+                $(this).closest(".form-group").addClass('has-error');
+                //$(this).next(".error-content").removeClass('hidden');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+                //$(this).next(".error-content").addClass('hidden');
+            }
+        });
+
+        if (error == "has error") {
+            $('#fullLoader').hide();
+            return false;
+        }
+
+    });
+
+    $(document).on('keyup change', '.field-validate-11', function(e) {
+
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+
+    });
+    /******* field validate 11 ********/
+
+    /******* field validate 12 ********/
+    $(document).on('submit', '.form-validate-12', function(e) {
+        var error = "";
+
+        //to validate text field
+        $(".field-validate-12").each(function() {
+
+            if (this.value == '') {
+
+                $(this).closest(".form-group").addClass('has-error');
+                //$(this).next(".error-content").removeClass('hidden');
+                error = "has error";
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+                //$(this).next(".error-content").addClass('hidden');
+            }
+        });
+
+        if (error == "has error") {
+            $('#fullLoader').hide();
+            return false;
+        }
+
+    });
+
+    $(document).on('keyup change', '.field-validate-12', function(e) {
+
+        if (this.value == '') {
+            $(this).closest(".form-group").addClass('has-error');
+            //$(this).next(".error-content").removeClass('hidden');
+        } else {
+            $(this).closest(".form-group").removeClass('has-error');
+            //$(this).next(".error-content").addClass('hidden');
+        }
+
+    });
+    /******* field validate 12 ********/
 </script>

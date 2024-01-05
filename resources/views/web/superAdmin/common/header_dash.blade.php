@@ -32,10 +32,35 @@
                         <a href="{{ URL::to('/all-company') }}"
                             class="skd_item @if ($headerTitle == 'Dashboard') skd_active @endif">Home</a>
                     </li>
+                    <div class="sb_new_navbar">
+                        <li class="skd_list _hover_submenu_open">
+                            <a href="javascript:void(0)"
+                                class="skd_item submnu_btn @if ($headerTitle == 'Assignment Section' || $headerTitle == 'School Section' || $headerTitle == 'Teacher Section') skd_active @endif">System
+                                Preferences<i class="plus"></i> </a>
+                            <div class="submenu_new">
+                                <ul class="submenu_ul">
+                                    <li class="skd_list">
+                                        <a class="skd_item" href="{{ URL::to('/system-assignment') }}">Assignment
+                                            Section</a>
+                                    </li>
+                                    <li class="skd_list">
+                                        <a class="skd_item" href="{{ URL::to('/system-school') }}">School Section</a>
+                                    </li>
+                                    <li class="skd_list">
+                                        <a class="skd_item" href="{{ URL::to('/system-teacher') }}">Teacher Section</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </li>
+                    </div>
+
                 </ul>
             </div>
 
         </li>
+
+
 
 
         <li class="user_log">
@@ -82,6 +107,18 @@
             $(this).toggleClass("is-active");
             $(".skd_menu").toggleClass("active_menu");
             // #(".skd_menu").toggleClass("active_menu");
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        var curentWindowWidth = window.innerWidth;
+        console.log('curentWindowWidth - ', curentWindowWidth);
+        $("._hover_submenu_open").click(function() {
+            if (curentWindowWidth < 1024) {
+                $(this).toggleClass("active_mnu");
+                $(".submenu_new").toggleClass("activeSubmenu");
+            }
         });
     });
 </script>

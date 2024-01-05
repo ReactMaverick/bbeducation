@@ -449,10 +449,10 @@ class TeacherController extends Controller
                         $join->on('tbl_teacherReference.teacherReference_id', '=', 't_sent.teacherReference_id');
                     }
                 )
-                ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherReference.teacherReference_id', DB::raw("IF(tbl_teacherReference.teacherReference_id IS NULL, 'No References Listed', employer_txt) AS employer_txt"), 'tbl_teacherReference.employedFrom_dte', 'tbl_teacherReference.employedUntil_dte', DB::raw("IF(lastSent_dte IS NULL, 'Not Sent', lastSent_dte) AS lastSent_txt"), DB::raw("IF(totalSent_int IS NULL, 0, totalSent_int) AS totalSent_int"), DB::raw("IF(lastSent_dte IS NULL, '', IF(DATEDIFF(CURDATE(), lastSent_dte) < '$v_overdueDays', '', DATEDIFF(CURDATE(), lastSent_dte) -'$v_overdueDays')) AS overDueDays_int"))
+                ->select('tbl_teacher.teacher_id', 'tbl_teacher.firstName_txt', 'tbl_teacher.surname_txt', 'tbl_teacher.knownAs_txt', 'tbl_teacherReference.teacherReference_id', DB::raw("IF(tbl_teacherReference.teacherReference_id IS NULL, 'No References Listed', employer_txt) AS employer_txt"), 'tbl_teacherReference.employedFrom_dte', 'tbl_teacherReference.employedUntil_dte', 'tbl_teacherReference.receivedOn_dtm', DB::raw("IF(lastSent_dte IS NULL, 'Not Sent', lastSent_dte) AS lastSent_txt"), DB::raw("IF(totalSent_int IS NULL, 0, totalSent_int) AS totalSent_int"), DB::raw("IF(lastSent_dte IS NULL, '', IF(DATEDIFF(CURDATE(), lastSent_dte) < '$v_overdueDays', '', DATEDIFF(CURDATE(), lastSent_dte) -'$v_overdueDays')) AS overDueDays_int"))
                 ->whereIn('applicationStatus_int', array(1, 2, 7))
                 ->where('receivedOn_dtm', NULL)
-                // ->where('tbl_teacher.is_delete', 0)
+                ->where('tbl_teacher.company_id', $company_id)
                 ->groupBy('tbl_teacherReference.teacherReference_id')
                 ->orderBy('lastSent_dte', 'ASC')
                 ->get();
@@ -2966,6 +2966,7 @@ class TeacherController extends Controller
                 // ->where('tbl_teacher.is_delete', 0)
                 ->groupBy('tbl_teacher.teacher_id')
                 ->first();
+            // dd($teacherDetail);
 
             $RTW_list = DB::table('tbl_description')
                 ->select('tbl_description.*')
@@ -5353,7 +5354,7 @@ class TeacherController extends Controller
             $typeList = DB::table('tbl_description')
                 ->select('tbl_description.*')
                 ->where('tbl_description.descriptionGroup_int', 19)
-                // ->where('tbl_description.description_int', '!=', 1)
+                ->where('tbl_description.description_int', '!=', 1)
                 ->get();
 
             $headerStatusList = DB::table('tbl_description')

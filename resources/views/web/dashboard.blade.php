@@ -116,9 +116,9 @@
                                 <thead>
                                     <tr class="table-heading">
                                         <th>School</th>
+                                        <th>Candidate</th>
                                         <th>Status</th>
                                         <th>Profession</th>
-                                        <th>Candidate</th>
                                         <th>Days</th>
                                         <th>Pay</th>
                                         <th>Charge</th>
@@ -128,11 +128,11 @@
                                     @foreach ($latestAssignment as $key => $Assignment)
                                         <tr class="table-data" onclick="assignmentDetail({{ $Assignment->asn_id }})">
                                             <td>{{ $Assignment->schooleName }}</td>
+                                            <td>{{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}</td>
                                             <td>
                                                 {{ $Assignment->assignmentStatus }}
                                             </td>
                                             <td>{{ $Assignment->teacherProfession }}</td>
-                                            <td>{{ $Assignment->techerFirstname }} {{ $Assignment->techerSurname }}</td>
                                             <td>{{ $Assignment->daysThisWeek }} Days</td>
                                             <td>{{ $Assignment->cost_dec }}</td>
                                             <td>{{ $Assignment->charge_dec }}</td>

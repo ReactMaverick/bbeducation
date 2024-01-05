@@ -20,13 +20,8 @@
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 topbar-sec">
 
                         <div class="school-assignment-sec">
-                            <div class="school-assignment-section sec_box_edit">
-                                {{-- <div class="contact-history-heading-section">
-                                    <h2>Contact History</h2>
-                                    <a data-toggle="modal" data-target="#ContactHistoryAddModal" style="cursor: pointer;">
-                                        <i class="fa-solid fa-plus"></i>
-                                    </a>
-                                </div> --}}
+                            <div class="school-assignment-section sec_box_edit mt-3">
+
                                 <div class="teacher-list-section details-heading">
                                     <div class="school-teacher-heading-text">
                                         <h2>All Companies</h2>
@@ -58,15 +53,15 @@
                                     </div>
                                 </div>
 
-                                <div class="assignment-finance-table-section p-5">
+                                <div class="assignment-finance-table-section">
                                     <table class="table table-bordered table-striped" id="myTable">
                                         <thead>
                                             <tr class="school-detail-table-heading">
-                                                <th style="width: 40%">Company Name</th>
-                                                <th>Company Phone</th>
-                                                <th>Vat Registration</th>
-                                                <th>Company Logo</th>
-                                                {{-- <th>Email</th> --}}
+                                                <th style="width: 25%">Company Name</th>
+                                                <th>Company Telephone</th>
+                                                <th>Company Address</th>
+                                                <th>Users</th>
+                                                <th>Created Date</th>
                                             </tr>
                                         </thead>
                                         <tbody class="table-body-sec">
@@ -76,13 +71,32 @@
                                                     id="editContactHistoryRow{{ $company->company_id }}"
                                                     onclick="contactHistoryRowSelect({{ $company->company_id }})"
                                                     data-id={{ $company->company_id }}>
-                                                    <td style="width: 40%">
-                                                        {{ $company->company_name }}</td>
+                                                    <td style="width: 25%">{{ $company->company_name }}</td>
                                                     <td>{{ $company->company_phone }}</td>
-                                                    <td>{{ $company->vat_registration }}</td>
-                                                    <td><img src="{{ asset($company->company_logo) }}"
-                                                            style="width: 70px; height: 70px;"></td>
-
+                                                    <td>
+                                                        @if ($company->address1_txt)
+                                                            {{ $company->address1_txt . ', ' }}
+                                                        @endif
+                                                        @if ($company->address2_txt)
+                                                            {{ $company->address2_txt . ', ' }}
+                                                        @endif
+                                                        @if ($company->address3_txt)
+                                                            {{ $company->address3_txt . ', ' }}
+                                                        @endif
+                                                        @if ($company->address4_txt)
+                                                            {{ $company->address4_txt . ', ' }}
+                                                        @endif
+                                                        @if ($company->address5_txt)
+                                                            {{ $company->address5_txt . ', ' }}
+                                                        @endif
+                                                        @if ($company->postcode_txt)
+                                                            {{ $company->postcode_txt }}
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $company->user_count }}</td>
+                                                    <td>
+                                                        {{ $company->created_at ? date('d M Y', strtotime($company->created_at)) : '' }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -130,7 +144,7 @@
         $(document).on('click', '#editContactHistoryBttn', function() {
             var companyId = $('#companyId').val();
             if (companyId) {
-                window.location.href = '{{ url('/editCompany') }}/' + companyId;
+                window.location.href = "{{ url('/editCompany') }}/" + companyId;
             } else {
                 swal("", "Please select one contact.");
             }
@@ -152,7 +166,7 @@
                             case "Yes":
                                 $.ajax({
                                     type: 'POST',
-                                    url: '{{ url('/deleteCompany') }}',
+                                    url: "{{ url('/deleteCompany') }}",
                                     data: {
                                         "_token": "{{ csrf_token() }}",
                                         companyId: companyId
@@ -182,7 +196,7 @@
         $(document).on('click', '#companyUsers', function() {
             var companyId = $('#companyId').val();
             if (companyId) {
-                window.location.href = '{{ url('/companyUsers') }}/' + companyId;
+                window.location.href = "{{ url('/companyUsers') }}/" + companyId;
             } else {
                 swal("", "Please select one contact.");
             }

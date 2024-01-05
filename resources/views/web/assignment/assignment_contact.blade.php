@@ -60,7 +60,7 @@
                                                         onclick="schoolHistoryRowSelect({{ $History->schoolContactLog_id }})">
                                                         <td>
                                                             Contact On :
-                                                            {{ date('d-m-Y H:i', strtotime($History->contactOn_dtm)) }}
+                                                            {{ date('d M Y, H:i', strtotime($History->contactOn_dtm)) }}
                                                             <br>
                                                             Contact With : {{ $History->contactWith_txt }}
                                                         </td>
@@ -73,7 +73,7 @@
                                                         onclick="editContactLogRowSelect({{ $History->teacherContactLog_id }})">
                                                         <td>
                                                             Contact On :
-                                                            {{ date('d-m-Y H:i', strtotime($History->contactOn_dtm)) }}
+                                                            {{ date('d M Y H:i', strtotime($History->contactOn_dtm)) }}
                                                             <br>
                                                             Contact With : {{ $History->contactWith_txt }}
                                                         </td>

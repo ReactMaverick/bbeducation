@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('admin_lte/dist/css/adminlte.min.css') }}">
     <script src="{{ asset('web/js/jquery.min.js') }}"></script>
 
     <style>
@@ -85,9 +86,9 @@
 <?php } ?>
 
 <script>
-    $(document).ready(function() {
-        $('#fullLoader').hide();
-    });
+    // $(document).ready(function() {
+    //     $('#fullLoader').hide();
+    // });
 </script>
 
 <?php if(app('request')->input('status') == 'approve'){?>
@@ -115,6 +116,9 @@
                 } else {
                     swal("", "Action has been already taken.");
                 }
+                setTimeout(function() {
+                    window.close();
+                }, 2000);
             }
         });
     }
@@ -125,6 +129,7 @@
 <script>
     var asnId = "{{ $asnId }}";
     var school_id = "{{ $school_id }}";
+    $('#fullLoader').hide();
     swal({
             title: "",
             text: "Are you sure you wish to reject the timesheet(s)?",

@@ -58,7 +58,6 @@
                                         <thead>
                                             <tr class="school-detail-table-heading">
                                                 <th style="width: 40%">First Name</th>
-                                                <th>Last Name</th>
                                                 <th>Email</th>
                                                 <th>Status</th>
                                                 {{-- <th>Email</th> --}}
@@ -72,8 +71,7 @@
                                                     onclick="contactHistoryRowSelect({{ $userAdmin->user_id }})"
                                                     data-id={{ $userAdmin->user_id }}>
                                                     <td style="width: 40%">
-                                                        {{ $userAdmin->firstName_txt }}</td>
-                                                    <td>{{ $userAdmin->surname_txt }}</td>
+                                                        {{ $userAdmin->firstName_txt }} {{ $userAdmin->surname_txt }}</td>
                                                     <td>{{ $userAdmin->user_name }}</td>
                                                     <td><select class="form-control status"
                                                             onchange="changeStatus({{ $userAdmin->user_id }}, this.value)">
@@ -81,7 +79,7 @@
                                                                 {{ $userAdmin->isActive == 1 ? 'selected' : '' }}>Active
                                                             </option>
                                                             <option value='0'
-                                                                {{ $userAdmin->isActive == 0 ? 'selected' : '' }}>De-Active
+                                                                {{ $userAdmin->isActive == 0 ? 'selected' : '' }}>Disable
                                                             </option>
                                                         </select></td>
                                                     {{-- <td>{{ $userAdmin->workEmail_txt }}</td> --}}
@@ -151,7 +149,7 @@
                                                 <option value='1' selected>
                                                     Active
                                                 </option>
-                                                <option value='0'>In Active
+                                                <option value='0'>Disable
                                                 </option>
                                             </select>
                                         </div>
@@ -161,10 +159,10 @@
                                             <span class="file_upload"><i class="fas fa-upload"></i>
                                                 Choose File to upload
                                             </span>
-                                            <input type="file" class="form-control file_up_load field-validate"
-                                                name="profileImage" id="admin_image" value="">
+                                            <input type="file" class="form-control file_up_load" name="profileImage"
+                                                id="admin_image" value="">
                                         </div>
-                                        <p style="color: red; font-size: small;">Jpg,Jpeg,png type allowed. Max size 5mb
+                                        <p style="font-size: small;">*Jpg,Jpeg,png type allowed. Max size 1mb
                                         </p>
                                         <div id="uploadedImage"></div>
                                         {{-- <div class="modal-input-field form-group">
@@ -238,7 +236,7 @@
                                                 <option value='1' selected>
                                                     Active
                                                 </option>
-                                                <option value='0'>De-Active
+                                                <option value='0'>Disable
                                                 </option>
                                             </select>
                                         </div>
@@ -251,7 +249,7 @@
                                             <input type="file" class="form-control file_up_load"
                                                 name="edit_profileImage" id="edit_admin_image" value="">
                                         </div>
-                                        <p style="color: red; font-size: small;">Jpg,Jpeg,png type allowed. Max size 1mb
+                                        <p style="font-size: small;">*Jpg,Jpeg,png type allowed. Max size 1mb
                                         </p>
                                         <div id="old_user_image"></div>
                                         <img id="edituploadedImage" style="display: none; width: 70px; height: 70px;"
@@ -354,7 +352,7 @@
                 var allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
 
                 // Max file size in bytes (adjust as needed)
-                var maxSize = 5 * 1024 * 1024; // 5 MB
+                var maxSize = 1 * 1024 * 1024; // 5 MB
 
                 if (!allowedTypes.includes(fileType)) {
                     swal({

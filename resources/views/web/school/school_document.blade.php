@@ -79,7 +79,7 @@
                                                                         {{ 'N/A' }}
                                                                     @endif
                                                                 </td>
-                                                                <td>{{ date('d-m-Y', strtotime($document->uploadOn_dtm)) }}
+                                                                <td>{{ date('d M Y', strtotime($document->uploadOn_dtm)) }}
                                                                 </td>
                                                             </tr>
                                                         @endforeach

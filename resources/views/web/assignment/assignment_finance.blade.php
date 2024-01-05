@@ -36,11 +36,11 @@
                                         @if ($invoice->invoice_id)
                                             <tr class="school-detail-table-data">
                                                 <td>{{ $invoice->invoice_id }}</td>
-                                                <td>{{ date('d-m-Y', strtotime($invoice->invoiceDate_dte)) }}</td>
+                                                <td>{{ date('d M Y', strtotime($invoice->invoiceDate_dte)) }}</td>
                                                 <td>{{ $invoice->net_dec }}</td>
                                                 <td>{{ $invoice->vat_dec }}</td>
                                                 <td>{{ $invoice->gross_dec }}</td>
-                                                <td>{{ date('d-m-Y', strtotime($invoice->paidOn_dte)) }}</td>
+                                                <td>{{ date('d M Y', strtotime($invoice->paidOn_dte)) }}</td>
                                             </tr>
                                         @endif
                                     @endforeach
